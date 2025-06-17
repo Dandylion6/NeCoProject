@@ -1,0 +1,360 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						5
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "external/raylib",
+					"childIndexes" : 
+					[
+						2
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-external.raylib-Debug-a5fa6b161633ff7591ae.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.25"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "external/raylib"
+				},
+				{
+					"build" : "external/raylib/raylib",
+					"childIndexes" : 
+					[
+						3
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-external.raylib.raylib-Debug-1b21d37c159b2c0321e9.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.25"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "external/raylib/src",
+					"targetIndexes" : 
+					[
+						12
+					]
+				},
+				{
+					"build" : "external/raylib/raylib/external/glfw",
+					"childIndexes" : 
+					[
+						4
+					],
+					"jsonFile" : "directory-external.raylib.raylib.external.glfw-Debug-312f90276d4ed88fed74.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.4"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 2,
+					"source" : "external/raylib/src/external/glfw"
+				},
+				{
+					"build" : "external/raylib/raylib/external/glfw/src",
+					"jsonFile" : "directory-external.raylib.raylib.external.glfw.src-Debug-6263d3de835a0365a452.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.4"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 2,
+					"source" : "external/raylib/src/external/glfw/src",
+					"targetIndexes" : 
+					[
+						10,
+						13
+					]
+				},
+				{
+					"build" : "external/openal-soft",
+					"childIndexes" : 
+					[
+						6,
+						7
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-external.openal-soft-Debug-b06ed4fa253f29bfb188.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 3,
+					"source" : "external/openal-soft",
+					"targetIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						8,
+						9,
+						11
+					]
+				},
+				{
+					"build" : "external/openal-soft/fmt-11.1.4",
+					"jsonFile" : "directory-external.openal-soft.fmt-11.1.4-Debug-8098c90c7d4275c7ec81.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 4,
+					"source" : "external/openal-soft/fmt-11.1.4",
+					"targetIndexes" : 
+					[
+						7
+					]
+				},
+				{
+					"build" : "external/openal-soft/utils/alsoft-config",
+					"jsonFile" : "directory-external.openal-soft.utils.alsoft-config-Debug-2c0054e5c6b76862b60e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 5,
+					"source" : "external/openal-soft/utils/alsoft-config"
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						3
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "NeCoProject",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"childIndexes" : 
+					[
+						2
+					],
+					"directoryIndexes" : 
+					[
+						1,
+						2
+					],
+					"name" : "raylib",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						12
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						3,
+						4
+					],
+					"name" : "GLFW",
+					"parentIndex" : 1,
+					"targetIndexes" : 
+					[
+						10,
+						13
+					]
+				},
+				{
+					"childIndexes" : 
+					[
+						4,
+						5
+					],
+					"directoryIndexes" : 
+					[
+						5
+					],
+					"name" : "OpenAL",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						8,
+						9,
+						11
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						6
+					],
+					"name" : "ALSOFT_FMT",
+					"parentIndex" : 3,
+					"targetIndexes" : 
+					[
+						7
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						7
+					],
+					"name" : "alsoft-config",
+					"parentIndex" : 3
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "NeCoProject::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-NeCoProject-Debug-43d33a3ec7c4a3bc0e4a.json",
+					"name" : "NeCoProject",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "OpenAL::@6e33801e51ee4e68e4d1",
+					"jsonFile" : "target-OpenAL-Debug-3419d06e6a9017f8285c.json",
+					"name" : "OpenAL",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "aldebug::@6e33801e51ee4e68e4d1",
+					"jsonFile" : "target-aldebug-Debug-37cba1cde08f491d4456.json",
+					"name" : "aldebug",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "allafplay::@6e33801e51ee4e68e4d1",
+					"jsonFile" : "target-allafplay-Debug-1e5133ed715efae585ee.json",
+					"name" : "allafplay",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "alrecord::@6e33801e51ee4e68e4d1",
+					"jsonFile" : "target-alrecord-Debug-5e5bb87a85238c3cf6c7.json",
+					"name" : "alrecord",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "alsoft.common::@6e33801e51ee4e68e4d1",
+					"jsonFile" : "target-alsoft.common-Debug-d8398cb2389eb4a36feb.json",
+					"name" : "alsoft.common",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "alsoft.excommon::@6e33801e51ee4e68e4d1",
+					"jsonFile" : "target-alsoft.excommon-Debug-78b25813372cdb55bde3.json",
+					"name" : "alsoft.excommon",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "alsoft.fmt::@a1fc4a833dc42cf6790b",
+					"jsonFile" : "target-alsoft.fmt-Debug-ca064ea151148b6970bb.json",
+					"name" : "alsoft.fmt",
+					"projectIndex" : 4
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "altonegen::@6e33801e51ee4e68e4d1",
+					"jsonFile" : "target-altonegen-Debug-933c81fa6b02ce3c9bff.json",
+					"name" : "altonegen",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "clang-tidy-check::@6e33801e51ee4e68e4d1",
+					"jsonFile" : "target-clang-tidy-check-Debug-44c3d7585974628e805b.json",
+					"name" : "clang-tidy-check",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "glfw::@0caa76eb0594e07c8f96",
+					"jsonFile" : "target-glfw-Debug-64d9c473916039fe3c37.json",
+					"name" : "glfw",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "openal-info::@6e33801e51ee4e68e4d1",
+					"jsonFile" : "target-openal-info-Debug-791bb50a3e3c5d4629dd.json",
+					"name" : "openal-info",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "raylib::@e0062cae9a75ca0a10b0",
+					"jsonFile" : "target-raylib-Debug-81d79a9d63ff03a1616f.json",
+					"name" : "raylib",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "update_mappings::@0caa76eb0594e07c8f96",
+					"jsonFile" : "target-update_mappings-Debug-7a5f5eb15a9a3d98807f.json",
+					"name" : "update_mappings",
+					"projectIndex" : 2
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/daano/OneDrive/Desktop/Projects/NeCoProject/out/build/x64-debug",
+		"source" : "C:/Users/daano/OneDrive/Desktop/Projects/NeCoProject"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 8
+	}
+}

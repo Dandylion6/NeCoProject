@@ -1,0 +1,244 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"external/openal-soft/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1634,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1643,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1647,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1649,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1651,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1663,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1669,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1675,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 1949,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"external/openal-soft/OpenAL32.lib"
+			],
+			"targetId" : "OpenAL::@6e33801e51ee4e68e4d1",
+			"targetIndex" : 1,
+			"targetIsImportLibrary" : true,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"external/openal-soft/OpenAL32.dll"
+			],
+			"targetId" : "OpenAL::@6e33801e51ee4e68e4d1",
+			"targetIndex" : 1,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/OpenAL",
+			"exportName" : "OpenAL",
+			"exportTargets" : 
+			[
+				{
+					"id" : "OpenAL::@6e33801e51ee4e68e4d1",
+					"index" : 1
+				}
+			],
+			"paths" : 
+			[
+				"external/openal-soft/CMakeFiles/Export/7997f1405615f9851461070a24c70e81/OpenALTargets.cmake"
+			],
+			"type" : "export"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "include",
+			"paths" : 
+			[
+				"external/openal-soft/include/AL"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 4,
+			"component" : "Unspecified",
+			"destination" : "lib/pkgconfig",
+			"paths" : 
+			[
+				"out/build/x64-debug/external/openal-soft/openal.pc"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 5,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/OpenAL",
+			"paths" : 
+			[
+				"out/build/x64-debug/external/openal-soft/OpenALConfig.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "share/openal",
+			"paths" : 
+			[
+				"external/openal-soft/alsoftrc.sample"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 7,
+			"component" : "Unspecified",
+			"destination" : "share/openal",
+			"paths" : 
+			[
+				"external/openal-soft/hrtf"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 8,
+			"component" : "Unspecified",
+			"destination" : "share/openal",
+			"paths" : 
+			[
+				"external/openal-soft/presets"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 9,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"external/openal-soft/openal-info.exe"
+			],
+			"targetId" : "openal-info::@6e33801e51ee4e68e4d1",
+			"targetIndex" : 11,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 9,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"external/openal-soft/altonegen.exe"
+			],
+			"targetId" : "altonegen::@6e33801e51ee4e68e4d1",
+			"targetIndex" : 8,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 9,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"external/openal-soft/alrecord.exe"
+			],
+			"targetId" : "alrecord::@6e33801e51ee4e68e4d1",
+			"targetIndex" : 4,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 9,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"external/openal-soft/aldebug.exe"
+			],
+			"targetId" : "aldebug::@6e33801e51ee4e68e4d1",
+			"targetIndex" : 2,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 9,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"external/openal-soft/allafplay.exe"
+			],
+			"targetId" : "allafplay::@6e33801e51ee4e68e4d1",
+			"targetIndex" : 3,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "external/openal-soft",
+		"source" : "external/openal-soft"
+	}
+}

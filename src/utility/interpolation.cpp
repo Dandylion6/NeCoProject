@@ -1,0 +1,43 @@
+#include "utility/interpolation.h"
+
+
+float Math::Lerp(float a, float b, float t)
+{
+    return a + (b - a) * t;
+}
+
+float Math::SineInOut(float x)
+{
+	return -(std::cosf(PI * x) - 1.0f) / 2.0f;
+}
+
+float Math::QuadIn(float x)
+{
+	return x * x;
+}
+
+float Math::QuadOut(float x)
+{
+	return 1.0f - (1.0f - x) * (1.0f - x);
+}
+
+float Math::CubicOut(float x)
+{
+	return 1.0f - (1.0f - x) * (1.0f - x) * (1.0f - x);
+}
+
+float Math::ExpoIn(float x)
+{
+	return std::exp2f(10.0f * (x - 1.0f));
+}
+
+float Math::ExpoOut(float x)
+{
+	return x == 1.0f ? 1.0f : 1.0f - std::exp2f(-10.0f * x);
+}
+
+float Math::BackOut(float x)
+{
+	const float C1 = 1.70158f, C3 = C1 + 1.0f;
+	return 1.0f + C3 * std::powf(x - 1.0f, 3.0f) + C1 * std::powf(x - 1.0f, 2.0f);
+}
