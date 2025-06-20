@@ -4,15 +4,11 @@
 #include <string>
 
 
-struct ReceiverCodeEvent
-{
-	int8_t character = MorseCode::NULL_CODE;
-};
-
 namespace Component
 {
 	struct Receiver
 	{
-		std::string receivedCode { };
+		int8_t incomingCharacter = MorseCode::NULL_CODE;
+		std::string message { };
 	};
 }

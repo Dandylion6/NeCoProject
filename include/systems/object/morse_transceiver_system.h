@@ -1,16 +1,16 @@
 #pragma once
 #include "components/objects/morse_transceiver_component.h"
 #include "core/scene.h"
+#include "entt/entity/fwd.hpp"
 #include "utility/morse_code.h"
 #include <cstdint>
-struct EcsContext;
 
 
 class MorseTransceiverSystem
 {
 public:
 	static void Update(
-		EcsContext& ecsContext, 
+		entt::registry& registry, 
 		Scene currentScene, 
 		float deltaTime
 	);
@@ -18,8 +18,9 @@ public:
 private:
 	static void InputChanged(Component::MorseTransceiver& transceiver);
 	static void TryEndCharacter(
-		EcsContext& ecsContext, Component::MorseTransceiver& transceiver
+		entt::registry& registry, Component::MorseTransceiver& transceiver
 	);
+	static void TransmitCharacter(entt::registry& registry, int8_t character);
 
 	static void RecordPulse(Component::MorseTransceiver& transceiver);
 	static void ClearTransceiver(Component::MorseTransceiver& transceiver);

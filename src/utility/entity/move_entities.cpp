@@ -1,11 +1,11 @@
 #include "components/core/button_action_component.h"
 #include "components/core/transform_component.h"
-#include "core/ecs_context.h"
 #include "core/game_state.h"
 #include "core/render_context.h"
 #include "core/scene.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
+#include "modules/ui/move_transition.h"
 #include "raylib.h"
 #include "utility/entity/move_entities.h"
 #include "utility/vector2.h"
@@ -14,40 +14,34 @@
 
 
 entt::entity Construct::MoveRegionEntity(
-	EcsContext& ecsContext, GameState& gameState, ResourceStore& resourceStore,
+	entt::registry& registry, GameState& gameState, ResourceStore& resourceStore,
 	const Component::Transform& transform,
 	Scene currentScene, Scene nextScene, float moveTime
 )
 {
-	const entt::entity entity = ecsContext.registry.create();
-	ecsContext.registry.emplace<Component::Transform>(entity, transform);
+	const entt::entity entity = registry.create();
+	registry.emplace<Component::Transform>(entity, transform);
 
 	std::function<void()> onClick = std::function<void()>(
-		[&ecsContext, &gameState, &resourceStore, nextScene, moveTime]()
+		[&registry, &gameState, &resourceStore, nextScene, moveTime]()
 		{
 			if (gameState.movingToScene != NullScene) return;
 			gameState.movingToScene = nextScene;
 
-			ecsContext.dispatcher.trigger(
-				MoveSceneEvent {
-					&gameState.currentScene, &ecsContext.registry, moveTime, nextScene
-				}
-			);
+			MoveTransition::StartMoveScene(registry, gameState.currentScene, nextScene, moveTime);
 
 			Sound transitionSound = LoadSound("assets/audio/effects/scene_transition.wav");
 			PlaySound(transitionSound);
 		}
 	);
 
-	constexpr float DOWN_TIME_ADDITION = 1.25f;
-	float downTime = moveTime + DOWN_TIME_ADDITION;
-	ecsContext.registry.emplace<Component::ButtonAction>(entity, std::move(onClick), downTime);
+	registry.emplace<Component::ButtonAction>(entity, std::move(onClick));
 	return entity;
 }
 
 
 entt::entity Construct::MoveRegionEntity(
-	EcsContext& ecsContext, GameState& gameState, ResourceStore& resourceStore,
+	entt::registry& registry, GameState& gameState, ResourceStore& resourceStore,
 	Direction region, Scene currentScene, Scene nextScene, float moveTime
 )
 {
@@ -96,7 +90,6 @@ entt::entity Construct::MoveRegionEntity(
 	}
 	}
 	return MoveRegionEntity(
-		ecsContext, gameState, resourceStore,
-		transform, currentScene, nextScene, moveTime
+		registry, gameState, resourceStore, transform, currentScene, nextScene, moveTime
 	);
 }

@@ -2,64 +2,60 @@
 #include "components/core/transform_component.h"
 #include "components/core/tween_component.h"
 #include "components/tags/move_transition_tag.h"
-#include "core/ecs_context.h"
 #include "core/game_state.h"
 #include "core/render_context.h"
 #include "core/scene.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "entt/signal/dispatcher.hpp"
-#include "entt/signal/sigh.hpp"
 #include "modules/ui/move_transition.h"
-#include "utility/entity/move_entities.h"
 #include "utility/tween.h"
 #include "utility/vector2.h"
 #include <functional>
 
 
 void MoveTransition::Build(
-	EcsContext& ecsContext, 
+	entt::registry& registry, 
 	RenderContext& renderContext,
 	GameState& gameState
 )
 {
 	Construct::MoveTransitionEntity(
-		ecsContext, renderContext, gameState
+		registry, renderContext, gameState
 	);
 }
 
 
-void MoveTransition::StartMoveScene(MoveSceneEvent& event)
+void MoveTransition::StartMoveScene(
+	entt::registry& registry, Scene& currentScene, Scene nextScene, float moveTime
+)
 {
-	entt::registry& registry = *event.registry;
 	entt::entity entity = registry.view<Tag::MoveTransition>().front();
-
 	Component::TweenCollection& collection = registry.get<Component::TweenCollection>(entity);
-	collection.tweens.at(TransitionDown).delayComplete = event.moveTime;
+	collection.tweens.at(MoveTransition::Tweens::TransitionDown).delayComplete = moveTime;
 	
 	std::function<void()> switchScene = std::function<void()>(
-		[&collection, currentScene = event.currentScene, nextScene = event.nextScene]()
+		[&collection, &currentScene, nextScene]()
 		{
-			*currentScene = nextScene;
-			Tween::Play(collection.tweens.at(TransitionUp));
+			currentScene = nextScene;
+			Tween::Play(collection.tweens.at(MoveTransition::Tweens::TransitionUp));
 		}
 	);
 
-	Tween& tweenDown = collection.tweens.at(TransitionDown);
+	Tween& tweenDown = collection.tweens.at(MoveTransition::Tweens::TransitionDown);
 	tweenDown.onComplete = switchScene;
 	Tween::Play(tweenDown);
 }
 
 
 entt::entity Construct::MoveTransitionEntity(
-	EcsContext& ecsContext, 
+	entt::registry& registry, 
 	RenderContext& renderContext,
 	GameState& gameState
 )
 {
-	entt::entity entity = ecsContext.registry.create();
-	ecsContext.registry.emplace<Component::Rectangle>(entity, RenderContext::CLEAR_COLOR);
-	Component::UiTransform& transform = ecsContext.registry.emplace<Component::UiTransform>(
+	entt::entity entity = registry.create();
+	registry.emplace<Component::Rectangle>(entity, RenderContext::CLEAR_COLOR);
+	Component::UiTransform& transform = registry.emplace<Component::UiTransform>(
 		entity,
 		Nc::Vector2f::Zero(),
 		Nc::Vector2f::Up(),
@@ -68,8 +64,8 @@ entt::entity Construct::MoveTransitionEntity(
 
 
 	//Construct transition tweening
-	ecsContext.registry.emplace<Tag::MoveTransition>(entity);
-	Component::TweenCollection& collection = ecsContext.registry.emplace<Component::TweenCollection>(entity);
+	registry.emplace<Tag::MoveTransition>(entity);
+	Component::TweenCollection& collection = registry.emplace<Component::TweenCollection>(entity);
 
 	//Transition down
 	Tween& tweenDown = collection.tweens.at(MoveTransition::TransitionDown);
@@ -92,6 +88,5 @@ entt::entity Construct::MoveTransitionEntity(
 		gameState.movingToScene = NullScene;
 	};
 
-	ecsContext.dispatcher.sink<MoveSceneEvent>().connect<&MoveTransition::StartMoveScene>();
 	return entity;
 }

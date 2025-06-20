@@ -4,6 +4,7 @@
 #include "modules/scenes/comms_scene.h"
 #include "modules/scenes/desk_scene.h"
 #include "modules/scenes/doorway_scene.h"
+#include "modules/scenes/external_scene.h"
 #include "modules/ui/move_transition.h"
 #include "raylib.h"
 #include "systems/core/button_action_system.h"
@@ -15,6 +16,7 @@
 #include "systems/object/morse_sound_system.h"
 #include "systems/object/morse_transceiver_system.h"
 #include "systems/object/radar_render_system.h"
+#include "systems/object/receiver_interpreting_system.h"
 #include "utility/vector2.h"
 #include <cmath>
 
@@ -53,10 +55,11 @@ void Game::SetupRenderContext()
 
 void Game::BuildScenes()
 {
-	MoveTransition::Build(ecsContext, renderContext, gameState);
-	CommsScene::Build(ecsContext, gameState, resourceStore);
-	DeskScene::Build(ecsContext, gameState, resourceStore);
-	DoorwayScene::Build(ecsContext, gameState, resourceStore);
+	MoveTransition::Build(registry, renderContext, gameState);
+	CommsScene::Build(registry, gameState, resourceStore);
+	DeskScene::Build(registry, gameState, resourceStore);
+	DoorwayScene::Build(registry, gameState, resourceStore);
+	ExternalScene::Build(registry, gameState, resourceStore);
 }
 
 
@@ -98,20 +101,20 @@ void Game::Update(float deltaTime)
 
 void Game::UpdateRegistries(float deltaTime)
 {
-	ButtonActionSystem::Update(ecsContext.registry, gameState, renderContext, deltaTime);
-	MorseTransceiverSystem::Update(ecsContext, gameState.currentScene, deltaTime);
-	MorseSoundSystem::Update(ecsContext.registry, gameState.currentScene, deltaTime);
-	BlipBlinkSystem::Update(ecsContext.registry);
-	TweenSystem::Update(ecsContext.registry, deltaTime);
-	SoundSystem::Update(ecsContext.registry, deltaTime);
+	ButtonActionSystem::Update(registry, gameState, renderContext, deltaTime);
+	MorseTransceiverSystem::Update(registry, gameState.currentScene, deltaTime);
+	MorseSoundSystem::Update(registry, gameState.currentScene, deltaTime);
+	ReceiverInterpretingSystem::Update(registry);
+	BlipBlinkSystem::Update(registry);
+	TweenSystem::Update(registry, deltaTime);
+	SoundSystem::Update(registry, deltaTime);
 }
 
 
 void Game::DrawGame()
 {
 	RadarRenderSystem::DrawRenderTexture(
-		ecsContext.registry, renderContext.radarRenderTexture, 
-		gameState.currentScene, resourceStore
+		registry, renderContext.radarRenderTexture, gameState.currentScene, resourceStore
 	);
 	DrawScreen();
 
@@ -144,9 +147,9 @@ void Game::DrawScreen()
 	BeginTextureMode(renderContext.renderTexture);
 	ClearBackground(WHITE);
 
-	SpriteRenderSystem::DrawScreen(ecsContext.registry, gameState.currentScene, cameraPosition);
+	SpriteRenderSystem::DrawScreen(registry, gameState.currentScene, cameraPosition);
 	RadarRenderSystem::DrawRadar(
-		ecsContext.registry, renderContext.radarRenderTexture, cameraPosition, gameState.currentScene
+		registry, renderContext.radarRenderTexture, cameraPosition, gameState.currentScene
 	);
 
 	EndTextureMode();
@@ -155,6 +158,6 @@ void Game::DrawScreen()
 
 void Game::DrawUi()
 {
-	SpriteRenderSystem::DrawUI(ecsContext.registry, renderContext.windowSize);
-	RectangleRenderSystem::DrawUi(ecsContext.registry, renderContext.windowSize);
+	SpriteRenderSystem::DrawUI(registry, renderContext.windowSize);
+	RectangleRenderSystem::DrawUi(registry, renderContext.windowSize);
 }

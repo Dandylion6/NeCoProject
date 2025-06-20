@@ -14,7 +14,7 @@ void MorseSoundSystem::Update(
 	auto view = registry.view<Component::MorseTransceiver, Component::LoopedSoundEmitter>();
 	for (auto [entity, transceiver, emitter] : view.each())
 	{
-		constexpr float FADE_SPEED = 56.0f;
+		constexpr float FADE_SPEED = 64.0f;
 		constexpr float TONE_VOLUME = 1.25f;
 
 		float targetVolume = transceiver.isInputActive ? TONE_VOLUME : 0.0f;

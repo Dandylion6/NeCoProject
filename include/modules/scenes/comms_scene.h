@@ -1,7 +1,6 @@
 #pragma once
 #include "entt/entity/fwd.hpp"
 #include "utility/vector2.h"
-struct EcsContext;
 struct GameState;
 class ResourceStore;
 
@@ -20,7 +19,7 @@ namespace Construct
 namespace CommsScene
 {
 	void Build(
-		EcsContext& ecsContext, 
+		entt::registry& registry, 
 		GameState& gameState, 
 		ResourceStore& resourceStore
 	);

@@ -1,6 +1,5 @@
 #pragma once
 #include "entt/entity/fwd.hpp"
-struct EcsContext;
 struct GameState;
 struct MoveSceneEvent;
 struct RenderContext;
@@ -9,7 +8,7 @@ struct RenderContext;
 namespace Construct
 {
 	entt::entity MoveTransitionEntity(
-		EcsContext& ecsContext, 
+		entt::registry& registry, 
 		RenderContext& renderContext,
 		GameState& gameState
 	);
@@ -25,10 +24,12 @@ namespace MoveTransition
 	};
 
 	void Build(
-		EcsContext& ecsContext,
+		entt::registry& registry,
 		RenderContext& renderContext,
 		GameState& gameState
 	);
 
-	void StartMoveScene(MoveSceneEvent& event);
+	void StartMoveScene(
+		entt::registry& registry, Scene& currentScene, Scene nextScene, float moveTime
+	);
 }

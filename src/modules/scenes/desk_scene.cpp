@@ -1,5 +1,5 @@
-#include "core/ecs_context.h"
 #include "core/scene.h"
+#include "entt/entity/fwd.hpp"
 #include "modules/scenes/desk_scene.h"
 #include "raylib.h"
 #include "utility/entity/move_entities.h"
@@ -8,17 +8,16 @@
 
 
 void DeskScene::Build(
-	EcsContext& ecsContext, 
+	entt::registry& registry, 
 	GameState& gameState, 
 	ResourceStore& resourceStore
 )
 {
 	Construct::SceneBackgroundEntity(
-		LoadTexture("assets/environment/backgrounds/comms_desk.png"), 
-		ecsContext.registry, CommsDesk
+		LoadTexture("assets/environment/backgrounds/comms_desk.png"), registry, CommsDesk
 	);
 
 	Construct::MoveRegionEntity(
-		ecsContext, gameState, resourceStore, Up, CommsDesk, CommsRoom, 0.1f
+		registry, gameState, resourceStore, Up, CommsDesk, CommsRoom, 0.1f
 	);
 }

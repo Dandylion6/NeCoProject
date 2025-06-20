@@ -1,7 +1,6 @@
 #include "components/core/transform_component.h"
 #include "components/objects/morse_transceiver_component.h"
 #include "components/objects/receiver_component.h"
-#include "core/ecs_context.h"
 #include "core/scene.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -14,26 +13,25 @@
 
 
 void MorseTransceiverSystem::Update(
-	EcsContext& ecsContext, Scene currentScene, float deltaTime
+	entt::registry& registry, Scene currentScene, float deltaTime
 )
 {
-	auto view = ecsContext.registry.view<Component::MorseTransceiver>();
-	entt::entity entity = view.front();
-	Component::Transform& transform = ecsContext.registry.get<Component::Transform>(entity);
-	if (currentScene != transform.boundScene) return;
+	auto view = registry.view<Component::Transform, Component::MorseTransceiver>();
+	for (auto [entity, transform, transceiver] : view.each())
+	{
+		if (currentScene != transform.boundScene) continue;
 
-	Component::MorseTransceiver& transceiver = ecsContext.registry.get<Component::MorseTransceiver>(entity);
+		bool inputKeyPressed = IsKeyDown(Component::MorseTransceiver::INPUT_KEY);
+		bool inputStateChanged = inputKeyPressed != transceiver.isInputActive;
 
-	bool inputKeyPressed = IsKeyDown(Component::MorseTransceiver::INPUT_KEY);
-	bool inputStateChanged = inputKeyPressed != transceiver.isInputActive;
-	
-	if (inputStateChanged) InputChanged(transceiver);
-	else if (!inputKeyPressed) TryEndCharacter(ecsContext, transceiver);
+		if (inputStateChanged) InputChanged(transceiver);
+		else if (!inputKeyPressed) TryEndCharacter(registry, transceiver);
 
-	transceiver.isInputActive = inputKeyPressed;
-	float increasedInverval = transceiver.intervalSeconds + deltaTime;
-	constexpr float MAX_INTERVAL = MorseCode::LONG_DURATION * 2.0f;
-	transceiver.intervalSeconds = std::fminf(increasedInverval, MAX_INTERVAL);
+		transceiver.isInputActive = inputKeyPressed;
+		float increasedInverval = transceiver.intervalSeconds + deltaTime;
+		constexpr float MAX_INTERVAL = MorseCode::LONG_DURATION * 2.0f;
+		transceiver.intervalSeconds = std::fminf(increasedInverval, MAX_INTERVAL);
+	}
 }
 
 
@@ -48,7 +46,7 @@ void MorseTransceiverSystem::InputChanged(Component::MorseTransceiver& transceiv
 
 
 void MorseTransceiverSystem::TryEndCharacter(
-	EcsContext& ecsContext, Component::MorseTransceiver& transceiver
+	entt::registry& registry, Component::MorseTransceiver& transceiver
 )
 {
 	bool shouldEndCharacter = transceiver.intervalSeconds > MorseCode::LONG_DURATION;
@@ -57,8 +55,21 @@ void MorseTransceiverSystem::TryEndCharacter(
 	if (transceiver.pulseCount == 0u) return;
 
 	int8_t character = PulsesToChar(transceiver.pulses, transceiver.pulseCount);
-	ecsContext.dispatcher.trigger(ReceiverCodeEvent { character });
+
+	TransmitCharacter(registry, character);
 	ClearTransceiver(transceiver);
+}
+
+
+void MorseTransceiverSystem::TransmitCharacter(
+	entt::registry& registry, int8_t character
+)
+{
+	auto receiverView = registry.view<Component::Receiver>();
+	for (auto [entity, receiver] : receiverView.each())
+	{
+		receiver.incomingCharacter = character;
+	}
 }
 
 

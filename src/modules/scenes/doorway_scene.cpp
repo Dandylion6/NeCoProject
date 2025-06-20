@@ -1,6 +1,6 @@
-#include "core/ecs_context.h"
 #include "core/resource_store.h"
 #include "core/scene.h"
+#include "entt/entity/fwd.hpp"
 #include "modules/scenes/doorway_scene.h"
 #include "raylib.h"
 #include "utility/entity/move_entities.h"
@@ -9,17 +9,16 @@
 
 
 void DoorwayScene::Build(
-	EcsContext& ecsContext, 
+	entt::registry& registry, 
 	GameState& gameState,
 	ResourceStore& resourceStore
 )
 {
 	Construct::SceneBackgroundEntity(
-		LoadTexture("assets/environment/backgrounds/doorway.png"), 
-		ecsContext.registry, Doorway
+		LoadTexture("assets/environment/backgrounds/doorway.png"), registry, Doorway
 	);
 
 	Construct::MoveRegionEntity(
-		ecsContext, gameState, resourceStore, Left, Doorway, CommsRoom, 0.4f
+		registry, gameState, resourceStore, Left, Doorway, CommsRoom, 0.4f
 	);
 }

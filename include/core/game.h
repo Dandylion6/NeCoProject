@@ -1,8 +1,9 @@
  #pragma once
-#include "core/ecs_context.h"
 #include "core/game_state.h"
 #include "core/render_context.h"
 #include "core/resource_store.h"
+#include "entt/entity/fwd.hpp"
+#include "entt/entity/registry.hpp"
 
 
 class Game
@@ -21,7 +22,7 @@ public:
 	void DrawGame();
 
 private:
-	EcsContext ecsContext { };
+	entt::registry registry;
 	RenderContext renderContext { };
 	GameState gameState { };
 	ResourceStore resourceStore { };

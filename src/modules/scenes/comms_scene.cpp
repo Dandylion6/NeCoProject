@@ -5,7 +5,6 @@
 #include "components/core/tween_component.h"
 #include "components/objects/morse_transceiver_component.h"
 #include "components/tags/radar_tags.h"
-#include "core/ecs_context.h"
 #include "core/render_context.h"
 #include "core/resource_store.h"
 #include "core/scene.h"
@@ -24,26 +23,26 @@
 
 
 void CommsScene::Build(
-	EcsContext& ecsContext,
+	entt::registry& registry,
 	GameState& gameState,
 	ResourceStore& resourceStore
 )
 {
-	Construct::RadarPathEntity(ecsContext.registry);
-	Construct::RadarObject(ecsContext.registry);
-	Construct::RadarBlipEntity(ecsContext.registry, Nc::Vector2f(100.0f, 50.0f));
+	Construct::RadarPathEntity(registry);
+	Construct::RadarObject(registry);
+	Construct::RadarBlipEntity(registry, Nc::Vector2f(100.0f, 50.0f));
 
 	Construct::SceneBackgroundEntity(
-		LoadTexture("assets/environment/backgrounds/comms_room.png"), ecsContext.registry, CommsRoom
+		LoadTexture("assets/environment/backgrounds/comms_room.png"), registry, CommsRoom
 	);
 	Construct::MoveRegionEntity(
-		ecsContext, gameState, resourceStore, Down, CommsRoom, CommsDesk, 0.1f
+		registry, gameState, resourceStore, Down, CommsRoom, CommsDesk, 0.1f
 	);
 	Construct::MoveRegionEntity(
-		ecsContext, gameState, resourceStore, Right, CommsRoom, Doorway, 0.3f
+		registry, gameState, resourceStore, Right, CommsRoom, Doorway, 0.3f
 	);
 
-	Construct::MorseTransceiverEntity(ecsContext.registry);
+	Construct::MorseTransceiverEntity(registry);
 }
 
 

@@ -1,5 +1,5 @@
 #pragma once
-struct EcsContext;
+#include "entt/entity/fwd.hpp"
 struct GameState;
 class ResourceStore;
 
@@ -7,7 +7,7 @@ class ResourceStore;
 namespace DoorwayScene
 {
 	void Build(
-		EcsContext& ecsContext,
+		entt::registry& registry,
 		GameState& gameState,
 		ResourceStore& resourceStore
 	);

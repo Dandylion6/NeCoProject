@@ -18,7 +18,7 @@ file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS
     "src/*.cpp"
 )
 
-add_executable(NeCoProject ${PROJECT_SOURCES})
+add_executable(NeCoProject ${PROJECT_SOURCES} "src/systems/object/receiver_interpreting_system.cpp" "include/modules/scenes/external_scene.h" "src/modules/scenes/external_scene.cpp")
 
 target_include_directories(
 	NeCoProject
