@@ -154,6 +154,12 @@ namespace Nc
 	}
 
 
+	void Vector2f::operator*=(const float factor)
+	{
+		x *= factor, y *= factor;
+	}
+
+
 	void Vector2f::operator/=(const float factor)
 	{
 		x /= factor, y /= factor;

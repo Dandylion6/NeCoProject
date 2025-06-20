@@ -63,6 +63,7 @@ namespace Nc
 		Vector2f operator/(const float factor) const;
 		void operator+=(const Vector2f& other);
 		void operator-=(const Vector2f& other);
+		void operator*=(const float factor);
 		void operator/=(const float factor);
 	};
 }

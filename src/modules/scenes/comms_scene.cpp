@@ -6,18 +6,21 @@
 #include "components/objects/morse_transceiver_component.h"
 #include "components/tags/radar_tags.h"
 #include "core/ecs_context.h"
+#include "core/render_context.h"
 #include "core/resource_store.h"
 #include "core/scene.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "modules/scenes/comms_scene.h"
 #include "raylib.h"
+#include "systems/core/sound_system.h"
 #include "utility/color.h"
 #include "utility/entity/move_entities.h"
 #include "utility/entity/scene_entities.h"
 #include "utility/tween.h"
 #include "utility/vector2.h"
 #include <cstdint>
+#include <utility>
 
 
 void CommsScene::Build(
@@ -40,20 +43,24 @@ void CommsScene::Build(
 		ecsContext, gameState, resourceStore, Right, CommsRoom, Doorway, 0.3f
 	);
 
-	Construct::MorseTransceiverEntity(ecsContext);
+	Construct::MorseTransceiverEntity(ecsContext.registry);
 }
 
 
-void Construct::MorseTransceiverEntity(EcsContext& ecsContext)
+void Construct::MorseTransceiverEntity(entt::registry& registry)
 {
-	const entt::entity entity = ecsContext.registry.create();
+	const entt::entity entity = registry.create();
 
-	ecsContext.registry.emplace<Component::Transform>(entity, CommsRoom);
-	ecsContext.registry.emplace<Component::MorseTransceiver>(entity);
-	Construct::AddSound(
-		"assets/audio/object/morse_code_tone.wav", entity, ecsContext.registry,
-		false, true
-	);
+	Nc::Vector2f position = RenderContext::DISPLAY_SIZE;
+	position *= 0.5f;
+
+	registry.emplace<Component::Transform>(entity, CommsRoom, position);
+	registry.emplace<Component::MorseTransceiver>(entity);
+
+	Music morseTone = LoadMusicStream("assets/audio/object/morse_tone.wav");
+	Component::LoopedSoundEmitter& emitter = registry.emplace<Component::LoopedSoundEmitter>(entity, std::move(morseTone));
+	emitter.volume = 0.0f;
+	SoundSystem::PlayEmitter(emitter);
 }
 
 
@@ -124,8 +131,8 @@ void Construct::RadarBlipEntity(entt::registry& registry, Nc::Vector2f position)
 	constexpr float FADE_IN_TIME = 0.3f, FADE_OUT_TIME = 6.5f;
 	constexpr float FADE_OUT_DELAY = 1.8f;
 	
-	Tween& fadeInTween = tweens.tweens.at(BlipFadeIn);
-	Tween& fadeOutTween = tweens.tweens.at(BlipFadeOut);
+	Tween& fadeInTween = tweens.tweens.at(Tag::Blip::BlipFadeIn);
+	Tween& fadeOutTween = tweens.tweens.at(Tag::Blip::BlipFadeOut);
 
 	fadeInTween.Build(&sprite.alpha, sprite.alpha, 1.0f, FADE_IN_TIME, CubicOut, FADE_OUT_DELAY);
 	fadeInTween.onComplete = [&fadeOutTween]() { Tween::Replay(fadeOutTween); };

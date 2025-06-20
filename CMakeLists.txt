@@ -12,7 +12,6 @@ endif()
 project ("NeCoProject")
 
 add_subdirectory("external/raylib")
-add_subdirectory("external/openal-soft")
 
 # Grab all cpp files automatically
 file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS
@@ -26,7 +25,6 @@ target_include_directories(
 	PRIVATE
 		"include"
 		"external/entt/src"
-		"external/openal-soft/include"
 		"external/raylib/src"
 )
 
@@ -34,7 +32,6 @@ target_link_libraries(
 	NeCoProject 
 	PRIVATE
 		raylib
-		OpenAL
 )
 
 # Copy assets after build

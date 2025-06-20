@@ -11,7 +11,8 @@ public:
 	bool ShouldRun() const;
 	
 	void SetupWindow() const;
-	void InitRenderContext();
+	void SetupRenderContext();
+
 	void BuildScenes();
 	void Shutdown();
 

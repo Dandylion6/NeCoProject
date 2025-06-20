@@ -6,6 +6,7 @@
 namespace Math
 {
 	float Lerp(float a, float b, float t);
+	float SmoothApproach(float a, float b, float deltaTime, float speed);
 	float SineInOut(float x);
 	float QuadIn(float x);
 	float QuadOut(float x);

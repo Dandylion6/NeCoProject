@@ -9,18 +9,16 @@ namespace Component
 	{
 		Sound sound;
 		float volume = 1.0f;
-		float duration = 0.0f;
-		float elapsed = 0.0f;
-		bool isPlaying = false;
-		bool loops = false;
 		
-		SoundEmitter() = default;
-		SoundEmitter(
-			Sound&& sound,
-			bool loops = false
-		):
-			sound(std::move(sound)),
-			loops(loops)
-		{ };
+		SoundEmitter(Sound&& sound): sound(std::move(sound)) { };
+	};
+
+
+	struct LoopedSoundEmitter
+	{
+		Music sound;
+		float volume = 1.0f;
+
+		LoopedSoundEmitter(Music&& sound): sound(std::move(sound)) { };
 	};
 }

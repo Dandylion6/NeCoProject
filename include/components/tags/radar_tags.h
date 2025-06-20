@@ -7,5 +7,13 @@ namespace Tag
 
 	struct RadarPath { };
 
-	struct Blip { };
+	struct Blip
+	{
+		enum Tweens
+		{
+			BlipFadeIn,
+			BlipFadeOut
+		};
+
+	};
 }

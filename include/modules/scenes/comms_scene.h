@@ -6,16 +6,9 @@ struct GameState;
 class ResourceStore;
 
 
-enum BlipTweens
-{
-	BlipFadeIn,
-	BlipFadeOut
-};
-
-
 namespace Construct
 {
-	void MorseTransceiverEntity(EcsContext& ecsContext);
+	void MorseTransceiverEntity(entt::registry& registry);
 
 	entt::entity RadarPathEntity(entt::registry& registry);
 

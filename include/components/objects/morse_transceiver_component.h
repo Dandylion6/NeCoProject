@@ -13,6 +13,12 @@ namespace Component
 		static constexpr uint8_t MAX_PULSES = 8u;
 		using PulseArray = std::array<MorseCode::Pulse, MAX_PULSES>;
 
+		enum Tweens
+		{
+			ToneFadeIn,
+			ToneFadeOut
+		};
+
 		PulseArray pulses { };
 		float intervalSeconds = 0.0f;
 		bool isInputActive = false;

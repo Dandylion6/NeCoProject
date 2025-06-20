@@ -18,7 +18,7 @@ void BlipBlinkSystem::Update(entt::registry& registry)
 	auto blipView = registry.view<const Tag::Blip, const Component::Transform, Component::TweenCollection>();
 	for (auto [entity, transform, tweens] : blipView.each())
 	{
-		Tween& fadeInTween = tweens.tweens.at(BlipFadeIn);
+		Tween& fadeInTween = tweens.tweens.at(Tag::Blip::BlipFadeIn);
 		if (!BlipShouldAppear(transform, pathTransform, fadeInTween)) continue;
 		Tween::Replay(fadeInTween);
 	}

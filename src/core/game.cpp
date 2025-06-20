@@ -19,7 +19,7 @@
 #include <cmath>
 
 
-void Game::InitRenderContext()
+void Game::SetupRenderContext()
 {
 	const int monitor = GetCurrentMonitor();
 	const Nc::Vector2i monitorSize = Nc::Vector2i(GetMonitorWidth(monitor), GetMonitorHeight(monitor));

@@ -1,0 +1,188 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "external/raylib",
+					"childIndexes" : 
+					[
+						2
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-external.raylib-Debug-a5fa6b161633ff7591ae.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.25"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "external/raylib"
+				},
+				{
+					"build" : "external/raylib/raylib",
+					"childIndexes" : 
+					[
+						3
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-external.raylib.raylib-Debug-60360acf274b6865e60a.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.25"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "external/raylib/src",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "external/raylib/raylib/external/glfw",
+					"childIndexes" : 
+					[
+						4
+					],
+					"jsonFile" : "directory-external.raylib.raylib.external.glfw-Debug-312f90276d4ed88fed74.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.4"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 2,
+					"source" : "external/raylib/src/external/glfw"
+				},
+				{
+					"build" : "external/raylib/raylib/external/glfw/src",
+					"jsonFile" : "directory-external.raylib.raylib.external.glfw.src-Debug-6263d3de835a0365a452.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.4"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 2,
+					"source" : "external/raylib/src/external/glfw/src",
+					"targetIndexes" : 
+					[
+						1,
+						3
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "NeCoProject",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"childIndexes" : 
+					[
+						2
+					],
+					"directoryIndexes" : 
+					[
+						1,
+						2
+					],
+					"name" : "raylib",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						3,
+						4
+					],
+					"name" : "GLFW",
+					"parentIndex" : 1,
+					"targetIndexes" : 
+					[
+						1,
+						3
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "NeCoProject::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-NeCoProject-Debug-dfeb32d70111bd5da38d.json",
+					"name" : "NeCoProject",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "glfw::@0caa76eb0594e07c8f96",
+					"jsonFile" : "target-glfw-Debug-64d9c473916039fe3c37.json",
+					"name" : "glfw",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "raylib::@e0062cae9a75ca0a10b0",
+					"jsonFile" : "target-raylib-Debug-81d79a9d63ff03a1616f.json",
+					"name" : "raylib",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "update_mappings::@0caa76eb0594e07c8f96",
+					"jsonFile" : "target-update_mappings-Debug-7a5f5eb15a9a3d98807f.json",
+					"name" : "update_mappings",
+					"projectIndex" : 2
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/daano/OneDrive/Desktop/Projects/NeCoProject/out/build/x64-debug",
+		"source" : "C:/Users/daano/OneDrive/Desktop/Projects/NeCoProject"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 8
+	}
+}

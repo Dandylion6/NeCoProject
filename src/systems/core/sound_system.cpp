@@ -10,26 +10,16 @@
 
 void SoundSystem::Update(entt::registry& registry, float deltaTime)
 {
-	auto view = registry.view<Component::Transform, Component::SoundEmitter>();
-	for (auto [entity, transform, emitter] : view.each())
+	auto viewEmitter = registry.view<Component::Transform, Component::SoundEmitter>();
+	for (auto [entity, transform, emitter] : viewEmitter.each())
 	{
-		if (!emitter.isPlaying) continue;
-		emitter.elapsed += deltaTime;
-		
-		SetSoundVolume(emitter.sound, emitter.volume);
-		float horizontalSpace = transform.position.x / RenderContext::DISPLAY_SIZE.x;
-		float pan = Math::Lerp(1.0f, -1.0f, horizontalSpace);
-		SetSoundPan(emitter.sound, pan);
+		UpdateEmitter(entity, transform, emitter, deltaTime);
+	}
 
-		if (emitter.elapsed < emitter.duration) continue;
-		emitter.elapsed = 0.0f;
-		
-		if (emitter.loops) SoundSystem::PlayEmitter(emitter);
-		else
-		{
-			StopSound(emitter.sound);
-			emitter.isPlaying = false;
-		}
+	auto viewLoopedEmitter = registry.view<Component::Transform, Component::LoopedSoundEmitter>();
+	for (auto [entity, transform, emitter] : viewLoopedEmitter.each())
+	{
+		UpdateLoopedEmitter(entity, transform, emitter, deltaTime);
 	}
 }
 
@@ -38,8 +28,15 @@ void SoundSystem::PlayEmitter(
 	Component::SoundEmitter& emitter
 )
 {
-	emitter.isPlaying = true;
 	PlaySound(emitter.sound);
+}
+
+
+void SoundSystem::PlayEmitter(
+	Component::LoopedSoundEmitter& emitter
+)
+{
+	PlayMusicStream(emitter.sound);
 }
 
 
@@ -47,7 +44,48 @@ void SoundSystem::StopEmitter(
 	Component::SoundEmitter& emitter
 )
 {
-	emitter.isPlaying = false;
-	emitter.elapsed = 0.0f;
 	StopSound(emitter.sound);
+}
+
+
+void SoundSystem::StopEmitter(
+	Component::LoopedSoundEmitter& emitter
+)
+{
+	StopMusicStream(emitter.sound);
+}
+
+
+void SoundSystem::UpdateEmitter(
+	const entt::entity entity, 
+	Component::Transform& transform, 
+	Component::SoundEmitter& emitter, 
+	float deltaTime
+)
+{
+	if (!IsSoundPlaying(emitter.sound)) return;
+
+	SetSoundVolume(emitter.sound, emitter.volume);
+	
+	float horizontalSpace = transform.position.x / static_cast<float>(RenderContext::DISPLAY_SIZE.x);
+	float pan = Math::Lerp(1.0f, -1.0f, horizontalSpace);
+	SetSoundPan(emitter.sound, pan);
+}
+
+
+void SoundSystem::UpdateLoopedEmitter(
+	const entt::entity entity, 
+	Component::Transform& transform, 
+	Component::LoopedSoundEmitter& emitter,
+	float deltaTime
+)
+{
+	if (!IsMusicStreamPlaying(emitter.sound)) return;
+	UpdateMusicStream(emitter.sound);
+
+	SetMusicVolume(emitter.sound, emitter.volume);
+	
+	float horizontalSpace = transform.position.x / RenderContext::DISPLAY_SIZE.x;
+	float pan = Math::Lerp(1.0f, 0.0f, horizontalSpace);
+	SetMusicPan(emitter.sound, pan);
 }

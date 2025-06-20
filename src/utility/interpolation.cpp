@@ -1,9 +1,16 @@
+#include "raylib.h"
 #include "utility/interpolation.h"
+#include <cmath>
 
 
 float Math::Lerp(float a, float b, float t)
 {
     return a + (b - a) * t;
+}
+
+float Math::SmoothApproach(float a, float b, float deltaTime, float speed)
+{
+	return a + (b - a) * (1.0f - std::expf(-speed * deltaTime));
 }
 
 float Math::SineInOut(float x)
