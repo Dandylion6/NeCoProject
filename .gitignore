@@ -12,5 +12,3 @@ _deps
 .vs
 .vscode
 out/
-.ninja_deps
-.ninja_log
