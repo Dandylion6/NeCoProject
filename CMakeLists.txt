@@ -11,6 +11,10 @@ endif()
 
 project ("NeCoProject")
 
+if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
+    message(FATAL_ERROR "This project supports only 64-bit (x64) builds.")
+endif()
+
 add_subdirectory("external/raylib")
 
 # Grab all cpp files automatically
