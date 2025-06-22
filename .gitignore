@@ -11,4 +11,6 @@ CTestTestfile.cmake
 _deps
 .vs
 .vscode
-/out
+out/
+.ninja_deps
+.ninja_log
