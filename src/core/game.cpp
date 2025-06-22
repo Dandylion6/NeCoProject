@@ -16,7 +16,9 @@
 #include "systems/object/morse_sound_system.h"
 #include "systems/object/morse_transceiver_system.h"
 #include "systems/object/radar_render_system.h"
-#include "systems/object/receiver_interpreting_system.h"
+#include "systems/object/radio_sound_system.h"
+#include "systems/object/receiver/receiver_code_response_system.h"
+#include "systems/object/receiver/receiver_interpreting_system.h"
 #include "utility/vector2.h"
 #include <cmath>
 
@@ -111,8 +113,10 @@ void Game::UpdateRegistries(float deltaTime)
 	ButtonActionSystem::Update(registry, gameState, renderContext, deltaTime);
 	MorseTransceiverSystem::Update(registry, gameState.currentScene, deltaTime);
 	MorseSoundSystem::Update(registry, gameState.currentScene, deltaTime);
-	ReceiverInterpretingSystem::Update(registry);
 	BlipBlinkSystem::Update(registry);
+	ReceiverCodeResponseSystem::Update(registry, resourceStore);
+	ReceiverInterpretingSystem::Update(registry);
+	RadioSoundSystem::Update(registry);
 	TweenSystem::Update(registry, deltaTime);
 	SoundSystem::Update(registry, deltaTime);
 }

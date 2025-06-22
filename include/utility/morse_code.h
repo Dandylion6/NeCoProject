@@ -6,9 +6,9 @@
 
 namespace MorseCode
 {
-    constexpr int8_t NULL_CODE = '\x0';
-    constexpr int8_t CANCEL_CODE = '\x18';
-    constexpr int8_t BACK_CODE = '\x8';
+    constexpr char NULL_CODE = '\x0';
+    constexpr char CANCEL_CODE = '\x18';
+    constexpr char BACK_CODE = '\x8';
 
 	constexpr float SHORT_DURATION = 0.15f;
 	constexpr float LONG_DURATION = 3.0f * SHORT_DURATION;
@@ -20,7 +20,7 @@ namespace MorseCode
 		Long = 2
 	};
 
-    const std::unordered_map<std::string, int8_t> TABLE {
+    const std::unordered_map<std::string, char> TABLE {
         { ".-", 'A' },  { "-...", 'B' },  { "-.-.", 'C' },
           { "-..", 'D' },     { ".", 'E' },  { "..-.", 'F' },
           { "--.", 'G' },  { "....", 'H' },    { "..", 'I' },
@@ -38,7 +38,7 @@ namespace MorseCode
     };
 
 
-    inline int8_t GetChar(const std::string& code)
+    inline char GetChar(const std::string& code)
     {
         if (TABLE.find(code) == TABLE.end()) return MorseCode::NULL_CODE;
         return TABLE.at(code);

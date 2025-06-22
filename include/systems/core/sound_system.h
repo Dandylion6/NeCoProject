@@ -29,4 +29,6 @@ private:
 		float deltaTime
 	);
 
+	static float GetPan(Nc::Vector2f position);
+
 };

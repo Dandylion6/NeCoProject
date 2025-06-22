@@ -6,6 +6,7 @@
 #include "raylib.h"
 #include "systems/core/sound_system.h"
 #include "utility/interpolation.h"
+#include "utility/vector2.h"
 
 
 void SoundSystem::Update(entt::registry& registry, float deltaTime)
@@ -66,10 +67,7 @@ void SoundSystem::UpdateEmitter(
 	if (!IsSoundPlaying(emitter.sound)) return;
 
 	SetSoundVolume(emitter.sound, emitter.volume);
-	
-	float horizontalSpace = transform.position.x / static_cast<float>(RenderContext::DISPLAY_SIZE.x);
-	float pan = Math::Lerp(1.0f, -1.0f, horizontalSpace);
-	SetSoundPan(emitter.sound, pan);
+	SetSoundPan(emitter.sound, GetPan(transform.position));
 }
 
 
@@ -84,8 +82,15 @@ void SoundSystem::UpdateLoopedEmitter(
 	UpdateMusicStream(emitter.sound);
 
 	SetMusicVolume(emitter.sound, emitter.volume);
-	
-	float horizontalSpace = transform.position.x / RenderContext::DISPLAY_SIZE.x;
-	float pan = Math::Lerp(1.0f, 0.0f, horizontalSpace);
-	SetMusicPan(emitter.sound, pan);
+	SetMusicPan(emitter.sound, GetPan(transform.position));
+}
+
+
+float SoundSystem::GetPan(Nc::Vector2f position)
+{
+	constexpr float WIDTH = static_cast<float>(RenderContext::DISPLAY_SIZE.x);
+
+	float normalizedX = position.x / WIDTH;
+	float stereoPan = Math::Lerp(1.0f, 0.0f, normalizedX);
+	return stereoPan;
 }

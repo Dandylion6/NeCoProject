@@ -4,11 +4,21 @@
 #include <string>
 
 
+enum TransmissionContext: int8_t
+{
+	OnStandby,
+	AimingArtillery
+};
+
+
 namespace Component
 {
 	struct Receiver
 	{
-		int8_t incomingCharacter = MorseCode::NULL_CODE;
+		char incomingCharacter = MorseCode::NULL_CODE;
 		std::string message { };
+		TransmissionContext currentContext = OnStandby;
+
+		Receiver() = default;
 	};
 }

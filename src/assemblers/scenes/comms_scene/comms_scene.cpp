@@ -2,6 +2,7 @@
 #include "assemblers/entities/scene_background_entity.h"
 #include "assemblers/scenes/comms_scene/comms_scene.h"
 #include "assemblers/scenes/comms_scene/morse_transceiver_entity.h"
+#include "assemblers/scenes/comms_scene/radio_entity.h"
 #include "components/core/rendering/sprite_component.h"
 #include "components/core/rendering/text_component.h"
 #include "components/core/transform_component.h"
@@ -23,9 +24,10 @@ void CommsScene::Build(
 	ResourceStore& resourceStore
 )
 {
-	Construct::RadarPathEntity(registry);
 	Construct::RadarObject(registry);
 	Construct::RadarBlipEntity(registry, Nc::Vector2f(100.0f, 50.0f));
+
+	Construct::RadioEntity(registry);
 
 	Construct::SceneBackgroundEntity(
 		LoadTexture("assets/environment/backgrounds/comms_room.png"), registry, CommsRoom

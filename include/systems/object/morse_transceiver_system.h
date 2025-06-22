@@ -20,13 +20,13 @@ private:
 	static void TryEndCharacter(
 		entt::registry& registry, Component::MorseTransceiver& transceiver
 	);
-	static void TransmitCharacter(entt::registry& registry, int8_t character);
+	static void TransmitCharacter(entt::registry& registry, char character);
 
 	static void RecordPulse(Component::MorseTransceiver& transceiver);
 	static void ClearTransceiver(Component::MorseTransceiver& transceiver);
 	static MorseCode::Pulse GetPulseType(float intervalSeconds);
 	
-	static int8_t PulsesToChar(
+	static char PulsesToChar(
 		const Component::MorseTransceiver::PulseArray& pulses, 
 		uint8_t pulseCount
 	);

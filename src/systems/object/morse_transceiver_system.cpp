@@ -62,7 +62,7 @@ void MorseTransceiverSystem::TryEndCharacter(
 
 
 void MorseTransceiverSystem::TransmitCharacter(
-	entt::registry& registry, int8_t character
+	entt::registry& registry, char character
 )
 {
 	auto receiverView = registry.view<Component::Receiver>();
@@ -102,7 +102,7 @@ MorseCode::Pulse MorseTransceiverSystem::GetPulseType(float intervalSeconds)
 }
 
 
-int8_t MorseTransceiverSystem::PulsesToChar(
+char MorseTransceiverSystem::PulsesToChar(
 	const Component::MorseTransceiver::PulseArray& pulses,
 	uint8_t pulseCount
 )
