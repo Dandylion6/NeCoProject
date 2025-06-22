@@ -1,11 +1,11 @@
+#include "assemblers/entities/move_transition_entity.h"
+#include "assemblers/scenes/comms_scene/comms_scene.h"
+#include "assemblers/scenes/desk_scene/desk_scene.h"
+#include "assemblers/scenes/doorway_scene/doorway_scene.h"
+#include "assemblers/scenes/outside_scene/outside_scene.h"
 #include "core/game.h"
 #include "core/game_state.h"
 #include "core/render_context.h"
-#include "modules/scenes/comms_scene.h"
-#include "modules/scenes/desk_scene.h"
-#include "modules/scenes/doorway_scene.h"
-#include "modules/scenes/external_scene.h"
-#include "modules/ui/move_transition.h"
 #include "raylib.h"
 #include "systems/core/button_action_system.h"
 #include "systems/core/rendering/rectangle_render_system.h"
@@ -55,11 +55,11 @@ void Game::SetupRenderContext()
 
 void Game::BuildScenes()
 {
-	MoveTransition::Build(registry, renderContext, gameState);
+	Construct::MoveTransitionEntity(registry, renderContext, gameState);
 	CommsScene::Build(registry, gameState, resourceStore);
 	DeskScene::Build(registry, gameState, resourceStore);
 	DoorwayScene::Build(registry, gameState, resourceStore);
-	ExternalScene::Build(registry, gameState, resourceStore);
+	OutsideScene::Build(registry, gameState, resourceStore);
 }
 
 

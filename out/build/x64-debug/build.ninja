@@ -49,6 +49,87 @@ cmake_ninja_workdir = C$:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\out\
 
 build cmake_object_order_depends_target_NeCoProject: phony || cmake_object_order_depends_target_glfw cmake_object_order_depends_target_raylib
 
+build CMakeFiles\NeCoProject.dir\src\assemblers\entities\move_region_entity.cpp.obj: CXX_COMPILER__NeCoProject_unscanned_Debug C$:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\src\assemblers\entities\move_region_entity.cpp || cmake_object_order_depends_target_NeCoProject
+  DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
+  INCLUDES = -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\include -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\entt\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src\external\glfw\include
+  OBJECT_DIR = CMakeFiles\NeCoProject.dir
+  OBJECT_FILE_DIR = CMakeFiles\NeCoProject.dir\src\assemblers\entities
+  TARGET_COMPILE_PDB = CMakeFiles\NeCoProject.dir\
+  TARGET_PDB = NeCoProject.pdb
+
+build CMakeFiles\NeCoProject.dir\src\assemblers\entities\move_transition_entity.cpp.obj: CXX_COMPILER__NeCoProject_unscanned_Debug C$:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\src\assemblers\entities\move_transition_entity.cpp || cmake_object_order_depends_target_NeCoProject
+  DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
+  INCLUDES = -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\include -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\entt\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src\external\glfw\include
+  OBJECT_DIR = CMakeFiles\NeCoProject.dir
+  OBJECT_FILE_DIR = CMakeFiles\NeCoProject.dir\src\assemblers\entities
+  TARGET_COMPILE_PDB = CMakeFiles\NeCoProject.dir\
+  TARGET_PDB = NeCoProject.pdb
+
+build CMakeFiles\NeCoProject.dir\src\assemblers\entities\scene_background_entity.cpp.obj: CXX_COMPILER__NeCoProject_unscanned_Debug C$:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\src\assemblers\entities\scene_background_entity.cpp || cmake_object_order_depends_target_NeCoProject
+  DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
+  INCLUDES = -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\include -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\entt\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src\external\glfw\include
+  OBJECT_DIR = CMakeFiles\NeCoProject.dir
+  OBJECT_FILE_DIR = CMakeFiles\NeCoProject.dir\src\assemblers\entities
+  TARGET_COMPILE_PDB = CMakeFiles\NeCoProject.dir\
+  TARGET_PDB = NeCoProject.pdb
+
+build CMakeFiles\NeCoProject.dir\src\assemblers\scenes\comms_scene\comms_scene.cpp.obj: CXX_COMPILER__NeCoProject_unscanned_Debug C$:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\src\assemblers\scenes\comms_scene\comms_scene.cpp || cmake_object_order_depends_target_NeCoProject
+  DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
+  INCLUDES = -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\include -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\entt\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src\external\glfw\include
+  OBJECT_DIR = CMakeFiles\NeCoProject.dir
+  OBJECT_FILE_DIR = CMakeFiles\NeCoProject.dir\src\assemblers\scenes\comms_scene
+  TARGET_COMPILE_PDB = CMakeFiles\NeCoProject.dir\
+  TARGET_PDB = NeCoProject.pdb
+
+build CMakeFiles\NeCoProject.dir\src\assemblers\scenes\comms_scene\morse_transceiver_entity.cpp.obj: CXX_COMPILER__NeCoProject_unscanned_Debug C$:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\src\assemblers\scenes\comms_scene\morse_transceiver_entity.cpp || cmake_object_order_depends_target_NeCoProject
+  DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
+  INCLUDES = -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\include -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\entt\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src\external\glfw\include
+  OBJECT_DIR = CMakeFiles\NeCoProject.dir
+  OBJECT_FILE_DIR = CMakeFiles\NeCoProject.dir\src\assemblers\scenes\comms_scene
+  TARGET_COMPILE_PDB = CMakeFiles\NeCoProject.dir\
+  TARGET_PDB = NeCoProject.pdb
+
+build CMakeFiles\NeCoProject.dir\src\assemblers\scenes\comms_scene\radar_object.cpp.obj: CXX_COMPILER__NeCoProject_unscanned_Debug C$:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\src\assemblers\scenes\comms_scene\radar_object.cpp || cmake_object_order_depends_target_NeCoProject
+  DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
+  INCLUDES = -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\include -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\entt\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src\external\glfw\include
+  OBJECT_DIR = CMakeFiles\NeCoProject.dir
+  OBJECT_FILE_DIR = CMakeFiles\NeCoProject.dir\src\assemblers\scenes\comms_scene
+  TARGET_COMPILE_PDB = CMakeFiles\NeCoProject.dir\
+  TARGET_PDB = NeCoProject.pdb
+
+build CMakeFiles\NeCoProject.dir\src\assemblers\scenes\desk_scene\desk_scene.cpp.obj: CXX_COMPILER__NeCoProject_unscanned_Debug C$:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\src\assemblers\scenes\desk_scene\desk_scene.cpp || cmake_object_order_depends_target_NeCoProject
+  DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
+  INCLUDES = -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\include -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\entt\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src\external\glfw\include
+  OBJECT_DIR = CMakeFiles\NeCoProject.dir
+  OBJECT_FILE_DIR = CMakeFiles\NeCoProject.dir\src\assemblers\scenes\desk_scene
+  TARGET_COMPILE_PDB = CMakeFiles\NeCoProject.dir\
+  TARGET_PDB = NeCoProject.pdb
+
+build CMakeFiles\NeCoProject.dir\src\assemblers\scenes\doorway_scene\doorway_scene.cpp.obj: CXX_COMPILER__NeCoProject_unscanned_Debug C$:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\src\assemblers\scenes\doorway_scene\doorway_scene.cpp || cmake_object_order_depends_target_NeCoProject
+  DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
+  INCLUDES = -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\include -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\entt\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src\external\glfw\include
+  OBJECT_DIR = CMakeFiles\NeCoProject.dir
+  OBJECT_FILE_DIR = CMakeFiles\NeCoProject.dir\src\assemblers\scenes\doorway_scene
+  TARGET_COMPILE_PDB = CMakeFiles\NeCoProject.dir\
+  TARGET_PDB = NeCoProject.pdb
+
+build CMakeFiles\NeCoProject.dir\src\assemblers\scenes\outside_scene\outside_scene.cpp.obj: CXX_COMPILER__NeCoProject_unscanned_Debug C$:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\src\assemblers\scenes\outside_scene\outside_scene.cpp || cmake_object_order_depends_target_NeCoProject
+  DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
+  INCLUDES = -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\include -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\entt\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src\external\glfw\include
+  OBJECT_DIR = CMakeFiles\NeCoProject.dir
+  OBJECT_FILE_DIR = CMakeFiles\NeCoProject.dir\src\assemblers\scenes\outside_scene
+  TARGET_COMPILE_PDB = CMakeFiles\NeCoProject.dir\
+  TARGET_PDB = NeCoProject.pdb
+
 build CMakeFiles\NeCoProject.dir\src\core\game.cpp.obj: CXX_COMPILER__NeCoProject_unscanned_Debug C$:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\src\core\game.cpp || cmake_object_order_depends_target_NeCoProject
   DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
@@ -82,51 +163,6 @@ build CMakeFiles\NeCoProject.dir\src\main.cpp.obj: CXX_COMPILER__NeCoProject_uns
   INCLUDES = -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\include -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\entt\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src\external\glfw\include
   OBJECT_DIR = CMakeFiles\NeCoProject.dir
   OBJECT_FILE_DIR = CMakeFiles\NeCoProject.dir\src
-  TARGET_COMPILE_PDB = CMakeFiles\NeCoProject.dir\
-  TARGET_PDB = NeCoProject.pdb
-
-build CMakeFiles\NeCoProject.dir\src\modules\scenes\comms_scene.cpp.obj: CXX_COMPILER__NeCoProject_unscanned_Debug C$:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\src\modules\scenes\comms_scene.cpp || cmake_object_order_depends_target_NeCoProject
-  DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
-  INCLUDES = -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\include -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\entt\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src\external\glfw\include
-  OBJECT_DIR = CMakeFiles\NeCoProject.dir
-  OBJECT_FILE_DIR = CMakeFiles\NeCoProject.dir\src\modules\scenes
-  TARGET_COMPILE_PDB = CMakeFiles\NeCoProject.dir\
-  TARGET_PDB = NeCoProject.pdb
-
-build CMakeFiles\NeCoProject.dir\src\modules\scenes\desk_scene.cpp.obj: CXX_COMPILER__NeCoProject_unscanned_Debug C$:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\src\modules\scenes\desk_scene.cpp || cmake_object_order_depends_target_NeCoProject
-  DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
-  INCLUDES = -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\include -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\entt\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src\external\glfw\include
-  OBJECT_DIR = CMakeFiles\NeCoProject.dir
-  OBJECT_FILE_DIR = CMakeFiles\NeCoProject.dir\src\modules\scenes
-  TARGET_COMPILE_PDB = CMakeFiles\NeCoProject.dir\
-  TARGET_PDB = NeCoProject.pdb
-
-build CMakeFiles\NeCoProject.dir\src\modules\scenes\doorway_scene.cpp.obj: CXX_COMPILER__NeCoProject_unscanned_Debug C$:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\src\modules\scenes\doorway_scene.cpp || cmake_object_order_depends_target_NeCoProject
-  DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
-  INCLUDES = -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\include -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\entt\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src\external\glfw\include
-  OBJECT_DIR = CMakeFiles\NeCoProject.dir
-  OBJECT_FILE_DIR = CMakeFiles\NeCoProject.dir\src\modules\scenes
-  TARGET_COMPILE_PDB = CMakeFiles\NeCoProject.dir\
-  TARGET_PDB = NeCoProject.pdb
-
-build CMakeFiles\NeCoProject.dir\src\modules\scenes\external_scene.cpp.obj: CXX_COMPILER__NeCoProject_unscanned_Debug C$:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\src\modules\scenes\external_scene.cpp || cmake_object_order_depends_target_NeCoProject
-  DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
-  INCLUDES = -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\include -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\entt\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src\external\glfw\include
-  OBJECT_DIR = CMakeFiles\NeCoProject.dir
-  OBJECT_FILE_DIR = CMakeFiles\NeCoProject.dir\src\modules\scenes
-  TARGET_COMPILE_PDB = CMakeFiles\NeCoProject.dir\
-  TARGET_PDB = NeCoProject.pdb
-
-build CMakeFiles\NeCoProject.dir\src\modules\ui\move_transition.cpp.obj: CXX_COMPILER__NeCoProject_unscanned_Debug C$:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\src\modules\ui\move_transition.cpp || cmake_object_order_depends_target_NeCoProject
-  DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
-  INCLUDES = -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\include -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\entt\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src\external\glfw\include
-  OBJECT_DIR = CMakeFiles\NeCoProject.dir
-  OBJECT_FILE_DIR = CMakeFiles\NeCoProject.dir\src\modules\ui
   TARGET_COMPILE_PDB = CMakeFiles\NeCoProject.dir\
   TARGET_PDB = NeCoProject.pdb
 
@@ -256,24 +292,6 @@ build CMakeFiles\NeCoProject.dir\src\utility\color.cpp.obj: CXX_COMPILER__NeCoPr
   TARGET_COMPILE_PDB = CMakeFiles\NeCoProject.dir\
   TARGET_PDB = NeCoProject.pdb
 
-build CMakeFiles\NeCoProject.dir\src\utility\entity\move_entities.cpp.obj: CXX_COMPILER__NeCoProject_unscanned_Debug C$:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\src\utility\entity\move_entities.cpp || cmake_object_order_depends_target_NeCoProject
-  DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
-  INCLUDES = -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\include -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\entt\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src\external\glfw\include
-  OBJECT_DIR = CMakeFiles\NeCoProject.dir
-  OBJECT_FILE_DIR = CMakeFiles\NeCoProject.dir\src\utility\entity
-  TARGET_COMPILE_PDB = CMakeFiles\NeCoProject.dir\
-  TARGET_PDB = NeCoProject.pdb
-
-build CMakeFiles\NeCoProject.dir\src\utility\entity\scene_entities.cpp.obj: CXX_COMPILER__NeCoProject_unscanned_Debug C$:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\src\utility\entity\scene_entities.cpp || cmake_object_order_depends_target_NeCoProject
-  DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
-  INCLUDES = -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\include -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\entt\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src -IC:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\external\raylib\src\external\glfw\include
-  OBJECT_DIR = CMakeFiles\NeCoProject.dir
-  OBJECT_FILE_DIR = CMakeFiles\NeCoProject.dir\src\utility\entity
-  TARGET_COMPILE_PDB = CMakeFiles\NeCoProject.dir\
-  TARGET_PDB = NeCoProject.pdb
-
 build CMakeFiles\NeCoProject.dir\src\utility\interpolation.cpp.obj: CXX_COMPILER__NeCoProject_unscanned_Debug C$:\Users\daano\OneDrive\Desktop\Projects\NeCoProject\src\utility\interpolation.cpp || cmake_object_order_depends_target_NeCoProject
   DEFINES = -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
@@ -309,7 +327,7 @@ build CMakeFiles\NeCoProject.dir\src\utility\vector2.cpp.obj: CXX_COMPILER__NeCo
 #############################################
 # Link the executable NeCoProject.exe
 
-build NeCoProject.exe: CXX_EXECUTABLE_LINKER__NeCoProject_Debug CMakeFiles\NeCoProject.dir\src\core\game.cpp.obj CMakeFiles\NeCoProject.dir\src\core\rendering.cpp.obj CMakeFiles\NeCoProject.dir\src\core\resource_store.cpp.obj CMakeFiles\NeCoProject.dir\src\main.cpp.obj CMakeFiles\NeCoProject.dir\src\modules\scenes\comms_scene.cpp.obj CMakeFiles\NeCoProject.dir\src\modules\scenes\desk_scene.cpp.obj CMakeFiles\NeCoProject.dir\src\modules\scenes\doorway_scene.cpp.obj CMakeFiles\NeCoProject.dir\src\modules\scenes\external_scene.cpp.obj CMakeFiles\NeCoProject.dir\src\modules\ui\move_transition.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\core\button_action_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\core\rendering\rectangle_render_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\core\rendering\sprite_render_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\core\rendering\text_render_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\core\rendering_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\core\sound_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\core\tween_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\object\blip_blink_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\object\morse_sound_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\object\morse_transceiver_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\object\radar_render_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\object\receiver_interpreting_system.cpp.obj CMakeFiles\NeCoProject.dir\src\utility\bounds.cpp.obj CMakeFiles\NeCoProject.dir\src\utility\color.cpp.obj CMakeFiles\NeCoProject.dir\src\utility\entity\move_entities.cpp.obj CMakeFiles\NeCoProject.dir\src\utility\entity\scene_entities.cpp.obj CMakeFiles\NeCoProject.dir\src\utility\interpolation.cpp.obj CMakeFiles\NeCoProject.dir\src\utility\tween.cpp.obj CMakeFiles\NeCoProject.dir\src\utility\vector2.cpp.obj | external\raylib\raylib\raylib.lib || external\raylib\raylib\external\glfw\src\glfw external\raylib\raylib\raylib.lib
+build NeCoProject.exe: CXX_EXECUTABLE_LINKER__NeCoProject_Debug CMakeFiles\NeCoProject.dir\src\assemblers\entities\move_region_entity.cpp.obj CMakeFiles\NeCoProject.dir\src\assemblers\entities\move_transition_entity.cpp.obj CMakeFiles\NeCoProject.dir\src\assemblers\entities\scene_background_entity.cpp.obj CMakeFiles\NeCoProject.dir\src\assemblers\scenes\comms_scene\comms_scene.cpp.obj CMakeFiles\NeCoProject.dir\src\assemblers\scenes\comms_scene\morse_transceiver_entity.cpp.obj CMakeFiles\NeCoProject.dir\src\assemblers\scenes\comms_scene\radar_object.cpp.obj CMakeFiles\NeCoProject.dir\src\assemblers\scenes\desk_scene\desk_scene.cpp.obj CMakeFiles\NeCoProject.dir\src\assemblers\scenes\doorway_scene\doorway_scene.cpp.obj CMakeFiles\NeCoProject.dir\src\assemblers\scenes\outside_scene\outside_scene.cpp.obj CMakeFiles\NeCoProject.dir\src\core\game.cpp.obj CMakeFiles\NeCoProject.dir\src\core\rendering.cpp.obj CMakeFiles\NeCoProject.dir\src\core\resource_store.cpp.obj CMakeFiles\NeCoProject.dir\src\main.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\core\button_action_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\core\rendering\rectangle_render_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\core\rendering\sprite_render_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\core\rendering\text_render_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\core\rendering_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\core\sound_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\core\tween_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\object\blip_blink_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\object\morse_sound_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\object\morse_transceiver_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\object\radar_render_system.cpp.obj CMakeFiles\NeCoProject.dir\src\systems\object\receiver_interpreting_system.cpp.obj CMakeFiles\NeCoProject.dir\src\utility\bounds.cpp.obj CMakeFiles\NeCoProject.dir\src\utility\color.cpp.obj CMakeFiles\NeCoProject.dir\src\utility\interpolation.cpp.obj CMakeFiles\NeCoProject.dir\src\utility\tween.cpp.obj CMakeFiles\NeCoProject.dir\src\utility\vector2.cpp.obj | external\raylib\raylib\raylib.lib || external\raylib\raylib\external\glfw\src\glfw external\raylib\raylib\raylib.lib
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -ZI
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
   LINK_LIBRARIES = external\raylib\raylib\raylib.lib  opengl32.lib  glu32.lib  winmm.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
