@@ -1,7 +1,7 @@
 #include "components/core/rendering/sprite_component.h"
 #include "components/core/rendering/text_component.h"
 #include "components/core/transform_component.h"
-#include "components/tags/radar_tags.h"
+#include "components/objects/radar_tags.h"
 #include "core/render_context.h"
 #include "core/rendering.h"
 #include "core/resource_store.h"

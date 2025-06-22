@@ -2,7 +2,7 @@
 #include "components/core/rendering/rectangle_component.h"
 #include "components/core/transform_component.h"
 #include "components/core/tween_component.h"
-#include "components/tags/move_transition_tag.h"
+#include "components/ui/move_transition_tag.h"
 #include "core/game_state.h"
 #include "core/render_context.h"
 #include "core/scene.h"

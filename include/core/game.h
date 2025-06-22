@@ -9,12 +9,14 @@
 class Game
 {
 public:
+	Game();
+
 	bool ShouldRun() const;
 	
 	void SetupWindow() const;
 	void SetupRenderContext();
 
-	void BuildScenes();
+	void InitialiseAssemblers();
 	void Shutdown();
 
 	void Update(float deltaTime);

@@ -1,16 +1,14 @@
 ﻿#include "core/game.h"
-#include "raylib.h"
 #include <chrono>
 
 
 int main()
 {
 	Game game { };
-	InitAudioDevice();
-
 	game.SetupWindow();
 	game.SetupRenderContext();
-	game.BuildScenes();
+
+	game.InitialiseAssemblers();
 
 	auto lastUpdateTime = std::chrono::steady_clock::now();
 	while (game.ShouldRun())

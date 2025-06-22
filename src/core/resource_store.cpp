@@ -22,3 +22,14 @@ Font& ResourceStore::GetFont(FontStyle style)
     }
     return fontStore.at(style);
 }
+
+
+Sound& ResourceStore::GetSound(const std::string& filePath)
+{
+	if (soundStore.find(filePath) == soundStore.end())
+	{
+		Sound sound = LoadSound(filePath.c_str());
+		soundStore.emplace(filePath, sound);
+	}
+	return soundStore.at(filePath);
+}

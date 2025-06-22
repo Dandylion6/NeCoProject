@@ -21,6 +21,12 @@
 #include <cmath>
 
 
+Game::Game()
+{
+	InitAudioDevice();
+};
+
+
 void Game::SetupRenderContext()
 {
 	const int monitor = GetCurrentMonitor();
@@ -53,7 +59,7 @@ void Game::SetupRenderContext()
 }
 
 
-void Game::BuildScenes()
+void Game::InitialiseAssemblers()
 {
 	Construct::MoveTransitionEntity(registry, renderContext, gameState);
 	CommsScene::Build(registry, gameState, resourceStore);
@@ -81,6 +87,7 @@ void Game::SetupWindow() const
 
 void Game::Shutdown()
 {
+	CloseAudioDevice();
 	CloseWindow();
 }
 

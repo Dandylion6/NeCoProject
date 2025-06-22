@@ -6,7 +6,7 @@
 #include "components/core/rendering/text_component.h"
 #include "components/core/transform_component.h"
 #include "components/core/tween_component.h"
-#include "components/tags/radar_tags.h"
+#include "components/objects/radar_tags.h"
 #include "core/resource_store.h"
 #include "core/scene.h"
 #include "entt/entity/fwd.hpp"

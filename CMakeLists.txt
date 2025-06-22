@@ -22,7 +22,7 @@ file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS
     "src/*.cpp"
 )
 
-add_executable(NeCoProject ${PROJECT_SOURCES} "include/assemblers/scenes/outside_scene/outside_scene.h" "src/assemblers/scenes/outside_scene/outside_scene.cpp" "include/assemblers/scenes/comms_scene/radar_object.h" "src/assemblers/scenes/comms_scene/morse_transceiver_entity.cpp" "src/assemblers/scenes/comms_scene/radar_object.cpp")
+add_executable(NeCoProject ${PROJECT_SOURCES})
 
 target_include_directories(
 	NeCoProject
