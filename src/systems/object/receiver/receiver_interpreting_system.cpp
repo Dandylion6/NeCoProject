@@ -1,4 +1,5 @@
 #include "components/objects/receiver_component.h"
+#include "core/resource_store.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "systems/object/receiver/artillery_control_system.h"
@@ -8,35 +9,43 @@
 #include <unordered_map>
 
 
-void ReceiverInterpretingSystem::Update(entt::registry& registry)
+void ReceiverInterpretingSystem::Update(
+	entt::registry& registry,
+	ResourceStore& resourceStore
+)
 {
 	auto view = registry.view<Component::Receiver>();
 	for (auto [entity, receiver] : view.each())
 	{
 		if (receiver.incomingCharacter == MorseCode::NULL_CODE) continue;
-
 		receiver.message += receiver.incomingCharacter;
-		TryInterpretMessage(receiver, receiver.message);
+
+		TryInterpretMessage(registry, resourceStore, receiver, receiver.message);
 	}
 }
 
 
 void ReceiverInterpretingSystem::TryInterpretMessage(
-	const Component::Receiver& receiver, const std::string& message
+	entt::registry& registry,
+	ResourceStore& resourceStore,
+	const Component::Receiver& receiver, 
+	const std::string& message
 )
 {
-	TransmissionContext newContext = OnStandby;
+	TransmissionContext context = receiver.currentContext;
 	if (receiver.currentContext == OnStandby)
 	{
-		newContext = TryGetContext(receiver, message);
+		context = TryGetContext(receiver, message);
 	}
 
-	switch (newContext)
+	switch (context)
 	{
 	case OnStandby:
 		break;
 	case AimingArtillery:
-		ArtilleryControlSystem::CheckReceivedMessage(message);
+		ArtilleryControlSystem::CheckReceivedMessage(
+			registry, resourceStore, message
+		);
 		break;
 	default:
 		break;
@@ -48,14 +57,13 @@ TransmissionContext ReceiverInterpretingSystem::TryGetContext(
 	const Component::Receiver& receiver, const std::string& message
 )
 {
-	static const std::unordered_map<std::string, TransmissionContext> simpleCommandMap {
-		{ ArtilleryControlSystem::COMMAND, AimingArtillery }
-	};
-
-	if (simpleCommandMap.find(message) != simpleCommandMap.end())
+	static const auto commandMap = []
 	{
-		return simpleCommandMap.at(message);
-	}
+		std::unordered_map<std::string, TransmissionContext> map;
+		map[ArtilleryControlSystem::COMMAND] = AimingArtillery;
+		return map;
+	}();
 
-	return OnStandby;
+	if (commandMap.find(message) == commandMap.end()) return OnStandby;
+	return commandMap.at(message);
 }

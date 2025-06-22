@@ -8,12 +8,27 @@
 #include <utility>
 
 
-void RadioSoundSystem::Update(entt::registry& registry)
+void RadioSoundSystem::Update(entt::registry& registry, float deltaTime)
 {
 	auto view = registry.view<Component::Radio, Component::SoundEmitter>();
 	for (auto [entity, radio, emitter] : view.each())
 	{
-		if (!IsSoundPlaying(emitter.sound)) radio.broadcastPriority = Idle;
+		if (radio.isSendingBroadcast)
+		{
+			if (radio.broadcastDelay > 0.0f)
+			{
+				radio.broadcastDelay -= deltaTime;
+				continue;
+			}
+
+			radio.isSendingBroadcast = false;
+			if (IsSoundPlaying(emitter.sound)) SoundSystem::StopEmitter(emitter);
+			SoundSystem::PlayEmitter(emitter);
+			continue;
+		}
+
+		if (!IsSoundPlaying(emitter.sound)) 
+			radio.priority = Idle;
 	}
 }
 
@@ -21,17 +36,20 @@ void RadioSoundSystem::Update(entt::registry& registry)
 void RadioSoundSystem::Broadcast(
 	entt::registry& registry, 
 	Sound&& sound, 
-	BroadcastPriority broadcastPriority
+	BroadcastPriority priority
 )
 {
 	auto view = registry.view<Component::Radio, Component::SoundEmitter>();
 	for (auto [entity, radio, emitter] : view.each())
 	{
 		//TODO: Improve priority logic
-		if (radio.broadcastPriority > broadcastPriority) continue;
-		radio.broadcastPriority = broadcastPriority;
+		if (radio.priority >= priority) continue;
+		radio.priority = priority;
+
+		constexpr float DELAY_SECONDS = 0.35f;
 
 		emitter.sound = std::move(sound);
-		SoundSystem::PlayEmitter(emitter);
+		radio.broadcastDelay = DELAY_SECONDS;
+		radio.isSendingBroadcast = true;
 	}
 }

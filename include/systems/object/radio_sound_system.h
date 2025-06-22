@@ -8,13 +8,13 @@ class RadioSoundSystem
 {
 public:
 	static void Update(
-		entt::registry& registry
+		entt::registry& registry, float deltaTime
 	);
 
 	static void Broadcast(
 		entt::registry& registry,
 		Sound&& sound,
-		BroadcastPriority broadcastPriority
+		BroadcastPriority priority
 	);
 
 };

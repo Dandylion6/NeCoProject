@@ -114,9 +114,9 @@ void Game::UpdateRegistries(float deltaTime)
 	MorseTransceiverSystem::Update(registry, gameState.currentScene, deltaTime);
 	MorseSoundSystem::Update(registry, gameState.currentScene, deltaTime);
 	BlipBlinkSystem::Update(registry);
+	ReceiverInterpretingSystem::Update(registry, resourceStore);
 	ReceiverCodeResponseSystem::Update(registry, resourceStore);
-	ReceiverInterpretingSystem::Update(registry);
-	RadioSoundSystem::Update(registry);
+	RadioSoundSystem::Update(registry, deltaTime);
 	TweenSystem::Update(registry, deltaTime);
 	SoundSystem::Update(registry, deltaTime);
 }

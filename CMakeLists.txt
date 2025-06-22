@@ -24,6 +24,13 @@ file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS
 
 add_executable(NeCoProject ${PROJECT_SOURCES} "include/systems/object/receiver/artillery_control_system.h" "src/systems/object/receiver/artillery_control_system.cpp" "include/systems/object/receiver/receiver_code_response_system.h" "src/systems/object/receiver/receiver_code_response_system.cpp" "include/systems/object/radio_sound_system.h" "src/systems/object/radio_sound_system.cpp")
 
+target_compile_definitions(
+	NeCoProject
+	PRIVATE 
+		$<$<CONFIG:Debug>:DEBUG_BUILD>
+		$<$<CONFIG:Release>:RELEASE_BUILD>
+)
+
 target_include_directories(
 	NeCoProject
 	PRIVATE

@@ -3,7 +3,7 @@
     "configurePresets": [
         {
             "name": "windows-base",
-            "hidden": false,
+            "hidden": true,
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "installDir": "${sourceDir}/out/install/${presetName}",
