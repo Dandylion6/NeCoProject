@@ -1,6 +1,7 @@
 #pragma once
 #include "components/objects/outside/receiver_component.h"
 #include "entt/entity/fwd.hpp"
+#include <cstdint>
 #include <string>
 class ResourceStore;
 
@@ -18,17 +19,30 @@ public:
 	);
 
 private:
+	struct CoordResult
+	{
+		enum Axis: uint8_t { Invalid, Horizontal, Vertical };
+		
+		int16_t coordinateLength = 0;
+		Axis axis = Invalid;
+		bool isValid = false;
+	};
+
 	static void ConfirmAimCommand(
 		entt::registry& registry,
 		ResourceStore& resourceStore,
 		Component::Receiver& receiver
 	);
 
-	static void TryMessageAsCoordinates(
+	static void HandleMessageAsCoord(
 		entt::registry& registry,
 		ResourceStore& resourceStore,
 		Component::Receiver& receiver,
 		const std::string& message
 	);
+
+	static CoordResult InterpretMessageAsCoord(const std::string& message);
+
+	static void AimArtillery(entt::registry& registry, CoordResult result);
 
 };

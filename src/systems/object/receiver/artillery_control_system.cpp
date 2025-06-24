@@ -28,7 +28,7 @@ void ArtilleryControlSystem::HandleReceivedMessage(
 		receiver.currentContext = AimingArtillery;
 		return ConfirmAimCommand(registry, resourceStore, receiver);
 	}
-	TryMessageAsCoordinates(registry, resourceStore, receiver, message);
+	HandleMessageAsCoord(registry, resourceStore, receiver, message);
 }
 
 
@@ -47,59 +47,17 @@ void ArtilleryControlSystem::ConfirmAimCommand(
 }
 
 
-void ArtilleryControlSystem::TryMessageAsCoordinates(
+void ArtilleryControlSystem::HandleMessageAsCoord(
 	entt::registry& registry, 
 	ResourceStore& resourceStore, 
 	Component::Receiver& receiver, 
 	const std::string& message
 )
 {
-	//WIP Implementation, requires refactoring
-	enum CoordinateAxis: uint8_t
-	{
-		Invalid, X, Y
-	};
+	CoordResult result = InterpretMessageAsCoord(message);
+	if (!result.isValid) return;
 
-	int16_t coordinateLength = 0;
-	CoordinateAxis axis = Invalid;
-
-	for (uint32_t i = 0u; i < message.length(); ++i)
-	{
-		const char character = message.at(i);
-		
-		bool isLastCharacter = i == (message.length() - 1);
-		if (isLastCharacter)
-		{
-			if (character == 'X') axis = X;
-			else if (character == 'Y') axis = Y;
-
-		} else
-		{
-			if (!std::isdigit(character)) return;
-
-			int16_t digit = character - '0';
-			coordinateLength *= 10;
-			coordinateLength += digit;
-		}
-	}
-
-	if (axis == Invalid || coordinateLength == 0) return;
-
-	auto view = registry.view<Component::Artillery>();
-	for (auto [entity, artillery] : view.each())
-	{
-		switch (axis)
-		{
-		case Invalid:
-			break;
-		case X:
-			artillery.aimPosition.x = coordinateLength;
-			break;
-		case Y:
-			artillery.aimPosition.y = coordinateLength;
-			break;
-		}
-	}
+	AimArtillery(registry, result);
 
 	const std::string COORDINATE_RESPONSE = "assets/audio/voicelines/receiver/commands/coordinate_received.wav";
 
@@ -107,4 +65,59 @@ void ArtilleryControlSystem::TryMessageAsCoordinates(
 	RadioSoundSystem::Broadcast(registry, std::move(response), Medium);
 
 	receiver.message.clear();
+}
+
+
+ArtilleryControlSystem::CoordResult ArtilleryControlSystem::InterpretMessageAsCoord(
+	const std::string& message
+)
+{
+	CoordResult result { };
+	for (uint32_t i = 0u; i < message.length(); ++i)
+	{
+		const char character = message.at(i);
+
+		bool isLastCharacter = i == (message.length() - 1);
+		if (isLastCharacter)
+		{
+			if (character == 'X') result.axis = CoordResult::Horizontal;
+			else if (character == 'Y') result.axis = CoordResult::Vertical;
+
+		} else
+		{
+			if (!std::isdigit(character)) return result;
+
+			int16_t digit = character - '0';
+			result.coordinateLength *= 10;
+			result.coordinateLength += digit;
+		}
+	}
+
+	bool validAxis = result.axis != CoordResult::Invalid;
+	bool hasLength = result.coordinateLength > 0;
+
+	result.isValid = validAxis && hasLength;
+	return result;
+}
+
+
+void ArtilleryControlSystem::AimArtillery(
+	entt::registry& registry, CoordResult result
+)
+{
+	auto view = registry.view<Component::Artillery>();
+	for (auto [entity, artillery] : view.each())
+	{
+		switch (result.axis)
+		{
+		case CoordResult::Invalid:
+			break;
+		case CoordResult::Horizontal:
+			artillery.aimPosition.x = result.coordinateLength;
+			break;
+		case CoordResult::Vertical:
+			artillery.aimPosition.y = result.coordinateLength;
+			break;
+		}
+	}
 };
