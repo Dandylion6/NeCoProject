@@ -9,24 +9,31 @@
 #include "raylib.h"
 #include "systems/core/sound_system.h"
 #include "systems/scene/ambient_sound_system.h"
+#include "utility/interpolation.h"
 #include <string>
 #include <utility>
 
 
 void AmbientSoundSystem::Update(
-	entt::registry& registry, GameState& gameState
+	entt::registry& registry, GameState& gameState, float deltaTime
 )
 {
 	auto view = registry.view<Tag::AmbientSound, Component::Transform, Component::LoopedSoundEmitter>();
 	for (auto [entity, transform, emitter] : view.each())
 	{
-		if (gameState.movingToScene == NullScene)
+		bool ambientSoundChanged = transform.boundScene == gameState.currentScene;
+		if (gameState.movingToScene == NullScene && !ambientSoundChanged)
 		{
+			emitter.volume = 0.0f;
 			TryPlayAmbience(transform, emitter, gameState.currentScene);
-		} else
-		{
-			TryPlayAmbience(transform, emitter, gameState.movingToScene);
+			continue;
 		}
+
+		constexpr float VOLUME_FADE_SPEED = 8.0f;
+
+		float targetVolume = gameState.movingToScene != NullScene ? 0.0f : 1.0f;
+		float volume = Math::SmoothApproach(emitter.volume, targetVolume, deltaTime, VOLUME_FADE_SPEED);
+		emitter.volume = volume;
 	}
 }
 

@@ -14,20 +14,20 @@
 
 
 void MoveTransition::StartMoveScene(
-	entt::registry& registry, Scene& currentScene, Scene nextScene, float moveTime
+	entt::registry& registry, GameState& gameState, Scene nextScene, float moveTime
 )
 {
 	entt::entity entity = registry.view<Tag::MoveTransition>().front();
 	Component::TweenCollection& collection = registry.get<Component::TweenCollection>(entity);
 	collection.tweens.at(MoveTransition::Tweens::TransitionDown).delayComplete = moveTime;
 	
-	std::function<void()> switchScene = std::function<void()>(
-		[&collection, &currentScene, nextScene]()
-		{
-			currentScene = nextScene;
-			Tween::Play(collection.tweens.at(MoveTransition::Tweens::TransitionUp));
-		}
-	);
+	std::function<void()> switchScene = [&collection, &gameState, nextScene]()
+	{
+		gameState.currentScene = nextScene;
+		gameState.movingToScene = NullScene;
+
+		Tween::Play(collection.tweens.at(MoveTransition::Tweens::TransitionUp));
+	};
 
 	Tween& tweenDown = collection.tweens.at(MoveTransition::Tweens::TransitionDown);
 	tweenDown.onComplete = switchScene;
@@ -71,10 +71,6 @@ entt::entity Construct::MoveTransitionEntity(
 	tweenUp.end = 1.0f;
 	tweenUp.duration = 0.6f;
 	tweenUp.easing = CubicOut;
-	tweenUp.onComplete = [&gameState]()
-	{
-		gameState.movingToScene = NullScene;
-	};
 
 	return entity;
 }

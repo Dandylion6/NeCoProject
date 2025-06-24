@@ -29,7 +29,7 @@ entt::entity Construct::MoveRegionEntity(
 		if (gameState.movingToScene != NullScene) return;
 		gameState.movingToScene = nextScene;
 
-		MoveTransition::StartMoveScene(registry, gameState.currentScene, nextScene, moveTime);
+		MoveTransition::StartMoveScene(registry, gameState, nextScene, moveTime);
 
 		Sound& transitionSound = resourceStore.GetSound("assets/audio/effects/scene_transition.wav");
 		PlaySound(transitionSound);

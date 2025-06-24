@@ -5,7 +5,7 @@
 #include "entt/entity/fwd.hpp"
 #include <string>
 #include <unordered_map>
-class GameState;
+struct GameState;
 class ResourceStore;
 
 
@@ -19,7 +19,8 @@ class AmbientSoundSystem
 public:
 	static void Update(
 		entt::registry& registry, 
-		GameState& gameState
+		GameState& gameState,
+		float deltaTime
 	);
 
 private:

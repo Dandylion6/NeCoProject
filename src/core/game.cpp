@@ -81,7 +81,7 @@ void Game::SetupWindow() const
 	SetTargetFPS(GameState::FRAME_RATE);
 	SetWindowState(FLAG_WINDOW_MAXIMIZED);
 
-#ifdef _DEBUG
+#ifdef DEBUG_BUILD
 	SetWindowState(FLAG_WINDOW_RESIZABLE);
 	MaximizeWindow();
 #else
@@ -120,7 +120,7 @@ void Game::UpdateRegistries(float deltaTime)
 	ReceiverInterpretingSystem::Update(registry, resourceStore);
 	ReceiverCodeResponseSystem::Update(registry, resourceStore);
 	RadioSoundSystem::Update(registry, deltaTime);
-	AmbientSoundSystem::Update(registry, gameState);
+	AmbientSoundSystem::Update(registry, gameState, deltaTime);
 	TweenSystem::Update(registry, deltaTime);
 	SoundSystem::Update(registry, deltaTime);
 }

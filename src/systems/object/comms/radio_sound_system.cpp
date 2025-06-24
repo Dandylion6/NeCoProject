@@ -27,8 +27,7 @@ void RadioSoundSystem::Update(entt::registry& registry, float deltaTime)
 			continue;
 		}
 
-		if (!IsSoundPlaying(emitter.sound)) 
-			radio.priority = Idle;
+		if (!IsSoundPlaying(emitter.sound)) radio.priority = Idle;
 	}
 }
 
@@ -46,7 +45,7 @@ void RadioSoundSystem::Broadcast(
 		if (radio.priority >= priority) continue;
 		radio.priority = priority;
 
-		constexpr float DELAY_SECONDS = 0.35f;
+		constexpr float DELAY_SECONDS = 0.42f;
 
 		emitter.sound = std::move(sound);
 		radio.broadcastDelay = DELAY_SECONDS;

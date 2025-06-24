@@ -24,6 +24,7 @@ namespace MoveTransition
 	};
 
 	void StartMoveScene(
-		entt::registry& registry, Scene& currentScene, Scene nextScene, float moveTime
+		entt::registry& registry, GameState& gameState, 
+		Scene nextScene, float moveTime
 	);
 }
