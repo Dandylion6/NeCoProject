@@ -1,11 +1,11 @@
 #include "components/core/transform_component.h"
-#include "components/objects/morse_transceiver_component.h"
-#include "components/objects/receiver_component.h"
+#include "components/objects/comms/morse_transceiver_component.h"
+#include "components/objects/outside/receiver_component.h"
 #include "core/scene.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/object/morse_transceiver_system.h"
+#include "systems/object/comms/morse_transceiver_system.h"
 #include "utility/morse_code.h"
 #include <cmath>
 #include <cstdint>

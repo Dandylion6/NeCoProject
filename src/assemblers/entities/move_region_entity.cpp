@@ -31,8 +31,9 @@ entt::entity Construct::MoveRegionEntity(
 
 		MoveTransition::StartMoveScene(registry, gameState.currentScene, nextScene, moveTime);
 
-		Sound transitionSound = LoadSound("assets/audio/effects/scene_transition.wav");
+		Sound& transitionSound = resourceStore.GetSound("assets/audio/effects/scene_transition.wav");
 		PlaySound(transitionSound);
+
 	}
 	);
 

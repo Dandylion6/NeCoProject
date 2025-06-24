@@ -10,6 +10,7 @@ namespace Component
 		Sound sound;
 		float volume = 1.0f;
 		
+		SoundEmitter(): sound() { };
 		SoundEmitter(Sound&& sound): sound(std::move(sound)) { };
 	};
 
@@ -19,6 +20,7 @@ namespace Component
 		Music sound;
 		float volume = 1.0f;
 
+		LoopedSoundEmitter(): sound() { };
 		LoopedSoundEmitter(Music&& sound): sound(std::move(sound)) { };
 	};
 }

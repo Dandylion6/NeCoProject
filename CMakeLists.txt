@@ -22,7 +22,14 @@ file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS
     "src/*.cpp"
 )
 
-add_executable(NeCoProject ${PROJECT_SOURCES} "include/systems/object/receiver/artillery_control_system.h" "src/systems/object/receiver/artillery_control_system.cpp" "include/systems/object/receiver/receiver_code_response_system.h" "src/systems/object/receiver/receiver_code_response_system.cpp" "include/systems/object/radio_sound_system.h" "src/systems/object/radio_sound_system.cpp")
+file(GLOB_RECURSE PROJECT_HEADERS CONFIGURE_DEPENDS 
+	"include/**/*.h"
+)
+
+add_executable(NeCoProject 
+	${PROJECT_SOURCES} 
+	${PROJECT_HEADERS}
+)
 
 target_compile_definitions(
 	NeCoProject

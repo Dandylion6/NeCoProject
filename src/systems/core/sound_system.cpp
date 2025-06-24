@@ -37,6 +37,7 @@ void SoundSystem::PlayEmitter(
 	Component::LoopedSoundEmitter& emitter
 )
 {
+	if (!IsMusicValid(emitter.sound)) return;
 	PlayMusicStream(emitter.sound);
 }
 
@@ -53,6 +54,7 @@ void SoundSystem::StopEmitter(
 	Component::LoopedSoundEmitter& emitter
 )
 {
+	if (!IsMusicValid(emitter.sound)) return;
 	StopMusicStream(emitter.sound);
 }
 

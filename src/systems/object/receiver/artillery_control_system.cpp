@@ -1,8 +1,8 @@
-#include "components/objects/radio_component.h"
+#include "components/objects/comms/radio_component.h"
 #include "core/resource_store.h"
 #include "entt/entity/fwd.hpp"
 #include "raylib.h"
-#include "systems/object/radio_sound_system.h"
+#include "systems/object/comms/radio_sound_system.h"
 #include "systems/object/receiver/artillery_control_system.h"
 #include <string>
 #include <utility>

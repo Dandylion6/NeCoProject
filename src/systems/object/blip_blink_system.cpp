@@ -1,9 +1,9 @@
 #include "components/core/transform_component.h"
 #include "components/core/tween_component.h"
-#include "components/objects/radar_tags.h"
+#include "components/objects/comms/radar_tags.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/object/blip_blink_system.h"
+#include "systems/object/comms/blip_blink_system.h"
 #include "utility/tween.h"
 #include "utility/vector2.h"
 #include <cmath>

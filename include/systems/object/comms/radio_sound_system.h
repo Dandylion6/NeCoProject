@@ -1,5 +1,5 @@
 #pragma once
-#include "components/objects/radio_component.h"
+#include "components/objects/comms/radio_component.h"
 #include "entt/entity/fwd.hpp"
 #include "raylib.h"
 

@@ -1,7 +1,7 @@
 #include "components/core/rendering/sprite_component.h"
 #include "components/core/rendering/text_component.h"
 #include "components/core/transform_component.h"
-#include "components/objects/radar_tags.h"
+#include "components/objects/comms/radar_tags.h"
 #include "core/render_context.h"
 #include "core/rendering.h"
 #include "core/resource_store.h"
@@ -10,7 +10,7 @@
 #include "entt/entity/registry.hpp"
 #include "format"
 #include "raylib.h"
-#include "systems/object/radar_render_system.h"
+#include "systems/object/comms/radar_render_system.h"
 #include "utility/vector2.h"
 #include <string>
 

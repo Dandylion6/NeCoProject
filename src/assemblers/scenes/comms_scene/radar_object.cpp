@@ -2,7 +2,7 @@
 #include "components/core/rendering/sprite_component.h"
 #include "components/core/transform_component.h"
 #include "components/core/tween_component.h"
-#include "components/objects/radar_tags.h"
+#include "components/objects/comms/radar_tags.h"
 #include "core/scene.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"

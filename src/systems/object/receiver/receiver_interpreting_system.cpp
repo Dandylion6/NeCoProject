@@ -1,4 +1,4 @@
-#include "components/objects/receiver_component.h"
+#include "components/objects/outside/receiver_component.h"
 #include "core/resource_store.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"

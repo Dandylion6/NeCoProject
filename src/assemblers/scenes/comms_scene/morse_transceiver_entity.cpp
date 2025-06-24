@@ -1,7 +1,7 @@
 #include "assemblers/scenes/comms_scene/morse_transceiver_entity.h"
 #include "components/core/sound_emitter_component.h"
 #include "components/core/transform_component.h"
-#include "components/objects/morse_transceiver_component.h"
+#include "components/objects/comms/morse_transceiver_component.h"
 #include "core/render_context.h"
 #include "core/scene.h"
 #include "entt/entity/fwd.hpp"

@@ -1,6 +1,6 @@
 #pragma once
 #include "components/core/sound_emitter_component.h"
-#include "components/objects/receiver_component.h"
+#include "components/objects/outside/receiver_component.h"
 #include "entt/entity/fwd.hpp"
 #include "raylib.h"
 class ResourceStore;

@@ -1,8 +1,6 @@
-#include "assemblers/scenes/outside_scene/outside_scene.h"
-#include "components/objects/receiver_component.h"
-#include "entt/entity/fwd.hpp"
-#include "entt/entity/registry.hpp"
 #include "assemblers/scenes/outside_scene/artillery_entity.h"
+#include "assemblers/scenes/outside_scene/outside_scene.h"
+#include "entt/entity/fwd.hpp"
 
 
 void OutsideScene::Build(

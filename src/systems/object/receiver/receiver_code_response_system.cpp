@@ -1,10 +1,10 @@
-#include "components/objects/radio_component.h"
-#include "components/objects/receiver_component.h"
+#include "components/objects/comms/radio_component.h"
+#include "components/objects/outside/receiver_component.h"
 #include "core/resource_store.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/object/radio_sound_system.h"
+#include "systems/object/comms/radio_sound_system.h"
 #include "systems/object/receiver/receiver_code_response_system.h"
 #include "utility/morse_code.h"
 #include <format>

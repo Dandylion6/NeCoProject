@@ -1,3 +1,4 @@
+#include "assemblers/entities/ambient_sound_entity.h"
 #include "assemblers/entities/move_transition_entity.h"
 #include "assemblers/scenes/comms_scene/comms_scene.h"
 #include "assemblers/scenes/desk_scene/desk_scene.h"
@@ -12,13 +13,14 @@
 #include "systems/core/rendering/sprite_render_system.h"
 #include "systems/core/sound_system.h"
 #include "systems/core/tween_system.h"
-#include "systems/object/blip_blink_system.h"
-#include "systems/object/morse_sound_system.h"
-#include "systems/object/morse_transceiver_system.h"
-#include "systems/object/radar_render_system.h"
-#include "systems/object/radio_sound_system.h"
+#include "systems/object/comms/blip_blink_system.h"
+#include "systems/object/comms/morse_sound_system.h"
+#include "systems/object/comms/morse_transceiver_system.h"
+#include "systems/object/comms/radar_render_system.h"
+#include "systems/object/comms/radio_sound_system.h"
 #include "systems/object/receiver/receiver_code_response_system.h"
 #include "systems/object/receiver/receiver_interpreting_system.h"
+#include "systems/scene/ambient_sound_system.h"
 #include "utility/vector2.h"
 #include <cmath>
 
@@ -64,6 +66,7 @@ void Game::SetupRenderContext()
 void Game::InitialiseAssemblers()
 {
 	Construct::MoveTransitionEntity(registry, renderContext, gameState);
+	Construct::AmbientSoundEntity(registry);
 	CommsScene::Build(registry, gameState, resourceStore);
 	DeskScene::Build(registry, gameState, resourceStore);
 	DoorwayScene::Build(registry, gameState, resourceStore);
@@ -117,6 +120,7 @@ void Game::UpdateRegistries(float deltaTime)
 	ReceiverInterpretingSystem::Update(registry, resourceStore);
 	ReceiverCodeResponseSystem::Update(registry, resourceStore);
 	RadioSoundSystem::Update(registry, deltaTime);
+	AmbientSoundSystem::Update(registry, gameState);
 	TweenSystem::Update(registry, deltaTime);
 	SoundSystem::Update(registry, deltaTime);
 }

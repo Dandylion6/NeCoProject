@@ -1,9 +1,9 @@
 #include "components/core/sound_emitter_component.h"
-#include "components/objects/morse_transceiver_component.h"
+#include "components/objects/comms/morse_transceiver_component.h"
 #include "core/scene.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/object/morse_sound_system.h"
+#include "systems/object/comms/morse_sound_system.h"
 #include "utility/interpolation.h"
 
 

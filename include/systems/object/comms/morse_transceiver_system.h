@@ -1,5 +1,5 @@
 #pragma once
-#include "components/objects/morse_transceiver_component.h"
+#include "components/objects/comms/morse_transceiver_component.h"
 #include "core/scene.h"
 #include "entt/entity/fwd.hpp"
 #include "utility/morse_code.h"
