@@ -18,7 +18,7 @@ private:
 	static void TryInterpretMessage(
 		entt::registry& registry,
 		ResourceStore& resourceStore,
-		const Component::Receiver& receiver, 
+		Component::Receiver& receiver, 
 		const std::string& message
 	);
 

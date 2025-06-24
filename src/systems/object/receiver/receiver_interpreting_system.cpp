@@ -28,7 +28,7 @@ void ReceiverInterpretingSystem::Update(
 void ReceiverInterpretingSystem::TryInterpretMessage(
 	entt::registry& registry,
 	ResourceStore& resourceStore,
-	const Component::Receiver& receiver, 
+	Component::Receiver& receiver, 
 	const std::string& message
 )
 {
@@ -43,10 +43,9 @@ void ReceiverInterpretingSystem::TryInterpretMessage(
 	case OnStandby:
 		break;
 	case AimingArtillery:
-		ArtilleryControlSystem::CheckReceivedMessage(
-			registry, resourceStore, message
+		return ArtilleryControlSystem::HandleReceivedMessage(
+			registry, resourceStore, receiver, message
 		);
-		break;
 	default:
 		break;
 	}
