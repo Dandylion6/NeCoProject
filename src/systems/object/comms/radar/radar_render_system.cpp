@@ -10,7 +10,7 @@
 #include "entt/entity/registry.hpp"
 #include "format"
 #include "raylib.h"
-#include "systems/object/comms/radar_render_system.h"
+#include "systems/object/comms/radar/radar_render_system.h"
 #include "utility/vector2.h"
 #include <string>
 
@@ -31,7 +31,9 @@ void RadarRenderSystem::DrawRenderTexture(
 
 	DrawScreen(registry);
 	DrawPath(registry);
+	DrawRadarArtillery(registry);
 	DrawBlips(registry, resourceStore);
+	auto view = registry.view<Component::Transform>();
 
 	EndTextureMode();
 	EndBlendMode();
@@ -66,18 +68,31 @@ void RadarRenderSystem::DrawRadar(
 
 void RadarRenderSystem::DrawScreen(entt::registry& registry)
 {
-	const entt::entity entity = registry.view<Tag::Radar>().front();
-	const Component::Sprite& sprite = registry.get<const Component::Sprite>(entity);
-	Renderer::DrawSprite(sprite, Nc::Vector2f::Zero());
+	auto view = registry.view<Tag::Radar, const Component::Sprite>();
+	for (auto [entity, sprite] : view.each())
+	{
+		Renderer::DrawSprite(sprite, Nc::Vector2f::Zero());
+	}
 }
 
 
 void RadarRenderSystem::DrawPath(entt::registry & registry)
 {
-	const entt::entity entity = registry.view<Tag::RadarPath>().front();
-	const Component::Transform& transform = registry.get<const Component::Transform>(entity);
-	const Component::Sprite& sprite = registry.get<const Component::Sprite>(entity);
-	Renderer::DrawSprite(sprite, transform.position);
+	auto view = registry.view<Tag::RadarPath, const Component::Transform, const Component::Sprite>();
+	for (auto [entity, transform, sprite] : view.each())
+	{
+		Renderer::DrawSprite(sprite, transform.position, transform.offset, transform.rotation);
+	}
+}
+
+
+void RadarRenderSystem::DrawRadarArtillery(entt::registry& registry)
+{
+	auto view = registry.view<Tag::RadarArtillery, const Component::Transform, const Component::Sprite>();
+	for (auto [entity, transform, sprite] : view.each())
+	{
+		Renderer::DrawSprite(sprite, transform.position, transform.offset, transform.rotation);
+	}
 }
 
 

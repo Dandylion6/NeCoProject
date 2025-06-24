@@ -108,6 +108,9 @@ void ArtilleryControlSystem::AimArtillery(
 	auto view = registry.view<Component::Artillery>();
 	for (auto [entity, artillery] : view.each())
 	{
+		constexpr float DELAY = 1.2f;
+		artillery.aimingDelay = DELAY;
+
 		switch (result.axis)
 		{
 		case CoordResult::Invalid:

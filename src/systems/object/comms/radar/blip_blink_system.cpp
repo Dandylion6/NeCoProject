@@ -3,7 +3,7 @@
 #include "components/objects/comms/radar_tags.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/object/comms/blip_blink_system.h"
+#include "systems/object/comms/radar/blip_blink_system.h"
 #include "utility/tween.h"
 #include "utility/vector2.h"
 #include <cmath>

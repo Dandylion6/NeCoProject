@@ -17,8 +17,8 @@ void SpriteRenderSystem::DrawScreen(
 	for (auto [entity, sprite, transform] : view.each())
 	{
 		if (!Renderer::IsRenderableToScreen(transform.boundScene, currentScene)) continue;
-		Nc::Vector2f position = (transform.position - transform.offset) + cameraPosition;
-		Renderer::DrawSprite(sprite, position);
+		Nc::Vector2f position = transform.position + cameraPosition;
+		Renderer::DrawSprite(sprite, position, transform.offset, transform.rotation);
 	}
 }
 
@@ -32,6 +32,6 @@ void SpriteRenderSystem::DrawUI(
 	{
 		Nc::Bounds bounds = Nc::Bounds(transform, windowSize);
 		Nc::Vector2i position = bounds.min;
-		Renderer::DrawSprite(sprite, position);
+		Renderer::DrawSprite(sprite, position, transform.origin * transform.size, transform.rotation);
 	}
 }

@@ -13,10 +13,11 @@
 #include "systems/core/rendering/sprite_render_system.h"
 #include "systems/core/sound_system.h"
 #include "systems/core/tween_system.h"
-#include "systems/object/comms/blip_blink_system.h"
 #include "systems/object/comms/morse_sound_system.h"
 #include "systems/object/comms/morse_transceiver_system.h"
-#include "systems/object/comms/radar_render_system.h"
+#include "systems/object/comms/radar/blip_blink_system.h"
+#include "systems/object/comms/radar/radar_artillery_system.h"
+#include "systems/object/comms/radar/radar_render_system.h"
 #include "systems/object/comms/radio_sound_system.h"
 #include "systems/object/receiver/receiver_code_response_system.h"
 #include "systems/object/receiver/receiver_interpreting_system.h"
@@ -117,6 +118,7 @@ void Game::UpdateRegistries(float deltaTime)
 	MorseTransceiverSystem::Update(registry, gameState.currentScene, deltaTime);
 	MorseSoundSystem::Update(registry, gameState.currentScene, deltaTime);
 	BlipBlinkSystem::Update(registry);
+	RadarArtillerySystem::Update(registry, deltaTime);
 	ReceiverInterpretingSystem::Update(registry, resourceStore);
 	ReceiverCodeResponseSystem::Update(registry, resourceStore);
 	RadioSoundSystem::Update(registry, deltaTime);

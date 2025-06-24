@@ -18,16 +18,28 @@ bool Renderer::IsRenderableToScreen(Scene boundScene, Scene currentScene)
 
 void Renderer::DrawSprite(
 	const Component::Sprite& sprite,
-	Nc::Vector2f position
+	Nc::Vector2f position,
+	Nc::Vector2f origin,
+	float rotation
 )
 {
 	bool isTransparent = sprite.alpha == 0.0f;
 	if (isTransparent) return;
 
-	Nc::Vector2i pixelPosition = Nc::Vector2f::Round(position);
 	Nc::RGBa tintColor = WHITE;
 	tintColor.SetAlpha(sprite.alpha);
-	::DrawTexture(sprite.texture, pixelPosition.x, pixelPosition.y, tintColor);
+	
+	float width = static_cast<float>(sprite.texture.width);
+	float height = static_cast<float>(sprite.texture.height);
+
+	::DrawTexturePro(
+		sprite.texture,
+		Rectangle { 0.0f, 0.0f, width, height },
+		Rectangle { position.x, position.y, width, height },
+		origin,
+		rotation,
+		tintColor
+	);
 }
 
 
