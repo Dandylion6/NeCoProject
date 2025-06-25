@@ -29,7 +29,7 @@ file(GLOB_RECURSE PROJECT_HEADERS CONFIGURE_DEPENDS
 add_executable(NeCoProject 
 	${PROJECT_SOURCES} 
 	${PROJECT_HEADERS}
-)
+ "src/systems/object/receiver/artillery_aiming_system.cpp" "include/components/objects/outside/projectile_component.h" "include/assemblers/entities/projectile_entity.h" "src/assemblers/entities/projectile_entity.cpp")
 
 target_compile_definitions(
 	NeCoProject

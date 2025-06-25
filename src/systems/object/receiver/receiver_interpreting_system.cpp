@@ -2,6 +2,7 @@
 #include "core/resource_store.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
+#include "systems/object/receiver/artillery_fire_system.h"
 #include "systems/object/receiver/artillery_control_system.h"
 #include "systems/object/receiver/receiver_interpreting_system.h"
 #include "utility/morse_code.h"
@@ -46,6 +47,10 @@ void ReceiverInterpretingSystem::TryInterpretMessage(
 		return ArtilleryControlSystem::HandleReceivedMessage(
 			registry, resourceStore, receiver, message
 		);
+	case FiringArtillery:
+		return ArtilleryFireSystem::HandleReceivedMessage(
+			registry, resourceStore, receiver, message
+		);
 	default:
 		break;
 	}
@@ -60,6 +65,7 @@ TransmissionContext ReceiverInterpretingSystem::TryGetContext(
 	{
 		std::unordered_map<std::string, TransmissionContext> map;
 		map[ArtilleryControlSystem::COMMAND] = AimingArtillery;
+		map[ArtilleryFireSystem::COMMAND] = FiringArtillery;
 		return map;
 	}();
 

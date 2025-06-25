@@ -6,8 +6,11 @@ namespace Component
 {
 	struct Artillery
 	{
-		Nc::Vector2f aimPosition = Nc::Vector2f(180.0f, 120.0f);
-		float aimingDelay = 0.0f;
+		Nc::Vector2f aimPosition = Nc::Vector2f(180.0f, 180.0f);
+		Nc::Vector2f targetPosition = Nc::Vector2f(180.0f, 180.0f);
+		float aimStartupDelay = 0.0f;
+		bool isReadyToFire = true;
+		bool receivedFireRequest = false;
 
 		Artillery() = default;
 	};

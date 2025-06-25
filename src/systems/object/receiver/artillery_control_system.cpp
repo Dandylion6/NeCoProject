@@ -57,7 +57,7 @@ void ArtilleryControlSystem::HandleMessageAsCoord(
 	CoordResult result = InterpretMessageAsCoord(message);
 	if (!result.isValid) return;
 
-	AimArtillery(registry, result);
+	SetArtilleryTarget(registry, result);
 
 	const std::string COORDINATE_RESPONSE = "assets/audio/voicelines/receiver/commands/coordinate_received.wav";
 
@@ -101,25 +101,26 @@ ArtilleryControlSystem::CoordResult ArtilleryControlSystem::InterpretMessageAsCo
 }
 
 
-void ArtilleryControlSystem::AimArtillery(
+void ArtilleryControlSystem::SetArtilleryTarget(
 	entt::registry& registry, CoordResult result
 )
 {
 	auto view = registry.view<Component::Artillery>();
 	for (auto [entity, artillery] : view.each())
 	{
-		constexpr float DELAY = 1.2f;
-		artillery.aimingDelay = DELAY;
+		constexpr float DELAY = 1.25f;
+		artillery.aimStartupDelay = DELAY;
+		artillery.isReadyToFire = false;
 
 		switch (result.axis)
 		{
 		case CoordResult::Invalid:
 			break;
 		case CoordResult::Horizontal:
-			artillery.aimPosition.x = result.coordinateLength;
+			artillery.targetPosition.x = result.coordinateLength;
 			break;
 		case CoordResult::Vertical:
-			artillery.aimPosition.y = result.coordinateLength;
+			artillery.targetPosition.y = result.coordinateLength;
 			break;
 		}
 	}

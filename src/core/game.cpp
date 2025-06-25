@@ -19,6 +19,7 @@
 #include "systems/object/comms/radar/radar_artillery_system.h"
 #include "systems/object/comms/radar/radar_render_system.h"
 #include "systems/object/comms/radio_sound_system.h"
+#include "systems/object/receiver/artillery_aiming_systerm.h"
 #include "systems/object/receiver/receiver_code_response_system.h"
 #include "systems/object/receiver/receiver_interpreting_system.h"
 #include "systems/scene/ambient_sound_system.h"
@@ -122,6 +123,7 @@ void Game::UpdateRegistries(float deltaTime)
 	ReceiverInterpretingSystem::Update(registry, resourceStore);
 	ReceiverCodeResponseSystem::Update(registry, resourceStore);
 	RadioSoundSystem::Update(registry, deltaTime);
+	ArtilleryAimingSystem::Update(registry, deltaTime);
 	AmbientSoundSystem::Update(registry, gameState, deltaTime);
 	TweenSystem::Update(registry, deltaTime);
 	SoundSystem::Update(registry, deltaTime);

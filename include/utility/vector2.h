@@ -53,6 +53,9 @@ namespace Nc
 		static Vector2f Right(float length);
 		static Vector2f Round(const Vector2f& vector);
 
+		float GetDistance() const;
+		float GetSqrDistance() const;
+
 		operator Vector2() const;
 		operator Vector2i() const;
 
@@ -65,5 +68,6 @@ namespace Nc
 		void operator-=(const Vector2f& other);
 		void operator*=(const float factor);
 		void operator/=(const float factor);
+		bool operator==(const Vector2f other) const;
 	};
 }

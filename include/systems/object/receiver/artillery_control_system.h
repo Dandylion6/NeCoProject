@@ -43,6 +43,6 @@ private:
 
 	static CoordResult InterpretMessageAsCoord(const std::string& message);
 
-	static void AimArtillery(entt::registry& registry, CoordResult result);
+	static void SetArtilleryTarget(entt::registry& registry, CoordResult result);
 
 };

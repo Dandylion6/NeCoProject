@@ -6,11 +6,12 @@
 class RadarArtillerySystem
 {
 public:
-	static void Update(entt::registry& registry, float deltaTime);
+	static void Update(
+		entt::registry& registry, 
+		float deltaTime
+	);
 
 private:
-	static Nc::Vector2f GetArtilleryAimPosition(
-		Nc::Vector2f currentPosition, entt::registry& registry, float deltaTime
-	);
+	static Nc::Vector2f GetArtilleryAimPosition(entt::registry& registry);
 
 };

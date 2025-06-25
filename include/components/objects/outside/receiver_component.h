@@ -7,7 +7,8 @@
 enum TransmissionContext: int8_t
 {
 	OnStandby,
-	AimingArtillery
+	AimingArtillery,
+	FiringArtillery,
 };
 
 

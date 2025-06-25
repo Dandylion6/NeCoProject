@@ -107,11 +107,11 @@ void RadarRenderSystem::DrawBlips(
 		text.text = std::format("({} , {})", pixelPosition.x, pixelPosition.y);
 		text.color.SetAlpha(sprite.alpha);
 
-		constexpr float TEXT_HEIGHT = 16.0f;
-		Nc::Vector2f textPosition = transform.position + transform.offset;
-		textPosition.y -= TEXT_HEIGHT;
+		constexpr Nc::Vector2f TEXT_OFFSET = Nc::Vector2f(16.0f, 0.0f);
+		Nc::Vector2f textPosition = transform.position - transform.offset;
+		textPosition += TEXT_OFFSET;
 
-		Renderer::DrawSprite(sprite, transform.position);
+		Renderer::DrawSprite(sprite, transform.position, transform.offset, transform.rotation);
 		Renderer::DrawText(text, textPosition, resourceStore);
 	}
 }

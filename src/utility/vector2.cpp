@@ -100,6 +100,18 @@ namespace Nc
 	}
 
 
+	float Vector2f::GetDistance() const
+	{
+		return std::sqrtf(GetSqrDistance());
+	}
+
+
+	float Vector2f::GetSqrDistance() const
+	{
+		return x * x + y * y;
+	}
+
+
 	Vector2f::operator Vector2() const
 	{
 		return Vector2 { x, y };
@@ -163,5 +175,11 @@ namespace Nc
 	void Vector2f::operator/=(const float factor)
 	{
 		x /= factor, y /= factor;
+	}
+
+
+	bool Vector2f::operator==(const Vector2f other) const
+	{
+		return x == other.x && y == other.y;
 	}
 }
