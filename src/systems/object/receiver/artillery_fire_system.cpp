@@ -1,4 +1,5 @@
 #include "assemblers/entities/projectile_entity.h"
+#include "components/core/sound_emitter_component.h"
 #include "components/objects/comms/radio_component.h"
 #include "components/objects/outside/artillery_component.h"
 #include "components/objects/outside/receiver_component.h"
@@ -7,6 +8,7 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
+#include "systems/core/sound_system.h"
 #include "systems/object/comms/radio_sound_system.h"
 #include "systems/object/receiver/artillery_fire_system.h"
 #include <string>
@@ -26,7 +28,10 @@ void ArtilleryFireSystem::HandleReceivedMessage(
 	auto view = registry.view<Component::Artillery>();
 	for (auto [entity, artillery] : view.each())
 	{
-		Construct::ProjectileEntity(registry, artillery.aimPosition);
+		constexpr float FIRE_DELAY = 4.6f;
+
+		artillery.receivedFireRequest = true;
+		artillery.fireDelay = FIRE_DELAY;
 	}
 	
 	const std::string FIRE_RESPONSE = "assets/audio/voicelines/receiver/commands/fire_request.wav";
@@ -35,4 +40,29 @@ void ArtilleryFireSystem::HandleReceivedMessage(
 	RadioSoundSystem::Broadcast(registry, std::move(response), Medium);
 
 	receiver.message.clear();
+};
+
+
+void ArtilleryFireSystem::Update(
+	entt::registry& registry,
+	ResourceStore& resourceStore,
+	float deltaTime
+)
+{
+	auto view = registry.view<Component::Artillery, Component::SoundEmitter>();
+	for (auto [entity, artillery, emitter] : view.each())
+	{
+		if (!artillery.receivedFireRequest) continue;
+		if (!artillery.isReadyToFire) continue;
+
+		if (artillery.fireDelay > 0.0f)
+		{
+			artillery.fireDelay -= deltaTime;
+			continue;
+		}
+
+		artillery.receivedFireRequest = false;
+		Construct::ProjectileEntity(registry, resourceStore, artillery.aimPosition);
+		SoundSystem::PlayEmitter(emitter);
+	}
 };

@@ -17,4 +17,10 @@ public:
 		const std::string& message
 	);
 
+	static void Update(
+		entt::registry& registry, 
+		ResourceStore& resourceStore,
+		float deltaTime
+	);
+
 };

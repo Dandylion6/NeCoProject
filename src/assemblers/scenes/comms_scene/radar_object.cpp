@@ -4,6 +4,7 @@
 #include "components/core/transform_component.h"
 #include "components/core/tween_component.h"
 #include "components/objects/comms/radar_tags.h"
+#include "components/objects/health_component.h"
 #include "core/scene.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -75,7 +76,7 @@ const entt::entity Construct::RadarArtilleryEntity(entt::registry& registry)
 
 
 const entt::entity Construct::RadarBlipEntity(
-	entt::registry& registry, Nc::Vector2f position
+	entt::registry& registry, Nc::Vector2f position, int16_t health
 )
 {
 	const entt::entity entity = registry.create();
@@ -86,6 +87,7 @@ const entt::entity Construct::RadarBlipEntity(
 	constexpr Nc::Hex TEXT_COLOR = 0x7cff3cff;
 
 	registry.emplace<Tag::Blip>(entity);
+	registry.emplace<Component::Health>(entity, health);
 	registry.emplace<Component::Transform>(entity, Radar, position, size, size * 0.5f);
 	registry.emplace<Component::Text>(entity, "( , )", TEXT_COLOR, WDXL, 16u);
 
