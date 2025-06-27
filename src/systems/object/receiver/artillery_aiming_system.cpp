@@ -1,7 +1,7 @@
 #include "components/objects/outside/artillery_component.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/object/receiver/artillery_aiming_systerm.h"
+#include "systems/object/outside/receiver/artillery_aiming_systerm.h"
 #include "utility/interpolation.h"
 #include "utility/vector2.h"
 

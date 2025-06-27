@@ -8,7 +8,7 @@
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
 #include "systems/core/sound_system.h"
-#include "systems/object/projectile_hit_system.h"
+#include "systems/object/outside/projectile_hit_system.h"
 #include "utility/vector2.h"
 #include <cstdint>
 #include <vector>

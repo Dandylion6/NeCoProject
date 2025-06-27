@@ -7,7 +7,7 @@
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
 #include "systems/object/comms/radio_sound_system.h"
-#include "systems/object/receiver/artillery_control_system.h"
+#include "systems/object/outside/receiver/artillery_control_system.h"
 #include <cstdint>
 #include <string>
 #include <utility>

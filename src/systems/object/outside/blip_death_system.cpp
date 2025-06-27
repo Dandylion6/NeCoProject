@@ -3,7 +3,7 @@
 #include "components/objects/outside/blip_component.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/object/blip_death_system.h"
+#include "systems/object/outside/blip_death_system.h"
 #include "utility/tween.h"
 
 

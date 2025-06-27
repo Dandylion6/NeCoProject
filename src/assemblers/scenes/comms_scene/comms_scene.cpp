@@ -18,19 +18,17 @@ void CommsScene::Build(
 )
 {
 	Construct::RadarObject(registry);
-	Construct::RadarBlipEntity(registry, Nc::Vector2f(180.0f, 180.0f));
-
+	Construct::MorseTransceiverEntity(registry);
 	Construct::RadioEntity(registry);
 
 	Construct::SceneBackgroundEntity(
 		LoadTexture("assets/environment/backgrounds/comms_room.png"), registry, CommsRoom
 	);
 	Construct::MoveRegionEntity(
-		registry, gameState, resourceStore, Down, CommsRoom, CommsDesk, 0.1f
+		registry, gameState, resourceStore, Down, CommsRoom, CommsDesk, 0.15f
 	);
 	Construct::MoveRegionEntity(
-		registry, gameState, resourceStore, Right, CommsRoom, Doorway, 0.3f
+		registry, gameState, resourceStore, Right, CommsRoom, Doorway, 0.35f
 	);
 
-	Construct::MorseTransceiverEntity(registry);
 }

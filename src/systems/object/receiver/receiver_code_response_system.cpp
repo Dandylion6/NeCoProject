@@ -5,7 +5,7 @@
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
 #include "systems/object/comms/radio_sound_system.h"
-#include "systems/object/receiver/receiver_code_response_system.h"
+#include "systems/object/outside/receiver/receiver_code_response_system.h"
 #include "utility/morse_code.h"
 #include <format>
 #include <string>
