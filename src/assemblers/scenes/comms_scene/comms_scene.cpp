@@ -18,7 +18,7 @@ void CommsScene::Build(
 )
 {
 	Construct::RadarObject(registry);
-	Construct::RadarBlipEntity(registry, Nc::Vector2f(100.0f, 50.0f));
+	Construct::RadarBlipEntity(registry, Nc::Vector2f(180.0f, 180.0f));
 
 	Construct::RadioEntity(registry);
 

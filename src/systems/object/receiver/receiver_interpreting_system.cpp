@@ -33,13 +33,10 @@ void ReceiverInterpretingSystem::TryInterpretMessage(
 	const std::string& message
 )
 {
-	TransmissionContext context = receiver.currentContext;
-	if (receiver.currentContext == OnStandby)
-	{
-		context = TryGetContext(receiver, message);
-	}
+	TransmissionContext newContext = TryGetContext(receiver, message);
+	if (newContext != OnStandby) receiver.currentContext = newContext;
 
-	switch (context)
+	switch (receiver.currentContext)
 	{
 	case OnStandby:
 		break;

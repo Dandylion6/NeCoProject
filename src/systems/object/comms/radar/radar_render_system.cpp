@@ -2,6 +2,7 @@
 #include "components/core/rendering/text_component.h"
 #include "components/core/transform_component.h"
 #include "components/objects/comms/radar_tags.h"
+#include "components/objects/outside/blip_component.h"
 #include "core/render_context.h"
 #include "core/rendering.h"
 #include "core/resource_store.h"
@@ -12,7 +13,6 @@
 #include "raylib.h"
 #include "systems/object/comms/radar/radar_render_system.h"
 #include "utility/vector2.h"
-#include <string>
 
 
 void RadarRenderSystem::DrawRenderTexture(
@@ -100,8 +100,8 @@ void RadarRenderSystem::DrawBlips(
 	entt::registry& registry, ResourceStore& resourceStore
 )
 {
-	auto blipView = registry.view<Tag::Blip, const Component::Transform, const Component::Sprite, Component::Text>();
-	for (auto [entity, transform, sprite, text] : blipView.each())
+	auto blipView = registry.view<Component::Blip, const Component::Transform, const Component::Sprite, Component::Text>();
+	for (auto [entity, blip, transform, sprite, text] : blipView.each())
 	{
 		Nc::Vector2i pixelPosition = transform.position;
 		text.text = std::format("({} , {})", pixelPosition.x, pixelPosition.y);

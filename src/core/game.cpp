@@ -13,6 +13,7 @@
 #include "systems/core/rendering/sprite_render_system.h"
 #include "systems/core/sound_system.h"
 #include "systems/core/tween_system.h"
+#include "systems/object/blip_death_system.h"
 #include "systems/object/comms/morse_sound_system.h"
 #include "systems/object/comms/morse_transceiver_system.h"
 #include "systems/object/comms/radar/blip_blink_system.h"
@@ -120,6 +121,7 @@ void Game::UpdateRegistries(float deltaTime)
 	ButtonActionSystem::Update(registry, gameState, renderContext, deltaTime);
 	MorseTransceiverSystem::Update(registry, gameState.currentScene, deltaTime);
 	MorseSoundSystem::Update(registry, gameState.currentScene, deltaTime);
+	BlipDeathSystem::Update(registry);
 	BlipBlinkSystem::Update(registry);
 	RadarArtillerySystem::Update(registry, deltaTime);
 	ReceiverInterpretingSystem::Update(registry, resourceStore);

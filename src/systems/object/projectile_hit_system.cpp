@@ -2,6 +2,7 @@
 #include "components/core/transform_component.h"
 #include "components/objects/comms/radar_tags.h"
 #include "components/objects/health_component.h"
+#include "components/objects/outside/blip_component.h"
 #include "components/objects/outside/projectile_component.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -48,8 +49,8 @@ void ProjectileHitSystem::CheckForHits(
 	std::vector<Nc::Vector2f>& hitPositions
 )
 {
-	auto view = registry.view<Tag::Blip, Component::Transform, Component::Health>();
-	for (auto [entity, transform, health] : view.each())
+	auto view = registry.view<Component::Blip, Component::Transform, Component::Health>();
+	for (auto [entity, blip, transform, health] : view.each())
 	{
 		for (Nc::Vector2f hitPosition : hitPositions)
 		{

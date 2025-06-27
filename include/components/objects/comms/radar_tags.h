@@ -8,14 +8,4 @@ namespace Tag
 	struct RadarPath { };
 
 	struct RadarArtillery { };
-
-	struct Blip
-	{
-		enum Tweens
-		{
-			BlipFadeIn,
-			BlipFadeOut
-		};
-
-	};
 }

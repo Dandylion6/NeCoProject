@@ -1,6 +1,7 @@
 #include "components/core/transform_component.h"
 #include "components/core/tween_component.h"
 #include "components/objects/comms/radar_tags.h"
+#include "components/objects/outside/blip_component.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "systems/object/comms/radar/blip_blink_system.h"
@@ -14,10 +15,12 @@ void BlipBlinkSystem::Update(entt::registry& registry)
 	entt::entity radarPathEntity = registry.view<const Tag::RadarPath>().front();
 	const Component::Transform& pathTransform = registry.get<const Component::Transform>(radarPathEntity);
 
-	auto blipView = registry.view<const Tag::Blip, const Component::Transform, Component::TweenCollection>();
-	for (auto [entity, transform, tweens] : blipView.each())
+	auto view = registry.view<const Component::Blip, const Component::Transform, Component::TweenCollection>();
+	for (auto [entity, blip, transform, tweens] : view.each())
 	{
-		Tween& fadeInTween = tweens.tweens.at(Tag::Blip::BlipFadeIn);
+		if (!blip.isActive) continue;
+		
+		Tween& fadeInTween = tweens.tweens.at(Component::Blip::BlipFadeIn);
 		if (!BlipShouldAppear(transform, pathTransform, fadeInTween)) continue;
 		Tween::Replay(fadeInTween);
 	}

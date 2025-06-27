@@ -5,6 +5,7 @@
 #include "components/core/tween_component.h"
 #include "components/objects/comms/radar_tags.h"
 #include "components/objects/health_component.h"
+#include "components/objects/outside/blip_component.h"
 #include "core/scene.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -86,7 +87,7 @@ const entt::entity Construct::RadarBlipEntity(
 
 	constexpr Nc::Hex TEXT_COLOR = 0x7cff3cff;
 
-	registry.emplace<Tag::Blip>(entity);
+	registry.emplace<Component::Blip>(entity);
 	registry.emplace<Component::Health>(entity, health);
 	registry.emplace<Component::Transform>(entity, Radar, position, size, size * 0.5f);
 	registry.emplace<Component::Text>(entity, "( , )", TEXT_COLOR, WDXL, 16u);
@@ -98,8 +99,8 @@ const entt::entity Construct::RadarBlipEntity(
 	constexpr float FADE_IN_TIME = 0.3f, FADE_OUT_TIME = 6.5f;
 	constexpr float FADE_OUT_DELAY = 1.8f;
 
-	Tween& fadeInTween = tweens.tweens.at(Tag::Blip::BlipFadeIn);
-	Tween& fadeOutTween = tweens.tweens.at(Tag::Blip::BlipFadeOut);
+	Tween& fadeInTween = tweens.tweens.at(Component::Blip::BlipFadeIn);
+	Tween& fadeOutTween = tweens.tweens.at(Component::Blip::BlipFadeOut);
 
 	fadeInTween.Build(&sprite.alpha, sprite.alpha, 1.0f, FADE_IN_TIME, CubicOut, FADE_OUT_DELAY);
 	fadeInTween.onComplete = [&fadeOutTween]() { Tween::Replay(fadeOutTween); };
