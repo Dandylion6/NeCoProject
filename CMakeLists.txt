@@ -22,13 +22,8 @@ file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS
     "src/*.cpp"
 )
 
-file(GLOB_RECURSE PROJECT_HEADERS CONFIGURE_DEPENDS 
-	"include/**/*.h"
-)
-
 add_executable(NeCoProject 
 	${PROJECT_SOURCES} 
-	${PROJECT_HEADERS}
 )
 
 target_compile_definitions(

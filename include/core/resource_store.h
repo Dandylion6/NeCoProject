@@ -8,10 +8,12 @@
 class ResourceStore
 {
 public:
+	Texture2D& GetTexture(const std::string& filePath);
 	Font& GetFont(FontStyle style);
 	Sound& GetSound(const std::string& filePath);
 
 private:
+	std::unordered_map<std::string, Texture2D> textureStore { };
 	std::unordered_map<FontStyle, Font> fontStore { };
 	std::unordered_map<std::string, Sound> soundStore { };
 

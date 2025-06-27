@@ -69,7 +69,7 @@ const entt::entity Construct::RadarArtilleryEntity(entt::registry& registry)
 	Nc::Vector2i size = Nc::Vector2i(texture.width, texture.height);
 
 	registry.emplace<Tag::RadarArtillery>(entity);
-	registry.emplace<Component::Transform>(entity, Radar, Nc::Vector2f(40.0f, 140.0f), size, size * 0.5f);
+	registry.emplace<Component::Transform>(entity, Radar, Nc::Vector2f::Zero(), size, size * 0.5f);
 	registry.emplace<Component::Sprite>(entity, texture);
 
 	return entity;

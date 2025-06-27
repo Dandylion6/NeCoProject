@@ -13,6 +13,7 @@
 #include "systems/core/rendering/sprite_render_system.h"
 #include "systems/core/sound_system.h"
 #include "systems/core/tween_system.h"
+#include "systems/entity/roamer_spawning_system.h"
 #include "systems/object/comms/morse_sound_system.h"
 #include "systems/object/comms/morse_transceiver_system.h"
 #include "systems/object/comms/radar/blip_blink_system.h"
@@ -131,6 +132,7 @@ void Game::UpdateRegistries(float deltaTime)
 	ArtilleryFireSystem::Update(registry, resourceStore, deltaTime);
 	ProjectileHitSystem::Update(registry, deltaTime);
 	AmbientSoundSystem::Update(registry, gameState, deltaTime);
+	RoamerSpawningSystem::Update(registry, deltaTime);
 	TweenSystem::Update(registry, deltaTime);
 	SoundSystem::Update(registry, deltaTime);
 }
