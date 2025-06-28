@@ -51,17 +51,21 @@ namespace Nc
 		static Vector2f Up(float length);
 		static Vector2f Down(float length);
 		static Vector2f Right(float length);
+		static Vector2f Scale(float scale);
 		static Vector2f Round(const Vector2f& vector);
 
 		float GetDistance() const;
 		float GetSqrDistance() const;
+		float GetMin() const;
 
 		operator Vector2() const;
 		operator Vector2i() const;
 
+		Vector2f operator-() const;
 		Vector2f operator+(const Vector2f& other) const;
 		Vector2f operator-(const Vector2f& other) const;
 		Vector2f operator*(const Vector2f& other) const;
+		Vector2f operator/(const Vector2f& other) const;
 		Vector2f operator*(const float factor) const;
 		Vector2f operator/(const float factor) const;
 		void operator+=(const Vector2f& other);

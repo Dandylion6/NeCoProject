@@ -94,6 +94,12 @@ namespace Nc
 	}
 
 
+	Vector2f Vector2f::Scale(float scale)
+	{
+		return Vector2f(scale, scale);
+	}
+
+
 	Vector2f Vector2f::Round(const Vector2f& vector)
 	{
 		return Vector2f(std::roundf(vector.x), std::roundf(vector.y));
@@ -112,6 +118,12 @@ namespace Nc
 	}
 
 
+	float Vector2f::GetMin() const
+	{
+		return std::fminf(x, y);
+	}
+
+
 	Vector2f::operator Vector2() const
 	{
 		return Vector2 { x, y };
@@ -121,6 +133,12 @@ namespace Nc
 	Vector2f::operator Vector2i() const
 	{
 		return Vector2i(static_cast<int>(x), static_cast<int>(y));
+	}
+
+
+	Vector2f Vector2f::operator-() const
+	{
+		return Vector2f(-x, -y);
 	}
 
 
@@ -139,6 +157,12 @@ namespace Nc
 	Vector2f Vector2f::operator*(const Vector2f& other) const
 	{
 		return Vector2f(x * other.x, y * other.y);
+	}
+
+
+	Vector2f Vector2f::operator/(const Vector2f& other) const
+	{
+		return Vector2f(x / other.x, y / other.y);
 	}
 
 

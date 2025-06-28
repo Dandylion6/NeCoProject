@@ -28,6 +28,7 @@ namespace Component
 		FontStyle style = WDXL;
 		uint8_t fontSize = 8u;
 		Alignment alignment = Center;
+		uint8_t spacing = 0u;
 
 		Text() = default;
 		Text(
@@ -35,13 +36,15 @@ namespace Component
 			Nc::RGBa color = RAYWHITE,
 			FontStyle style = WDXL,
 			uint8_t fontSize = 8u,
-			Alignment alignment = Center
+			Alignment alignment = Center,
+			uint8_t spacing = 0u
 		):
 			text(std::move(text)),
 			color(color),
 			style(style),
 			fontSize(fontSize),
-			alignment(alignment)
+			alignment(alignment),
+			spacing(spacing)
 		{ };
 	};
 }

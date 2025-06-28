@@ -11,7 +11,7 @@ namespace Construct
 {
 	entt::entity MoveRegionEntity(
 		entt::registry& registry, GameState& gameState, ResourceStore& resourceStore,
-		const Component::Transform& transform,
+		const Component::Transform&& transform,
 		Scene currentScene, Scene nextScene, float moveTime = 0.2f
 	);
 

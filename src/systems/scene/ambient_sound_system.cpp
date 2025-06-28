@@ -2,7 +2,6 @@
 #include "components/core/transform_component.h"
 #include "components/scene/ambient_sound_tag.h"
 #include "core/game_state.h"
-#include "core/resource_store.h"
 #include "core/scene.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -46,14 +45,24 @@ void AmbientSoundSystem::TryPlayAmbience(
 {
 	if (scene == transform.boundScene) return;
 
-	if (ambienceMap.find(scene) != ambienceMap.end())
+	std::string filePath { };
+	switch (scene)
 	{
-		TransitionAmbientAudio(emitter, ambienceMap.at(scene));
-		
-	} else
-	{
+	case CommsRoom:
+		filePath = "assets/audio/ambient/comms_ambience.wav";
+		break;
+	case CommsDesk:
+		filePath = "assets/audio/ambient/comms_ambience.wav";
+		break;
+	case Doorway:
+		filePath = "assets/audio/ambient/comms_ambience.wav";
+		break;
+	default:
 		SoundSystem::StopEmitter(emitter);
+		break;
 	}
+
+	if (!filePath.empty()) TransitionAmbientAudio(emitter, filePath);
 	transform.boundScene = scene;
 }
 
@@ -69,4 +78,8 @@ void AmbientSoundSystem::TransitionAmbientAudio(
 	emitter.sound = std::move(ambience);
 
 	SoundSystem::PlayEmitter(emitter);
+
+	float soundLength = GetMusicTimeLength(emitter.sound);
+	float start = GetRandomValue(0, static_cast<int>(soundLength * 100.0f)) * 0.01f;
+	SeekMusicStream(emitter.sound, start);
 }

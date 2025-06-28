@@ -3,6 +3,7 @@
 #include "assemblers/scenes/comms_scene/comms_scene.h"
 #include "assemblers/scenes/desk_scene/desk_scene.h"
 #include "assemblers/scenes/doorway_scene/doorway_scene.h"
+#include "assemblers/scenes/main_menu/main_menu.h"
 #include "assemblers/scenes/outside_scene/outside_scene.h"
 #include "core/game.h"
 #include "core/game_state.h"
@@ -11,6 +12,7 @@
 #include "systems/core/button_action_system.h"
 #include "systems/core/rendering/rectangle_render_system.h"
 #include "systems/core/rendering/sprite_render_system.h"
+#include "systems/core/rendering/text_render_system.h"
 #include "systems/core/sound_system.h"
 #include "systems/core/tween_system.h"
 #include "systems/entity/roamer_spawning_system.h"
@@ -73,6 +75,8 @@ void Game::InitialiseAssemblers()
 {
 	Construct::MoveTransitionEntity(registry, renderContext, gameState);
 	Construct::AmbientSoundEntity(registry);
+	
+	MainMenuScene::Build(registry, gameState, resourceStore);
 	CommsScene::Build(registry, gameState, resourceStore);
 	DeskScene::Build(registry, gameState, resourceStore);
 	DoorwayScene::Build(registry, gameState, resourceStore);
@@ -113,13 +117,19 @@ bool Game::ShouldRun() const
 void Game::Update(float deltaTime)
 {
 	if (IsKeyPressed(KEY_ESCAPE)) Shutdown();
-	gameState.time += deltaTime;
+	if (!gameState.isPaused) gameState.time += deltaTime;
 }
 
 
 void Game::UpdateRegistries(float deltaTime)
 {
 	ButtonActionSystem::Update(registry, gameState, renderContext, deltaTime);
+	AmbientSoundSystem::Update(registry, gameState, deltaTime);
+	TweenSystem::Update(registry, deltaTime);
+	SoundSystem::Update(registry, deltaTime);
+
+	if (gameState.isPaused) return;
+
 	MorseTransceiverSystem::Update(registry, gameState.currentScene, deltaTime);
 	MorseSoundSystem::Update(registry, gameState.currentScene, deltaTime);
 	BlipDeathSystem::Update(registry);
@@ -131,10 +141,7 @@ void Game::UpdateRegistries(float deltaTime)
 	ArtilleryAimingSystem::Update(registry, deltaTime);
 	ArtilleryFireSystem::Update(registry, resourceStore, deltaTime);
 	ProjectileHitSystem::Update(registry, deltaTime);
-	AmbientSoundSystem::Update(registry, gameState, deltaTime);
 	RoamerSpawningSystem::Update(registry, deltaTime);
-	TweenSystem::Update(registry, deltaTime);
-	SoundSystem::Update(registry, deltaTime);
 }
 
 
@@ -146,7 +153,7 @@ void Game::DrawGame()
 	DrawScreen();
 
 	BeginDrawing();
-	ClearBackground(Color(RenderContext::CLEAR_COLOR));
+	ClearBackground(RenderContext::BACKGROUND_COLOR);
 
 	Nc::Vector2f displaySize = RenderContext::DISPLAY_SIZE;
 	Rectangle source { 0, 0, displaySize.x, -displaySize.y };
@@ -172,7 +179,7 @@ void Game::DrawScreen()
 	cameraPosition.y += std::sinf((gameState.time * 2.8f) - 0.3f) * 4.0f;
 
 	BeginTextureMode(renderContext.renderTexture);
-	ClearBackground(WHITE);
+	ClearBackground(RenderContext::BACKGROUND_COLOR);
 
 	SpriteRenderSystem::DrawScreen(registry, gameState.currentScene, cameraPosition);
 	RadarRenderSystem::DrawRadar(
@@ -187,4 +194,5 @@ void Game::DrawUi()
 {
 	SpriteRenderSystem::DrawUI(registry, renderContext.windowSize);
 	RectangleRenderSystem::DrawUi(registry, renderContext.windowSize);
+	TextRenderSystem::DrawUi(registry, resourceStore, renderContext.windowSize);
 }

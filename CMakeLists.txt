@@ -9,6 +9,8 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${CMAKE_SOURCE_DIR}/include")
+
 project ("NeCoProject")
 
 if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -36,9 +38,9 @@ target_compile_definitions(
 target_include_directories(
 	NeCoProject
 	PRIVATE
-		"include"
-		"external/entt/src"
-		"external/raylib/src"
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external/entt/src>
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external/raylib/src>
 )
 
 target_link_libraries(

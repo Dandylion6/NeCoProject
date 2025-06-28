@@ -16,7 +16,7 @@
 
 entt::entity Construct::MoveRegionEntity(
 	entt::registry& registry, GameState& gameState, ResourceStore& resourceStore,
-	const Component::Transform& transform,
+	const Component::Transform&& transform,
 	Scene currentScene, Scene nextScene, float moveTime
 )
 {
@@ -92,6 +92,7 @@ entt::entity Construct::MoveRegionEntity(
 	}
 	}
 	return MoveRegionEntity(
-		registry, gameState, resourceStore, transform, currentScene, nextScene, moveTime
+		registry, gameState, resourceStore, std::move(transform), 
+		currentScene, nextScene, moveTime
 	);
 }

@@ -9,11 +9,6 @@ struct GameState;
 class ResourceStore;
 
 
-static const std::unordered_map<Scene, std::string> ambienceMap {
-	{ CommsRoom, "assets/audio/ambient/comms_ambience.wav" }
-};
-
-
 class AmbientSoundSystem
 {
 public:

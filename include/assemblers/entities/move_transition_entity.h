@@ -7,7 +7,7 @@ struct RenderContext;
 
 namespace Construct
 {
-	entt::entity MoveTransitionEntity(
+	const entt::entity MoveTransitionEntity(
 		entt::registry& registry, 
 		RenderContext& renderContext,
 		GameState& gameState
@@ -24,7 +24,15 @@ namespace MoveTransition
 	};
 
 	void StartMoveScene(
-		entt::registry& registry, GameState& gameState, 
-		Scene nextScene, float moveTime
+		entt::registry& registry, 
+		GameState& gameState, 
+		Scene nextScene, 
+		float moveTime
+	);
+
+	void InstantTransition(
+		entt::registry& registry,
+		GameState& gameState,
+		Scene nextScene
 	);
 }

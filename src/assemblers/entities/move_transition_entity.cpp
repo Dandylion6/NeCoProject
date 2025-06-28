@@ -35,21 +35,35 @@ void MoveTransition::StartMoveScene(
 }
 
 
-entt::entity Construct::MoveTransitionEntity(
+void MoveTransition::InstantTransition(
+	entt::registry& registry, GameState& gameState, Scene nextScene
+)
+{
+	entt::entity entity = registry.view<Tag::MoveTransition>().front();
+	Component::TweenCollection& collection = registry.get<Component::TweenCollection>(entity);
+
+	gameState.currentScene = nextScene;
+	gameState.movingToScene = NullScene;
+
+	Tween::Play(collection.tweens.at(MoveTransition::Tweens::TransitionUp));
+}
+
+
+const entt::entity Construct::MoveTransitionEntity(
 	entt::registry& registry, 
 	RenderContext& renderContext,
 	GameState& gameState
 )
 {
-	entt::entity entity = registry.create();
-	registry.emplace<Component::Rectangle>(entity, RenderContext::CLEAR_COLOR);
+	const entt::entity entity = registry.create();
+
+	registry.emplace<Component::Rectangle>(entity, RenderContext::BACKGROUND_COLOR);
 	Component::UiTransform& transform = registry.emplace<Component::UiTransform>(
 		entity,
 		Nc::Vector2f::Zero(),
 		Nc::Vector2f::Up(),
 		renderContext.windowSize
 	);
-
 
 	//Construct transition tweening
 	registry.emplace<Tag::MoveTransition>(entity);

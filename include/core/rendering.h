@@ -15,7 +15,8 @@ namespace Renderer
 		const Component::Sprite& sprite,
 		Nc::Vector2f position,
 		Nc::Vector2f origin = Nc::Vector2f::Zero(),
-		float rotation = 0.0f
+		float rotation = 0.0f,
+		float scale = 1.0f
 	);
 
 	void DrawRectangle(

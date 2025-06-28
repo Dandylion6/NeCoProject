@@ -17,9 +17,9 @@ namespace Nc
 	{
 		Nc::Vector2f anchorPoint = transform.anchor * screenSize;
 		Nc::Vector2f position = anchorPoint + transform.offset;
-		Nc::Vector2f originOffset = transform.origin * transform.size;
+		Nc::Vector2f origin = transform.origin * transform.size;
 
-		min = position - originOffset;
+		min = position - origin;
 		max = min + transform.size;
 	}
 

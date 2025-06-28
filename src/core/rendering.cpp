@@ -20,7 +20,8 @@ void Renderer::DrawSprite(
 	const Component::Sprite& sprite,
 	Nc::Vector2f position,
 	Nc::Vector2f origin,
-	float rotation
+	float rotation,
+	float scale
 )
 {
 	bool isTransparent = sprite.alpha == 0.0f;
@@ -35,7 +36,7 @@ void Renderer::DrawSprite(
 	::DrawTexturePro(
 		sprite.texture,
 		Rectangle { 0.0f, 0.0f, width, height },
-		Rectangle { position.x, position.y, width, height },
+		Rectangle { position.x, position.y, width * scale, height * scale },
 		origin,
 		rotation,
 		tintColor
@@ -75,9 +76,10 @@ void Renderer::DrawText(
 
 	Font& font = resourceStore.GetFont(text.style);
 	float fontSize = static_cast<float>(text.fontSize);
+	float spacing = static_cast<float>(text.spacing);
 
 	const char* cText = text.text.c_str();
-	Nc::Vector2f textSize = MeasureTextEx(font, cText, fontSize, 0.0f);
+	Nc::Vector2f textSize = MeasureTextEx(font, cText, fontSize, spacing);
 	Nc::Vector2f offset = Nc::Vector2f::Zero();
 	switch (text.alignment)
 	{
@@ -94,7 +96,7 @@ void Renderer::DrawText(
 		offset,
 		0.0f, 
 		fontSize, 
-		0.0f, 
+		spacing,
 		text.color
 	);
 }

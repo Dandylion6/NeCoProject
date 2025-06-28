@@ -15,7 +15,7 @@ public:
 
 	static void DrawUI(
 		entt::registry& registry,
-		Nc::Vector2i windowSize
+		Nc::Vector2f windowSize
 	);
 
 };

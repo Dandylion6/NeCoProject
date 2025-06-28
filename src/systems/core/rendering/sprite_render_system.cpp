@@ -5,8 +5,8 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "systems/core/rendering/sprite_render_system.h"
-#include "utility/bounds.h"
 #include "utility/vector2.h"
+#include <cmath>
 
 
 void SpriteRenderSystem::DrawScreen(
@@ -24,14 +24,19 @@ void SpriteRenderSystem::DrawScreen(
 
 
 void SpriteRenderSystem::DrawUI(
-	entt::registry& registry, Nc::Vector2i windowSize
+	entt::registry& registry, Nc::Vector2f windowSize
 )
 {
 	auto view = registry.view<const Component::Sprite, const Component::UiTransform>();
 	for (auto [entity, sprite, transform] : view.each())
 	{
-		Nc::Bounds bounds = Nc::Bounds(transform, windowSize);
-		Nc::Vector2i position = bounds.min;
-		Renderer::DrawSprite(sprite, position, transform.origin * transform.size, transform.rotation);
+		float scale = (windowSize / transform.size).GetMin();
+		scale = std::floorf(scale * 10.0f) * 0.1f;
+
+		Nc::Vector2f anchorPoint = transform.anchor * windowSize;
+		Nc::Vector2f position = anchorPoint + transform.offset;
+		Nc::Vector2f origin = transform.origin * transform.size * scale;
+
+		Renderer::DrawSprite(sprite, position, origin, transform.rotation, scale);
 	}
 }

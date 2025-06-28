@@ -54,7 +54,7 @@ void ProjectileHitSystem::CheckForHits(
 	{
 		for (Nc::Vector2f hitPosition : hitPositions)
 		{
-			constexpr float BLAST_RADIUS = 5.0f;
+			constexpr float BLAST_RADIUS = 4.0f;
 			constexpr int16_t DAMAGE = 10;
 
 			Nc::Vector2f difference = hitPosition - transform.position;
