@@ -7,6 +7,7 @@
 #include "assemblers/scenes/outside_scene/outside_scene.h"
 #ifdef DEBUG_BUILD
 #include "core/debug_context.h"
+#include "utility/morse_code.h"
 #endif // DEBUG_BUILD
 #include "core/game.h"
 #include "core/game_state.h"
@@ -204,19 +205,7 @@ void Game::DrawGame()
 	DrawUi();
 
 #ifdef DEBUG_BUILD
-	Game::debugContext.frames.pop_back();
-	Game::debugContext.frames.push_front(GetFPS());
-	float averageFps = 0.0f;
-	for (const float frame : Game::debugContext.frames)
-	{
-		averageFps += frame;
-	}
-	averageFps = std::roundf(averageFps / 32.0f);
-	std::string text = "FPS: " + std::to_string(static_cast<int>(averageFps));
-	DrawText(text.c_str(), 32, 32, 32, GREEN);
-
-	text = "MSG: " + Game::debugContext.receiverMessage;
-	DrawText(text.c_str(), 32, 70, 32, GREEN);
+	DrawDebugUi();
 #endif // DEBUG_BUILD
 
 	EndDrawing();
@@ -247,3 +236,37 @@ void Game::DrawUi()
 	RectangleRenderSystem::DrawUi(registry, renderContext.windowSize);
 	TextRenderSystem::DrawUi(registry, resourceStore, renderContext.windowSize);
 }
+
+
+#ifdef DEBUG_BUILD
+void Game::DrawDebugUi()
+{
+	Game::debugContext.frames.pop_back();
+	Game::debugContext.frames.push_front(GetFPS());
+	float averageFps = 0.0f;
+	for (const float frame : Game::debugContext.frames)
+	{
+		averageFps += frame;
+	}
+	averageFps = std::roundf(averageFps / 32.0f);
+	std::string text = "FPS: " + std::to_string(static_cast<int>(averageFps));
+	DrawText(text.c_str(), 32, 32, 32, GREEN);
+
+	text = "MSG: " + Game::debugContext.receiverMessage;
+	DrawText(text.c_str(), 32, 70, 32, GREEN);
+
+	text = "PULSE: ";
+	switch (Game::debugContext.pulse)
+	{
+	case MorseCode::Invalid:
+		break;
+	case MorseCode::Short:
+		text += ".";
+		break;
+	case MorseCode::Long:
+		text += "-";
+		break;
+	}
+	DrawText(text.c_str(), 32, 110, 32, GREEN);
+}
+#endif // DEBUG_BUILD

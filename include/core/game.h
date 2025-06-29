@@ -42,4 +42,8 @@ private:
 
 	void DrawScreen();
 	void DrawUi();
+#ifdef DEBUG_BUILD
+	void DrawDebugUi();
+#endif // DEBUG_BUILD
+
 };

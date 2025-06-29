@@ -13,11 +13,11 @@ namespace MorseCode
 	constexpr float SHORT_DURATION = 0.15f;
 	constexpr float LONG_DURATION = 3.0f * SHORT_DURATION;
 
-	enum Pulse
+	enum Pulse: uint8_t
 	{
-        Invalid = 0,
-		Short = 1,
-		Long = 2
+        Invalid,
+		Short,
+		Long,
 	};
 
     const std::unordered_map<std::string, char> TABLE {

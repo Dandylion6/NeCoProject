@@ -1,6 +1,10 @@
 #include "components/core/transform_component.h"
 #include "components/objects/comms/morse_transceiver_component.h"
 #include "components/objects/outside/receiver_component.h"
+#ifdef DEBUG_BUILD
+#include "core/debug_context.h"
+#include "core/game.h"
+#endif // DEBUG_BUILD
 #include "core/scene.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -27,10 +31,20 @@ void MorseTransceiverSystem::Update(
 		if (inputStateChanged) InputChanged(transceiver);
 		else if (!inputKeyPressed) TryEndCharacter(registry, transceiver);
 
+		constexpr float MAX_INTERVAL = MorseCode::LONG_DURATION * 2.0f;
+
 		transceiver.isInputActive = inputKeyPressed;
 		float increasedInverval = transceiver.intervalSeconds + deltaTime;
-		constexpr float MAX_INTERVAL = MorseCode::LONG_DURATION * 2.0f;
 		transceiver.intervalSeconds = std::fminf(increasedInverval, MAX_INTERVAL);
+
+#ifdef DEBUG_BUILD
+		if (!transceiver.isInputActive)
+		{
+			Game::debugContext.pulse = MorseCode::Invalid;
+			continue;
+		}
+		Game::debugContext.pulse = GetPulseType(transceiver.intervalSeconds);
+#endif // DEBUG_BUILD
 	}
 }
 
