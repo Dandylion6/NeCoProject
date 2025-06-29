@@ -165,7 +165,7 @@ void Game::UpdateRegistries(float deltaTime)
 
 	if (gameState.isPaused) return;
 
-	MorseTransceiverSystem::Update(registry, gameState.currentScene, deltaTime);
+	MorseTransceiverSystem::Update(registry, gameState.currentScene, gameState.morseSettings, deltaTime);
 	MorseSoundSystem::Update(registry, gameState.currentScene, deltaTime);
 	BlipDeathSystem::Update(registry);
 	BlipBlinkSystem::Update(registry);

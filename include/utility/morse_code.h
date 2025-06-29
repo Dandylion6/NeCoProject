@@ -10,8 +10,7 @@ namespace MorseCode
     constexpr char CANCEL_CODE = '\x18';
     constexpr char BACK_CODE = '\x8';
 
-	constexpr float SHORT_DURATION = 0.15f;
-	constexpr float LONG_DURATION = 3.0f * SHORT_DURATION;
+	constexpr float ERROR_MARGIN = 0.3f;
 
 	enum Pulse: uint8_t
 	{

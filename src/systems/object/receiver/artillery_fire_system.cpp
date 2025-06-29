@@ -24,7 +24,7 @@ void ArtilleryFireSystem::HandleReceivedMessage(
 	const std::string& message
 )
 {
-	//TODO: Add a waiting system before firing artillery + Audio response for it. Once the artillery stops moving it is ready to fire.
+	//TODO: Add audio response for when not ready.
 	auto view = registry.view<Component::Artillery>();
 	for (auto [entity, artillery] : view.each())
 	{
@@ -39,6 +39,7 @@ void ArtilleryFireSystem::HandleReceivedMessage(
 	Sound response = LoadSoundAlias(resourceStore.GetSound(FIRE_RESPONSE));
 	RadioSoundSystem::Broadcast(registry, std::move(response), Medium);
 
+	receiver.currentContext = OnStandby;
 	receiver.message.clear();
 };
 

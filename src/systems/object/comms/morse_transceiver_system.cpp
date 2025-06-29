@@ -14,10 +14,15 @@
 #include <cmath>
 #include <cstdint>
 #include <string>
+#include "core/game_state.h"
+#include "utility/vector2.h"
 
 
 void MorseTransceiverSystem::Update(
-	entt::registry& registry, Scene currentScene, float deltaTime
+	entt::registry& registry, 
+	Scene currentScene, 
+	MorseSettings settings,
+	float deltaTime
 )
 {
 	auto view = registry.view<Component::Transform, Component::MorseTransceiver>();
@@ -28,14 +33,14 @@ void MorseTransceiverSystem::Update(
 		bool inputKeyPressed = IsKeyDown(Component::MorseTransceiver::INPUT_KEY);
 		bool inputStateChanged = inputKeyPressed != transceiver.isInputActive;
 
-		if (inputStateChanged) InputChanged(transceiver);
-		else if (!inputKeyPressed) TryEndCharacter(registry, transceiver);
-
-		constexpr float MAX_INTERVAL = MorseCode::LONG_DURATION * 2.0f;
+		if (inputStateChanged) InputChanged(transceiver, settings);
+		else if (!inputKeyPressed) TryEndCharacter(registry, transceiver, settings);
 
 		transceiver.isInputActive = inputKeyPressed;
+		
 		float increasedInverval = transceiver.intervalSeconds + deltaTime;
-		transceiver.intervalSeconds = std::fminf(increasedInverval, MAX_INTERVAL);
+		float maxInterval = settings.dashTime * 3.0f;
+		transceiver.intervalSeconds = std::fminf(increasedInverval, maxInterval);
 
 #ifdef DEBUG_BUILD
 		if (!transceiver.isInputActive)
@@ -43,27 +48,33 @@ void MorseTransceiverSystem::Update(
 			Game::debugContext.pulse = MorseCode::Invalid;
 			continue;
 		}
-		Game::debugContext.pulse = GetPulseType(transceiver.intervalSeconds);
+		Game::debugContext.pulse = GetPulseType(transceiver.intervalSeconds, settings);
 #endif // DEBUG_BUILD
 	}
 }
 
 
-void MorseTransceiverSystem::InputChanged(Component::MorseTransceiver& transceiver)
+void MorseTransceiverSystem::InputChanged(
+	Component::MorseTransceiver& transceiver,
+	MorseSettings settings
+)
 {
 	bool inputJustStarted = IsKeyPressed(Component::MorseTransceiver::INPUT_KEY);
 	if (inputJustStarted)
 	{
 		transceiver.intervalSeconds = 0.0f;
-	} else RecordPulse(transceiver); // Input just stopped
+	} else RecordPulse(transceiver, settings); // Input just stopped
 }
 
 
 void MorseTransceiverSystem::TryEndCharacter(
-	entt::registry& registry, Component::MorseTransceiver& transceiver
+	entt::registry& registry, 
+	Component::MorseTransceiver& transceiver, 
+	MorseSettings settings
 )
 {
-	bool shouldEndCharacter = transceiver.intervalSeconds > MorseCode::LONG_DURATION;
+	float longestTime = settings.dashTime + settings.errorMargin;
+	bool shouldEndCharacter = transceiver.intervalSeconds > longestTime;
 	
 	if (!shouldEndCharacter) return;
 	if (transceiver.pulseCount == 0u) return;
@@ -87,11 +98,13 @@ void MorseTransceiverSystem::TransmitCharacter(
 }
 
 
-void MorseTransceiverSystem::RecordPulse(Component::MorseTransceiver& transceiver)
+void MorseTransceiverSystem::RecordPulse(
+	Component::MorseTransceiver& transceiver, MorseSettings settings
+)
 {
 	if (transceiver.pulseCount >= Component::MorseTransceiver::MAX_PULSES) return;
 	
-	transceiver.pulses[transceiver.pulseCount] = GetPulseType(transceiver.intervalSeconds);
+	transceiver.pulses[transceiver.pulseCount] = GetPulseType(transceiver.intervalSeconds, settings);
 	++transceiver.pulseCount;
 	transceiver.intervalSeconds = 0.0f;
 }
@@ -105,14 +118,24 @@ void MorseTransceiverSystem::ClearTransceiver(Component::MorseTransceiver& trans
 }
 
 
-MorseCode::Pulse MorseTransceiverSystem::GetPulseType(float intervalSeconds)
+MorseCode::Pulse MorseTransceiverSystem::GetPulseType(
+	float intervalSeconds, MorseSettings settings
+)
 {
+	Nc::Vector2f margins = Nc::Vector2f::Zero();
+	margins.x = settings.dotTime - settings.errorMargin;
+	margins.y = settings.dotTime + settings.errorMargin;
 
-	float dotDifference = std::fabsf(intervalSeconds - MorseCode::SHORT_DURATION);
-	float dashDifference = std::fabsf(intervalSeconds - MorseCode::LONG_DURATION);
+	if (intervalSeconds >= margins.x && intervalSeconds <= margins.y)
+		return MorseCode::Short;
+	
+	margins.x = settings.dashTime - settings.errorMargin;
+	margins.y = settings.dashTime + settings.errorMargin;
 
-	bool isShortPulse = dotDifference < dashDifference;
-	return isShortPulse ? MorseCode::Short : MorseCode::Long;
+	if (intervalSeconds >= margins.x && intervalSeconds <= margins.y)
+		return MorseCode::Long;
+
+	return MorseCode::Invalid;
 }
 
 

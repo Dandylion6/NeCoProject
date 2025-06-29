@@ -20,10 +20,17 @@ void ReceiverCodeResponseSystem::Update(
 	auto view = registry.view<Component::Receiver>();
 	for (auto [entity, receiver] : view.each())
 	{
-		if (receiver.incomingCharacter != MorseCode::NULL_CODE)
+		switch (receiver.incomingCharacter)
+		{
+		case MorseCode::NULL_CODE: continue;
+		case MorseCode::BACK_CODE: continue;
+		case MorseCode::CANCEL_CODE: continue;
+		default:
 		{
 			RespondToCharacterCode(registry, receiver, resourceStore);
 			receiver.incomingCharacter = MorseCode::NULL_CODE;
+			break;
+		}
 		}
 	}
 }
