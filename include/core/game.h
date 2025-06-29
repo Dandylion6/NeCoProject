@@ -1,20 +1,31 @@
  #pragma once
+#ifdef DEBUG_BUILD
+#include "core/debug_context.h"
+#endif // DEBUG_BUILD
 #include "core/game_state.h"
 #include "core/render_context.h"
 #include "core/resource_store.h"
 #include "entt/entity/fwd.hpp"
-#include "entt/entity/registry.hpp"
+#include "entt/entity/registry.hpp" 
 
 
 class Game
 {
 public:
+#ifdef DEBUG_BUILD
+	static DebugContext debugContext;
+#endif // DEBUG_BUILD
+
 	Game();
 
 	bool ShouldRun() const;
 	
 	void SetupWindow() const;
 	void SetupRenderContext();
+
+#ifdef DEBUG_BUILD
+	void SetupDebug(int args, char* argv[]);
+#endif // DEBUG_BUILD
 
 	void InitialiseAssemblers();
 	void Shutdown();
@@ -24,7 +35,7 @@ public:
 	void DrawGame();
 
 private:
-	entt::registry registry;
+	entt::registry registry { };
 	RenderContext renderContext { };
 	GameState gameState { };
 	ResourceStore resourceStore { };

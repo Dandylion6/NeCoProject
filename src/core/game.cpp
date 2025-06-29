@@ -5,9 +5,14 @@
 #include "assemblers/scenes/doorway_scene/doorway_scene.h"
 #include "assemblers/scenes/main_menu/main_menu.h"
 #include "assemblers/scenes/outside_scene/outside_scene.h"
+#ifdef DEBUG_BUILD
+#include "core/debug_context.h"
+#endif // DEBUG_BUILD
 #include "core/game.h"
 #include "core/game_state.h"
 #include "core/render_context.h"
+#include "core/scene.h"
+#include "cstring"
 #include "raylib.h"
 #include "systems/core/button_action_system.h"
 #include "systems/core/rendering/rectangle_render_system.h"
@@ -31,6 +36,12 @@
 #include "systems/scene/ambient_sound_system.h"
 #include "utility/vector2.h"
 #include <cmath>
+#include <string>
+
+
+#ifdef DEBUG_BUILD
+DebugContext Game::debugContext { };
+#endif // DEBUG_BUILD
 
 
 Game::Game()
@@ -71,12 +82,35 @@ void Game::SetupRenderContext()
 }
 
 
+#ifdef DEBUG_BUILD
+void Game::SetupDebug(int args, char* argv[])
+{
+	for (int i = 0; i < args; ++i)
+	{
+		if (strcmp(argv[i], "--ignore-main-menu") == 0)
+		{
+			Game::debugContext.ignoreMainMenu = true;
+		};
+	}
+}
+#endif // DEBUG_BUILD
+
+
 void Game::InitialiseAssemblers()
 {
 	Construct::MoveTransitionEntity(registry, renderContext, gameState);
 	Construct::AmbientSoundEntity(registry);
-	
+
+#ifdef DEBUG_BUILD
+	if (!Game::debugContext.ignoreMainMenu)
+	{
+		MainMenuScene::Build(registry, gameState, resourceStore);
+	}
+	else gameState.currentScene = CommsRoom;
+#else
 	MainMenuScene::Build(registry, gameState, resourceStore);
+#endif // DEBUG_BUILD
+
 	CommsScene::Build(registry, gameState, resourceStore);
 	DeskScene::Build(registry, gameState, resourceStore);
 	DoorwayScene::Build(registry, gameState, resourceStore);
@@ -168,6 +202,23 @@ void Game::DrawGame()
 	);
 
 	DrawUi();
+
+#ifdef DEBUG_BUILD
+	Game::debugContext.frames.pop_back();
+	Game::debugContext.frames.push_front(GetFPS());
+	float averageFps = 0.0f;
+	for (const float frame : Game::debugContext.frames)
+	{
+		averageFps += frame;
+	}
+	averageFps = std::roundf(averageFps / 32.0f);
+	std::string text = "FPS: " + std::to_string(static_cast<int>(averageFps));
+	DrawText(text.c_str(), 32, 32, 32, GREEN);
+
+	text = "MSG: " + Game::debugContext.receiverMessage;
+	DrawText(text.c_str(), 32, 70, 32, GREEN);
+#endif // DEBUG_BUILD
+
 	EndDrawing();
 }
 

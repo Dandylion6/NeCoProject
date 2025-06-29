@@ -1,4 +1,5 @@
 #include "components/objects/outside/receiver_component.h"
+#include "core/game.h"
 #include "core/resource_store.h"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -20,6 +21,10 @@ void ReceiverInterpretingSystem::Update(
 	{
 		if (receiver.incomingCharacter == MorseCode::NULL_CODE) continue;
 		receiver.message += receiver.incomingCharacter;
+		
+#ifdef DEBUG_BUILD
+		Game::debugContext.receiverMessage = receiver.message;
+#endif // DEBUG_BUILD
 
 		TryInterpretMessage(registry, resourceStore, receiver, receiver.message);
 	}
