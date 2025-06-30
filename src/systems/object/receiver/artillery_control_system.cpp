@@ -11,6 +11,7 @@
 #include <cstdint>
 #include <string>
 #include <utility>
+#include "core/render_context.h"
 
 
 const std::string ArtilleryControlSystem::COMMAND = "AIM";
@@ -55,7 +56,12 @@ void ArtilleryControlSystem::HandleMessageAsCoord(
 )
 {
 	CoordResult result = InterpretMessageAsCoord(message);
-	if (!result.isValid) return;
+	if (!result.isValid)
+	{
+		if (result.withinRegion) return;
+		
+		receiver.message.clear();
+	}
 
 	SetArtilleryTarget(registry, result);
 
@@ -96,7 +102,21 @@ ArtilleryControlSystem::CoordResult ArtilleryControlSystem::InterpretMessageAsCo
 	bool validAxis = result.axis != CoordResult::Invalid;
 	bool hasLength = result.coordinateLength > 0;
 
-	result.isValid = validAxis && hasLength;
+	float regionLength = 0.0f;
+	switch (result.axis)
+	{
+	case CoordResult::Horizontal:
+		regionLength = RenderContext::RADAR_SIZE.x;
+		break;
+	case CoordResult::Vertical:
+		regionLength = RenderContext::RADAR_SIZE.y;
+		break;
+	default:
+		break;
+	}
+
+	result.withinRegion = result.coordinateLength <= regionLength;
+	result.isValid = validAxis && hasLength && result.withinRegion;
 	return result;
 }
 

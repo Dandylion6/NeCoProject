@@ -21,6 +21,7 @@
 #include "systems/core/rendering/text_render_system.h"
 #include "systems/core/sound_system.h"
 #include "systems/core/tween_system.h"
+#include "systems/object/comms/morse_monitor_display_system.h"
 #include "systems/entity/roamer_spawning_system.h"
 #include "systems/object/comms/morse_sound_system.h"
 #include "systems/object/comms/morse_transceiver_system.h"
@@ -166,6 +167,7 @@ void Game::UpdateRegistries(float deltaTime)
 	if (gameState.isPaused) return;
 
 	MorseTransceiverSystem::Update(registry, gameState.currentScene, gameState.morseSettings, deltaTime);
+	MorseMonitorDisplaySystem::Update(registry, gameState.morseSettings, deltaTime);
 	MorseSoundSystem::Update(registry, gameState.currentScene, deltaTime);
 	BlipDeathSystem::Update(registry);
 	BlipBlinkSystem::Update(registry);
@@ -222,6 +224,7 @@ void Game::DrawScreen()
 	ClearBackground(RenderContext::BACKGROUND_COLOR);
 
 	SpriteRenderSystem::DrawScreen(registry, gameState.currentScene, cameraPosition);
+	RectangleRenderSystem::DrawScreen(registry, gameState.currentScene, cameraPosition);
 	RadarRenderSystem::DrawRadar(
 		registry, renderContext.radarRenderTexture, cameraPosition, gameState.currentScene
 	);

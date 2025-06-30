@@ -17,21 +17,27 @@ void RectangleRenderSystem::DrawScreen(
 	for (auto [entity, transform, rectangle] : view.each())
 	{
 		if (!Renderer::IsRenderableToScreen(transform.boundScene, currentScene)) continue;
-		Nc::Vector2f position = (transform.position - transform.position) + cameraPosition;
-		Renderer::DrawRectangle(position, transform.size, rectangle.fillColor);
+		Nc::Vector2f position = transform.position + cameraPosition;
+		Renderer::DrawRectangle(
+			position, transform.size, rectangle.fillColor, transform.offset, transform.rotation
+		);
 	}
 }
 
 
 void RectangleRenderSystem::DrawUi(
-	entt::registry& registry, Nc::Vector2i windowSize
+	entt::registry& registry, Nc::Vector2f windowSize
 )
 {
 	auto view = registry.view<const Component::UiTransform, const Component::Rectangle>();
 	for (auto [entity, transform, rectangle] : view.each())
 	{
-		Nc::Bounds bounds = Nc::Bounds(transform, windowSize);
-		Nc::Vector2f position = bounds.min, size = Nc::Bounds::SizeOf(bounds);
-		Renderer::DrawRectangle(position, size, rectangle.fillColor);
+		Nc::Vector2f anchorPoint = transform.anchor * windowSize;
+		Nc::Vector2f position = anchorPoint + transform.offset;
+		Nc::Vector2f origin = transform.origin * transform.size;
+
+		Renderer::DrawRectangle(
+			position, transform.size, rectangle.fillColor, origin, transform.rotation
+		);
 	}
 }

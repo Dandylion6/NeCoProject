@@ -22,7 +22,9 @@ namespace Renderer
 	void DrawRectangle(
 		Nc::Vector2f position,
 		Nc::Vector2f size,
-		Nc::RGBa fillColor
+		Nc::RGBa fillColor,
+		Nc::Vector2f origin = Nc::Vector2f::Zero(),
+		float rotation = 0.0f
 	);
 	
 	void DrawText(

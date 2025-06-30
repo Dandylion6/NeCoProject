@@ -39,8 +39,7 @@ void MorseTransceiverSystem::Update(
 		transceiver.isInputActive = inputKeyPressed;
 		
 		float increasedInverval = transceiver.intervalSeconds + deltaTime;
-		float maxInterval = settings.dashTime * 3.0f;
-		transceiver.intervalSeconds = std::fminf(increasedInverval, maxInterval);
+		transceiver.intervalSeconds = std::fminf(increasedInverval, settings.exitTime);
 
 #ifdef DEBUG_BUILD
 		if (!transceiver.isInputActive)

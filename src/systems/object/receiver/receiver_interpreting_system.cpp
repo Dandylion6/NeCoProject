@@ -30,6 +30,7 @@ void ReceiverInterpretingSystem::Update(
 		case MorseCode::BACK_CODE:
 		{
 			if (receiver.message.empty()) continue;
+			receiver.incomingCharacter = MorseCode::NULL_CODE;
 			receiver.message.pop_back();
 
 			const std::string RESPONSE = "assets/audio/voicelines/receiver/commands/remove_request.wav";
@@ -39,7 +40,9 @@ void ReceiverInterpretingSystem::Update(
 		}
 		case MorseCode::CANCEL_CODE:
 		{
+			receiver.incomingCharacter = MorseCode::NULL_CODE;
 			receiver.message.clear();
+
 			const std::string RESPONSE = "assets/audio/voicelines/receiver/commands/clear_transmission_request.wav";
 			Sound response = LoadSoundAlias(resourceStore.GetSound(RESPONSE));
 			RadioSoundSystem::Broadcast(registry, std::move(response), Low);

@@ -47,19 +47,18 @@ void Renderer::DrawSprite(
 void Renderer::DrawRectangle(
 	Nc::Vector2f position,
 	Nc::Vector2f size,
-	Nc::RGBa fillColor
+	Nc::RGBa fillColor,
+	Nc::Vector2f origin,
+	float rotation
 )
 {
 	bool isTransparent = fillColor.alpha == 0u;
 	if (isTransparent) return;
 
-	Nc::Vector2i pixelPosition = Nc::Vector2f::Round(position);
-	Nc::Vector2i pixelSize = Nc::Vector2f::Round(size);
-	::DrawRectangle(
-		pixelPosition.x, 
-		pixelPosition.y,
-		pixelSize.x,
-		pixelSize.y,
+	::DrawRectanglePro(
+		Rectangle { position.x, position.y, size.x, size.y },
+		origin,
+		rotation,
 		fillColor
 	);
 }

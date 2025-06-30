@@ -15,7 +15,7 @@ namespace Nc
 	struct Vector2f;
 
 
-	struct alignas(8u) Vector2i
+	struct Vector2i
 	{
 		int x = 0, y = 0;
 
@@ -35,23 +35,22 @@ namespace Nc
 	};
 
 
-	struct alignas(8u) Vector2f
+	struct Vector2f
 	{
 		float x = 0.0f, y = 0.0f;
 
 		constexpr Vector2f() = default;
 		constexpr Vector2f(float x, float y): x(x), y(y) { };
+		constexpr Vector2f(Vector2 vector) { x = vector.x, y = vector.y; };
 
-		Vector2f(Vector2 vector);
-
-		static Vector2f Zero();
-		static Vector2f Up();
-		static Vector2f Down();
-		static Vector2f Right();
-		static Vector2f Up(float length);
-		static Vector2f Down(float length);
-		static Vector2f Right(float length);
-		static Vector2f Scale(float scale);
+		constexpr static Vector2f Zero() { return Vector2f(0.0f, 0.0f); };
+		constexpr static Vector2f Up() { return Vector2f(0.0f, 1.0f); };
+		constexpr static Vector2f Down() { return Vector2f(0.0f, -1.0f); };
+		constexpr static Vector2f Right() { return Vector2f(1.0f, 0.0f); };
+		constexpr static Vector2f Up(const float length) { return Vector2f(0.0f, length); };
+		constexpr static Vector2f Down(const float length) { return Vector2f(0.0f, -length); };
+		constexpr static Vector2f Right(const float length) { return Vector2f(length, 0.0f); };
+		constexpr static Vector2f Scale(const float scale) { return Vector2f(scale, scale); };
 		static Vector2f Round(const Vector2f& vector);
 
 		float GetDistance() const;

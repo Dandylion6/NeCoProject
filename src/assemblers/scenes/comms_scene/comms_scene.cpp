@@ -1,6 +1,7 @@
 #include "assemblers/entities/move_region_entity.h"
 #include "assemblers/entities/scene_background_entity.h"
 #include "assemblers/scenes/comms_scene/comms_scene.h"
+#include "assemblers/scenes/comms_scene/morse_monitor_object.h"
 #include "assemblers/scenes/comms_scene/morse_transceiver_entity.h"
 #include "assemblers/scenes/comms_scene/radar_object.h"
 #include "assemblers/scenes/comms_scene/radio_entity.h"
@@ -18,6 +19,7 @@ void CommsScene::Build(
 )
 {
 	Construct::RadarObject(registry);
+	Construct::MorseMonitorObject(registry, resourceStore);
 	Construct::MorseTransceiverEntity(registry);
 	Construct::RadioEntity(registry);
 

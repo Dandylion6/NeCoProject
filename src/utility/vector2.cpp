@@ -47,59 +47,6 @@ namespace Nc
 	}
 
 
-	Vector2f::Vector2f(Vector2 vector)
-	{
-		x = vector.x, y = vector.y;
-	}
-
-
-	Vector2f Vector2f::Zero()
-	{
-		return Vector2f(0.0f, 0.0f);
-	}
-
-
-	Vector2f Vector2f::Up()
-	{
-		return Vector2f(0.0f, 1.0f);
-	}
-
-
-	Vector2f Vector2f::Down()
-	{
-		return Vector2f(0.0f, -1.0f);
-	}
-
-	Vector2f Vector2f::Right()
-	{
-		return Vector2f(1.0f, 0.0f);
-	}
-
-
-	Vector2f Vector2f::Up(float length)
-	{
-		return Vector2f(0.0f, length);
-	}
-
-
-	Vector2f Vector2f::Down(float length)
-	{
-		return Vector2f(0.0f, -length);
-	}
-
-
-	Vector2f Vector2f::Right(float length)
-	{
-		return Vector2f(length, 0.0f);
-	}
-
-
-	Vector2f Vector2f::Scale(float scale)
-	{
-		return Vector2f(scale, scale);
-	}
-
-
 	Vector2f Vector2f::Round(const Vector2f& vector)
 	{
 		return Vector2f(std::roundf(vector.x), std::roundf(vector.y));
