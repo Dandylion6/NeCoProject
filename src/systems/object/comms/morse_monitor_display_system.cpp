@@ -32,8 +32,8 @@ void MorseMonitorDisplaySystem::UpdatePointer(
 		const Component::MorseTransceiver& transceiver = *result;
 		if (!transceiver.isInputActive)
 		{
-			transform.position.x = Math::Lerp(
-				transform.position.x, MorseMonitor::POSITION.x, deltaTime * 32.0f
+			transform.position.x = Math::SmoothApproach(
+				transform.position.x, MorseMonitor::POSITION.x, deltaTime, 32.0f
 			);
 			continue;
 		}

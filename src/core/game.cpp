@@ -103,28 +103,28 @@ void Game::InitialiseAssemblers()
 	Construct::MoveTransitionEntity(registry, renderContext, gameState);
 	Construct::AmbientSoundEntity(registry);
 
-#ifdef DEBUG_BUILD
-	if (!Game::debugContext.ignoreMainMenu)
-	{
-		MainMenuScene::Build(registry, gameState, resourceStore);
-	}
-	else gameState.currentScene = CommsRoom;
-#else
-	MainMenuScene::Build(registry, gameState, resourceStore);
-#endif // DEBUG_BUILD
-
 	CommsScene::Build(registry, gameState, resourceStore);
 	DeskScene::Build(registry, gameState, resourceStore);
 	DoorwayScene::Build(registry, gameState, resourceStore);
 	OutsideScene::Build(registry, gameState, resourceStore);
+
+#ifdef DEBUG_BUILD
+	if (!Game::debugContext.ignoreMainMenu)
+	{
+		MainMenuScene::Build(registry, gameState, resourceStore);
+	} else gameState.currentScene = CommsRoom;
+#else
+	MainMenuScene::Build(registry, gameState, resourceStore);
+#endif // DEBUG_BUILD
 }
 
 
 void Game::SetupWindow() const
 {
-	const Nc::Vector2i monitorSize = Nc::Vector2i(GetMonitorWidth(0), GetMonitorHeight(0));
+	SetConfigFlags(FLAG_VSYNC_HINT);
+
+	Nc::Vector2i monitorSize = Nc::Vector2i(GetMonitorWidth(0), GetMonitorHeight(0));
 	InitWindow(monitorSize.x, monitorSize.y, "Negative Contact");
-	SetTargetFPS(GameState::FRAME_RATE);
 	SetWindowState(FLAG_WINDOW_MAXIMIZED);
 
 #ifdef DEBUG_BUILD
@@ -246,13 +246,13 @@ void Game::DrawDebugUi()
 {
 	Game::debugContext.frames.pop_back();
 	Game::debugContext.frames.push_front(GetFPS());
-	float averageFps = 0.0f;
-	for (const float frame : Game::debugContext.frames)
+	int averageFps = 0;
+	for (const int frame : Game::debugContext.frames)
 	{
 		averageFps += frame;
 	}
-	averageFps = std::roundf(averageFps / 32.0f);
-	std::string text = "FPS: " + std::to_string(static_cast<int>(averageFps));
+	averageFps = averageFps / 32;
+	std::string text = "FPS: " + std::to_string(averageFps);
 	DrawText(text.c_str(), 32, 32, 32, GREEN);
 
 	text = "MSG: " + Game::debugContext.receiverMessage;
