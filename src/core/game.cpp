@@ -22,7 +22,8 @@
 #include "systems/core/sound_system.h"
 #include "systems/core/tween_system.h"
 #include "systems/object/comms/morse_monitor_display_system.h"
-#include "systems/entity/roamer_spawning_system.h"
+#include "systems/anomaly/roamer_movement_system.h"
+#include "systems/anomaly/roamer_spawning_system.h"
 #include "systems/object/comms/morse_sound_system.h"
 #include "systems/object/comms/morse_transceiver_system.h"
 #include "systems/object/comms/radar/blip_blink_system.h"
@@ -178,7 +179,8 @@ void Game::UpdateRegistries(float deltaTime)
 	ArtilleryAimingSystem::Update(registry, deltaTime);
 	ArtilleryFireSystem::Update(registry, resourceStore, deltaTime);
 	ProjectileHitSystem::Update(registry, deltaTime);
-	RoamerSpawningSystem::Update(registry, deltaTime);
+	RoamerSpawningSystem::Update(registry, gameState.anomalyState, gameState.time);
+	RoamerMovementSystem::Update(registry, deltaTime);
 }
 
 

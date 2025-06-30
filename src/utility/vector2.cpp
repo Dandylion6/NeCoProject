@@ -71,6 +71,20 @@ namespace Nc
 	}
 
 
+	Nc::Vector2f Vector2f::Normalized() const
+	{
+		float length = GetDistance();
+		return Nc::Vector2f(x, y) / length;
+	}
+
+
+	void Vector2f::Normalize()
+	{
+		float length = GetDistance();
+		x /= length, y /= length;
+	}
+
+
 	Vector2f::operator Vector2() const
 	{
 		return Vector2 { x, y };

@@ -1,7 +1,7 @@
 #pragma once
 #include "core/scene.h"
 #include "utility/morse_code.h"
-#include <cstdint>
+#include "utility/vector2.h"
 
 
 struct MorseSettings
@@ -13,11 +13,20 @@ struct MorseSettings
 };
 
 
+struct AnomalyState
+{
+	float lastSpawnTime = 0.0f;
+	float spawnWaitMinutes = 0.1f;
+};
+
+
 struct GameState
 {
-	static constexpr uint8_t FRAME_RATE = 120u;
+	static constexpr Nc::Vector2f BUNKER_POSITION = Nc::Vector2f(238.0f, 251.0f);
+	static constexpr Nc::Vector2f ARTILLERY_POSITION = Nc::Vector2f(60.0f, 156.0f);
 
 	MorseSettings morseSettings { };
+	AnomalyState anomalyState { };
 	float time = 0.0f;
 	Scene currentScene = NullScene;
 	Scene movingToScene = NullScene;

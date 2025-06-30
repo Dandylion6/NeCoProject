@@ -106,10 +106,10 @@ ArtilleryControlSystem::CoordResult ArtilleryControlSystem::InterpretMessageAsCo
 	switch (result.axis)
 	{
 	case CoordResult::Horizontal:
-		regionLength = RenderContext::RADAR_SIZE.x;
+		regionLength = static_cast<float>(RenderContext::RADAR_SIZE.x);
 		break;
 	case CoordResult::Vertical:
-		regionLength = RenderContext::RADAR_SIZE.y;
+		regionLength = static_cast<float>(RenderContext::RADAR_SIZE.y);
 		break;
 	default:
 		break;

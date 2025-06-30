@@ -57,6 +57,9 @@ namespace Nc
 		float GetSqrDistance() const;
 		float GetMin() const;
 
+		Nc::Vector2f Normalized() const;
+		void Normalize();
+
 		operator Vector2() const;
 		operator Vector2i() const;
 
