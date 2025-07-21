@@ -1,10 +1,10 @@
-#include "components/core/transform_component.h"
-#include "components/objects/comms/radar_tags.h"
-#include "components/objects/outside/artillery_component.h"
+#include "components/core/transform_component.hpp"
+#include "components/objects/comms/radar_tags.hpp"
+#include "components/objects/outside/artillery_component.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/object/comms/radar/radar_artillery_system.h"
-#include "utility/vector2.h"
+#include "systems/object/comms/radar/radar_artillery_system.hpp"
+#include "utility/vector2.hpp"
 
 
 void RadarArtillerySystem::Update(

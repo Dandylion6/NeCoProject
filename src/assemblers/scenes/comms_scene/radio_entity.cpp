@@ -1,13 +1,13 @@
-#include "assemblers/scenes/comms_scene/radio_entity.h"
-#include "components/core/sound_emitter_component.h"
-#include "components/core/transform_component.h"
-#include "components/objects/comms/radio_component.h"
-#include "core/render_context.h"
-#include "core/scene.h"
+#include "assemblers/scenes/comms_scene/radio_entity.hpp"
+#include "components/core/sound_emitter_component.hpp"
+#include "components/core/transform_component.hpp"
+#include "components/objects/comms/radio_component.hpp"
+#include "core/render_context.hpp"
+#include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "utility/vector2.h"
+#include "utility/vector2.hpp"
 
 
 const entt::entity Construct::RadioEntity(entt::registry& registry)

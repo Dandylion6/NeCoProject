@@ -1,9 +1,9 @@
-#include "components/objects/outside/artillery_component.h"
+#include "components/objects/outside/artillery_component.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/object/outside/receiver/artillery_aiming_systerm.h"
-#include "utility/interpolation.h"
-#include "utility/vector2.h"
+#include "systems/object/outside/receiver/artillery_aiming_systerm.hpp"
+#include "utility/interpolation.hpp"
+#include "utility/vector2.hpp"
 
 
 void ArtilleryAimingSystem::Update(

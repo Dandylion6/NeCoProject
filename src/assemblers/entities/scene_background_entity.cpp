@@ -1,12 +1,12 @@
-#include "assemblers/entities/scene_background_entity.h"
-#include "components/core/rendering/sprite_component.h"
-#include "components/core/transform_component.h"
-#include "core/render_context.h"
-#include "core/scene.h"
+#include "assemblers/entities/scene_background_entity.hpp"
+#include "components/core/rendering/sprite_component.hpp"
+#include "components/core/transform_component.hpp"
+#include "core/render_context.hpp"
+#include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "utility/vector2.h"
+#include "utility/vector2.hpp"
 
 
 const entt::entity Construct::SceneBackgroundEntity(

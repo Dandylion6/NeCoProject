@@ -1,12 +1,12 @@
-#include "components/core/rendering/rectangle_component.h"
-#include "components/core/transform_component.h"
-#include "core/rendering.h"
-#include "core/scene.h"
+#include "components/core/rendering/rectangle_component.hpp"
+#include "components/core/transform_component.hpp"
+#include "core/rendering.hpp"
+#include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/core/rendering/rectangle_render_system.h"
-#include "utility/bounds.h"
-#include "utility/vector2.h"
+#include "systems/core/rendering/rectangle_render_system.hpp"
+#include "utility/bounds.hpp"
+#include "utility/vector2.hpp"
 
 
 void RectangleRenderSystem::DrawScreen(

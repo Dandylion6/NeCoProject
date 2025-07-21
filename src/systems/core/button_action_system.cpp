@@ -1,13 +1,13 @@
-#include "components/core/button_action_component.h"
-#include "components/core/transform_component.h"
-#include "core/game_state.h"
-#include "core/render_context.h"
+#include "components/core/button_action_component.hpp"
+#include "components/core/transform_component.hpp"
+#include "core/game_state.hpp"
+#include "core/render_context.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/core/button_action_system.h"
-#include "utility/bounds.h"
-#include "utility/vector2.h"
+#include "systems/core/button_action_system.hpp"
+#include "utility/bounds.hpp"
+#include "utility/vector2.hpp"
 
 
 void ButtonActionSystem::Update(

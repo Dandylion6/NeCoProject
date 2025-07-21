@@ -1,12 +1,12 @@
-#include "assemblers/entities/ambient_sound_entity.h"
-#include "components/core/sound_emitter_component.h"
-#include "components/core/transform_component.h"
-#include "components/scene/ambient_sound_tag.h"
-#include "core/render_context.h"
-#include "core/scene.h"
+#include "assemblers/entities/ambient_sound_entity.hpp"
+#include "components/core/sound_emitter_component.hpp"
+#include "components/core/transform_component.hpp"
+#include "components/scene/ambient_sound_tag.hpp"
+#include "core/render_context.hpp"
+#include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "utility/vector2.h"
+#include "utility/vector2.hpp"
 
 
 const entt::entity Construct::AmbientSoundEntity(

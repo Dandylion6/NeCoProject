@@ -1,8 +1,8 @@
-#include "assemblers/entities/scene_background_entity.h"
-#include "assemblers/scenes/main_menu/main_menu.h"
-#include "assemblers/scenes/main_menu/menu_background_entity.h"
-#include "assemblers/scenes/main_menu/menu_button_entities.h"
-#include "core/resource_store.h"
+#include "assemblers/entities/scene_background_entity.hpp"
+#include "assemblers/scenes/main_menu/main_menu.hpp"
+#include "assemblers/scenes/main_menu/menu_background_entity.hpp"
+#include "assemblers/scenes/main_menu/menu_button_entities.hpp"
+#include "core/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 
 

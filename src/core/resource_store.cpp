@@ -1,5 +1,5 @@
-#include "components/core/rendering/text_component.h"
-#include "core/resource_store.h"
+#include "components/core/rendering/text_component.hpp"
+#include "core/resource_store.hpp"
 #include "raylib.h"
 #include <string>
 #include <utility>

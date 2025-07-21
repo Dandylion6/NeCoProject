@@ -1,10 +1,10 @@
-#include "components/anomaly/anomaly_roamer_component.h"
-#include "components/core/transform_component.h"
-#include "core/game_state.h"
+#include "components/anomaly/anomaly_roamer_component.hpp"
+#include "components/core/transform_component.hpp"
+#include "core/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/anomaly/roamer_movement_system.h"
-#include "utility/vector2.h"
+#include "systems/anomaly/roamer_movement_system.hpp"
+#include "utility/vector2.hpp"
 
 
 void RoamerMovementSystem::Update(

@@ -1,9 +1,9 @@
 #include "algorithm"
-#include "components/core/tween_component.h"
+#include "components/core/tween_component.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/core/tween_system.h"
-#include "utility/interpolation.h"
+#include "systems/core/tween_system.hpp"
+#include "utility/interpolation.hpp"
 #include <utility>
 
 

@@ -1,4 +1,4 @@
-﻿#include "core/game.h"
+﻿#include "core/game.hpp"
 #include "raylib.h"
 #include <memory>
 
@@ -23,5 +23,8 @@ int main(int args, char* argv[])
 		game->UpdateRegistries(deltaTime);
 		game->DrawGame();
 	}
+
+	game->Shutdown();
+
 	return 0;
 }

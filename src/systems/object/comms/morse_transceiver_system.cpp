@@ -1,21 +1,21 @@
-#include "components/core/transform_component.h"
-#include "components/objects/comms/morse_transceiver_component.h"
-#include "components/objects/outside/receiver_component.h"
+#include "components/core/transform_component.hpp"
+#include "components/objects/comms/morse_transceiver_component.hpp"
+#include "components/objects/outside/receiver_component.hpp"
 #ifdef DEBUG_BUILD
-#include "core/debug_context.h"
-#include "core/game.h"
+#include "core/debug_context.hpp"
+#include "core/game.hpp"
 #endif // DEBUG_BUILD
-#include "core/scene.h"
+#include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/object/comms/morse_transceiver_system.h"
-#include "utility/morse_code.h"
+#include "systems/object/comms/morse_transceiver_system.hpp"
+#include "utility/morse_code.hpp"
 #include <cmath>
 #include <cstdint>
 #include <string>
-#include "core/game_state.h"
-#include "utility/vector2.h"
+#include "core/game_state.hpp"
+#include "utility/vector2.hpp"
 
 
 void MorseTransceiverSystem::Update(

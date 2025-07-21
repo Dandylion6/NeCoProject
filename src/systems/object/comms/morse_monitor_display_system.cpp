@@ -1,12 +1,12 @@
-#include "assemblers/scenes/comms_scene/morse_monitor_object.h"
-#include "components/core/transform_component.h"
-#include "components/objects/comms/morse_monitor.h"
-#include "components/objects/comms/morse_transceiver_component.h"
-#include "core/game_state.h"
+#include "assemblers/scenes/comms_scene/morse_monitor_object.hpp"
+#include "components/core/transform_component.hpp"
+#include "components/objects/comms/morse_monitor.hpp"
+#include "components/objects/comms/morse_transceiver_component.hpp"
+#include "core/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/object/comms/morse_monitor_display_system.h"
-#include "utility/interpolation.h"
+#include "systems/object/comms/morse_monitor_display_system.hpp"
+#include "utility/interpolation.hpp"
 #include <cmath>
 
 

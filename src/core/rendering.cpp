@@ -1,11 +1,11 @@
-#include "components/core/rendering/sprite_component.h"
-#include "components/core/rendering/text_component.h"
-#include "core/rendering.h"
-#include "core/resource_store.h"
-#include "core/scene.h"
+#include "components/core/rendering/sprite_component.hpp"
+#include "components/core/rendering/text_component.hpp"
+#include "core/rendering.hpp"
+#include "core/resource_store.hpp"
+#include "core/scene.hpp"
 #include "raylib.h"
-#include "utility/color.h"
-#include "utility/vector2.h"
+#include "utility/color.hpp"
+#include "utility/vector2.hpp"
 
 
 bool Renderer::IsRenderableToScreen(Scene boundScene, Scene currentScene)

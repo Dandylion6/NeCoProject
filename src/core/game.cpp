@@ -1,43 +1,43 @@
-#include "assemblers/entities/ambient_sound_entity.h"
-#include "assemblers/entities/move_transition_entity.h"
-#include "assemblers/scenes/comms_scene/comms_scene.h"
-#include "assemblers/scenes/desk_scene/desk_scene.h"
-#include "assemblers/scenes/doorway_scene/doorway_scene.h"
-#include "assemblers/scenes/main_menu/main_menu.h"
-#include "assemblers/scenes/outside_scene/outside_scene.h"
+#include "assemblers/entities/ambient_sound_entity.hpp"
+#include "assemblers/entities/move_transition_entity.hpp"
+#include "assemblers/scenes/comms_scene/comms_scene.hpp"
+#include "assemblers/scenes/desk_scene/desk_scene.hpp"
+#include "assemblers/scenes/doorway_scene/doorway_scene.hpp"
+#include "assemblers/scenes/main_menu/main_menu.hpp"
+#include "assemblers/scenes/outside_scene/outside_scene.hpp"
 #ifdef DEBUG_BUILD
-#include "core/debug_context.h"
-#include "utility/morse_code.h"
+#include "core/debug_context.hpp"
+#include "utility/morse_code.hpp"
 #endif // DEBUG_BUILD
-#include "core/game.h"
-#include "core/game_state.h"
-#include "core/render_context.h"
-#include "core/scene.h"
+#include "core/game.hpp"
+#include "core/game_state.hpp"
+#include "core/render_context.hpp"
+#include "core/scene.hpp"
 #include "cstring"
 #include "raylib.h"
-#include "systems/core/button_action_system.h"
-#include "systems/core/rendering/rectangle_render_system.h"
-#include "systems/core/rendering/sprite_render_system.h"
-#include "systems/core/rendering/text_render_system.h"
-#include "systems/core/sound_system.h"
-#include "systems/core/tween_system.h"
-#include "systems/object/comms/morse_monitor_display_system.h"
-#include "systems/anomaly/roamer_movement_system.h"
-#include "systems/anomaly/roamer_spawning_system.h"
-#include "systems/object/comms/morse_sound_system.h"
-#include "systems/object/comms/morse_transceiver_system.h"
-#include "systems/object/comms/radar/blip_blink_system.h"
-#include "systems/object/comms/radar/radar_artillery_system.h"
-#include "systems/object/comms/radar/radar_render_system.h"
-#include "systems/object/comms/radio_sound_system.h"
-#include "systems/object/outside/blip_death_system.h"
-#include "systems/object/outside/projectile_hit_system.h"
-#include "systems/object/outside/receiver/artillery_aiming_systerm.h"
-#include "systems/object/outside/receiver/artillery_fire_system.h"
-#include "systems/object/outside/receiver/receiver_code_response_system.h"
-#include "systems/object/outside/receiver/receiver_interpreting_system.h"
-#include "systems/scene/ambient_sound_system.h"
-#include "utility/vector2.h"
+#include "systems/core/button_action_system.hpp"
+#include "systems/core/rendering/rectangle_render_system.hpp"
+#include "systems/core/rendering/sprite_render_system.hpp"
+#include "systems/core/rendering/text_render_system.hpp"
+#include "systems/core/sound_system.hpp"
+#include "systems/core/tween_system.hpp"
+#include "systems/object/comms/morse_monitor_display_system.hpp"
+#include "systems/anomaly/roamer_movement_system.hpp"
+#include "systems/anomaly/roamer_spawning_system.hpp"
+#include "systems/object/comms/morse_sound_system.hpp"
+#include "systems/object/comms/morse_transceiver_system.hpp"
+#include "systems/object/comms/radar/blip_blink_system.hpp"
+#include "systems/object/comms/radar/radar_artillery_system.hpp"
+#include "systems/object/comms/radar/radar_render_system.hpp"
+#include "systems/object/comms/radio_sound_system.hpp"
+#include "systems/object/outside/blip_death_system.hpp"
+#include "systems/object/outside/projectile_hit_system.hpp"
+#include "systems/object/outside/receiver/artillery_aiming_systerm.hpp"
+#include "systems/object/outside/receiver/artillery_fire_system.hpp"
+#include "systems/object/outside/receiver/receiver_code_response_system.hpp"
+#include "systems/object/outside/receiver/receiver_interpreting_system.hpp"
+#include "systems/scene/ambient_sound_system.hpp"
+#include "utility/vector2.hpp"
 #include <cmath>
 #include <string>
 
@@ -128,6 +128,8 @@ void Game::SetupWindow() const
 	InitWindow(monitorSize.x, monitorSize.y, "Negative Contact");
 	SetWindowState(FLAG_WINDOW_MAXIMIZED);
 
+	SetExitKey(KEY_BACKSPACE);
+
 #ifdef DEBUG_BUILD
 	SetWindowState(FLAG_WINDOW_RESIZABLE);
 	MaximizeWindow();
@@ -153,7 +155,6 @@ bool Game::ShouldRun() const
 
 void Game::Update(float deltaTime)
 {
-	if (IsKeyPressed(KEY_ESCAPE)) Shutdown();
 	if (!gameState.isPaused) gameState.time += deltaTime;
 }
 

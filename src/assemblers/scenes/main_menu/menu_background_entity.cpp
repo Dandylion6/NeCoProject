@@ -1,9 +1,9 @@
-#include "assemblers/scenes/main_menu/menu_background_entity.h"
-#include "components/core/rendering/sprite_component.h"
-#include "components/core/transform_component.h"
-#include "components/ui/main_menu_tag.h"
+#include "assemblers/scenes/main_menu/menu_background_entity.hpp"
+#include "components/core/rendering/sprite_component.hpp"
+#include "components/core/transform_component.hpp"
+#include "components/ui/main_menu_tag.hpp"
 #include "entt/entity/registry.hpp"
-#include "utility/vector2.h"
+#include "utility/vector2.hpp"
 
 
 const entt::entity Construct::MainMenuBackgroundEntity(entt::registry& registry)

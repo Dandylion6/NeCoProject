@@ -1,5 +1,5 @@
 #include "raylib.h"
-#include "utility/interpolation.h"
+#include "utility/interpolation.hpp"
 #include <cmath>
 
 

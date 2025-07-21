@@ -1,7 +1,7 @@
-#include "components/core/transform_component.h"
+#include "components/core/transform_component.hpp"
 #include "raylib.h"
-#include "utility/bounds.h"
-#include "utility/vector2.h"
+#include "utility/bounds.hpp"
+#include "utility/vector2.hpp"
 
 
 namespace Nc

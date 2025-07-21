@@ -1,5 +1,5 @@
 #include "raylib.h"
-#include "utility/vector2.h"
+#include "utility/vector2.hpp"
 #include <cmath>
 
 

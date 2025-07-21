@@ -1,12 +1,12 @@
-#include "components/core/transform_component.h"
-#include "components/core/tween_component.h"
-#include "components/objects/comms/radar_tags.h"
-#include "components/objects/outside/blip_component.h"
+#include "components/core/transform_component.hpp"
+#include "components/core/tween_component.hpp"
+#include "components/objects/comms/radar_tags.hpp"
+#include "components/objects/outside/blip_component.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/object/comms/radar/blip_blink_system.h"
-#include "utility/tween.h"
-#include "utility/vector2.h"
+#include "systems/object/comms/radar/blip_blink_system.hpp"
+#include "utility/tween.hpp"
+#include "utility/vector2.hpp"
 #include <cmath>
 
 

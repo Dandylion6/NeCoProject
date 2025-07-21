@@ -1,10 +1,10 @@
-#include "components/core/sound_emitter_component.h"
-#include "components/objects/comms/radio_component.h"
+#include "components/core/sound_emitter_component.hpp"
+#include "components/objects/comms/radio_component.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/core/sound_system.h"
-#include "systems/object/comms/radio_sound_system.h"
+#include "systems/core/sound_system.hpp"
+#include "systems/object/comms/radio_sound_system.hpp"
 #include <utility>
 
 

@@ -1,5 +1,5 @@
 #include "raylib.h"
-#include "utility/color.h"
+#include "utility/color.hpp"
 #include <cstdint>
 
 

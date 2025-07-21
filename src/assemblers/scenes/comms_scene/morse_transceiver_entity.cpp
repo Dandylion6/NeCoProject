@@ -1,14 +1,14 @@
-#include "assemblers/scenes/comms_scene/morse_transceiver_entity.h"
-#include "components/core/sound_emitter_component.h"
-#include "components/core/transform_component.h"
-#include "components/objects/comms/morse_transceiver_component.h"
-#include "core/render_context.h"
-#include "core/scene.h"
+#include "assemblers/scenes/comms_scene/morse_transceiver_entity.hpp"
+#include "components/core/sound_emitter_component.hpp"
+#include "components/core/transform_component.hpp"
+#include "components/objects/comms/morse_transceiver_component.hpp"
+#include "core/render_context.hpp"
+#include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/core/sound_system.h"
-#include "utility/vector2.h"
+#include "systems/core/sound_system.hpp"
+#include "utility/vector2.hpp"
 #include <utility>
 
 

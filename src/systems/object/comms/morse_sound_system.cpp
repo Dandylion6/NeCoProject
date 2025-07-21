@@ -1,10 +1,10 @@
-#include "components/core/sound_emitter_component.h"
-#include "components/objects/comms/morse_transceiver_component.h"
-#include "core/scene.h"
+#include "components/core/sound_emitter_component.hpp"
+#include "components/objects/comms/morse_transceiver_component.hpp"
+#include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/object/comms/morse_sound_system.h"
-#include "utility/interpolation.h"
+#include "systems/object/comms/morse_sound_system.hpp"
+#include "utility/interpolation.hpp"
 
 
 void MorseSoundSystem::Update(

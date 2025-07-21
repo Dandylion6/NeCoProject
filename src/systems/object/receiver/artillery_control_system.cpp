@@ -1,17 +1,17 @@
 #include "cctype"
-#include "components/objects/comms/radio_component.h"
-#include "components/objects/outside/artillery_component.h"
-#include "components/objects/outside/receiver_component.h"
-#include "core/resource_store.h"
+#include "components/objects/comms/radio_component.hpp"
+#include "components/objects/outside/artillery_component.hpp"
+#include "components/objects/outside/receiver_component.hpp"
+#include "core/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/object/comms/radio_sound_system.h"
-#include "systems/object/outside/receiver/artillery_control_system.h"
+#include "systems/object/comms/radio_sound_system.hpp"
+#include "systems/object/outside/receiver/artillery_control_system.hpp"
 #include <cstdint>
 #include <string>
 #include <utility>
-#include "core/render_context.h"
+#include "core/render_context.hpp"
 
 
 const std::string ArtilleryControlSystem::COMMAND = "AIM";

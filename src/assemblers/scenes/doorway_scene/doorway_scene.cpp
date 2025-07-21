@@ -1,11 +1,11 @@
-#include "assemblers/entities/move_region_entity.h"
-#include "assemblers/entities/scene_background_entity.h"
-#include "assemblers/scenes/doorway_scene/doorway_scene.h"
-#include "core/resource_store.h"
-#include "core/scene.h"
+#include "assemblers/entities/move_region_entity.hpp"
+#include "assemblers/entities/scene_background_entity.hpp"
+#include "assemblers/scenes/doorway_scene/doorway_scene.hpp"
+#include "core/resource_store.hpp"
+#include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "raylib.h"
-#include "utility/vector2.h" 
+#include "utility/vector2.hpp" 
 
 
 void DoorwayScene::Build(

@@ -1,10 +1,10 @@
-#include "components/core/tween_component.h"
-#include "components/objects/health_component.h"
-#include "components/objects/outside/blip_component.h"
+#include "components/core/tween_component.hpp"
+#include "components/objects/health_component.hpp"
+#include "components/objects/outside/blip_component.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/object/outside/blip_death_system.h"
-#include "utility/tween.h"
+#include "systems/object/outside/blip_death_system.hpp"
+#include "utility/tween.hpp"
 
 
 void BlipDeathSystem::Update(entt::registry& registry)

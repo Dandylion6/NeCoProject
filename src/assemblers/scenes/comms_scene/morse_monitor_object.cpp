@@ -1,13 +1,13 @@
-#include "assemblers/scenes/comms_scene/morse_monitor_object.h"
-#include "components/core/rendering/rectangle_component.h"
-#include "components/core/transform_component.h"
-#include "components/objects/comms/morse_monitor.h"
-#include "core/scene.h"
+#include "assemblers/scenes/comms_scene/morse_monitor_object.hpp"
+#include "components/core/rendering/rectangle_component.hpp"
+#include "components/core/transform_component.hpp"
+#include "components/objects/comms/morse_monitor.hpp"
+#include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "utility/color.h"
-#include "utility/vector2.h"
+#include "utility/color.hpp"
+#include "utility/vector2.hpp"
 
 
 void Construct::MorseMonitorObject(

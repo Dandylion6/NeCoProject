@@ -1,14 +1,14 @@
-#include "components/core/sound_emitter_component.h"
-#include "components/core/transform_component.h"
-#include "components/scene/ambient_sound_tag.h"
-#include "core/game_state.h"
-#include "core/scene.h"
+#include "components/core/sound_emitter_component.hpp"
+#include "components/core/transform_component.hpp"
+#include "components/scene/ambient_sound_tag.hpp"
+#include "core/game_state.hpp"
+#include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/core/sound_system.h"
-#include "systems/scene/ambient_sound_system.h"
-#include "utility/interpolation.h"
+#include "systems/core/sound_system.hpp"
+#include "systems/scene/ambient_sound_system.hpp"
+#include "utility/interpolation.hpp"
 #include <string>
 #include <utility>
 

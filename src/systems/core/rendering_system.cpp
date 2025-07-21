@@ -1,11 +1,11 @@
-#include "components/core/rendering/sprite_component.h"
-#include "components/core/transform_component.h"
-#include "core/render_context.h"
-#include "core/scene.h"
+#include "components/core/rendering/sprite_component.hpp"
+#include "components/core/transform_component.hpp"
+#include "core/render_context.hpp"
+#include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/core/rendering_system.h"
+#include "systems/core/rendering_system.hpp"
 
 
 void RenderingSystem::Draw(

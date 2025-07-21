@@ -1,5 +1,5 @@
-#include "assemblers/scenes/outside_scene/artillery_entity.h"
-#include "assemblers/scenes/outside_scene/outside_scene.h"
+#include "assemblers/scenes/outside_scene/artillery_entity.hpp"
+#include "assemblers/scenes/outside_scene/outside_scene.hpp"
 #include "entt/entity/fwd.hpp"
 
 

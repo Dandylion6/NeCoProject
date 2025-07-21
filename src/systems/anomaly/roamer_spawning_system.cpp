@@ -1,12 +1,12 @@
-#include "assemblers/scenes/comms_scene/radar_object.h"
-#include "components/anomaly/anomaly_roamer_component.h"
-#include "core/game_state.h"
-#include "core/render_context.h"
+#include "assemblers/scenes/comms_scene/radar_object.hpp"
+#include "components/anomaly/anomaly_roamer_component.hpp"
+#include "core/game_state.hpp"
+#include "core/render_context.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/anomaly/roamer_spawning_system.h"
-#include "utility/vector2.h"
+#include "systems/anomaly/roamer_spawning_system.hpp"
+#include "utility/vector2.hpp"
 #include <cstdint>
 
 

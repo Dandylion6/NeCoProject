@@ -1,14 +1,14 @@
-#include "assemblers/entities/projectile_entity.h"
-#include "components/core/sound_emitter_component.h"
-#include "components/core/transform_component.h"
-#include "components/objects/outside/projectile_component.h"
-#include "core/render_context.h"
-#include "core/resource_store.h"
-#include "core/scene.h"
+#include "assemblers/entities/projectile_entity.hpp"
+#include "components/core/sound_emitter_component.hpp"
+#include "components/core/transform_component.hpp"
+#include "components/objects/outside/projectile_component.hpp"
+#include "core/render_context.hpp"
+#include "core/resource_store.hpp"
+#include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "utility/vector2.h"
+#include "utility/vector2.hpp"
 #include <utility>
 
 
