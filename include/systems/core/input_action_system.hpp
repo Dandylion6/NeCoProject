@@ -8,7 +8,7 @@ class InputActionSystem
 public:
     static void Update(
         entt::registry& registry,
-        GameState& game_state
+        GameState& gameState
     );
 
 };

@@ -32,6 +32,8 @@ void RectangleRenderSystem::DrawUi(
 	auto view = registry.view<const Component::UiTransform, const Component::Rectangle>();
 	for (auto [entity, transform, rectangle] : view.each())
 	{
+		if (!transform.isVisible) continue;
+
 		Nc::Vector2f anchorPoint = transform.anchor * windowSize;
 		Nc::Vector2f position = anchorPoint + transform.offset;
 		Nc::Vector2f origin = transform.origin * transform.size;

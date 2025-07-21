@@ -9,5 +9,8 @@ namespace Component
     {
         std::function<void()> onPressed { };
         KeyboardKey key = KEY_NULL;
+
+        Input(KeyboardKey key, std::function<void()>&& onPressed): 
+            key(key), onPressed(std::move(onPressed)) { };
     };
 }

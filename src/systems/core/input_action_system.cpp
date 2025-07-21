@@ -18,7 +18,7 @@ void InputActionSystem::Update(entt::registry& registry, GameState& gameState)
             const Component::Transform& transform = registry.get<const Component::Transform>(entity);
             if (transform.boundScene != gameState.currentScene && transform.boundScene == NullScene) continue;
         }
-
+        
         if (IsKeyPressed(input.key)) input.onPressed();
     }
 };

@@ -46,6 +46,7 @@ namespace Component
 
 		float rotation = 0.0f;
 		zIndex index = 0;
+		bool isVisible = true;
 
 		UiTransform() = default;
 		UiTransform(

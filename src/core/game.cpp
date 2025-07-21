@@ -5,6 +5,7 @@
 #include "assemblers/scenes/doorway_scene/doorway_scene.hpp"
 #include "assemblers/scenes/main_menu/main_menu.hpp"
 #include "assemblers/scenes/outside_scene/outside_scene.hpp"
+#include "assemblers/scenes/settings_menu/settings_menu.hpp"
 #ifdef DEBUG_BUILD
 #include "core/debug_context.hpp"
 #include "utility/morse_code.hpp"
@@ -16,14 +17,15 @@
 #include "cstring"
 #include "raylib.h"
 #include "systems/core/button_action_system.hpp"
+#include "systems/core/input_action_system.hpp"
 #include "systems/core/rendering/rectangle_render_system.hpp"
 #include "systems/core/rendering/sprite_render_system.hpp"
 #include "systems/core/rendering/text_render_system.hpp"
 #include "systems/core/sound_system.hpp"
 #include "systems/core/tween_system.hpp"
-#include "systems/object/comms/morse_monitor_display_system.hpp"
 #include "systems/anomaly/roamer_movement_system.hpp"
 #include "systems/anomaly/roamer_spawning_system.hpp"
+#include "systems/object/comms/morse_monitor_display_system.hpp"
 #include "systems/object/comms/morse_sound_system.hpp"
 #include "systems/object/comms/morse_transceiver_system.hpp"
 #include "systems/object/comms/radar/blip_blink_system.hpp"
@@ -37,6 +39,7 @@
 #include "systems/object/outside/receiver/receiver_code_response_system.hpp"
 #include "systems/object/outside/receiver/receiver_interpreting_system.hpp"
 #include "systems/scene/ambient_sound_system.hpp"
+#include "systems/core/input_action_system.hpp"
 #include "utility/vector2.hpp"
 #include <cmath>
 #include <string>
@@ -109,6 +112,8 @@ void Game::InitialiseAssemblers()
 	DoorwayScene::Build(registry, gameState, resourceStore);
 	OutsideScene::Build(registry, gameState, resourceStore);
 
+	SettingsMenuScene::Build(registry, renderContext, gameState, resourceStore);
+
 #ifdef DEBUG_BUILD
 	if (!Game::debugContext.ignoreMainMenu)
 	{
@@ -161,6 +166,7 @@ void Game::Update(float deltaTime)
 
 void Game::UpdateRegistries(float deltaTime)
 {
+	InputActionSystem::Update(registry, gameState);
 	ButtonActionSystem::Update(registry, gameState, renderContext, deltaTime);
 	AmbientSoundSystem::Update(registry, gameState, deltaTime);
 	TweenSystem::Update(registry, deltaTime);
@@ -238,8 +244,8 @@ void Game::DrawScreen()
 
 void Game::DrawUi()
 {
-	SpriteRenderSystem::DrawUI(registry, renderContext.windowSize);
 	RectangleRenderSystem::DrawUi(registry, renderContext.windowSize);
+	SpriteRenderSystem::DrawUI(registry, renderContext.windowSize);
 	TextRenderSystem::DrawUi(registry, resourceStore, renderContext.windowSize);
 }
 

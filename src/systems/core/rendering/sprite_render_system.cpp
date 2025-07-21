@@ -30,6 +30,8 @@ void SpriteRenderSystem::DrawUI(
 	auto view = registry.view<const Component::Sprite, const Component::UiTransform>();
 	for (auto [entity, sprite, transform] : view.each())
 	{
+		if (!transform.isVisible) continue;
+
 		float scale = (windowSize / transform.size).GetMin();
 		scale = std::floorf(scale * 10.0f) * 0.1f;
 
