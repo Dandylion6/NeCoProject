@@ -3,7 +3,7 @@
 #include "utility/vector2.hpp"
 #include <cstdint>
 
-using zIndex = int8_t;
+using SortIndex = int8_t;
 
 
 namespace Component
@@ -16,7 +16,7 @@ namespace Component
 
 		float rotation = 0.0f;
 		Scene boundScene = CommsRoom;
-		zIndex index = 0;
+		SortIndex index = 0;
 
 		Transform() = default;
 		Transform(
@@ -24,15 +24,15 @@ namespace Component
 			Nc::Vector2f position = Nc::Vector2f::Zero(),
 			Nc::Vector2f size = Nc::Vector2f::Zero(),
 			Nc:: Vector2f offset = Nc::Vector2f::Zero(),
-			float rotation = 0.0f,
-			zIndex index = 0
+			SortIndex index = 0,
+			float rotation = 0.0f
 		): 
 			boundScene(boundScene),
 			position(position),
 			size(size),
 			offset(offset),
-			rotation(rotation),
-			index(index)
+			index(index),
+			rotation(rotation)
 		{ };
 	};
 
@@ -45,7 +45,7 @@ namespace Component
 		Nc::Vector2f offset = Nc::Vector2f::Zero();
 
 		float rotation = 0.0f;
-		zIndex index = 0;
+		SortIndex index = 0;
 		bool isVisible = true;
 
 		UiTransform() = default;
@@ -54,15 +54,15 @@ namespace Component
 			Nc::Vector2f origin = Nc::Vector2f::Zero(),
 			Nc::Vector2f size = Nc::Vector2f::Zero(),
 			Nc::Vector2f offset = Nc::Vector2f::Zero(),
-			float rotation = 0.0f,
-			zIndex index = 0
+			SortIndex index = 0,
+			float rotation = 0.0f
 		):
 			anchor(anchor),
 			origin(origin),
 			size(size),
 			offset(offset),
-			rotation(rotation),
-			index(index)
+			index(index),
+			rotation(rotation)
 		{ };
 	};
 }

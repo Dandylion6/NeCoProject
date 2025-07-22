@@ -1,7 +1,9 @@
 #pragma once
-#include "core/render_context.hpp"
+#include "components/core/transform_component.hpp"
 #include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
+struct GameState;
+struct RenderContext;
 
 
 class RenderingSystem
@@ -10,20 +12,21 @@ public:
 	static void Draw(
 		entt::registry& registry,
 		RenderContext& renderContext,
-		Scene currentScene
+		GameState& gameState
 	);
 
 private:
-	enum RenderType
+	enum class RenderType: uint8_t
 	{
-		Ignore,
+		Invalid,
 		Sprite,
-		Text
+		Rectangle,
+		Text,
 	};
 
-	static RenderType GetRenderType(
-		entt::registry& registry, 
-		const entt::entity entity,
-		Scene currentScene
-	);
+	static RenderType GetRenderType(entt::registry& registry, const entt::entity entity);
+
+	static bool ShouldRender(const Component::Transform& transform, Scene currentScene);
+
+	static bool ShouldRender(const Component::UiTransform& transform);
 };

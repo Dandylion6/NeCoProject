@@ -6,6 +6,7 @@
 #include "assemblers/scenes/main_menu/main_menu.hpp"
 #include "assemblers/scenes/outside_scene/outside_scene.hpp"
 #include "assemblers/scenes/settings_menu/settings_menu.hpp"
+#include "systems/core/rendering_system.hpp"
 #ifdef DEBUG_BUILD
 #include "core/debug_context.hpp"
 #include "utility/morse_code.hpp"
@@ -196,30 +197,33 @@ void Game::DrawGame()
 	RadarRenderSystem::DrawRenderTexture(
 		registry, renderContext.radarRenderTexture, gameState.currentScene, resourceStore
 	);
-	DrawScreen();
 
-	BeginDrawing();
-	ClearBackground(RenderContext::BACKGROUND_COLOR);
+	RenderingSystem::Draw(registry, renderContext, gameState);
 
-	Nc::Vector2f displaySize = RenderContext::DISPLAY_SIZE;
-	Rectangle source { 0, 0, displaySize.x, -displaySize.y };
+	//DrawScreen();
 
-	DrawTexturePro(
-		renderContext.renderTexture.texture,
-		source,
-		renderContext.renderRectangle,
-		Nc::Vector2f::Zero(),
-		0.0f,
-		WHITE
-	);
+	//BeginDrawing();
+	//ClearBackground(RenderContext::BACKGROUND_COLOR);
 
-	DrawUi();
+	//Nc::Vector2f displaySize = RenderContext::DISPLAY_SIZE;
+	//Rectangle source { 0, 0, displaySize.x, -displaySize.y };
+
+	//DrawTexturePro(
+	//	renderContext.renderTexture.texture,
+	//	source,
+	//	renderContext.renderRectangle,
+	//	Nc::Vector2f::Zero(),
+	//	0.0f,
+	//	WHITE
+	//);
+
+	//DrawUi();
 
 #ifdef DEBUG_BUILD
 	DrawDebugUi();
 #endif // DEBUG_BUILD
 
-	EndDrawing();
+	//EndDrawing();
 }
 
 
@@ -232,8 +236,8 @@ void Game::DrawScreen()
 	BeginTextureMode(renderContext.renderTexture);
 	ClearBackground(RenderContext::BACKGROUND_COLOR);
 
-	SpriteRenderSystem::DrawScreen(registry, gameState.currentScene, cameraPosition);
-	RectangleRenderSystem::DrawScreen(registry, gameState.currentScene, cameraPosition);
+	//SpriteRenderSystem::DrawScreen(registry, gameState.currentScene, cameraPosition);
+	//RectangleRenderSystem::DrawScreen(registry, gameState.currentScene, cameraPosition);
 	RadarRenderSystem::DrawRadar(
 		registry, renderContext.radarRenderTexture, cameraPosition, gameState.currentScene
 	);
@@ -244,8 +248,8 @@ void Game::DrawScreen()
 
 void Game::DrawUi()
 {
-	RectangleRenderSystem::DrawUi(registry, renderContext.windowSize);
-	SpriteRenderSystem::DrawUI(registry, renderContext.windowSize);
+	//RectangleRenderSystem::DrawUi(registry, renderContext.windowSize);
+	//SpriteRenderSystem::DrawUI(registry, renderContext.windowSize);
 	TextRenderSystem::DrawUi(registry, resourceStore, renderContext.windowSize);
 }
 

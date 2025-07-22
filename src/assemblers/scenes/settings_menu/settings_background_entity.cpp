@@ -44,7 +44,7 @@ const entt::entity Construct::SettingsBackgroundEntity(
 	Nc::Vector2f center = Nc::Vector2f::Scale(0.5f);
 
 	registry.emplace<Tag::Settings>(entity);
-	registry.emplace<Component::UiTransform>(entity, center, center, size);
+	registry.emplace<Component::UiTransform>(entity, center, center, size, Nc::Vector2f::Zero(), 1);
 	registry.emplace<Component::Sprite>(entity, texture);
 
 	std::function<void()> toggleSettings = [&registry]()
