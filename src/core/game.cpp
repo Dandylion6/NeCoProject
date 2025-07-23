@@ -198,59 +198,46 @@ void Game::DrawGame()
 		registry, renderContext.radarRenderTexture, gameState.currentScene, resourceStore
 	);
 
-	RenderingSystem::Draw(registry, renderContext, gameState);
-
-	//DrawScreen();
-
-	//BeginDrawing();
-	//ClearBackground(RenderContext::BACKGROUND_COLOR);
-
-	//Nc::Vector2f displaySize = RenderContext::DISPLAY_SIZE;
-	//Rectangle source { 0, 0, displaySize.x, -displaySize.y };
-
-	//DrawTexturePro(
-	//	renderContext.renderTexture.texture,
-	//	source,
-	//	renderContext.renderRectangle,
-	//	Nc::Vector2f::Zero(),
-	//	0.0f,
-	//	WHITE
-	//);
-
-	//DrawUi();
-
-#ifdef DEBUG_BUILD
-	DrawDebugUi();
-#endif // DEBUG_BUILD
-
-	//EndDrawing();
-}
-
-
-void Game::DrawScreen()
-{
 	Nc::Vector2f cameraPosition = Nc::Vector2f::Zero();
 	cameraPosition.x += std::cosf(gameState.time * 1.4f) * 5.0f;
 	cameraPosition.y += std::sinf((gameState.time * 2.8f) - 0.3f) * 4.0f;
 
 	BeginTextureMode(renderContext.renderTexture);
-	ClearBackground(RenderContext::BACKGROUND_COLOR);
 
-	//SpriteRenderSystem::DrawScreen(registry, gameState.currentScene, cameraPosition);
-	//RectangleRenderSystem::DrawScreen(registry, gameState.currentScene, cameraPosition);
+	RenderingSystem::DrawScreen(registry, renderContext, gameState, cameraPosition);
 	RadarRenderSystem::DrawRadar(
 		registry, renderContext.radarRenderTexture, cameraPosition, gameState.currentScene
 	);
 
 	EndTextureMode();
+
+	BeginDrawing();
+	ClearBackground(RenderContext::BACKGROUND_COLOR);
+
+	DrawRenderTexture();
+	RenderingSystem::DrawUi(registry, renderContext, gameState);
+
+#ifdef DEBUG_BUILD
+	DrawDebugUi();
+#endif // DEBUG_BUILD
+
+	EndDrawing();
 }
 
 
-void Game::DrawUi()
+void Game::DrawRenderTexture()
 {
-	//RectangleRenderSystem::DrawUi(registry, renderContext.windowSize);
-	//SpriteRenderSystem::DrawUI(registry, renderContext.windowSize);
-	TextRenderSystem::DrawUi(registry, resourceStore, renderContext.windowSize);
+	Nc::Vector2f displaySize = RenderContext::DISPLAY_SIZE;
+	Rectangle source { 0, 0, displaySize.x, -displaySize.y };
+
+	DrawTexturePro(
+		renderContext.renderTexture.texture,
+		source,
+		renderContext.renderRectangle,
+		Nc::Vector2f::Zero(),
+		0.0f,
+		WHITE
+	);
 }
 
 

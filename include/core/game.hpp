@@ -40,8 +40,8 @@ private:
 	GameState gameState { };
 	ResourceStore resourceStore { };
 
-	void DrawScreen();
-	void DrawUi();
+	void DrawRenderTexture();
+
 #ifdef DEBUG_BUILD
 	void DrawDebugUi();
 #endif // DEBUG_BUILD

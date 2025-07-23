@@ -19,29 +19,14 @@
 #include <functional>
 
 
-void RenderingSystem::Draw(
-    entt::registry& registry, RenderContext& renderContext, GameState& gameState
+void RenderingSystem::DrawScreen(
+    entt::registry& registry, 
+    RenderContext& renderContext, 
+    GameState& gameState, 
+    Nc::Vector2f cameraPosition
 )
 {
-    struct Renderable
-    {
-        entt::entity entity = entt::null;
-        RenderType type = RenderType::Invalid;
-        SortIndex index = 0;
-    };
-
-    std::function<bool(Renderable, Renderable)> comparison = [](Renderable a, Renderable b)
-    {
-        return a.index < b.index;
-    };
-
     std::vector<Renderable> entities { };
-
-    Nc::Vector2f cameraPosition = Nc::Vector2f::Zero();
-	cameraPosition.x += std::cosf(gameState.time * 1.4f) * 5.0f;
-	cameraPosition.y += std::sinf((gameState.time * 2.8f) - 0.3f) * 4.0f;
-
-    BeginTextureMode(renderContext.renderTexture);
 
     auto view = registry.view<Component::Transform>();
     for (auto [entity, transform] : view.each())
@@ -52,7 +37,7 @@ void RenderingSystem::Draw(
         entities.emplace_back(entity, type, transform.index);
     }
 
-    std::sort(entities.begin(), entities.end(), comparison);
+    std::sort(entities.begin(), entities.end(), SortComparison);
 
     for (Renderable renderable : entities)
     {
@@ -70,29 +55,14 @@ void RenderingSystem::Draw(
             break;
         }
     }
+}
 
-    RadarRenderSystem::DrawRadar(
-		registry, renderContext.radarRenderTexture, cameraPosition, gameState.currentScene
-	);
 
-    EndTextureMode();
-
-    BeginDrawing();
-	ClearBackground(RenderContext::BACKGROUND_COLOR);
-
-	Nc::Vector2f displaySize = RenderContext::DISPLAY_SIZE;
-	Rectangle source { 0, 0, displaySize.x, -displaySize.y };
-
-	DrawTexturePro(
-		renderContext.renderTexture.texture,
-		source,
-		renderContext.renderRectangle,
-		Nc::Vector2f::Zero(),
-		0.0f,
-		WHITE
-	);
-
-    entities.clear();
+void RenderingSystem::DrawUi(
+    entt::registry& registry, RenderContext& renderContext, GameState& gameState
+)
+{
+    std::vector<Renderable> entities { };
 
     auto viewUi = registry.view<Component::UiTransform>();
     for (auto [entity, transform] : viewUi.each())
@@ -103,7 +73,7 @@ void RenderingSystem::Draw(
         entities.emplace_back(entity, type, transform.index);
     }
 
-    std::sort(entities.begin(), entities.end(), comparison);
+    std::sort(entities.begin(), entities.end(), SortComparison);
 
     for (Renderable renderable : entities)
     {
@@ -121,10 +91,7 @@ void RenderingSystem::Draw(
             break;
         }
     }
-
-    EndDrawing();
 }
-
 
 
 RenderingSystem::RenderType RenderingSystem::GetRenderType(
@@ -153,4 +120,10 @@ bool RenderingSystem::ShouldRender(
 )
 {
     return transform.isVisible;
+}
+
+
+bool RenderingSystem::SortComparison(Renderable a, Renderable b)
+{
+    return a.index < b.index;
 }
