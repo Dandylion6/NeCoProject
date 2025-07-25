@@ -1,6 +1,7 @@
 #pragma once
 #include "components/core/rendering/text_component.hpp"
 #include "raylib.h"
+#include <cstdint>
 #include <string>
 #include <unordered_map>
 
@@ -9,12 +10,12 @@ class ResourceStore
 {
 public:
 	Texture2D& GetTexture(const std::string& filePath);
-	Font& GetFont(FontStyle style);
+	Font& GetFont(FontStyle style, uint8_t fontSize);
 	Sound& GetSound(const std::string& filePath);
 
 private:
 	std::unordered_map<std::string, Texture2D> textureStore { };
-	std::unordered_map<FontStyle, Font> fontStore { };
+	std::unordered_map<FontKey, Font, FontKeyHash> fontStore { };
 	std::unordered_map<std::string, Sound> soundStore { };
 
 };

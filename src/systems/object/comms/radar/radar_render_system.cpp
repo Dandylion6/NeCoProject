@@ -112,6 +112,8 @@ void RadarRenderSystem::DrawBlips(
 		textPosition += TEXT_OFFSET;
 
 		Renderer::DrawSprite(sprite, transform.position, transform.offset, transform.rotation);
-		Renderer::DrawText(text, textPosition, resourceStore);
+		
+		Nc::Vector2f offset = Renderer::GetTextOffset(text, resourceStore);
+		Renderer::DrawText(text, textPosition, offset, resourceStore);
 	}
 }

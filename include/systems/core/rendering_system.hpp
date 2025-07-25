@@ -6,6 +6,7 @@
 #include "utility/vector2.hpp"
 struct GameState;
 struct RenderContext;
+struct ResourceStore;
 
 
 class RenderingSystem
@@ -20,6 +21,7 @@ public:
 
 	static void DrawUi(
 		entt::registry& registry,
+		ResourceStore& resourceStore,
 		RenderContext& renderContext,
 		GameState& gameState
 	);

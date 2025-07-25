@@ -1,6 +1,7 @@
 #include "components/core/rendering/text_component.hpp"
 #include "components/core/transform_component.hpp"
 #include "core/rendering.hpp"
+#include "core/resource_store.hpp"
 #include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -9,7 +10,7 @@
 
 
 void TextRenderSystem::DrawScreen(
-	entt::registry& registry, Scene currentScene, Nc::Vector2f cameraPosition
+	const entt::entity entity, entt::registry& registry, Nc::Vector2f cameraPosition
 )
 {
 	
@@ -17,17 +18,14 @@ void TextRenderSystem::DrawScreen(
 
 
 void TextRenderSystem::DrawUi(
-	entt::registry& registry, 
-	ResourceStore& resourceStore, 
-	Nc::Vector2f windowSize
+	const entt::entity entity, entt::registry& registry, ResourceStore& resourceStore, Nc::Vector2f windowSize
 )
 {
-	auto view = registry.view<const Component::Text, const Component::UiTransform>();
-	for (auto [entity, text, transform] : view.each())
-	{
-		Nc::Vector2f anchorPoint = transform.anchor * windowSize;
-		Nc::Vector2f position = anchorPoint + transform.offset;
+	Component::UiTransform& transform = registry.get<Component::UiTransform>(entity);
+	const Component::Text& text = registry.get<const Component::Text>(entity);
 
-		Renderer::DrawText(text, position, resourceStore);
-	}
+	Nc::Vector2f anchorPoint = transform.anchor * windowSize;
+	Nc::Vector2f position = anchorPoint + transform.offset;
+
+	Renderer::DrawText(text, position, Renderer::GetTextOffset(text, resourceStore), resourceStore);
 };

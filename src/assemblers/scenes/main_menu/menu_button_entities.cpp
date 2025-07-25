@@ -10,10 +10,31 @@
 #include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "utility/color.hpp"
+#include "utility/color_palette.hpp"
 #include "utility/vector2.hpp"
 #include <functional>
+#include <string>
 #include <utility>
+
+
+namespace Construct
+{
+	const entt::entity ButtonLabelEntity(
+		entt::registry& registry, const std::string&& label, Component::UiTransform& transform
+	)
+	{
+		const entt::entity entity = registry.create();
+
+		registry.emplace<Tag::MainMenu>(entity);
+		registry.emplace<Component::UiTransform>(
+			entity, transform.anchor, transform.origin, transform.size, transform.offset, transform.index + 1, transform.rotation
+		);
+
+		registry.emplace<Component::Text>(entity, "PLAY", RADAR_COLOR, WDXL, 64, Component::Text::Center, 8u);
+
+		return entity;
+	};
+}
 
 
 const entt::entity Construct::PlayButtonEntity(
@@ -23,14 +44,12 @@ const entt::entity Construct::PlayButtonEntity(
 	const entt::entity entity = registry.create();
 
 	registry.emplace<Tag::MainMenu>(entity);
-	registry.emplace<Component::UiTransform>(
+	Component::UiTransform& transform = registry.emplace<Component::UiTransform>(
 		entity, Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Scale(0.5f), Nc::Vector2f(440.0f, 90.0f)
 	);
 	registry.emplace<Component::Rectangle>(entity, RenderContext::BACKGROUND_COLOR);
 
-	constexpr Nc::Hex TEXT_COLOR = 0x7cff3cff;
-	
-	registry.emplace<Component::Text>(entity, "PLAY", TEXT_COLOR, WDXL, 64, Component::Text::Center, 8u);
+	Construct::ButtonLabelEntity(registry, "PLAY", transform);
 
 	std::function<void()> onClick = [&gameState, &registry]()
 	{

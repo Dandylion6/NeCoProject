@@ -215,7 +215,7 @@ void Game::DrawGame()
 	ClearBackground(RenderContext::BACKGROUND_COLOR);
 
 	DrawRenderTexture();
-	RenderingSystem::DrawUi(registry, renderContext, gameState);
+	RenderingSystem::DrawUi(registry, resourceStore, renderContext, gameState);
 
 #ifdef DEBUG_BUILD
 	DrawDebugUi();

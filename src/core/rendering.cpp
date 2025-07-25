@@ -67,13 +67,33 @@ void Renderer::DrawRectangle(
 void Renderer::DrawText(
 	const Component::Text& text, 
 	Nc::Vector2f position, 
+	Nc::Vector2f offset,
 	ResourceStore& resourceStore
 )
 {
 	bool isTransparent = text.color.alpha == 0u;
 	if (isTransparent) return;
 
-	Font& font = resourceStore.GetFont(text.style);
+	Font& font = resourceStore.GetFont(text.style, text.fontSize);
+	float fontSize = static_cast<float>(text.fontSize);
+	float spacing = static_cast<float>(text.spacing);
+
+	::DrawTextPro(
+		font, 
+		text.text.c_str(),
+		position, 
+		offset,
+		0.0f, 
+		fontSize, 
+		spacing,
+		text.color
+	);
+}
+
+
+Nc::Vector2f Renderer::GetTextOffset(const Component::Text& text,  ResourceStore& resourceStore)
+{
+	Font& font = resourceStore.GetFont(text.style, text.fontSize);
 	float fontSize = static_cast<float>(text.fontSize);
 	float spacing = static_cast<float>(text.spacing);
 
@@ -82,20 +102,13 @@ void Renderer::DrawText(
 	Nc::Vector2f offset = Nc::Vector2f::Zero();
 	switch (text.alignment)
 	{
+	case Component::Text::Left:
+		offset.y = textSize.y * 0.5f;
+		break;
 	case Component::Text::Center: 
 		offset = textSize * 0.5f;
 		break;
 	default: break;
 	}
-
-	::DrawTextPro(
-		font, 
-		cText,
-		position, 
-		offset,
-		0.0f, 
-		fontSize, 
-		spacing,
-		text.color
-	);
+	return offset;
 }

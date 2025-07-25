@@ -16,7 +16,6 @@
 #include "raylib.h"
 #include "utility/vector2.hpp"
 #include <algorithm>
-#include <functional>
 
 
 void RenderingSystem::DrawScreen(
@@ -59,7 +58,10 @@ void RenderingSystem::DrawScreen(
 
 
 void RenderingSystem::DrawUi(
-    entt::registry& registry, RenderContext& renderContext, GameState& gameState
+    entt::registry& registry, 
+    ResourceStore& resourceStore,
+    RenderContext& renderContext, 
+    GameState& gameState
 )
 {
     std::vector<Renderable> entities { };
@@ -86,6 +88,7 @@ void RenderingSystem::DrawUi(
             RectangleRenderSystem::DrawUi(renderable.entity, registry, renderContext.windowSize);
             break;
         case RenderType::Text:
+            TextRenderSystem::DrawUi(renderable.entity, registry, resourceStore, renderContext.windowSize);
             break;
         default:
             break;

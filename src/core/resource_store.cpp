@@ -16,9 +16,10 @@ Texture2D& ResourceStore::GetTexture(const std::string& filePath)
 }
 
 
-Font& ResourceStore::GetFont(FontStyle style)
+Font& ResourceStore::GetFont(FontStyle style, uint8_t fontSize)
 {
-    if (fontStore.find(style) == fontStore.end())
+    FontKey key = FontKey(style, fontSize);
+    if (fontStore.find(key) == fontStore.end())
     {
         std::string filePath { };
         switch (style)
@@ -30,9 +31,11 @@ Font& ResourceStore::GetFont(FontStyle style)
             break;
         }
 
-        fontStore.emplace(style, LoadFont(filePath.c_str()));
+        fontStore.emplace(
+            key, LoadFontEx(filePath.c_str(), fontSize, nullptr, 0)
+        );
     }
-    return fontStore.at(style);
+    return fontStore.at(key);
 }
 
 

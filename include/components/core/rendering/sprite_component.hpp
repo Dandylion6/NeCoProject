@@ -10,7 +10,7 @@ namespace Component
 		Texture2D texture;
 		float alpha = 1.0f;
 
-		Sprite(Texture2D texture): texture(texture) { };
-		Sprite(Texture2D&& texture): texture(std::move(texture)) { };
+		Sprite(Texture2D texture, float alpha = 1.0f): texture(texture), alpha(alpha) { };
+		Sprite(Texture2D&& texture, float alpha = 1.0f): texture(std::move(texture)), alpha(alpha) { };
 	};
 }

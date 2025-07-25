@@ -30,7 +30,9 @@ namespace Renderer
 	void DrawText(
 		const Component::Text& text,
 		Nc::Vector2f position,
+		Nc::Vector2f offset,
 		ResourceStore& resourceStore
 	);
 
+	Nc::Vector2f GetTextOffset(const Component::Text& text, ResourceStore& resourceStore);
 }

@@ -2,7 +2,9 @@
 #include "components/core/rendering/rectangle_component.hpp"
 #include "components/core/rendering/sprite_component.hpp"
 #include "components/core/transform_component.hpp"
+#include "core/game_state.hpp"
 #include "core/render_context.hpp"
+#include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
@@ -32,7 +34,7 @@ namespace Construct
 
 
 const entt::entity Construct::SettingsBackgroundEntity(
-	entt::registry& registry, Nc::Vector2f windowSize
+	entt::registry& registry, GameState& gameState, Nc::Vector2f windowSize
 )
 {
 	Construct::BackdropEntity(registry, windowSize);
@@ -45,13 +47,19 @@ const entt::entity Construct::SettingsBackgroundEntity(
 
 	registry.emplace<Tag::Settings>(entity);
 	registry.emplace<Component::UiTransform>(entity, center, center, size, Nc::Vector2f::Zero(), 1);
-	registry.emplace<Component::Sprite>(entity, texture);
+	registry.emplace<Component::Sprite>(entity, texture, 0.4f);
 
-	std::function<void()> toggleSettings = [&registry]()
+	std::function<void()> toggleSettings = [&registry, &gameState]()
 	{
 		auto view = registry.view<const Tag::Settings, Component::UiTransform>();
 		for (auto [settingsEntity, transform] : view.each())
 		{
+			if (gameState.currentScene == NullScene)
+			{
+				transform.isVisible = false;
+				continue;
+			}
+
 			//Simple toggle method.
 			transform.isVisible = !transform.isVisible;
 		}

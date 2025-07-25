@@ -9,14 +9,15 @@ class TextRenderSystem
 {
 public:
 	static void DrawScreen(
+		const entt::entity entity,
 		entt::registry& registry,
-		Scene currentScene,
 		Nc::Vector2f cameraPosition
 	);
 
 	static void DrawUi(
-		entt::registry& registry,
-		ResourceStore& resourceStore,
+		const entt::entity entity, 
+		entt::registry& registry, 
+		ResourceStore& resourceStore, 
 		Nc::Vector2f windowSize
 	);
 
