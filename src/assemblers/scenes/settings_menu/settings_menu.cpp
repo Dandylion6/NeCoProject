@@ -29,8 +29,6 @@
 
 void SettingsMenu::Build(
     Settings& settings, GameState& gameState, Nc::Vector2f windowSize, entt::registry& registry, ResourceStore& resourceStore
-void SettingsMenu::Build(
-    Settings& settings, GameState& gameState, Nc::Vector2f windowSize, entt::registry& registry, ResourceStore& resourceStore
 ) 
 {
     Construct::SettingsHeaderEntity(registry);
@@ -40,7 +38,6 @@ void SettingsMenu::Build(
     Construct::GameplaySettingsHeaderEntity(registry);
 
     Component::UiIncrement morseDotDuration = Component::UiIncrement(0.05f, 2u);
-    morseDotDuration.onIncrement = [&morseSettings = settings.morseSettings](float increment)
     morseDotDuration.onIncrement = [&morseSettings = settings.morseSettings](float increment)
     {
         morseSettings.dotTime += increment;

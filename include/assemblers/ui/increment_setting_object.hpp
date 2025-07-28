@@ -6,13 +6,11 @@
 #include "components/core/rendering/text_component.hpp"
 #include "components/core/transform_component.hpp"
 #include "components/ui/increment_component.hpp"
-#include "components/ui/settings_tag.hpp"
 #include "core/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
 #include "utility/color_palette.hpp"
-#include "components/ui/settings_tag.hpp"
 #include "core/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -23,12 +21,7 @@
 #include <iomanip>
 #include <ios>
 #include <sstream>
-#include <functional>
-#include <iomanip>
-#include <ios>
-#include <sstream>
 #include <string>
-#include <utility>
 #include <utility>
 
 
@@ -123,40 +116,9 @@ namespace Construct
     inline void IncrementSettingObject(
         Nc::Vector2f position,
         std::string&& display, 
-        std::string&& display, 
         Component::UiIncrement&& increment,
         entt::registry& registry, 
         ResourceStore& resourceStore
-    )
-    {
-        Nc::Vector2f size = MeasureTextEx(
-            resourceStore.GetFont(WDXL, static_cast<uint8_t>(FontSize::Medium)),
-            display.c_str(), 
-            static_cast<float>(FontSize::Medium), 
-            0.0f
-        );
-        size.y = 0.0f;
-        
-        const entt::entity label = Construct::LabelEntity(position, std::move(display), registry);
-
-        const entt::entity valueDisplay = ValueDisplayEntity(position, size + Nc::Vector2f::Right(28.0f), registry);
-        Component::Text& valueText = registry.get<Component::Text>(valueDisplay); 
-
-        const entt::entity decrease = Construct::DecreaseButton(position, size + Nc::Vector2f::Right(72.0f), increment, valueText, registry);
-        const entt::entity increase = Construct::IncreaseButton(position, size + Nc::Vector2f::Right(98.0f), increment, valueText, registry);
-
-        float currentValue = increment.onIncrement(0.0f);
-
-        std::stringstream stringStream;
-        stringStream << std::fixed << std::setprecision(increment.decimals) << currentValue;
-                
-        valueText.text = stringStream.str();
-
-        registry.emplace<T>(label);
-        registry.emplace<T>(valueDisplay);
-        registry.emplace<T>(decrease);
-        registry.emplace<T>(increase);
-    };
     )
     {
         Nc::Vector2f size = MeasureTextEx(
