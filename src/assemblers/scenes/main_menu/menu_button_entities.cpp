@@ -52,7 +52,7 @@ void Construct::SettingsButtonObject(
 		auto view = registry.view<Tag::MainMenu, Component::UiTransform>();
 		for (auto [entity, transform] : view.each()) transform.isVisible = false;
 		
-		SettingsMenu::Open(registry);
+		SettingsMenu::Open(registry, gameState);
 	};
 	 
 	LabelButton button = Construct::LabelButtonObject<Tag::MainMenu>(

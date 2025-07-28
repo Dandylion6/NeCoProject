@@ -17,9 +17,9 @@ namespace SettingsMenu
 	);
 
 	
-	void Open(entt::registry& registry);
+	void Open(entt::registry& registry, GameState& gameState);
 
-	void Close(entt::registry& registry);
+	void Close(entt::registry& registry, GameState& gameState);
 
 	void Toggle(entt::registry& registry, GameState& gameState);
 };

@@ -9,6 +9,7 @@
 #include "components/ui/settings_tag.hpp"
 #include "components/ui/toggle_state_component.hpp"
 #include "core/game_state.hpp"
+#include "core/save.hpp"
 #include "core/scene.hpp"
 #include "core/settings.hpp"
 #include "entt/entity/fwd.hpp"
@@ -41,12 +42,24 @@ void SettingsMenu::Build(
     );
     std::function<void()> toMainMenu = [&registry, &gameState]()
     {
-        SettingsMenu::Close(registry);
+        SettingsMenu::Close(registry, gameState);
         MainMenu::Open(registry, gameState);
     };
 
-    LabelButton button = Construct::LabelButtonObject<Tag::Settings>(
+    Construct::LabelButtonObject<Tag::Settings>(
         std::move(transform), "BACK TO MAIN", std::move(toMainMenu), registry, resourceStore
+    );
+
+    Component::UiTransform transformb = Component::UiTransform(
+        Nc::Vector2f(0.7f, 0.8f), Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Zero(), Nc::Vector2f::Zero(), 2
+    );
+    std::function<void()> applySettings = [&settings]()
+    {
+        Save::SaveSettings(settings);
+    };
+
+    Construct::LabelButtonObject<Tag::Settings>(
+        std::move(transformb), "APPLY", std::move(applySettings), registry, resourceStore
     );
 
     Construct::IncrementSettingObject<Tag::Settings>(
@@ -55,25 +68,37 @@ void SettingsMenu::Build(
 
     Construct::SettingsBackgroundEntity(registry, gameState, windowSize);
 
-    SettingsMenu::Close(registry);
+    SettingsMenu::Close(registry, gameState);
 }
 
 
-void SettingsMenu::Open(entt::registry& registry)
+void SettingsMenu::Open(entt::registry& registry, GameState& gameState)
 {
     auto view = registry.view<const Tag::Settings, Component::UiTransform>();
-	for (auto [settingsEntity, transform] : view.each())
+	for (auto [entity, transform] : view.each())
 	{
+        if (registry.any_of<Component::ToggleState>(entity))
+        {
+            Component::ToggleState& toggle = registry.get<Component::ToggleState>(entity);
+            toggle.isActive = true;
+            gameState.isPaused = true;
+        }
         transform.isVisible = true;
 	}
 }
 
 
-void SettingsMenu::Close(entt::registry& registry)
+void SettingsMenu::Close(entt::registry& registry, GameState& gameState)
 {
     auto view = registry.view<const Tag::Settings, Component::UiTransform>();
-	for (auto [settingsEntity, transform] : view.each())
+	for (auto [entity, transform] : view.each())
 	{
+        if (registry.any_of<Component::ToggleState>(entity))
+        {
+            Component::ToggleState& toggle = registry.get<Component::ToggleState>(entity);
+            toggle.isActive = false;
+            gameState.isPaused = false;
+        }
         transform.isVisible = false;
 	}
 }
@@ -84,13 +109,8 @@ void SettingsMenu::Toggle(entt::registry& registry, GameState& gameState)
     auto view = registry.view<const Tag::Settings, Component::ToggleState>();
 	for (auto [settingsEntity, toggle] : view.each())
 	{
-        if (toggle.isActive && gameState.currentScene == NullScene) return SettingsMenu::Close(registry);
+        if (toggle.isActive && gameState.currentScene == NullScene) return SettingsMenu::Close(registry, gameState);
         else if (gameState.currentScene == NullScene) return;
-
-		toggle.isActive = !toggle.isActive;
-        gameState.isPaused = toggle.isActive;
-
-        return toggle.isActive ? SettingsMenu::Open(registry) : SettingsMenu::Close(registry);
-
+        return toggle.isActive ? SettingsMenu::Close(registry, gameState) : SettingsMenu::Open(registry, gameState);
 	}
 }

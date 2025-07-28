@@ -32,6 +32,8 @@ bool ButtonActionSystem::UpdateSceneButtons(
 	float deltaTime
 )
 {
+	if (gameState.isPaused) return false;
+
 	bool isHovering = false;
 	auto view = registry.view<const Component::Transform, Component::ButtonAction>();
 	for (auto [entity, transform, button] : view.each())
