@@ -28,7 +28,7 @@
 
 
 void SettingsMenu::Build(
-    Settings& settings, GameState& gameState, Nc::Vector2f windowSize, entt::registry& registry, ResourceStore& resourceStore
+    Settings& settings, Settings& pendingSettings, GameState& gameState, Nc::Vector2f windowSize, entt::registry& registry, ResourceStore& resourceStore
 ) 
 {
     Construct::SettingsHeaderEntity(registry);
@@ -38,7 +38,7 @@ void SettingsMenu::Build(
     Construct::GameplaySettingsHeaderEntity(registry);
 
     Component::UiIncrement morseDotDuration = Component::UiIncrement(0.05f, 2u);
-    morseDotDuration.onIncrement = [&morseSettings = settings.morseSettings](float increment)
+    morseDotDuration.onIncrement = [&morseSettings = pendingSettings.morseSettings](float increment)
     {
         morseSettings.dotTime += increment;
         morseSettings.dashTime = morseSettings.dotTime * 3.0f;
@@ -50,9 +50,9 @@ void SettingsMenu::Build(
     Component::UiTransform transform = Component::UiTransform(
         Nc::Vector2f(0.3f, 0.8f), Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Zero(), Nc::Vector2f::Zero(), 2
     );
-    std::function<void()> toMainMenu = [&registry, &gameState]()
+    std::function<void()> toMainMenu = [&registry, &gameState, &settings, &pendingSettings]()
     {
-        SettingsMenu::Close(registry, gameState);
+        SettingsMenu::Close(settings, pendingSettings, registry, gameState);
         MainMenu::Open(registry, gameState);
     };
 
@@ -63,9 +63,10 @@ void SettingsMenu::Build(
     Component::UiTransform transformb = Component::UiTransform(
         Nc::Vector2f(0.7f, 0.8f), Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Zero(), Nc::Vector2f::Zero(), 2
     );
-    std::function<void()> applySettings = [&settings]()
+    std::function<void()> applySettings = [&settings, &pendingSettings]()
     {
-        Save::SaveSettings(settings);
+        Save::SaveSettings(pendingSettings);
+        settings = pendingSettings;
     };
 
     Construct::LabelButtonObject<Tag::Settings>(
@@ -111,6 +112,15 @@ void SettingsMenu::Close(entt::registry& registry, GameState& gameState)
         }
         transform.isVisible = false;
 	}
+}
+
+
+void SettingsMenu::Close(Settings& settings, Settings& pendingSettings, entt::registry& registry, GameState& gameState)
+{
+    if (settings == pendingSettings) return SettingsMenu::Close(registry, gameState); 
+    // TODO: Add warning for unsaved changes.
+    SettingsMenu::Close(registry, gameState);
+    pendingSettings = settings;
 }
 
 

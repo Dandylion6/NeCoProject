@@ -14,4 +14,10 @@ struct MorseSettings
 struct Settings
 {
     MorseSettings morseSettings { };
+
+	bool operator==(const Settings& other) const
+	{
+		if (morseSettings.dashTime != other.morseSettings.dotTime) return false;
+		return true;
+	};
 };

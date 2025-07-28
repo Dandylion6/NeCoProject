@@ -6,6 +6,7 @@
 #include "assemblers/scenes/main_menu/main_menu.hpp"
 #include "assemblers/scenes/outside_scene/outside_scene.hpp"
 #include "assemblers/scenes/settings_menu/settings_menu.hpp"
+#include "core/save.hpp"
 #include "systems/core/rendering_system.hpp"
 #include "utility/color_palette.hpp"
 #include <cstring>
@@ -53,6 +54,8 @@ DebugContext Game::debugContext { };
 Game::Game()
 {
 	InitAudioDevice();
+	Save::LoadSettings(settings);
+	pendingSettings = settings;
 };
 
 
@@ -118,7 +121,7 @@ void Game::InitialiseAssemblers()
 	DoorwayScene::Build(registry, gameState, resourceStore);
 	OutsideScene::Build(registry, gameState, resourceStore);
 
-	SettingsMenu::Build(settings, gameState, renderContext.windowSize, registry, resourceStore);
+	SettingsMenu::Build(settings, pendingSettings, gameState, renderContext.windowSize, registry, resourceStore);
 
 #ifdef DEBUG_BUILD
 	if (!Game::debugContext.ignoreMainMenu)

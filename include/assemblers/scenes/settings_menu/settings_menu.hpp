@@ -10,6 +10,7 @@ namespace SettingsMenu
 {
     void Build(
 		Settings& settings,
+		Settings& pendingSettings,
 		GameState& gameState,
 		Nc::Vector2f windowSize,
 		entt::registry& registry,
@@ -20,6 +21,7 @@ namespace SettingsMenu
 	void Open(entt::registry& registry, GameState& gameState);
 
 	void Close(entt::registry& registry, GameState& gameState);
+	void Close(Settings& settings, Settings& pendingSettings, entt::registry& registry, GameState& gameState);
 
 	void Toggle(entt::registry& registry, GameState& gameState);
 };

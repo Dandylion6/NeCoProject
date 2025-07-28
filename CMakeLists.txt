@@ -30,6 +30,12 @@ add_executable(NeCoProject
 )
 
 target_compile_definitions(
+	NeCoProject 
+	PRIVATE
+    	BUILD_DIR_PATH="${CMAKE_BINARY_DIR}"
+)
+
+target_compile_definitions(
 	NeCoProject
 	PRIVATE 
 		$<$<CONFIG:Debug>:DEBUG_BUILD>

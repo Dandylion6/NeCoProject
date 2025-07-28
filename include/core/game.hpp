@@ -40,6 +40,7 @@ private:
 	RenderContext renderContext { };
 	GameState gameState { };
 	Settings settings { };
+	Settings pendingSettings { };
 	ResourceStore resourceStore { };
 
 	void DrawRenderTexture();
