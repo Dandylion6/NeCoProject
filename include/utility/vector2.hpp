@@ -50,6 +50,7 @@ namespace Nc
 		constexpr static Vector2f Up(const float length) { return Vector2f(0.0f, length); };
 		constexpr static Vector2f Down(const float length) { return Vector2f(0.0f, -length); };
 		constexpr static Vector2f Right(const float length) { return Vector2f(length, 0.0f); };
+		constexpr static Vector2f Left(const float length) { return Vector2f(-length, 0.0f); };
 		constexpr static Vector2f Scale(const float scale) { return Vector2f(scale, scale); };
 		static Vector2f Round(const Vector2f& vector);
 

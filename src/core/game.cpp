@@ -7,6 +7,7 @@
 #include "assemblers/scenes/outside_scene/outside_scene.hpp"
 #include "assemblers/scenes/settings_menu/settings_menu.hpp"
 #include "systems/core/rendering_system.hpp"
+#include "utility/color_palette.hpp"
 #include <cstring>
 #ifdef DEBUG_BUILD
 #include "core/debug_context.hpp"
@@ -20,9 +21,6 @@
 #include "raylib.h"
 #include "systems/core/button_action_system.hpp"
 #include "systems/core/input_action_system.hpp"
-#include "systems/core/rendering/rectangle_render_system.hpp"
-#include "systems/core/rendering/sprite_render_system.hpp"
-#include "systems/core/rendering/text_render_system.hpp"
 #include "systems/core/sound_system.hpp"
 #include "systems/core/tween_system.hpp"
 #include "systems/anomaly/roamer_movement_system.hpp"
@@ -120,16 +118,16 @@ void Game::InitialiseAssemblers()
 	DoorwayScene::Build(registry, gameState, resourceStore);
 	OutsideScene::Build(registry, gameState, resourceStore);
 
-	SettingsMenuScene::Build(registry, renderContext, gameState, resourceStore);
+	SettingsMenu::Build(settings, gameState, renderContext.windowSize, registry, resourceStore);
 
 #ifdef DEBUG_BUILD
 	if (!Game::debugContext.ignoreMainMenu)
 	{
-		MainMenuScene::Build(registry, gameState, resourceStore);
+		MainMenu::Build(registry, gameState, resourceStore);
 		gameState.isPaused = true;
 	} else gameState.currentScene = CommsRoom;
 #else
-	MainMenuScene::Build(registry, gameState, resourceStore);
+	MainMenu::Build(registry, gameState, resourceStore);
 	gameState.isPaused = true;
 #endif // DEBUG_BUILD
 }
@@ -188,8 +186,8 @@ void Game::UpdateRegistries(float deltaTime)
 
 	if (gameState.isPaused) return;
 
-	MorseTransceiverSystem::Update(registry, gameState.currentScene, gameState.morseSettings, deltaTime);
-	MorseMonitorDisplaySystem::Update(registry, gameState.morseSettings, deltaTime);
+	MorseTransceiverSystem::Update(registry, gameState.currentScene, settings.morseSettings, deltaTime);
+	MorseMonitorDisplaySystem::Update(registry, settings.morseSettings, deltaTime);
 	MorseSoundSystem::Update(registry, gameState.currentScene, deltaTime);
 	BlipDeathSystem::Update(registry);
 	BlipBlinkSystem::Update(registry);
@@ -216,6 +214,7 @@ void Game::DrawGame()
 	cameraPosition.y += std::sinf((gameState.time * 2.8f) - 0.3f) * 4.0f;
 
 	BeginTextureMode(renderContext.renderTexture);
+	ClearBackground(BACKGROUND_COLOR);
 
 	RenderingSystem::DrawScreen(registry, renderContext, gameState, cameraPosition);
 	RadarRenderSystem::DrawRadar(
@@ -225,7 +224,7 @@ void Game::DrawGame()
 	EndTextureMode();
 
 	BeginDrawing();
-	ClearBackground(RenderContext::BACKGROUND_COLOR);
+	ClearBackground(BACKGROUND_COLOR);
 
 	DrawRenderTexture();
 	RenderingSystem::DrawUi(registry, resourceStore, renderContext, gameState);

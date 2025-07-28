@@ -5,6 +5,7 @@
 #include "core/game_state.hpp"
 #include "core/render_context.hpp"
 #include "core/resource_store.hpp"
+#include "core/settings.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp" 
 
@@ -38,6 +39,7 @@ private:
 	entt::registry registry { };
 	RenderContext renderContext { };
 	GameState gameState { };
+	Settings settings { };
 	ResourceStore resourceStore { };
 
 	void DrawRenderTexture();

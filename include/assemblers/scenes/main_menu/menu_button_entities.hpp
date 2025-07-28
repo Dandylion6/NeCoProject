@@ -13,6 +13,12 @@ namespace Construct
 		ResourceStore& resourceStore
 	);
 
+	void SettingsButtonObject(
+		entt::registry& registry,
+		GameState& gameState,
+		ResourceStore& resourceStore
+	);
+
 	void ExitButtonObject(
 		entt::registry& registry,
 		GameState& gameState,
