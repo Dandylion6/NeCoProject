@@ -31,9 +31,4 @@ private:
 		float deltaTime
 	);
 
-	static void UpdateButtonDownTime(
-		Component::ButtonAction& button,
-		float deltaTime
-	);
-
 };

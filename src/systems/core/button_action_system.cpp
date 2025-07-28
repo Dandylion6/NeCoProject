@@ -36,8 +36,6 @@ bool ButtonActionSystem::UpdateSceneButtons(
 	auto view = registry.view<const Component::Transform, Component::ButtonAction>();
 	for (auto [entity, transform, button] : view.each())
 	{
-		UpdateButtonDownTime(button, deltaTime);
-
 		if (!button.isActive) continue;
 		if (gameState.currentScene != transform.boundScene) continue;
 
@@ -47,15 +45,15 @@ bool ButtonActionSystem::UpdateSceneButtons(
 
 		Nc::Bounds bounds = Nc::Bounds(transform);
 		if (!Nc::Bounds::PointInBounds(bounds, mousePosition)) continue;
-		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+		if (button.isActive)
 		{
-			if (button.isActive)
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 			{
 				button.isActive = false;
 				button.onClick();
 			}
+			else isHovering = true;
 		}
-		else isHovering = true;
 		break;
 	}
 	return isHovering;
@@ -73,27 +71,23 @@ bool ButtonActionSystem::UpdateUiButtons(
 	auto view = registry.view<const Component::UiTransform, Component::ButtonAction>();
 	for (auto [entity, transform, button] : view.each())
 	{
+		button.isActive = transform.isVisible;
+		if (!button.isActive) continue;
+
 		Nc::Vector2f mousePosition = GetMousePosition();
 		Nc::Bounds bounds = Nc::Bounds(transform, windowSize);
 		
 		if (!Nc::Bounds::PointInBounds(bounds, mousePosition)) continue;
-		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) button.onClick();
-		else isHovering = true;
+		if (button.isActive)
+		{
+			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+			{
+				button.isActive = false;
+				button.onClick();
+			}
+			else isHovering = true;
+		}
 		break;
 	}
 	return isHovering;	
-}
-
-
-void ButtonActionSystem::UpdateButtonDownTime(
-	Component::ButtonAction& button, float deltaTime
-)
-{
-	if (button.isActive) return;
-	button.lastPressedSeconds += deltaTime;
-	if (button.lastPressedSeconds >= button.buttonDownTime)
-	{
-		button.isActive = true;
-		button.lastPressedSeconds = 0.0f;
-	}
 }

@@ -126,9 +126,11 @@ void Game::InitialiseAssemblers()
 	if (!Game::debugContext.ignoreMainMenu)
 	{
 		MainMenuScene::Build(registry, gameState, resourceStore);
+		gameState.isPaused = true;
 	} else gameState.currentScene = CommsRoom;
 #else
 	MainMenuScene::Build(registry, gameState, resourceStore);
+	gameState.isPaused = true;
 #endif // DEBUG_BUILD
 }
 
@@ -165,6 +167,7 @@ void Game::Shutdown()
 bool Game::ShouldRun() const
 {
 	if (WindowShouldClose()) return false;
+	if (gameState.shouldExit) return false;
 	return true;
 }
 
@@ -180,7 +183,7 @@ void Game::UpdateRegistries(float deltaTime)
 	InputActionSystem::Update(registry, gameState);
 	ButtonActionSystem::Update(registry, gameState, renderContext, deltaTime);
 	AmbientSoundSystem::Update(registry, gameState, deltaTime);
-	TweenSystem::Update(registry, deltaTime);
+	TweenSystem::Update(registry, gameState, deltaTime);
 	SoundSystem::Update(registry, deltaTime);
 
 	if (gameState.isPaused) return;

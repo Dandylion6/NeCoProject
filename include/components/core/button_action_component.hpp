@@ -9,16 +9,12 @@ namespace Component
 	{
 		std::function<void()> onClick = std::function<void()>();
 		bool isActive = true;
-		float buttonDownTime = 0.0f;
-		float lastPressedSeconds = 0.0f;
 
 		ButtonAction() = default;
 		ButtonAction(
-			std::function<void()>&& onClick,
-			float buttonDownTime = 0.0f
+			std::function<void()>&& onClick
 		): 
-			onClick(std::move(onClick)),
-			buttonDownTime(buttonDownTime)
+			onClick(std::move(onClick))
 		{ };
 	};
 }

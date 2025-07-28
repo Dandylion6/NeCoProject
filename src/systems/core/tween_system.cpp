@@ -1,17 +1,19 @@
 #include "algorithm"
+#include "components/core/transform_component.hpp"
 #include "components/core/tween_component.hpp"
+#include "core/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "systems/core/tween_system.hpp"
 #include "utility/interpolation.hpp"
-#include <utility>
 
 
-void TweenSystem::Update(entt::registry& registry, float deltaTime)
+void TweenSystem::Update(entt::registry& registry, GameState& gameState, float deltaTime)
 {
 	auto view = registry.view<Component::TweenCollection>();
 	for (auto [entity, tweenCollection] : view.each())
 	{
+		if (registry.all_of<Component::Transform>(entity) && gameState.isPaused) continue;
 		UpdateTweenCollection(tweenCollection, deltaTime);
 	}
 }

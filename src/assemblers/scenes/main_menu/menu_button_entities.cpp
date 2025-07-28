@@ -11,6 +11,7 @@
 #include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
+#include "raylib.h"
 #include "utility/vector2.hpp"
 #include <functional>
 #include <string>
@@ -22,7 +23,7 @@ void Construct::PlayButtonObject(
 )
 {
 	Component::UiTransform transform = Component::UiTransform(
-		Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Scale(0.5f)
+		Nc::Vector2f(0.5f, 0.5f), Nc::Vector2f::Scale(0.5f)
 	);
 	
 	std::function<void()> onClick = [&gameState, &registry]()
@@ -36,6 +37,28 @@ void Construct::PlayButtonObject(
 	 
 	LabelButton button = Construct::LabelButtonObject(
 		std::move(transform), "PLAY", std::move(onClick), registry, resourceStore
+	);
+	
+	registry.emplace<Tag::MainMenu>(button.button);
+	registry.emplace<Tag::MainMenu>(button.label);
+}
+
+
+void Construct::ExitButtonObject(
+	entt::registry& registry, GameState& gameState, ResourceStore& resourceStore
+)
+{
+	Component::UiTransform transform = Component::UiTransform(
+		Nc::Vector2f(0.5f, 0.56f), Nc::Vector2f::Scale(0.5f)
+	);
+	
+	std::function<void()> onClick = [&gameState]()
+	{
+		gameState.shouldExit = true;
+	};
+	 
+	LabelButton button = Construct::LabelButtonObject(
+		std::move(transform), "EXIT", std::move(onClick), registry, resourceStore
 	);
 	
 	registry.emplace<Tag::MainMenu>(button.button);

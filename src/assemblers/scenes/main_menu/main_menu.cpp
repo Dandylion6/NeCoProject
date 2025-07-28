@@ -13,6 +13,7 @@ void MainMenuScene::Build(
 )
 {
 	Construct::PlayButtonObject(registry, gameState, resourceStore);
+	Construct::ExitButtonObject(registry, gameState, resourceStore);
 
 	Construct::MainMenuBackgroundEntity(registry);
 }

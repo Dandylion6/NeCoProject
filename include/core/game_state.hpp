@@ -31,4 +31,5 @@ struct GameState
 	Scene currentScene = NullScene;
 	Scene movingToScene = NullScene;
 	bool isPaused = false;
+	bool shouldExit = false;
 };
