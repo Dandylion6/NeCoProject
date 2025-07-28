@@ -7,6 +7,7 @@
 #include "assemblers/scenes/outside_scene/outside_scene.hpp"
 #include "assemblers/scenes/settings_menu/settings_menu.hpp"
 #include "systems/core/rendering_system.hpp"
+#include <cstring>
 #ifdef DEBUG_BUILD
 #include "core/debug_context.hpp"
 #include "utility/morse_code.hpp"
@@ -97,6 +98,12 @@ void Game::SetupDebug(int args, char* argv[])
 		if (strcmp(argv[i], "--ignore-main-menu") == 0)
 		{
 			Game::debugContext.ignoreMainMenu = true;
+			break;
+		};
+
+		if (strcmp(argv[i], "--maximized-windowed") == 0)
+		{
+			Game::debugContext.isMaximizedWindowed = true;
 		};
 	}
 }
@@ -137,8 +144,11 @@ void Game::SetupWindow() const
 	SetExitKey(KEY_BACKSPACE);
 
 #ifdef DEBUG_BUILD
-	SetWindowState(FLAG_WINDOW_RESIZABLE);
-	MaximizeWindow();
+	if (Game::debugContext.isMaximizedWindowed)
+	{
+		SetWindowState(FLAG_WINDOW_RESIZABLE);
+		MaximizeWindow();
+	} else SetWindowState(FLAG_FULLSCREEN_MODE);
 #else
 	SetWindowState(FLAG_FULLSCREEN_MODE);
 #endif
