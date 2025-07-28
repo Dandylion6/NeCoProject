@@ -18,6 +18,7 @@ if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
 endif()
 
 add_subdirectory("external/raylib")
+add_subdirectory("external/json")
 
 # Grab all cpp files automatically
 file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS
@@ -41,12 +42,14 @@ target_include_directories(
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external/entt/src>
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external/raylib/src>
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external/json/src>
 )
 
 target_link_libraries(
 	NeCoProject 
 	PRIVATE
 		raylib
+		nlohmann_json
 )
 
 # Copy assets after build
