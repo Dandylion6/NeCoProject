@@ -12,7 +12,7 @@ void MainMenuScene::Build(
 	ResourceStore& resourceStore
 )
 {
-	Construct::PlayButtonEntity(registry, gameState, resourceStore);
+	Construct::PlayButtonObject(registry, gameState, resourceStore);
 
 	Construct::MainMenuBackgroundEntity(registry);
 }

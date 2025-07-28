@@ -62,6 +62,7 @@ const entt::entity Construct::SettingsBackgroundEntity(
 
 			//Simple toggle method.
 			transform.isVisible = !transform.isVisible;
+			gameState.isPaused = transform.isVisible;
 		}
 	};
 

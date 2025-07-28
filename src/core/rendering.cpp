@@ -6,6 +6,7 @@
 #include "raylib.h"
 #include "utility/color.hpp"
 #include "utility/vector2.hpp"
+#include <cstdint>
 
 
 bool Renderer::IsRenderableToScreen(Scene boundScene, Scene currentScene)
@@ -74,7 +75,7 @@ void Renderer::DrawText(
 	bool isTransparent = text.color.alpha == 0u;
 	if (isTransparent) return;
 
-	Font& font = resourceStore.GetFont(text.style, text.fontSize);
+	Font& font = resourceStore.GetFont(text.style, static_cast<uint8_t>(text.fontSize));
 	float fontSize = static_cast<float>(text.fontSize);
 	float spacing = static_cast<float>(text.spacing);
 
@@ -93,7 +94,7 @@ void Renderer::DrawText(
 
 Nc::Vector2f Renderer::GetTextOffset(const Component::Text& text,  ResourceStore& resourceStore)
 {
-	Font& font = resourceStore.GetFont(text.style, text.fontSize);
+	Font& font = resourceStore.GetFont(text.style, static_cast<uint8_t>(text.fontSize));
 	float fontSize = static_cast<float>(text.fontSize);
 	float spacing = static_cast<float>(text.spacing);
 
@@ -102,10 +103,10 @@ Nc::Vector2f Renderer::GetTextOffset(const Component::Text& text,  ResourceStore
 	Nc::Vector2f offset = Nc::Vector2f::Zero();
 	switch (text.alignment)
 	{
-	case Component::Text::Left:
+	case Alignment::Left:
 		offset.y = textSize.y * 0.5f;
 		break;
-	case Component::Text::Center: 
+	case Alignment::Center: 
 		offset = textSize * 0.5f;
 		break;
 	default: break;

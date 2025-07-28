@@ -32,7 +32,7 @@ namespace Construct
 
         registry.emplace<Tag::Settings>(entity);
         registry.emplace<Component::UiTransform>(entity, position, Nc::Vector2f::Zero(), Nc::Vector2f::Zero(), Nc::Vector2f::Zero(), 2);
-        registry.emplace<Component::Text>(entity, std::move(display), RADAR_COLOR, WDXL, FontSize::MEDIUM);
+        registry.emplace<Component::Text>(entity, std::move(display), RADAR_COLOR, WDXL, FontSize::Medium);
     };
 
 
@@ -47,7 +47,7 @@ namespace Construct
 
         registry.emplace<Tag::Settings>(entity);
         registry.emplace<Component::UiTransform>(entity, position, Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Zero(), offset, 2);
-        registry.emplace<Component::Text>(entity, "", RADAR_COLOR, WDXL, FontSize::MEDIUM);
+        registry.emplace<Component::Text>(entity, "", RADAR_COLOR, WDXL, FontSize::Medium);
 
         return entity;
     };
@@ -67,7 +67,7 @@ namespace Construct
         registry.emplace<Tag::Settings>(entity);
 
         registry.emplace<Component::UiTransform>(entity, position, Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Scale(32.0f), offset + Nc::Vector2f::Up(2.0f), 2);
-        registry.emplace<Component::Text>(entity, "+", RAYWHITE, WDXL, FontSize::MEDIUM);
+        registry.emplace<Component::Text>(entity, "+", RAYWHITE, WDXL, FontSize::Medium);
 
         std::function<void()> onClick = [increment = increment, &valueDisplay]()
         {
@@ -98,7 +98,7 @@ namespace Construct
         registry.emplace<Tag::Settings>(entity);
 
         registry.emplace<Component::UiTransform>(entity, position, Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Scale(24.0f), offset, 2);
-        registry.emplace<Component::Text>(entity, "-", RAYWHITE, WDXL, FontSize::LARGE);
+        registry.emplace<Component::Text>(entity, "-", RAYWHITE, WDXL, FontSize::Large);
 
         std::function<void()> onClick = [increment = increment, &valueDisplay]()
         {
@@ -125,9 +125,9 @@ void Construct::IncrementSettingObject(
 )
 {
     Nc::Vector2f size = MeasureTextEx(
-        resourceStore.GetFont(WDXL, FontSize::MEDIUM),
+        resourceStore.GetFont(WDXL, static_cast<uint8_t>(FontSize::Medium)),
         display.c_str(), 
-        static_cast<float>(FontSize::MEDIUM), 
+        static_cast<float>(FontSize::Medium), 
         0.0f
     );
     size.y = 0.0f;

@@ -12,16 +12,24 @@ enum FontStyle: uint8_t
 };
 
 
-namespace FontSize 
+enum class FontSize: uint8_t
 {
-	constexpr uint8_t TINY = 16u;     	// For very subtle details, debug info, or very minor secondary elements.
-    constexpr uint8_t SMALL = 24u;      // Good for general menu text, item descriptions in inventories, standard UI labels.
-    constexpr uint8_t MEDIUM = 32u;     // A solid default for dialogue, main button text, and common informational displays.
-    constexpr uint8_t LARGE = 48u;      // Perfect for section titles, important prompts, or quest objectives.
-    constexpr uint8_t HUGE = 64u;       // Use for major headings, "Game Over", or significant notifications.
-    constexpr uint8_t GIANT = 80u;      // Big, bold titles for splash screens, main menu, or level complete.
-    constexpr uint8_t MASSIVE = 96u;    // If you want to really make a statement on a title screen or a dramatic announcement!
-}
+	Tiny = 16u,     // For very subtle details, debug info, or very minor secondary elements.
+    Small = 24u,    // Good for general menu text, item descriptions in inventories, standard UI labels.
+    Medium = 32u,   // A solid default for dialogue, main button text, and common informational displays.
+    Large = 48u,    // Perfect for section titles, important prompts, or quest objectives.
+    Huge = 64u,     // Use for major headings, "Game Over", or significant notifications.
+    Giant = 80u,    // Big, bold titles for splash screens, main menu, or level complete.
+    Massive = 96u,  // If you want to really make a statement on a title screen or a dramatic announcement!
+};
+
+
+enum class Alignment: uint8_t
+{
+	Left,
+	Center,
+	Right
+};
 
 
 struct FontKey
@@ -52,18 +60,11 @@ namespace Component
 {
 	struct Text
 	{
-		enum Alignment: uint8_t
-		{
-			Left,
-			Center,
-			Right
-		};
-
 		std::string text = "Hello, World!";
 		Nc::RGBa color = RAYWHITE;
 		FontStyle style = WDXL;
-		uint8_t fontSize = 8u;
-		Alignment alignment = Center;
+		FontSize fontSize = FontSize::Medium;
+		Alignment alignment = Alignment::Center;
 		uint8_t spacing = 0u;
 
 		Text() = default;
@@ -71,8 +72,8 @@ namespace Component
 			std::string&& text,
 			Nc::RGBa color = RAYWHITE,
 			FontStyle style = WDXL,
-			uint8_t fontSize = 8u,
-			Alignment alignment = Center,
+			FontSize fontSize = FontSize::Medium,
+			Alignment alignment = Alignment::Center,
 			uint8_t spacing = 0u
 		):
 			text(std::move(text)),

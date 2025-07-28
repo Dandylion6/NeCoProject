@@ -7,7 +7,7 @@ class ResourceStore;
 
 namespace Construct
 {
-	const entt::entity PlayButtonEntity(
+	void PlayButtonObject(
 		entt::registry& registry,
 		GameState& gameState,
 		ResourceStore& resourceStore

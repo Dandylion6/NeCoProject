@@ -90,7 +90,7 @@ const entt::entity Construct::RadarBlipEntity(
 	registry.emplace<Component::Blip>(entity);
 	registry.emplace<Component::Health>(entity, health);
 	registry.emplace<Component::Transform>(entity, Radar, position, size, size * 0.5f);
-	registry.emplace<Component::Text>(entity, "( , )", TEXT_COLOR, WDXL, 16u);
+	registry.emplace<Component::Text>(entity, "( , )", TEXT_COLOR, WDXL, FontSize::Tiny);
 
 	Component::Sprite& sprite = registry.emplace<Component::Sprite>(entity, texture);
 	Component::TweenCollection& tweens = registry.emplace<Component::TweenCollection>(entity);
