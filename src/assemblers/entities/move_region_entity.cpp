@@ -2,6 +2,7 @@
 #include "assemblers/entities/move_transition_entity.hpp"
 #include "components/core/button_action_component.hpp"
 #include "components/core/transform_component.hpp"
+#include "components/scene/move_region_tag.hpp"
 #include "core/game_state.hpp"
 #include "core/render_context.hpp"
 #include "core/resource_store.hpp"
@@ -21,6 +22,8 @@ entt::entity Construct::MoveRegionEntity(
 )
 {
 	const entt::entity entity = registry.create();
+
+	registry.emplace<Tag::MoveRegion>(entity);
 	registry.emplace<Component::Transform>(entity, transform);
 
 	std::function<void()> onClick = std::function<void()>(

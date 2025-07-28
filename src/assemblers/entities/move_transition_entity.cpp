@@ -1,7 +1,9 @@
 #include "assemblers/entities/move_transition_entity.hpp"
+#include "components/core/button_action_component.hpp"
 #include "components/core/rendering/rectangle_component.hpp"
 #include "components/core/transform_component.hpp"
 #include "components/core/tween_component.hpp"
+#include "components/scene/move_region_tag.hpp"
 #include "components/ui/move_transition_tag.hpp"
 #include "core/game_state.hpp"
 #include "core/render_context.hpp"
@@ -22,6 +24,9 @@ void MoveTransition::StartMoveScene(
 	Component::TweenCollection& collection = registry.get<Component::TweenCollection>(entity);
 	collection.tweens.at(MoveTransition::Tweens::TransitionDown).delayComplete = moveTime;
 	
+	auto view = registry.view<Tag::MoveRegion, Component::ButtonAction>();
+	for (auto [entity, button] : view.each()) button.isActive = false;
+
 	std::function<void()> switchScene = [&collection, &gameState, nextScene]()
 	{
 		gameState.currentScene = nextScene;
@@ -86,6 +91,11 @@ const entt::entity Construct::MoveTransitionEntity(
 	tweenUp.end = 1.0f;
 	tweenUp.duration = 0.6f;
 	tweenUp.easing = CubicOut;
+	tweenUp.onComplete = [&registry]()
+	{
+		auto view = registry.view<Tag::MoveRegion, Component::ButtonAction>();
+		for (auto [entity, button] : view.each()) button.isActive = true;
+	};
 
 	return entity;
 }

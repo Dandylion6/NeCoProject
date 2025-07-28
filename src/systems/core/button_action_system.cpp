@@ -47,16 +47,12 @@ bool ButtonActionSystem::UpdateSceneButtons(
 
 		Nc::Bounds bounds = Nc::Bounds(transform);
 		if (!Nc::Bounds::PointInBounds(bounds, mousePosition)) continue;
-		if (button.isActive)
+		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 		{
-			if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-			{
-				button.isActive = false;
-				button.onClick();
-			}
-			else isHovering = true;
+			button.isActive = false;
+			button.onClick();
 		}
-		break;
+		else isHovering = true;
 	}
 	return isHovering;
 }
