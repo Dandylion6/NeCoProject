@@ -8,6 +8,7 @@
 #include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
+#include "utility/color_palette.hpp"
 #include "utility/tween.hpp"
 #include "utility/vector2.hpp"
 #include <functional>
@@ -57,7 +58,7 @@ const entt::entity Construct::MoveTransitionEntity(
 {
 	const entt::entity entity = registry.create();
 
-	registry.emplace<Component::Rectangle>(entity, RenderContext::BACKGROUND_COLOR);
+	registry.emplace<Component::Rectangle>(entity, BACKGROUND_COLOR);
 	Component::UiTransform& transform = registry.emplace<Component::UiTransform>(
 		entity,
 		Nc::Vector2f::Zero(),
