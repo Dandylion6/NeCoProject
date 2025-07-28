@@ -1,11 +1,17 @@
 #include "assemblers/scenes/settings_menu/settings_menu.hpp"
 #include "assemblers/scenes/main_menu/main_menu.hpp"
+#include "assemblers/scenes/main_menu/main_menu.hpp"
 #include "assemblers/scenes/settings_menu/settings_background_entity.hpp"
+#include "assemblers/scenes/settings_menu/settings_headers.hpp"
 #include "assemblers/scenes/settings_menu/settings_headers.hpp"
 #include "assemblers/ui/increment_setting_object.hpp"
 #include "assemblers/ui/label_button_object.hpp"
 #include "components/core/transform_component.hpp"
+#include "assemblers/ui/label_button_object.hpp"
+#include "components/core/transform_component.hpp"
 #include "components/ui/increment_component.hpp"
+#include "components/ui/settings_tag.hpp"
+#include "components/ui/toggle_state_component.hpp"
 #include "components/ui/settings_tag.hpp"
 #include "components/ui/toggle_state_component.hpp"
 #include "core/game_state.hpp"
@@ -17,9 +23,12 @@
 #include "utility/vector2.hpp"
 #include "utility/morse_code.hpp"
 #include <functional>
+#include <functional>
 #include <utility>
 
 
+void SettingsMenu::Build(
+    Settings& settings, GameState& gameState, Nc::Vector2f windowSize, entt::registry& registry, ResourceStore& resourceStore
 void SettingsMenu::Build(
     Settings& settings, GameState& gameState, Nc::Vector2f windowSize, entt::registry& registry, ResourceStore& resourceStore
 ) 
@@ -27,7 +36,11 @@ void SettingsMenu::Build(
     Construct::SettingsHeaderEntity(registry);
     Construct::GameplaySettingsHeaderEntity(registry);
 
+    Construct::SettingsHeaderEntity(registry);
+    Construct::GameplaySettingsHeaderEntity(registry);
+
     Component::UiIncrement morseDotDuration = Component::UiIncrement(0.05f, 2u);
+    morseDotDuration.onIncrement = [&morseSettings = settings.morseSettings](float increment)
     morseDotDuration.onIncrement = [&morseSettings = settings.morseSettings](float increment)
     {
         morseSettings.dotTime += increment;

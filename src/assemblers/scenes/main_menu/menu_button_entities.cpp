@@ -61,6 +61,33 @@ void Construct::SettingsButtonObject(
 }
 
 
+void Construct::SettingsButtonObject(
+	entt::registry& registry,
+	GameState& gameState,
+	ResourceStore& resourceStore
+)
+{
+	Component::UiTransform transform = Component::UiTransform(
+		Nc::Vector2f(0.5f, 0.56f), Nc::Vector2f::Scale(0.5f)
+	);
+	
+	std::function<void()> onClick = [&gameState, &registry]()
+	{
+		auto view = registry.view<Tag::MainMenu, Component::UiTransform>();
+		for (auto [entity, transform] : view.each()) transform.isVisible = false;
+		
+		SettingsMenu::Open(registry);
+	};
+	 
+	LabelButton button = Construct::LabelButtonObject(
+		std::move(transform), "SETTINGS", std::move(onClick), registry, resourceStore
+	);
+	
+	registry.emplace<Tag::MainMenu>(button.button);
+	registry.emplace<Tag::MainMenu>(button.label);
+}
+
+
 void Construct::ExitButtonObject(
 	entt::registry& registry, GameState& gameState, ResourceStore& resourceStore
 )
