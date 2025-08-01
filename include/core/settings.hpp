@@ -20,4 +20,7 @@ struct Settings
 		if (morseSettings.dashTime != other.morseSettings.dotTime) return false;
 		return true;
 	};
+
+
+	static void Apply(Settings& settings, Settings& toApply);
 };

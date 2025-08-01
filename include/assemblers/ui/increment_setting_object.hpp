@@ -45,6 +45,7 @@ namespace Construct
     inline const entt::entity ValueDisplayEntity(
         Nc::Vector2f position,
         Nc::Vector2f offset,
+        Component::UiIncrement&& increment,
         entt::registry& registry
     )
     {
@@ -52,6 +53,7 @@ namespace Construct
 
         registry.emplace<Component::UiTransform>(entity, position, Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Zero(), offset, 2);
         registry.emplace<Component::Text>(entity, "", RADAR_COLOR, WDXL, FontSize::Medium);
+        registry.emplace<Component::UiIncrement>(entity, increment);
 
         return entity;
     };
@@ -72,12 +74,8 @@ namespace Construct
 
         std::function<void()> onClick = [increment = increment, &valueDisplay]()
         {
-            float newValue = increment.onIncrement(increment.increment);
-
-            std::stringstream stringStream;
-            stringStream << std::fixed << std::setprecision(increment.decimals) << newValue;
-            
-            valueDisplay.text = stringStream.str();
+            if (increment.value == nullptr) return;
+            *increment.value = (*increment.value) + increment.increment;
         };
 
         registry.emplace<Component::ButtonAction>(entity, std::move(onClick));
@@ -100,22 +98,19 @@ namespace Construct
 
         std::function<void()> onClick = [increment = increment, &valueDisplay]()
         {
-            float newValue = increment.onIncrement(-increment.increment);
-
-            std::stringstream stringStream;
-            stringStream << std::fixed << std::setprecision(increment.decimals) << newValue;
-            
-            valueDisplay.text = stringStream.str();
+            if (increment.value == nullptr) return;
+            *increment.value = (*increment.value) - increment.increment;
         };
 
         registry.emplace<Component::ButtonAction>(entity, std::move(onClick));
         return entity;
     };
 
+
     template<class T>
     inline void IncrementSettingObject(
         Nc::Vector2f position,
-        std::string&& display, 
+        std::string&& display,
         Component::UiIncrement&& increment,
         entt::registry& registry, 
         ResourceStore& resourceStore
@@ -131,18 +126,11 @@ namespace Construct
         
         const entt::entity label = Construct::LabelEntity(position, std::move(display), registry);
 
-        const entt::entity valueDisplay = ValueDisplayEntity(position, size + Nc::Vector2f::Right(28.0f), registry);
+        const entt::entity valueDisplay = ValueDisplayEntity(position, size + Nc::Vector2f::Right(28.0f), std::move(increment), registry);
         Component::Text& valueText = registry.get<Component::Text>(valueDisplay); 
 
         const entt::entity decrease = Construct::DecreaseButton(position, size + Nc::Vector2f::Right(72.0f), increment, valueText, registry);
         const entt::entity increase = Construct::IncreaseButton(position, size + Nc::Vector2f::Right(98.0f), increment, valueText, registry);
-
-        float currentValue = increment.onIncrement(0.0f);
-
-        std::stringstream stringStream;
-        stringStream << std::fixed << std::setprecision(increment.decimals) << currentValue;
-                
-        valueText.text = stringStream.str();
 
         registry.emplace<T>(label);
         registry.emplace<T>(valueDisplay);

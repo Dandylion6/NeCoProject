@@ -8,6 +8,7 @@
 #include "assemblers/scenes/settings_menu/settings_menu.hpp"
 #include "core/save.hpp"
 #include "systems/core/rendering_system.hpp"
+#include "systems/ui/increment_number_system.hpp"
 #include "utility/color_palette.hpp"
 #include <cstring>
 #ifdef DEBUG_BUILD
@@ -183,6 +184,7 @@ void Game::UpdateRegistries(float deltaTime)
 {
 	InputActionSystem::Update(registry, gameState);
 	ButtonActionSystem::Update(registry, gameState, renderContext, deltaTime);
+	IncrementNumberSystem::Update(registry);
 	AmbientSoundSystem::Update(registry, gameState, deltaTime);
 	TweenSystem::Update(registry, gameState, deltaTime);
 	SoundSystem::Update(registry, deltaTime);
