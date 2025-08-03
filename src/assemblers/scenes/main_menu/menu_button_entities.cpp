@@ -1,11 +1,12 @@
 #include "assemblers/scenes/main_menu/menu_button_entities.hpp"
+#include "assemblers/scenes/main_menu/main_menu.hpp"
 #include "assemblers/scenes/settings_menu/settings_menu.hpp"
 #include "assemblers/ui/label_button_object.hpp"
 #include "components/core/transform_component.hpp"
 #include "components/ui/main_menu_tag.hpp"
 #include "core/game_state.hpp"
 #include "core/resource_store.hpp"
-#include "core/scene.hpp"
+#include "core/save.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "utility/vector2.hpp"
@@ -24,11 +25,8 @@ void Construct::PlayButtonObject(
 	
 	std::function<void()> onClick = [&gameState, &registry]()
 	{
-		auto view = registry.view<Tag::MainMenu, Component::UiTransform>();
-		for (auto [entity, transform] : view.each()) transform.isVisible = false;
-		
-		gameState.currentScene = CommsRoom;
-		gameState.isPaused = false;
+		Save::LoadGameState(gameState);
+		MainMenu::Close(registry, gameState);
 	};
 	 
 	LabelButton button = Construct::LabelButtonObject<Tag::MainMenu>(

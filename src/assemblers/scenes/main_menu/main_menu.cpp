@@ -21,6 +21,8 @@ void MainMenu::Build(
 	Construct::ExitButtonObject(registry, gameState, resourceStore);
 
 	Construct::MainMenuBackgroundEntity(registry);
+
+	Close(registry, gameState);
 }
 
 
@@ -33,4 +35,15 @@ void MainMenu::Open(entt::registry& registry, GameState& gameState)
 	}
 	gameState.currentScene = NullScene;
 	gameState.isPaused = true;
+}
+
+
+void MainMenu::Close(entt::registry& registry, GameState &gameState)
+{
+	auto view = registry.view<Tag::MainMenu, Component::UiTransform>();
+	for (auto [entity, transform] : view.each())
+	{
+		transform.isVisible = false;
+	}
+	gameState.isPaused = false;
 }

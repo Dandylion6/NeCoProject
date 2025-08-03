@@ -6,7 +6,9 @@
 #include "core/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
+#include "utility/color.hpp"
 #include "utility/color_palette.hpp"
+#include "utility/vector2.hpp"
 #include <functional>
 #include <utility>
 
@@ -68,6 +70,25 @@ namespace Construct
 
         registry.emplace<T>(button);
         registry.emplace<T>(label);
+
+        LabelButton labelButton = LabelButton(label, button);
+        return labelButton;
+    }
+
+
+    inline LabelButton LabelButtonObject(
+        Component::UiTransform&& transform, 
+        std::string &&display,
+        std::function<void()>&& onClick,
+        entt::registry &registry, 
+        ResourceStore& resourceStore
+    )
+    {
+        if (transform.size == Nc::Vector2f::Zero()) transform.size = Nc::Vector2f(420.0f, 68.0f);
+        const entt::entity button = Construct::ButtonEntity(registry, std::move(transform), std::move(onClick));
+
+        const Component::UiTransform& entityTransform = registry.get<Component::UiTransform>(button);
+        const entt::entity label = Construct::ButtonLabelEntity(registry, std::move(display), entityTransform);
 
         LabelButton labelButton = LabelButton(label, button);
         return labelButton;

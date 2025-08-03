@@ -13,4 +13,6 @@ namespace MainMenu
 	);
 
 	void Open(entt::registry& registry, GameState& gameState);
+
+	void Close(entt::registry& registry, GameState& gameState);
 }

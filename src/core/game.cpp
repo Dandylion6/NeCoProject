@@ -6,11 +6,18 @@
 #include "assemblers/scenes/main_menu/main_menu.hpp"
 #include "assemblers/scenes/outside_scene/outside_scene.hpp"
 #include "assemblers/scenes/settings_menu/settings_menu.hpp"
+#include "assemblers/ui/label_button_object.hpp"
+#include "components/core/button_action_component.hpp"
+#include "components/core/rendering/text_component.hpp"
+#include "components/core/transform_component.hpp"
 #include "core/save.hpp"
+#include "entt/entity/fwd.hpp"
 #include "systems/core/rendering_system.hpp"
 #include "systems/ui/increment_number_system.hpp"
 #include "utility/color_palette.hpp"
 #include <cstring>
+#include <functional>
+#include <utility>
 #ifdef DEBUG_BUILD
 #include "core/debug_context.hpp"
 #include "utility/morse_code.hpp"
@@ -122,17 +129,23 @@ void Game::InitialiseAssemblers()
 	DoorwayScene::Build(registry, gameState, resourceStore);
 	OutsideScene::Build(registry, gameState, resourceStore);
 
+	MainMenu::Build(registry, gameState, resourceStore);
 	SettingsMenu::Build(settings, pendingSettings, gameState, renderContext.windowSize, registry, resourceStore);
 
 #ifdef DEBUG_BUILD
-	if (!Game::debugContext.ignoreMainMenu)
-	{
-		MainMenu::Build(registry, gameState, resourceStore);
-		gameState.isPaused = true;
-	} else gameState.currentScene = CommsRoom;
+	if (!Game::debugContext.ignoreMainMenu) MainMenu::Open(registry, gameState);
+	else Save::LoadGameState(gameState);
+
+	const entt::entity entity = registry.create();
+
+	registry.emplace<Component::UiTransform>(entity, Nc::Vector2f(0.06f, 0.9f), Nc::Vector2f::Scale(0.5f), Nc::Vector2f(180.0f, 32.0f));
+	registry.emplace<Component::Text>(entity, "SAVE STATE", RADAR_COLOR);
+	
+	std::function<void()> onClick = [&gameState = gameState]() { Save::SaveGameState(gameState); };
+	registry.emplace<Component::ButtonAction>(entity, std::move(onClick));
+
 #else
-	MainMenu::Build(registry, gameState, resourceStore);
-	gameState.isPaused = true;
+	MainMenu::Open(registry, gameState);
 #endif // DEBUG_BUILD
 }
 
