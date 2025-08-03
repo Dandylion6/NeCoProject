@@ -6,7 +6,7 @@
 class ResourceStore;
 
 
-class ArtilleryControlSystem
+class AimInterpretingSystem
 {
 public:
 	static const std::string COMMAND;

@@ -7,17 +7,17 @@
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
 #include "systems/object/comms/radio_sound_system.hpp"
-#include "systems/object/outside/receiver/artillery_control_system.hpp"
+#include "systems/object/outside/receiver/aim_interpreting_system.hpp"
 #include <cstdint>
 #include <string>
 #include <utility>
 #include "core/render_context.hpp"
 
 
-const std::string ArtilleryControlSystem::COMMAND = "AIM";
+const std::string AimInterpretingSystem::COMMAND = "AIM";
 
 
-void ArtilleryControlSystem::HandleReceivedMessage(
+void AimInterpretingSystem::HandleReceivedMessage(
 	entt::registry& registry,
 	ResourceStore& resourceStore,
 	Component::Receiver& receiver,
@@ -33,7 +33,7 @@ void ArtilleryControlSystem::HandleReceivedMessage(
 }
 
 
-void ArtilleryControlSystem::ConfirmAimCommand(
+void AimInterpretingSystem::ConfirmAimCommand(
 	entt::registry& registry, 
 	ResourceStore& resourceStore, 
 	Component::Receiver& receiver
@@ -48,7 +48,7 @@ void ArtilleryControlSystem::ConfirmAimCommand(
 }
 
 
-void ArtilleryControlSystem::HandleMessageAsCoord(
+void AimInterpretingSystem::HandleMessageAsCoord(
 	entt::registry& registry, 
 	ResourceStore& resourceStore, 
 	Component::Receiver& receiver, 
@@ -69,7 +69,7 @@ void ArtilleryControlSystem::HandleMessageAsCoord(
 }
 
 
-ArtilleryControlSystem::CoordResult ArtilleryControlSystem::InterpretMessageAsCoord(
+AimInterpretingSystem::CoordResult AimInterpretingSystem::InterpretMessageAsCoord(
 	const std::string& message
 )
 {
@@ -123,7 +123,7 @@ ArtilleryControlSystem::CoordResult ArtilleryControlSystem::InterpretMessageAsCo
 }
 
 
-void ArtilleryControlSystem::SetArtilleryTarget(
+void AimInterpretingSystem::SetArtilleryTarget(
 	entt::registry& registry, CoordResult result
 )
 {

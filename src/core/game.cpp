@@ -6,7 +6,6 @@
 #include "assemblers/scenes/main_menu/main_menu.hpp"
 #include "assemblers/scenes/outside_scene/outside_scene.hpp"
 #include "assemblers/scenes/settings_menu/settings_menu.hpp"
-#include "assemblers/ui/label_button_object.hpp"
 #include "components/core/button_action_component.hpp"
 #include "components/core/rendering/text_component.hpp"
 #include "components/core/transform_component.hpp"
@@ -15,18 +14,11 @@
 #include "systems/core/rendering_system.hpp"
 #include "systems/ui/increment_number_system.hpp"
 #include "utility/color_palette.hpp"
-#include <cstddef>
-#include <cstring>
-#include <functional>
-#include <utility>
-#ifdef DEBUG_BUILD
-#include "core/debug_context.hpp"
 #include "utility/morse_code.hpp"
-#endif // DEBUG_BUILD
+#include "core/debug_context.hpp"
 #include "core/game.hpp"
 #include "core/game_state.hpp"
 #include "core/render_context.hpp"
-#include "core/scene.hpp"
 #include "cstring"
 #include "raylib.h"
 #include "systems/core/button_action_system.hpp"
@@ -52,7 +44,10 @@
 #include "systems/core/input_action_system.hpp"
 #include "utility/vector2.hpp"
 #include <cmath>
+#include <cstring>
+#include <functional>
 #include <string>
+#include <utility>
 
 
 #ifdef DEBUG_BUILD
