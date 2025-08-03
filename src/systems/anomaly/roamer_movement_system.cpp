@@ -1,5 +1,6 @@
 #include "components/anomaly/anomaly_roamer_component.hpp"
 #include "components/core/transform_component.hpp"
+#include "components/objects/health_component.hpp"
 #include "core/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -18,8 +19,15 @@ void RoamerMovementSystem::Update(
 		{
 		case Component::AnomalyRoamer::Strider:
 		{
-			Nc::Vector2f direction = (GameState::BUNKER_POSITION - transform.position).Normalized();
+			Nc::Vector2f difference = GameState::BUNKER_POSITION - transform.position;
+			Nc::Vector2f direction = difference.Normalized();
 			transform.position += direction * roamer.speed * deltaTime;
+			
+			if (difference.GetSqrDistance() <= 16.0f)
+			{
+				Component::Health& health = registry.get<Component::Health>(entity);
+				health.health = 0;
+			}
 			break;
 		}
 		default:

@@ -56,12 +56,7 @@ void ArtilleryControlSystem::HandleMessageAsCoord(
 )
 {
 	CoordResult result = InterpretMessageAsCoord(message);
-	if (!result.isValid)
-	{
-		if (result.withinRegion) return;
-		
-		receiver.message.clear();
-	}
+	if (!result.isValid) return;
 
 	SetArtilleryTarget(registry, result);
 
@@ -86,9 +81,17 @@ ArtilleryControlSystem::CoordResult ArtilleryControlSystem::InterpretMessageAsCo
 		bool isLastCharacter = i == (message.length() - 1);
 		if (isLastCharacter)
 		{
-			if (character == 'X') result.axis = CoordResult::Horizontal;
-			else if (character == 'Y') result.axis = CoordResult::Vertical;
-
+			switch (character) 
+			{
+			case 'X':
+				result.axis = CoordResult::Horizontal;
+				break;
+			case 'Y':
+				result.axis = CoordResult::Vertical;
+				break;
+			default:
+				return result;
+			}
 		} else
 		{
 			if (!std::isdigit(character)) return result;
@@ -99,7 +102,6 @@ ArtilleryControlSystem::CoordResult ArtilleryControlSystem::InterpretMessageAsCo
 		}
 	}
 
-	bool validAxis = result.axis != CoordResult::Invalid;
 	bool hasLength = result.coordinateLength > 0;
 
 	float regionLength = 0.0f;
@@ -116,7 +118,7 @@ ArtilleryControlSystem::CoordResult ArtilleryControlSystem::InterpretMessageAsCo
 	}
 
 	result.withinRegion = result.coordinateLength <= regionLength;
-	result.isValid = validAxis && hasLength && result.withinRegion;
+	result.isValid = hasLength && result.withinRegion;
 	return result;
 }
 

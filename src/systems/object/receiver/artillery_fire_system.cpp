@@ -14,6 +14,7 @@
 #include <string>
 #include <utility>
 
+
 const std::string ArtilleryFireSystem::COMMAND = "FIRE";
 
 

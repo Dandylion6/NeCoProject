@@ -192,6 +192,10 @@ bool Game::ShouldRun() const
 void Game::Update(float deltaTime)
 {
 	if (!gameState.isPaused) gameState.time += deltaTime;
+
+#ifdef DEBUG_BUILD
+	if (IsKeyPressed(KEY_PERIOD)) RoamerSpawningSystem::SpawnRoamer(registry, gameState.anomalyState);
+#endif
 }
 
 
@@ -303,5 +307,7 @@ void Game::DrawDebugUi()
 		break;
 	}
 	DrawText(text.c_str(), 32, 110, 32, GREEN);
+
+	DrawText("Press [.] to spawn roamer", 32, 240, 24, GREEN);
 }
 #endif // DEBUG_BUILD

@@ -59,8 +59,6 @@ void Save::SaveGameState(GameState& gameState, uint8_t save)
 
     nlohmann::json data;
 
-    data["anomaly_last_spawn"] = gameState.anomalyState.lastSpawnTime;
-    data["anomaly_spawn_wait"] = gameState.anomalyState.spawnWaitMinutes;
     data["time"] = gameState.time;
     data["current_scene"] = static_cast<uint8_t>(gameState.currentScene);
 
@@ -97,8 +95,6 @@ bool Save::LoadGameState(GameState& gameState, uint8_t save)
 
     nlohmann::json data = nlohmann::json::parse(*result.stream);
 
-    gameState.anomalyState.lastSpawnTime = data.at("anomaly_last_spawn");
-    gameState.anomalyState.spawnWaitMinutes = data.at("anomaly_spawn_wait");
     gameState.time = data.at("time");
     gameState.currentScene = static_cast<Scene>(data.at("current_scene"));
 
