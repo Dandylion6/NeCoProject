@@ -15,6 +15,7 @@
 #include "systems/core/rendering_system.hpp"
 #include "systems/ui/increment_number_system.hpp"
 #include "utility/color_palette.hpp"
+#include <cstddef>
 #include <cstring>
 #include <functional>
 #include <utility>
@@ -167,6 +168,7 @@ void Game::SetupWindow() const
 		MaximizeWindow();
 	} else SetWindowState(FLAG_FULLSCREEN_MODE);
 #else
+	SetExitKey(KEY_NULL);
 	SetWindowState(FLAG_FULLSCREEN_MODE);
 #endif
 }
