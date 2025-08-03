@@ -1,21 +1,20 @@
 #include "components/objects/comms/radio_component.hpp"
 #include "components/objects/outside/receiver_component.hpp"
+#include "core/debug_context.hpp"
+#include "core/game.hpp"
 #include "core/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
 #include "systems/object/comms/radio_sound_system.hpp"
-#include "systems/object/outside/receiver/artillery_control_system.hpp"
+#include "systems/object/outside/receiver/adjust_interpreting_system.hpp"
+#include "systems/object/outside/receiver/aim_interpreting_system.hpp"
 #include "systems/object/outside/receiver/artillery_fire_system.hpp"
 #include "systems/object/outside/receiver/receiver_interpreting_system.hpp"
 #include "utility/morse_code.hpp"
 #include <string>
 #include <unordered_map>
 #include <utility>
-#ifdef DEBUG_BUILD
-#include "core/debug_context.hpp"
-#include "core/game.hpp"
-#endif
 
 
 void ReceiverInterpretingSystem::Update(
@@ -87,13 +86,11 @@ void ReceiverInterpretingSystem::TryInterpretMessage(
 	case OnStandby:
 		break;
 	case AimingArtillery:
-		return ArtilleryControlSystem::HandleReceivedMessage(
-			registry, resourceStore, receiver, message
-		);
+		return AimInterpretingSystem::HandleReceivedMessage(registry, resourceStore, receiver, message);
+	case AdjustArtillery:
+		return AdjustInterpretingSystem::HandleReceivedMessage(registry, resourceStore, receiver, message);
 	case FiringArtillery:
-		return ArtilleryFireSystem::HandleReceivedMessage(
-			registry, resourceStore, receiver, message
-		);
+		return ArtilleryFireSystem::HandleReceivedMessage(registry, resourceStore, receiver, message);
 	default:
 		break;
 	}
@@ -107,7 +104,8 @@ TransmissionContext ReceiverInterpretingSystem::TryGetContext(
 	static const auto commandMap = []
 	{
 		std::unordered_map<std::string, TransmissionContext> map;
-		map[ArtilleryControlSystem::COMMAND] = AimingArtillery;
+		map[AimInterpretingSystem::COMMAND] = AimingArtillery;
+		map[AdjustInterpretingSystem::COMMAND] = AdjustArtillery;
 		map[ArtilleryFireSystem::COMMAND] = FiringArtillery;
 		return map;
 	}();

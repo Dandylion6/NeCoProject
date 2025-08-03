@@ -3,13 +3,13 @@
 #include "entt/entity/fwd.hpp"
 #include "systems/object/outside/receiver/coordinate_interpreting_system.hpp"
 #include <string>
-class ResourceStore;
+struct ResourceStore;
 
 
-class AimInterpretingSystem
+class AdjustInterpretingSystem
 {
 public:
-	static const std::string COMMAND;
+    static const std::string COMMAND;
 
 	static void HandleReceivedMessage(
 		entt::registry& registry,
@@ -19,12 +19,12 @@ public:
 	);
 
 private:
-	static void ConfirmAimCommand(
+    static void ConfirmAdjustCommand(
 		entt::registry& registry,
 		ResourceStore& resourceStore,
 		Component::Receiver& receiver
 	);
 
-	static void SetArtilleryTarget(entt::registry& registry, CoordResult result);
-
+	static void AdjustArtilery(entt::registry& registry, CoordResult result);
+    
 };

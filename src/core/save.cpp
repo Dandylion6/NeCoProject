@@ -14,92 +14,76 @@
 #include <utility>
 
 
-struct StreamResult
-{
-    std::unique_ptr<std::fstream> stream = nullptr;
-    bool isExistant = false;
-};
-
-
-StreamResult GetFileStream(std::string&& file)
-{
-    std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
-    if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
-
-    std::filesystem::path filePath = dataDirectoryPath / file;
-    bool fileExisted = std::filesystem::exists(filePath);
-
-    std::unique_ptr<std::fstream> stream = std::make_unique<std::fstream>();
-    stream->open(filePath, std::ios::in | std::ios::out);
-
-    return StreamResult 
-    {
-        std::move(stream),
-        fileExisted
-    };
-}
 
 
 void Save::SaveSettings(Settings& settings, uint8_t save)
 {
-    StreamResult result = GetFileStream("settings.json");
+    std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
+    if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
+    std::ofstream stream(dataDirectoryPath / "settings.json");
 
     nlohmann::json data;
 
     data["morse_dot_duration"] = settings.morseSettings.dotTime;
 
-    *result.stream << data.dump(4) << std::endl;
-    result.stream->close();
+    stream << data.dump(4) << std::endl;
+    stream.close();
 };
 
 
 void Save::SaveGameState(GameState& gameState, uint8_t save)
 {
-    StreamResult result = GetFileStream("game_state.json");
+    std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
+    if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
+    std::ofstream stream(dataDirectoryPath / "game_state.json");
 
     nlohmann::json data;
 
     data["time"] = gameState.time;
     data["current_scene"] = static_cast<uint8_t>(gameState.currentScene);
 
-    *result.stream << data.dump(4) << std::endl;
-    result.stream->close();
+    stream << data.dump(4) << std::endl;
+    stream.close();
 }
 
 
 bool Save::LoadSettings(Settings& settings, uint8_t save)
 {
-    StreamResult result = GetFileStream("settings.json");
+    std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
+    if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
+    std::ifstream stream(dataDirectoryPath / "settings.json");
 
-    if (!result.isExistant) return true;
-    if (result.stream->peek() == EOF) return true;
+    if (!std::filesystem::exists(dataDirectoryPath / "settings.json")) return true;
+    if (stream.peek() == EOF) return true;
 
-    nlohmann::json data = nlohmann::json::parse(*result.stream);
+    nlohmann::json data = nlohmann::json::parse(stream);
 
     settings.morseSettings.dotTime = data.at("morse_dot_duration");
     
     Settings::Apply(settings);
 
-    result.stream->close();
+    stream.close();
     return true;
 };
 
 
 bool Save::LoadGameState(GameState& gameState, uint8_t save)
 {
-    StreamResult result = GetFileStream("game_state.json");
+    std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
+    if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
+    std::ifstream stream(dataDirectoryPath / "game_state.json");
 
-    if (!result.isExistant || result.stream->peek() == EOF)
+    if (!std::filesystem::exists(dataDirectoryPath / "settings.json") || stream.peek() == EOF)
     {
         gameState.currentScene = CommsRoom;
         return true;
     }
 
-    nlohmann::json data = nlohmann::json::parse(*result.stream);
+    nlohmann::json data = nlohmann::json::parse(stream);
 
     gameState.time = data.at("time");
     gameState.currentScene = static_cast<Scene>(data.at("current_scene"));
 
-    result.stream->close();
+    stream.close();
     return true;
 }
