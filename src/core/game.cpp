@@ -108,12 +108,13 @@ void Game::SetupDebug(int args, char* argv[])
 		if (strcmp(argv[i], "--ignore-main-menu") == 0)
 		{
 			Game::debugContext.ignoreMainMenu = true;
-			break;
+			continue;
 		};
 
 		if (strcmp(argv[i], "--maximized-windowed") == 0)
 		{
 			Game::debugContext.isMaximizedWindowed = true;
+			continue;
 		};
 	}
 }
@@ -308,6 +309,7 @@ void Game::DrawDebugUi()
 	}
 	DrawText(text.c_str(), 32, 110, 32, GREEN);
 
-	DrawText("Press [.] to spawn roamer", 32, 240, 24, GREEN);
+	DrawText("Press [/] to delete msg", 32, 240, 24, GREEN);
+	DrawText("Press [.] to spawn roamer", 32, 280, 24, GREEN);
 }
 #endif // DEBUG_BUILD

@@ -9,8 +9,14 @@ void ApplyMorseSettings(MorseSettings& morseSettings)
 }
 
 
+void Settings::Apply(Settings& settings)
+{
+    ApplyMorseSettings(settings.morseSettings);
+}
+
+
 void Settings::Apply(Settings& settings, Settings& toApply)
 {
     settings.morseSettings.dotTime = toApply.morseSettings.dotTime;
-    ApplyMorseSettings(settings.morseSettings);
+    Apply(settings);
 }

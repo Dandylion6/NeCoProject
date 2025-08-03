@@ -19,9 +19,11 @@ void RoamerMovementSystem::Update(
 		{
 		case Component::AnomalyRoamer::Strider:
 		{
+			constexpr float SPEED_MODIFIER = 0.4f;
+
 			Nc::Vector2f difference = GameState::BUNKER_POSITION - transform.position;
 			Nc::Vector2f direction = difference.Normalized();
-			transform.position += direction * roamer.speed * deltaTime;
+			transform.position += direction * roamer.speed * deltaTime * SPEED_MODIFIER;
 			
 			if (difference.GetSqrDistance() <= 16.0f)
 			{

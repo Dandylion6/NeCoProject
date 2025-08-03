@@ -4,7 +4,7 @@
 
 struct MorseSettings
 {
-	float dotTime = 0.15f;
+	float dotTime = 0.16f;
 	float dashTime = dotTime * 3.0f;
 	float errorMargin = dotTime * MorseCode::ERROR_MARGIN;
 	float exitTime = dashTime + errorMargin + dotTime;
@@ -21,6 +21,6 @@ struct Settings
 		return true;
 	};
 
-
+	static void Apply(Settings& settings);
 	static void Apply(Settings& settings, Settings& toApply);
 };

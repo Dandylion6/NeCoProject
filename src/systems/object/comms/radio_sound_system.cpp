@@ -45,7 +45,7 @@ void RadioSoundSystem::Broadcast(
 		if (radio.priority >= priority) continue;
 		radio.priority = priority;
 
-		constexpr float DELAY_SECONDS = 0.42f;
+		constexpr float DELAY_SECONDS = 0.52f;
 
 		emitter.sound = std::move(sound);
 		radio.broadcastDelay = DELAY_SECONDS;

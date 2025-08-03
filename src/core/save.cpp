@@ -77,6 +77,8 @@ bool Save::LoadSettings(Settings& settings, uint8_t save)
     nlohmann::json data = nlohmann::json::parse(*result.stream);
 
     settings.morseSettings.dotTime = data.at("morse_dot_duration");
+    
+    Settings::Apply(settings);
 
     result.stream->close();
     return true;

@@ -37,7 +37,7 @@ void SettingsMenu::Build(
     Construct::IncrementSettingObject<Tag::Settings>(
         Nc::Vector2f(0.3f, 0.3f),
         "Morse code DOT duration",
-        Component::UiIncrement(&pendingSettings.morseSettings.dotTime, 0.05f, 2u), 
+        Component::UiIncrement(&pendingSettings.morseSettings.dotTime, 0.02f, Nc::Vector2f(0.1f, 0.4f), 2u), 
         registry, 
         resourceStore
     );

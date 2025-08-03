@@ -1,6 +1,5 @@
 #include "components/objects/comms/radio_component.hpp"
 #include "components/objects/outside/receiver_component.hpp"
-#include "core/game.hpp"
 #include "core/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -13,6 +12,10 @@
 #include <string>
 #include <unordered_map>
 #include <utility>
+#ifdef DEBUG_BUILD
+#include "core/debug_context.hpp"
+#include "core/game.hpp"
+#endif
 
 
 void ReceiverInterpretingSystem::Update(
@@ -23,6 +26,17 @@ void ReceiverInterpretingSystem::Update(
 	auto view = registry.view<Component::Receiver>();
 	for (auto [entity, receiver] : view.each())
 	{
+#ifdef DEBUG_BUILD
+		Game::debugContext.receiverMessage = receiver.message;
+
+		if (IsKeyPressed(KEY_SLASH))
+		{
+			receiver.message.clear();
+			Game::debugContext.receiverMessage.clear();
+			continue;
+		}
+#endif
+
 		switch (receiver.incomingCharacter)
 		{
 		case MorseCode::NULL_CODE:
@@ -53,11 +67,6 @@ void ReceiverInterpretingSystem::Update(
 		}
 
 		receiver.message += receiver.incomingCharacter;
-		
-#ifdef DEBUG_BUILD
-		Game::debugContext.receiverMessage = receiver.message;
-#endif // DEBUG_BUILD
-
 		TryInterpretMessage(registry, resourceStore, receiver, receiver.message);
 	}
 }
