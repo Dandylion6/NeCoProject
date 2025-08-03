@@ -1,10 +1,7 @@
 #include "components/core/transform_component.hpp"
 #include "components/objects/comms/morse_transceiver_component.hpp"
 #include "components/objects/outside/receiver_component.hpp"
-#ifdef DEBUG_BUILD
-#include "core/debug_context.hpp"
-#include "core/game.hpp"
-#endif // DEBUG_BUILD
+#include "core/settings.hpp"
 #include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -14,8 +11,11 @@
 #include <cmath>
 #include <cstdint>
 #include <string>
-#include "core/game_state.hpp"
 #include "utility/vector2.hpp"
+#ifdef DEBUG_BUILD
+#include "core/debug_context.hpp"
+#include "core/game.hpp"
+#endif // DEBUG_BUILD
 
 
 void MorseTransceiverSystem::Update(

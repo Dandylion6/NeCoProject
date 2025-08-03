@@ -1,20 +1,17 @@
-﻿{
+{
     "version": 3,
-    "configurePresets":
-    [
+    "configurePresets": [
         {
             "name": "windows-base",
             "hidden": true,
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "installDir": "${sourceDir}/out/install/${presetName}",
-            "cacheVariables":
-            {
+            "cacheVariables": {
                 "CMAKE_C_COMPILER": "cl.exe",
                 "CMAKE_CXX_COMPILER": "cl.exe"
             },
-            "condition":
-            {
+            "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
                 "rhs": "Windows"
@@ -24,13 +21,11 @@
             "name": "x64-debug",
             "displayName": "x64 Debug",
             "inherits": "windows-base",
-            "architecture":
-            {
+            "architecture": {
                 "value": "x64",
                 "strategy": "external"
             },
-            "cacheVariables":
-            {
+            "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             }
         },
@@ -38,8 +33,7 @@
             "name": "x64-release",
             "displayName": "x64 Release",
             "inherits": "windows-base",
-            "cacheVariables":
-            {
+            "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
             }
         },
@@ -49,20 +43,36 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "installDir": "${sourceDir}/out/install/${presetName}",
-            "cacheVariables":
-            {
+            "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             },
-            "condition":
-            {
+            "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
                 "rhs": "Linux"
             },
-            "vendor":
-            {
-                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0":
-                {
+            "vendor": {
+                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+                    "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+                }
+            }
+        },
+        {
+            "name": "linux-release",
+            "displayName": "Linux Release",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
                     "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
                 }
             }
@@ -73,20 +83,16 @@
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "installDir": "${sourceDir}/out/install/${presetName}",
-            "cacheVariables":
-            {
+            "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             },
-            "condition":
-            {
+            "condition": {
                 "type": "equals",
                 "lhs": "${hostSystemName}",
                 "rhs": "Darwin"
             },
-            "vendor":
-            {
-                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0":
-                {
+            "vendor": {
+                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
                     "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
                 }
             }

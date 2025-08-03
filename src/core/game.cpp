@@ -158,9 +158,9 @@ void Game::SetupWindow() const
 	InitWindow(monitorSize.x, monitorSize.y, "Negative Contact");
 	SetWindowState(FLAG_WINDOW_MAXIMIZED);
 
-	SetExitKey(KEY_BACKSPACE);
-
 #ifdef DEBUG_BUILD
+	SetExitKey(KEY_BACKSPACE);
+	
 	if (Game::debugContext.isMaximizedWindowed)
 	{
 		SetWindowState(FLAG_WINDOW_RESIZABLE);
