@@ -5,6 +5,13 @@
 #include <utility>
 
 
+#if defined(PLATFORM_DESKTOP)
+    #define GLSL_VERSION            330
+#else   // PLATFORM_ANDROID, PLATFORM_WEB
+    #define GLSL_VERSION            100
+#endif
+
+
 Texture2D& ResourceStore::GetTexture(const std::string& filePath)
 {
 	if (textureStore.find(filePath) == textureStore.end())
@@ -13,6 +20,17 @@ Texture2D& ResourceStore::GetTexture(const std::string& filePath)
 		textureStore.emplace(filePath, std::move(texture));
 	}
 	return textureStore.at(filePath);
+}
+
+
+Shader& ResourceStore::GetShader(const std::string& filePath)
+{
+    if (shaderStore.find(filePath) == shaderStore.end())
+	{
+		Shader shader = LoadShader(0, TextFormat(filePath.c_str(), GLSL_VERSION));
+		shaderStore.emplace(filePath, std::move(shader));
+	}
+	return shaderStore.at(filePath);
 }
 
 

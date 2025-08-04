@@ -5,7 +5,6 @@
 #include "core/game_state.hpp"
 #include "core/render_context.hpp"
 #include "core/scene.hpp"
-#include "entt/entity/entity.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "systems/core/rendering_system.hpp"
@@ -13,7 +12,6 @@
 #include "systems/core/rendering/sprite_render_system.hpp"
 #include "systems/core/rendering/text_render_system.hpp"
 #include "systems/object/comms/radar/radar_render_system.hpp"
-#include "raylib.h"
 #include "utility/vector2.hpp"
 #include <algorithm>
 
