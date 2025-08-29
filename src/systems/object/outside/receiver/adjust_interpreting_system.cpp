@@ -1,11 +1,9 @@
 #include "components/objects/outside/artillery_component.hpp"
-#include "core/render_context.hpp"
 #include "core/resource_store.hpp"
 #include "entt/entity/registry.hpp"
 #include "systems/object/outside/receiver/adjust_interpreting_system.hpp"
 #include "systems/object/comms/radio_sound_system.hpp"
 #include "systems/object/outside/receiver/coordinate_interpreting_system.hpp"
-#include <algorithm>
 
 
 const std::string AdjustInterpretingSystem::COMMAND = "ADJ";
@@ -56,16 +54,16 @@ void AdjustInterpretingSystem::AdjustArtilery(entt::registry& registry, CoordRes
 		constexpr float DELAY = 0.75f;
 		artillery.aimStartupDelay = DELAY;
 		artillery.isReadyToFire = false;
-
+		
 		switch (result.axis)
 		{
 		case CoordResult::Invalid:
 			break;
 		case CoordResult::Horizontal:
-			artillery.targetPosition.x = std::min(artillery.targetPosition.x + result.coordinateLength, static_cast<float>(RenderContext::RADAR_SIZE.x));
+			artillery.targetPosition.x = artillery.targetPosition.x + result.coordinateLength;
 			break;
 		case CoordResult::Vertical:
-			artillery.targetPosition.y = std::min(artillery.targetPosition.y + result.coordinateLength, static_cast<float>(RenderContext::RADAR_SIZE.y));
+			artillery.targetPosition.y = artillery.targetPosition.y + result.coordinateLength;
 			break;
 		}
 	}

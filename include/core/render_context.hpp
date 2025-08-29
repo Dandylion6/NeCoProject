@@ -1,12 +1,13 @@
 #pragma once
 #include "raylib.h"
+#include "utility/bounds.hpp"
 #include "utility/vector2.hpp"
 
 
 struct RenderContext
 {
 	static constexpr Nc::Vector2i DISPLAY_SIZE = Nc::Vector2i(980, 740);
-	static constexpr Nc::Vector2i RADAR_SIZE = Nc::Vector2i(320, 320);
+	static constexpr Nc::Bounds RADAR_BOUNDS = Nc::Bounds(0.0f, 0.0f, 320.0f, 320.0f);
 	static constexpr Nc::Vector2f RADAR_POSITION = Nc::Vector2f(282.0f, 100.0f);
 
 	RenderTexture2D renderTexture { };

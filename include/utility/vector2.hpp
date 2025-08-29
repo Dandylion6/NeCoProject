@@ -12,6 +12,7 @@ enum Direction
 
 namespace Nc
 {
+	struct Bounds;
 	struct Vector2f;
 
 
@@ -53,6 +54,7 @@ namespace Nc
 		constexpr static Vector2f Left(const float length) { return Vector2f(-length, 0.0f); };
 		constexpr static Vector2f Scale(const float scale) { return Vector2f(scale, scale); };
 		static Vector2f Round(const Vector2f& vector);
+		static Nc::Vector2f Remap(Bounds from, Bounds to, const Vector2f value); 
 
 		float GetDistance() const;
 		float GetSqrDistance() const;

@@ -1,4 +1,6 @@
 #include "raylib.h"
+#include "utility/bounds.hpp"
+#include "utility/interpolation.hpp"
 #include "utility/vector2.hpp"
 #include <cmath>
 
@@ -50,6 +52,14 @@ namespace Nc
 	Vector2f Vector2f::Round(const Vector2f& vector)
 	{
 		return Vector2f(std::roundf(vector.x), std::roundf(vector.y));
+	}
+
+
+	Vector2f Vector2f::Remap(Bounds from, Bounds to, const Vector2f value)
+	{
+		from = Bounds(Vector2f(from.min.x, from.max.x), Vector2f(from.min.y, from.max.y));
+		to = Bounds(Vector2f(to.min.x, to.max.x), Vector2f(to.min.y, to.max.y));
+		return Nc::Vector2f(Math::Remap(from.min, to.min, value.x), Math::Remap(from.max, to.max, value.y));
 	}
 
 

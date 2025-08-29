@@ -28,10 +28,12 @@ const entt::entity RoamerSpawningSystem::SpawnRoamer(
 	entt::registry& registry, AnomalyState anomalyState
 )
 {
-	Nc::Vector2i radarSize = RenderContext::RADAR_SIZE;
+	Nc::Vector2i worldMin = GameState::WORLD_BOUNDS.min;
+	Nc::Vector2i worldMax = GameState::WORLD_BOUNDS.max;
+
 	Nc::Vector2f position = Nc::Vector2f::Zero();
-	position.x = static_cast<float>(GetRandomValue(-32, radarSize.x + 32));
-	position.y = static_cast<float>(GetRandomValue(-32, radarSize.y + 32));
+	position.x = static_cast<float>(GetRandomValue(worldMin.x - 32, worldMax.x + 32));
+	position.y = static_cast<float>(GetRandomValue(worldMin.y - 32, worldMax.y + 32));
 	int16_t health = 10;
 	
 	const entt::entity entity = Construct::RadarBlipEntity(registry, position, health);

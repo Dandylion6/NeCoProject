@@ -8,6 +8,18 @@ float Math::Lerp(float a, float b, float t)
     return a + (b - a) * t;
 }
 
+float Math::InverseLerp(float a, float b, float value)
+{
+	if (a == b) return value <= a ? 0.0f : 1.0f;
+	return (value - a) / (b - a);
+}
+
+float Math::Remap(Nc::Vector2f a, Nc::Vector2f b, float value)
+{
+	float factor = Math::InverseLerp(a.x, a.y, value);
+	return Math::Lerp(b.x, b.y, factor);
+}
+
 float Math::SmoothApproach(float a, float b, float deltaTime, float speed)
 {
 	return a + (b - a) * (1.0f - std::expf(-speed * deltaTime));

@@ -11,7 +11,6 @@ struct CoordResult
 	
 	int16_t coordinateLength = 0;
 	Axis axis = Invalid;
-	bool withinRegion = false;
 	bool isValid = false;
 };
 

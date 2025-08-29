@@ -3,6 +3,7 @@
 #include "components/core/transform_component.hpp"
 #include "components/objects/comms/radar_tags.hpp"
 #include "components/objects/outside/blip_component.hpp"
+#include "core/game_state.hpp"
 #include "core/render_context.hpp"
 #include "core/rendering.hpp"
 #include "core/resource_store.hpp"
@@ -49,7 +50,7 @@ void RadarRenderSystem::DrawRadar(
 {
 	if (currentScene != CommsRoom) return;
 
-	Nc::Vector2f radarSize = RenderContext::RADAR_SIZE;
+	Nc::Vector2f radarSize = RenderContext::RADAR_BOUNDS.max;
 	Nc::Vector2f position = RenderContext::RADAR_POSITION + cameraPosition;
 
 	Rectangle source { 0, 0, radarSize.x, -radarSize.y };
@@ -91,7 +92,8 @@ void RadarRenderSystem::DrawRadarArtillery(entt::registry& registry)
 	auto view = registry.view<Tag::RadarArtillery, const Component::Transform, const Component::Sprite>();
 	for (auto [entity, transform, sprite] : view.each())
 	{
-		Renderer::DrawSprite(sprite, transform.position, transform.offset, transform.rotation);
+		Nc::Vector2f position = Nc::Vector2f::Remap(GameState::WORLD_BOUNDS, RenderContext::RADAR_BOUNDS, transform.position);
+		Renderer::DrawSprite(sprite, position, transform.offset, transform.rotation);
 	}
 }
 
@@ -108,10 +110,11 @@ void RadarRenderSystem::DrawBlips(
 		text.color.SetAlpha(sprite.alpha);
 
 		constexpr Nc::Vector2f TEXT_OFFSET = Nc::Vector2f(16.0f, 0.0f);
-		Nc::Vector2f textPosition = transform.position - transform.offset;
-		textPosition += TEXT_OFFSET;
 
-		Renderer::DrawSprite(sprite, transform.position, transform.offset, transform.rotation);
+		Nc::Vector2f position = Nc::Vector2f::Remap(GameState::WORLD_BOUNDS, RenderContext::RADAR_BOUNDS, transform.position);
+		Nc::Vector2f textPosition = position - transform.offset + TEXT_OFFSET;
+
+		Renderer::DrawSprite(sprite, position, transform.offset, transform.rotation);
 		
 		Nc::Vector2f offset = Renderer::GetTextOffset(text, resourceStore);
 		Renderer::DrawText(text, textPosition, offset, resourceStore);
