@@ -1,5 +1,4 @@
 #pragma once
-#include "components/core/button_action_component.hpp"
 #include "entt/entity/fwd.hpp"
 #include "utility/vector2.hpp"
 struct GameState;
