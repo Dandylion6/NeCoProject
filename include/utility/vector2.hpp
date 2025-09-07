@@ -69,7 +69,7 @@ namespace Nc
 		Vector2f operator-() const;
 		Vector2f operator+(const Vector2f& other) const;
 		Vector2f operator-(const Vector2f& other) const;
-		Vector2f operator*(const Vector2f& other) const;
+		constexpr Vector2f operator*(const Vector2f& other) const { return Vector2f(x * other.x, y * other.y); };
 		Vector2f operator/(const Vector2f& other) const;
 		Vector2f operator*(const float factor) const;
 		Vector2f operator/(const float factor) const;

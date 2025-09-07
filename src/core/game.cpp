@@ -190,7 +190,8 @@ void Game::Update(float deltaTime)
 	if (!gameState.isPaused) gameState.time += deltaTime;
 
 #ifdef DEBUG_BUILD
-	if (IsKeyPressed(KEY_PERIOD)) RoamerSpawningSystem::SpawnRoamer(registry, gameState.anomalyState);
+	constexpr Nc::Vector2f FIXED_ROAMER_SPAWN = Nc::Vector2f(0.0f, -90.0f);
+	if (IsKeyPressed(KEY_PERIOD)) RoamerSpawningSystem::SpawnRoamer(registry, FIXED_ROAMER_SPAWN, gameState.anomalyState);
 #endif
 }
 
