@@ -6,7 +6,7 @@
 #include "utility/vector2.hpp"
 struct GameState;
 struct RenderContext;
-struct ResourceStore;
+class ResourceStore;
 
 
 class RenderingSystem

@@ -1,9 +1,16 @@
-#include "assemblers/scenes/settings_menu/settings_buttons.hpp"
 #include "assemblers/scenes/main_menu/main_menu.hpp"
+#include "assemblers/scenes/settings_menu/settings_buttons.hpp"
 #include "assemblers/scenes/settings_menu/settings_menu.hpp"
 #include "assemblers/ui/label_button_object.hpp"
+#include "components/core/transform_component.hpp"
 #include "components/ui/settings_tag.hpp"
+#include "core/resource_store.hpp"
 #include "core/save.hpp"
+#include "core/settings.hpp"
+#include "entt/entity/fwd.hpp"
+#include "utility/vector2.hpp"
+#include <functional>
+#include <utility>
 
 
 LabelButton Construct::SettingsToMainButton(
