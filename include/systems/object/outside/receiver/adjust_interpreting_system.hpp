@@ -3,7 +3,7 @@
 #include "entt/entity/fwd.hpp"
 #include "systems/object/outside/receiver/coordinate_interpreting_system.hpp"
 #include <string>
-struct ResourceStore;
+class ResourceStore;
 
 
 class AdjustInterpretingSystem

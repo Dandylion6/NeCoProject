@@ -2,7 +2,7 @@
 #include "assemblers/ui/label_button_object.hpp"
 #include "core/settings.hpp"
 #include "entt/entity/fwd.hpp"
-class GameState;
+struct GameState;
 class ResourceStore;
 
 
