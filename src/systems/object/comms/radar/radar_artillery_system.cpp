@@ -1,5 +1,5 @@
 #include "components/core/transform_component.hpp"
-#include "components/objects/comms/radar_tags.hpp"
+#include "components/objects/comms/radar.hpp"
 #include "components/objects/outside/artillery_component.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"

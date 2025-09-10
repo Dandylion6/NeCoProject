@@ -1,6 +1,5 @@
 #include "components/core/sound_emitter_component.hpp"
 #include "components/core/transform_component.hpp"
-#include "components/objects/comms/radar_tags.hpp"
 #include "components/objects/health_component.hpp"
 #include "components/objects/outside/blip_component.hpp"
 #include "components/objects/outside/projectile_component.hpp"

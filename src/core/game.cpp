@@ -201,6 +201,9 @@ void Game::Update(float deltaTime)
 #ifdef DEBUG_BUILD
 	constexpr Nc::Vector2f FIXED_ROAMER_SPAWN = Nc::Vector2f(0.0f, -90.0f);
 	if (IsKeyPressed(KEY_PERIOD)) RoamerSpawningSystem::SpawnRoamer(registry, FIXED_ROAMER_SPAWN, gameState.anomalyState);
+	
+	if (IsKeyPressed(KEY_MINUS)) ++gameState.anomalyState.intensity;
+	if (IsKeyPressed(KEY_EQUAL)) --gameState.anomalyState.intensity;
 #endif
 }
 
@@ -321,7 +324,11 @@ void Game::DrawDebugUi()
 	}
 	DrawText(text.c_str(), 32, 110, 32, GREEN);
 
+	text = "DNGER LVL: " + std::to_string(gameState.anomalyState.intensity);
+	DrawText(text.c_str(), 32, 148, 32, GREEN);
+
 	DrawText("Press [/] to delete msg", 32, 240, 24, GREEN);
 	DrawText("Press [.] to spawn roamer", 32, 280, 24, GREEN);
+	DrawText("Press [-/=] to mod intensity", 32, 320, 24, GREEN);
 }
 #endif // DEBUG_BUILD

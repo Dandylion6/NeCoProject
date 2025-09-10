@@ -109,10 +109,10 @@ void RadarRenderSystem::DrawBlips(
 		text.text = std::format("({} , {})", pixelPosition.x, pixelPosition.y);
 		text.color.SetAlpha(sprite.alpha);
 
-		constexpr Nc::Vector2f TEXT_OFFSET = Nc::Vector2f(16.0f, 0.0f);
+		constexpr Nc::Vector2f TEXT_OFFSET = Nc::Vector2f::Down(12.0f);
 
 		Nc::Vector2f position = Nc::Vector2f::Remap(GameState::WORLD_BOUNDS, RenderContext::RADAR_BOUNDS, transform.position);
-		Nc::Vector2f textPosition = position - transform.offset + TEXT_OFFSET;
+		Nc::Vector2f textPosition = position + TEXT_OFFSET;
 
 		Renderer::DrawSprite(sprite, position, transform.offset, transform.rotation);
 

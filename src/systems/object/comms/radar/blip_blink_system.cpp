@@ -1,6 +1,6 @@
 #include "components/core/transform_component.hpp"
 #include "components/core/tween_component.hpp"
-#include "components/objects/comms/radar_tags.hpp"
+#include "components/objects/comms/radar.hpp"
 #include "components/objects/outside/blip_component.hpp"
 #include "core/game_state.hpp"
 #include "core/render_context.hpp"
@@ -40,10 +40,10 @@ bool BlipBlinkSystem::BlipShouldAppear(
 	constexpr Nc::Vector2f RADAR_Y_RANGE = Nc::Vector2f(RenderContext::RADAR_BOUNDS.min.y, RenderContext::RADAR_BOUNDS.max.y);
 
 	float pathHeight = path.position.y + path.offset.y;
-	float blipHeight = Math::Remap(WORLD_Y_RANGE, RADAR_Y_RANGE, blip.position.y) - blip.offset.y;
+	float blipHeight = Math::Remap(WORLD_Y_RANGE, RADAR_Y_RANGE, blip.position.y);
 	float distance = std::fabsf(pathHeight - blipHeight);
 	
-	if (distance > 0.1f) return false;
+	if (distance > 0.8f) return false;
 	if (tween.isPlaying) return false;
 	return true;
 }
