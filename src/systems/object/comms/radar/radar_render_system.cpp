@@ -1,7 +1,7 @@
 #include "components/core/rendering/sprite_component.hpp"
 #include "components/core/rendering/text_component.hpp"
 #include "components/core/transform_component.hpp"
-#include "components/objects/comms/radar_tags.hpp"
+#include "components/objects/comms/radar.hpp"
 #include "components/objects/outside/blip_component.hpp"
 #include "core/game_state.hpp"
 #include "core/render_context.hpp"
@@ -17,7 +17,7 @@
 
 
 void RadarRenderSystem::DrawRenderTexture(
-	entt::registry& registry, 
+	entt::registry& registry,
 	const RenderTexture2D& radarRenderTexture,
 	Scene currentScene,
 	ResourceStore& resourceStore
@@ -42,8 +42,8 @@ void RadarRenderSystem::DrawRenderTexture(
 
 
 void RadarRenderSystem::DrawRadar(
-	entt::registry& registry, 
-	const RenderTexture2D& radarRenderTexture, 
+	entt::registry& registry,
+	const RenderTexture2D& radarRenderTexture,
 	Nc::Vector2f cameraPosition,
 	Scene currentScene
 )
@@ -69,15 +69,15 @@ void RadarRenderSystem::DrawRadar(
 
 void RadarRenderSystem::DrawScreen(entt::registry& registry)
 {
-	auto view = registry.view<Tag::Radar, const Component::Sprite>();
-	for (auto [entity, sprite] : view.each())
+	auto view = registry.view<Component::RadarMachine, const Component::Sprite>();
+	for (auto [entity, machine, sprite] : view.each())
 	{
 		Renderer::DrawSprite(sprite, Nc::Vector2f::Zero());
 	}
 }
 
 
-void RadarRenderSystem::DrawPath(entt::registry & registry)
+void RadarRenderSystem::DrawPath(entt::registry& registry)
 {
 	auto view = registry.view<Tag::RadarPath, const Component::Transform, const Component::Sprite>();
 	for (auto [entity, transform, sprite] : view.each())
@@ -115,7 +115,7 @@ void RadarRenderSystem::DrawBlips(
 		Nc::Vector2f textPosition = position - transform.offset + TEXT_OFFSET;
 
 		Renderer::DrawSprite(sprite, position, transform.offset, transform.rotation);
-		
+
 		Nc::Vector2f offset = Renderer::GetTextOffset(text, resourceStore);
 		Renderer::DrawText(text, textPosition, offset, resourceStore);
 	}

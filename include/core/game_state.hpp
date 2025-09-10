@@ -8,6 +8,7 @@ struct AnomalyState
 {
 	float lastSpawnTime = 0.0f;
 	float spawnWaitMinutes = 0.1f;
+	uint8_t intensity = 1u;
 };
 
 
