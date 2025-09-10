@@ -3,7 +3,7 @@
 #include "components/core/rendering/text_component.hpp"
 #include "components/core/transform_component.hpp"
 #include "components/core/tween_component.hpp"
-#include "components/objects/comms/radar_tags.hpp"
+#include "components/objects/comms/radar.hpp"
 #include "components/objects/health_component.hpp"
 #include "components/objects/outside/blip_component.hpp"
 #include "core/scene.hpp"
@@ -23,7 +23,7 @@ void Construct::RadarObject(entt::registry& registry)
 	Texture2D texture = LoadTexture("assets/environment/objects/radar/radar_screen.png");
 	Nc::Vector2i size = Nc::Vector2i(texture.width, texture.height);
 
-	registry.emplace<Tag::Radar>(entity);
+	registry.emplace<Component::RadarMachine>(entity);
 	registry.emplace<Component::Transform>(entity, Radar);
 	registry.emplace<Component::Sprite>(entity, texture);
 
