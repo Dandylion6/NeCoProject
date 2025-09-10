@@ -21,7 +21,7 @@ int main(int args, char* argv[])
 
 		game->Update(deltaTime);
 		game->UpdateRegistries(deltaTime);
-		game->DrawGame();
+		game->DrawGame(deltaTime);
 	}
 
 	game->Shutdown();

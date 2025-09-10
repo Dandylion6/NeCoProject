@@ -9,6 +9,13 @@
 #include "components/core/button_action_component.hpp"
 #include "components/core/rendering/text_component.hpp"
 #include "components/core/transform_component.hpp"
+#include "core/save.hpp"
+#include "entt/entity/fwd.hpp"
+#include "systems/core/lighting_system.hpp"
+#include "systems/core/rendering_system.hpp"
+#include "systems/ui/increment_number_system.hpp"
+#include "utility/color_palette.hpp"
+#include "utility/morse_code.hpp"
 #include "core/debug_context.hpp"
 #include "core/game.hpp"
 #include "core/game_state.hpp"
@@ -92,6 +99,8 @@ void Game::SetupRenderContext()
 		static_cast<float>(trueDisplaySize.x),
 		static_cast<float>(trueDisplaySize.y)
 	};
+
+	LightingSystem::Initialize(renderContext.lightingContext, resourceStore);
 }
 
 
@@ -224,7 +233,7 @@ void Game::UpdateRegistries(float deltaTime)
 }
 
 
-void Game::DrawGame()
+void Game::DrawGame(float deltaTime)
 {
 	RadarRenderSystem::DrawRenderTexture(
 		registry, renderContext.radarRenderTexture, gameState.currentScene, resourceStore
@@ -238,14 +247,16 @@ void Game::DrawGame()
 	ClearBackground(BACKGROUND_COLOR);
 
 	Shader& shader = resourceStore.GetShader("assets/lighting.fs");
-
 	BeginShaderMode(shader);
+
+	LightingSystem::Update(registry, renderContext.lightingContext, shader, gameState, cameraPosition, deltaTime);
 	RenderingSystem::DrawScreen(registry, renderContext, gameState, cameraPosition);
-	EndShaderMode();
-	
 	RadarRenderSystem::DrawRadar(
 		registry, renderContext.radarRenderTexture, cameraPosition, gameState.currentScene
 	);
+
+	EndShaderMode();
+	
 
 	EndTextureMode();
 

@@ -33,7 +33,7 @@ public:
 
 	void Update(float deltaTime);
 	void UpdateRegistries(float deltaTime);
-	void DrawGame();
+	void DrawGame(float deltaTime);
 
 private:
 	entt::registry registry { };

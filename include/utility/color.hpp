@@ -26,6 +26,8 @@ namespace Nc
 
 		static RGBa White() { return RGBa(255u, 255u, 255u, 255u); };
 
+		Vector4 ToFloat() const;
+
 		void SetAlpha(float alpha);
 
 		operator Color() const;

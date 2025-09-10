@@ -30,6 +30,12 @@ namespace Nc
 	}
 
 
+	Vector4 RGBa::ToFloat() const
+	{
+		return Vector4(red / 255.0f, green / 255.0f, blue / 255.0f, alpha / 255.0f);
+	}
+
+
 	void RGBa::SetAlpha(float alpha)
 	{
 		this->alpha = static_cast<uint8_t>(alpha * 255.0f);
