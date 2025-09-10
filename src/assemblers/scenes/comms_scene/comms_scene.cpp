@@ -38,7 +38,8 @@ void CommsScene::Build(
 
 	constexpr Nc::Hex LIGHT_COLOR = 0xfee8c8ff;
 
-	Nc::Vector2f lightPosition = Nc::Vector2f(RenderContext::DISPLAY_SIZE) * Nc::Vector2f(0.6f, 1.3f);
+	Nc::Vector2f displaySize = RenderContext::DISPLAY_SIZE;
+	Nc::Vector2f lightPosition = displaySize * Nc::Vector2f(0.6f, 1.3f);
 	Construct::LightSourceEntity(registry, lightPosition, CommsRoom, LIGHT_COLOR, 1.6f, 940.0f);
 
 }

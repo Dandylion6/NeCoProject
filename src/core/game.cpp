@@ -249,16 +249,16 @@ void Game::DrawGame(float deltaTime)
 	BeginTextureMode(renderContext.renderTexture);
 	ClearBackground(BACKGROUND_COLOR);
 
-	Shader& shader = resourceStore.GetShader("assets/lighting.fs");
-	BeginShaderMode(shader);
+	//Shader& shader = resourceStore.GetShader("assets/lighting.fs");
+	//BeginShaderMode(shader);
 
-	LightingSystem::Update(registry, renderContext.lightingContext, shader, gameState, cameraPosition, deltaTime);
+	//LightingSystem::Update(registry, renderContext.lightingContext, shader, gameState, cameraPosition, deltaTime);
 	RenderingSystem::DrawScreen(registry, renderContext, gameState, cameraPosition);
 	RadarRenderSystem::DrawRadar(
 		registry, renderContext.radarRenderTexture, cameraPosition, gameState.currentScene
 	);
 
-	EndShaderMode();
+	//EndShaderMode();
 	
 
 	EndTextureMode();
