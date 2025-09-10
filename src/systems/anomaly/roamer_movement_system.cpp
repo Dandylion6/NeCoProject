@@ -19,7 +19,7 @@ void RoamerMovementSystem::Update(
 		{
 		case Component::AnomalyRoamer::Strider:
 		{
-			constexpr float SPEED_MODIFIER = 0.4f;
+			constexpr float SPEED_MODIFIER = 0.2f;
 
 			Nc::Vector2f difference = GameState::BUNKER_POSITION - transform.position;
 			Nc::Vector2f direction = difference.Normalized();
