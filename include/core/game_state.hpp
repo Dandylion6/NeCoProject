@@ -6,6 +6,8 @@
 
 struct AnomalyState
 {
+	static constexpr uint8_t MAX_INTENSITY = 4u;
+
 	float lastSpawnTime = 0.0f;
 	float spawnWaitMinutes = 0.1f;
 	uint8_t intensity = 1u;
