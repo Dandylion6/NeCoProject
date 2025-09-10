@@ -1,9 +1,10 @@
 #pragma once
+#include "entt/entity/fwd.hpp"
 struct AnomalyState;
 
 
 class RadarStabilitySystem
 {
 public:
-	static void Update(AnomalyState& anomalyState, float deltaTime);
+	static void Update(entt::registry& registry, AnomalyState& anomalyState, float deltaTime);
 };
