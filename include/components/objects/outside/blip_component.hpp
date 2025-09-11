@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 
 
 namespace Component
@@ -11,6 +12,14 @@ namespace Component
 			BlipFadeOut
 		};
 
+		enum class CoordTextState: uint8_t
+		{
+			Stable,
+			CoordinateJumble,
+			CompleteFailure,
+		};
+
 		bool isActive = true;
+		CoordTextState coordState = Stable;
 	};
 }
