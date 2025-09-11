@@ -77,8 +77,8 @@ bool RoamerSpawningSystem::GenerateRandomSpawnPoint(Nc::Vector2f& spawnPoint)
 		weight = Math::Remap(SPAWN_WEIGHT_RANGE_SQR, Nc::Vector2f(0.0f, 1.0f), distanceToArtillery);
 		weight *= Math::Remap(SPAWN_WEIGHT_RANGE_SQR, Nc::Vector2f(0.0f, 1.0f), distanceToBunker);
 		
-		float deterministicValue = static_cast<float>(GetRandomValue(0, 100)) * 0.01f;
-		if (weight >= deterministicValue)
+		float deterministicSeed = static_cast<float>(GetRandomValue(0, 100)) * 0.01f;
+		if (weight >= deterministicSeed)
 		{
 			spawnPoint = position;
 			return true;

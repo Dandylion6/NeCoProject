@@ -20,6 +20,6 @@ namespace Component
 		};
 
 		bool isActive = true;
-		CoordTextState coordState = Stable;
+		CoordTextState coordState = CoordTextState::Stable;
 	};
 }

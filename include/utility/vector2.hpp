@@ -44,6 +44,8 @@ namespace Nc
 		constexpr Vector2f(float x, float y): x(x), y(y) { };
 		constexpr Vector2f(Vector2 vector) { x = vector.x, y = vector.y; };
 
+		constexpr Vector2i ToInt() const { return Vector2i(static_cast<int>(x), static_cast<int>(y)); };
+
 		constexpr static Vector2f Zero() { return Vector2f(0.0f, 0.0f); };
 		constexpr static Vector2f Up() { return Vector2f(0.0f, 1.0f); };
 		constexpr static Vector2f Down() { return Vector2f(0.0f, -1.0f); };
@@ -55,7 +57,7 @@ namespace Nc
 		constexpr static Vector2f Scale(const float scale) { return Vector2f(scale, scale); };
 		static Vector2f Round(const Vector2f& vector);
 		static Nc::Vector2f Remap(Bounds from, Bounds to, const Vector2f value); 
-
+		
 		float GetDistance() const;
 		float GetSqrDistance() const;
 		float GetMin() const;

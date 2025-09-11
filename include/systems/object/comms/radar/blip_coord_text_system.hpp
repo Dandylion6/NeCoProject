@@ -1,4 +1,7 @@
 #pragma once
+#include "components/core/rendering/text_component.hpp"
+#include "components/core/transform_component.hpp"
+#include "components/objects/outside/blip_component.hpp"
 #include "entt/entity/fwd.hpp"
 
 
@@ -6,5 +9,9 @@ class BlipCoordTextSystem
 {
 public:
 	static void Update(entt::registry& registry, float time, float deltaTime);
+
+private:
+	static void UpdateBlipTextStable(const Component::Transform& transform, const Component::Blip& blip, Component::Text& text);
+	static void UpdateBlipTextJumble(const Component::Transform& transform, const Component::Blip& blip, Component::Text& text);
 
 };

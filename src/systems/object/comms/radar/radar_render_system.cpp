@@ -102,21 +102,19 @@ void RadarRenderSystem::DrawBlips(
 	entt::registry& registry, ResourceStore& resourceStore
 )
 {
+	constexpr Nc::Vector2f TEXT_OFFSET = Nc::Vector2f::Down(12.0f);
+	
 	auto blipView = registry.view<Component::Blip, const Component::Transform, const Component::Sprite, Component::Text>();
 	for (auto [entity, blip, transform, sprite, text] : blipView.each())
 	{
-		Nc::Vector2i pixelPosition = transform.position;
-		text.text = std::format("({} , {})", pixelPosition.x, pixelPosition.y);
-		text.color.SetAlpha(sprite.alpha);
-
-		constexpr Nc::Vector2f TEXT_OFFSET = Nc::Vector2f::Down(12.0f);
-
+		
 		Nc::Vector2f position = Nc::Vector2f::Remap(GameState::WORLD_BOUNDS, RenderContext::RADAR_BOUNDS, transform.position);
-		Nc::Vector2f textPosition = position + TEXT_OFFSET;
-
 		Renderer::DrawSprite(sprite, position, transform.offset, transform.rotation);
-
+		
+		Nc::Vector2f textPosition = position + TEXT_OFFSET;
 		Nc::Vector2f offset = Renderer::GetTextOffset(text, resourceStore);
+		
+		text.color.SetAlpha(sprite.alpha);
 		Renderer::DrawText(text, textPosition, offset, resourceStore);
 	}
 }
