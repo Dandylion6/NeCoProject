@@ -26,7 +26,7 @@ void RoamerSpawningSystem::Update(
 
 	SpawnRoamer(registry, spawnPoint, anomalyState);
 		
-	anomalyState.spawnWaitMinutes = static_cast<float>(GetRandomValue(150, 400)) * 0.01f;
+	anomalyState.spawnWaitMinutes = static_cast<float>(GetRandomValue(25, 35)) * 0.1f;
 	anomalyState.lastSpawnTime = time;
 }
 
