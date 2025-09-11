@@ -13,6 +13,7 @@
 
 void DeskScene::Build(
 	entt::registry& registry, 
+	RenderContext& renderContext,
 	GameState& gameState, 
 	ResourceStore& resourceStore
 )
@@ -29,6 +30,8 @@ void DeskScene::Build(
 
 	constexpr Nc::Hex LIGHT_COLOR = 0xfee8c8ff;
 
-	Nc::Vector2f lightPosition = Nc::Vector2f(RenderContext::DISPLAY_SIZE) * Nc::Vector2f(0.5f, 0.34f);
-	Construct::LightSourceEntity(registry, lightPosition, CommsDesk, LIGHT_COLOR, 0.9f, 600.0f);
+	Nc::Vector2f windowSize = renderContext.windowSize;
+	Nc::Vector2f lightPosition = windowSize * Nc::Vector2f(0.5f, 0.34f);
+	float lightRadius = 620.0f * renderContext.renderScale;
+	Construct::LightSourceEntity(registry, lightPosition, CommsDesk, LIGHT_COLOR, 0.9f, lightRadius);
 }

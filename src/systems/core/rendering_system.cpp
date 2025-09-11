@@ -7,13 +7,13 @@
 #include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/core/rendering_system.hpp"
 #include "systems/core/rendering/rectangle_render_system.hpp"
 #include "systems/core/rendering/sprite_render_system.hpp"
 #include "systems/core/rendering/text_render_system.hpp"
-#include "systems/object/comms/radar/radar_render_system.hpp"
+#include "systems/core/rendering_system.hpp"
 #include "utility/vector2.hpp"
 #include <algorithm>
+#include <vector>
 
 
 void RenderingSystem::DrawScreen(

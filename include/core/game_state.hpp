@@ -2,15 +2,18 @@
 #include "core/scene.hpp"
 #include "utility/bounds.hpp"
 #include "utility/vector2.hpp"
+#include <cstdint>
 
 
 struct AnomalyState
 {
-	static constexpr uint8_t MAX_INTENSITY = 4u;
+	static constexpr float DEGRADATION_THRESHOLD = 20.0f; // The attraction percentage needed to start degrading stability.
+	static constexpr float PRECENTAGE_FACTOR = 1.0f / (100.0f - DEGRADATION_THRESHOLD);
 
 	float lastSpawnTime = 0.0f;
 	float spawnWaitMinutes = 0.1f;
-	uint8_t intensity = 1u;
+	float attractionPercentage = 10.0f;
+	uint8_t intensityLevel = 1u;
 };
 
 
