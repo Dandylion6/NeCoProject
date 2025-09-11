@@ -14,6 +14,9 @@
 #include "utility/tween.hpp"
 #include "utility/vector2.hpp"
 #include <cstdint>
+#ifdef DEBUG_BUILD
+#include "core/game.hpp"
+#endif
 
 
 void Construct::RadarObject(entt::registry& registry)
@@ -23,7 +26,12 @@ void Construct::RadarObject(entt::registry& registry)
 	Texture2D texture = LoadTexture("assets/environment/objects/radar/radar_screen.png");
 	Nc::Vector2i size = Nc::Vector2i(texture.width, texture.height);
 
-	registry.emplace<Component::RadarMachine>(entity);
+	bool radarActive = false;
+#ifdef DEBUG_BUILD
+	radarActive = Game::debugContext.isRadarActiveOnStart;	
+#endif
+
+	registry.emplace<Component::RadarMachine>(entity, radarActive);
 	registry.emplace<Component::Transform>(entity, Radar);
 	registry.emplace<Component::Sprite>(entity, texture);
 

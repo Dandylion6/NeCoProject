@@ -96,6 +96,35 @@
                     "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
                 }
             }
+        },
+        {
+            "name": "windows-x-compilation-base",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "installDir": "${sourceDir}/out/install/${presetName}",
+            "toolchainFile": "${sourceDir}/mingw-w64.cmake",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Linux"
+            }
+        },
+        {
+            "name": "win-x-comp-debug",
+            "displayName": "Windows Cross-Compilation Debug",
+            "inherits": "windows-x-compilation-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "win-x-comp-release",
+            "displayName": "Windows Cross-Compilation Release",
+            "inherits": "windows-x-compilation-base",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
         }
     ]
 }

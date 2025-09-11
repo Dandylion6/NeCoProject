@@ -19,6 +19,16 @@ namespace Component
 			CompleteFailure,
 		};
 
+		struct JumbledCoordindate
+		{
+			float lastJumbleTime = 0.0f;
+			float nextJumbleSeconds = 0.0f;
+			bool flippedAxis = false;
+			bool duplicateFirstAxis = false;
+			bool flippedSignX = false;	
+			bool flippedSignY = false;
+		};
+
 		bool isActive = true;
 		CoordTextState coordState = CoordTextState::Stable;
 	};

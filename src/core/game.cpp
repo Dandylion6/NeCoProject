@@ -49,6 +49,7 @@
 #include "utility/morse_code.hpp"
 #include "utility/vector2.hpp"
 #include <cmath>
+#include <cstdint>
 #include <cstring>
 #include <functional>
 #include <string>
@@ -111,13 +112,19 @@ void Game::SetupDebug(int args, char* argv[])
 		{
 			Game::debugContext.ignoreMainMenu = true;
 			continue;
-		};
+		}
 
 		if (strcmp(argv[i], "--maximized-windowed") == 0)
 		{
 			Game::debugContext.isMaximizedWindowed = true;
 			continue;
-		};
+		}
+
+		if (strcmp(argv[i], "--auto-start-radar") == 0)
+		{
+			Game::debugContext.isRadarActiveOnStart = true;
+			continue;
+		}
 	}
 }
 #endif // DEBUG_BUILD
@@ -325,8 +332,13 @@ void Game::DrawDebugUi()
 	text = "DNGER LVL: " + std::to_string(gameState.anomalyState.intensityLevel);
 	DrawText(text.c_str(), 32, 148, 32, GREEN);
 
-	DrawText("Press [/] to delete msg", 32, 240, 24, GREEN);
-	DrawText("Press [.] to spawn roamer", 32, 280, 24, GREEN);
-	DrawText("Press [-/=] to mod intensity", 32, 320, 24, GREEN);
+	text = "RADAR: " + std::to_string(static_cast<int32_t>(Game::debugContext.radarStabilityPercentage));
+	DrawText(text.c_str(), 32, 186, 32, GREEN);
+
+	DrawText("Press [/] to delete msg", 32, 340, 24, GREEN);
+	DrawText("Press [.] to spawn roamer", 32, 380, 24, GREEN);
+	DrawText("Press [G] to glitch a blip", 32, 420, 24, GREEN);
+	DrawText("Press [-/=] to mod intensity", 32, 460, 18, GREEN);
+	DrawText("Press [K/L] to mod radar stability", 32, 500, 18, GREEN);
 }
 #endif // DEBUG_BUILD

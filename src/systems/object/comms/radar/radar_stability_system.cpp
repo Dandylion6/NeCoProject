@@ -4,10 +4,15 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
+#include "systems/object/comms/radar/blip_coord_text_system.hpp"
 #include "utility/vector2.hpp"
 #include "systems/object/comms/radar/radar_stability_system.hpp"
 #include <cmath>
 #include <cstdint>
+#ifdef  DEBUG_BUILD
+#include "core/game.hpp"
+#include "core/debug_context.hpp"
+#endif
 
 
 void RadarStabilitySystem::Update(entt::registry& registry, AnomalyState& anomalyState, float time, float deltaTime)
@@ -18,7 +23,14 @@ void RadarStabilitySystem::Update(entt::registry& registry, AnomalyState& anomal
 	auto view = registry.view<Component::RadarMachine>();
 	for (auto [entity, machine] : view.each())
 	{
+#ifdef DEBUG_BUILD
+		Game::debugContext.radarStabilityPercentage = machine.sability;
+		if (IsKeyPressed(KEY_K)) machine.sability = std::fminf(machine.sability + 10.0f, 100.0f);
+		if (IsKeyPressed(KEY_L)) machine.sability = std::fmaxf(machine.sability - 10.0f, 0.0f);
+#endif
+
 		if (!machine.isActive) continue;
+		if (machine.nextGlitchSpawnSeconds == 0.0f) SetRandomGlitchSpawnInterval(machine);
 
 		if (anomalyState.attractionPercentage >= AnomalyState::DEGRADATION_THRESHOLD)
 		{
@@ -55,6 +67,9 @@ void RadarStabilitySystem::UpdateBlipStability(entt::registry& registry, Compone
 		SetRandomGlitchSpawnInterval(machine);
 		
 		blip.coordState = Component::Blip::CoordTextState::CoordinateJumble;
+		Component::Blip::JumbledCoordindate& jumble = registry.emplace<Component::Blip::JumbledCoordindate>(entity);
+		jumble = BlipCoordTextSystem::GenerateRandomJumble();
+
 		// TODO: Add more glitch logic.
 	}
 }
@@ -64,6 +79,10 @@ bool RadarStabilitySystem::ShouldBlipGlitch(
 	Component::Blip& blip, Component::RadarMachine& machine, float secondsSinceLastGlitch, uint32_t blipIndex, uint32_t blipCount
 )
 {
+#ifdef DEBUG_BUILD
+	if (IsKeyPressed(KEY_G)) return true;
+#endif
+
 	if (secondsSinceLastGlitch <= machine.nextGlitchSpawnSeconds) return false;
 	if (blip.coordState != Component::Blip::CoordTextState::Stable) return false;
 	

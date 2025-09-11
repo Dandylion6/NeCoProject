@@ -11,6 +11,7 @@ namespace Component
 		float lastGlitchTime = 0.0f;
 		bool isActive = false;
 
+		RadarMachine(bool isActive): isActive(isActive) { };
 	};
 }
 
