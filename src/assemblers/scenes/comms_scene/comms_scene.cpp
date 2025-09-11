@@ -17,6 +17,7 @@
 
 void CommsScene::Build(
 	entt::registry& registry,
+	RenderContext& renderContext,
 	GameState& gameState,
 	ResourceStore& resourceStore
 )
@@ -38,8 +39,9 @@ void CommsScene::Build(
 
 	constexpr Nc::Hex LIGHT_COLOR = 0xfee8c8ff;
 
-	Nc::Vector2f displaySize = RenderContext::DISPLAY_SIZE;
-	Nc::Vector2f lightPosition = displaySize * Nc::Vector2f(0.6f, 1.3f);
-	Construct::LightSourceEntity(registry, lightPosition, CommsRoom, LIGHT_COLOR, 1.6f, 940.0f);
+	Nc::Vector2f windowSize = renderContext.windowSize;
+	Nc::Vector2f lightPosition = windowSize * Nc::Vector2f(0.5f, 1.3f);
+	float lightRadius = 940.0f * renderContext.renderScale;
+	Construct::LightSourceEntity(registry, lightPosition, CommsRoom, LIGHT_COLOR, 1.6f, lightRadius);
 
 }

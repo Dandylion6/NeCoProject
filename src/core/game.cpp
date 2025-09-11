@@ -9,19 +9,11 @@
 #include "components/core/button_action_component.hpp"
 #include "components/core/rendering/text_component.hpp"
 #include "components/core/transform_component.hpp"
-#include "core/save.hpp"
-#include "entt/entity/fwd.hpp"
-#include "systems/core/lighting_system.hpp"
-#include "systems/core/rendering_system.hpp"
-#include "systems/ui/increment_number_system.hpp"
-#include "utility/color_palette.hpp"
-#include "utility/morse_code.hpp"
 #include "core/debug_context.hpp"
 #include "core/game.hpp"
 #include "core/game_state.hpp"
 #include "core/render_context.hpp"
 #include "core/save.hpp"
-#include "cstring"
 #include "entt/entity/fwd.hpp"
 #include "raylib.h"
 #include "systems/anomaly/roamer_movement_system.hpp"
@@ -29,6 +21,8 @@
 #include "systems/core/button_action_system.hpp"
 #include "systems/core/input_action_system.hpp"
 #include "systems/core/input_action_system.hpp"
+#include "systems/core/lighting_system.hpp"
+#include "systems/core/rendering_system.hpp"
 #include "systems/core/rendering_system.hpp"
 #include "systems/core/sound_system.hpp"
 #include "systems/core/tween_system.hpp"
@@ -47,6 +41,8 @@
 #include "systems/object/outside/receiver/receiver_interpreting_system.hpp"
 #include "systems/scene/ambient_sound_system.hpp"
 #include "systems/ui/increment_number_system.hpp"
+#include "systems/ui/increment_number_system.hpp"
+#include "utility/color_palette.hpp"
 #include "utility/color_palette.hpp"
 #include "utility/morse_code.hpp"
 #include "utility/vector2.hpp"
@@ -130,8 +126,8 @@ void Game::InitialiseAssemblers()
 	Construct::MoveTransitionEntity(registry, renderContext, gameState);
 	Construct::AmbientSoundEntity(registry);
 
-	CommsScene::Build(registry, gameState, resourceStore);
-	DeskScene::Build(registry, gameState, resourceStore);
+	CommsScene::Build(registry, renderContext, gameState, resourceStore);
+	DeskScene::Build(registry, renderContext, gameState, resourceStore);
 	DoorwayScene::Build(registry, gameState, resourceStore);
 	OutsideScene::Build(registry, gameState, resourceStore);
 
@@ -249,24 +245,22 @@ void Game::DrawGame(float deltaTime)
 	BeginTextureMode(renderContext.renderTexture);
 	ClearBackground(BACKGROUND_COLOR);
 
-	//Shader& shader = resourceStore.GetShader("assets/lighting.fs");
-	//BeginShaderMode(shader);
-
-	//LightingSystem::Update(registry, renderContext.lightingContext, shader, gameState, cameraPosition, deltaTime);
+	Shader& shader = resourceStore.GetShader("assets/lighting.fs");
+	LightingSystem::Update(registry, renderContext.lightingContext, shader, gameState, cameraPosition, deltaTime);
 	RenderingSystem::DrawScreen(registry, renderContext, gameState, cameraPosition);
 	RadarRenderSystem::DrawRadar(
 		registry, renderContext.radarRenderTexture, cameraPosition, gameState.currentScene
 	);
-
-	//EndShaderMode();
-	
 
 	EndTextureMode();
 
 	BeginDrawing();
 	ClearBackground(BACKGROUND_COLOR);
 
+	BeginShaderMode(shader);
 	DrawRenderTexture();
+	EndShaderMode();
+
 	RenderingSystem::DrawUi(registry, resourceStore, renderContext, gameState);
 
 #ifdef DEBUG_BUILD
