@@ -59,8 +59,8 @@ bool RoamerSpawningSystem::GenerateRandomSpawnPoint(Nc::Vector2f& spawnPoint)
 	Nc::Vector2i worldMin = GameState::WORLD_BOUNDS.min;
 	Nc::Vector2i worldMax = GameState::WORLD_BOUNDS.max;
 
-	constexpr int OVERFLOW_RANGE = 16;
-	constexpr Nc::Vector2f SPAWN_WEIGHT_RANGE = Nc::Vector2f(54.0f, 88.0f);
+	constexpr int OVERFLOW_RANGE = 4;
+	constexpr Nc::Vector2f SPAWN_WEIGHT_RANGE = Nc::Vector2f(64.0f, 92.0f);
 	constexpr Nc::Vector2f SPAWN_WEIGHT_RANGE_SQR = SPAWN_WEIGHT_RANGE * SPAWN_WEIGHT_RANGE;
 	constexpr uint8_t MAX_SPAWN_SAMPLES = 32u;
 
@@ -78,11 +78,10 @@ bool RoamerSpawningSystem::GenerateRandomSpawnPoint(Nc::Vector2f& spawnPoint)
 		weight *= Math::Remap(SPAWN_WEIGHT_RANGE_SQR, Nc::Vector2f(0.0f, 1.0f), distanceToBunker);
 		
 		float deterministicValue = static_cast<float>(GetRandomValue(0, 100)) * 0.01f;
-		if (weight >= deterministicValue)
-		{
-			spawnPoint = position;
-			return true;
-		}
+		if (weight < deterministicValue) continue;
+		
+		spawnPoint = position;
+		return true;
 	}
 
 	return false;
