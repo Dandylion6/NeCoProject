@@ -216,7 +216,7 @@ typedef struct {
         Vector2 vector;                 // DRAG vector (between initial and current position)
         float angle;                    // DRAG angle (relative to x-axis)
         float distance;                 // DRAG distance (from initial touch point to final) (normalized [0..1])
-        float intensity;                // DRAG intensity, how far why did the DRAG (pixels per frame)
+        float intensityLevel;                // DRAG intensity, how far why did the DRAG (pixels per frame)
     } Drag;
     struct {
         double startTime;               // SWIPE start time to calculate drag intensity
@@ -302,10 +302,10 @@ void ProcessGestureEvent(GestureEvent event)
 
             // NOTE: GESTURES.Drag.intensity dependent on the resolution of the screen
             GESTURES.Drag.distance = rgVector2Distance(GESTURES.Touch.downPositionA, GESTURES.Touch.upPosition);
-            GESTURES.Drag.intensity = GESTURES.Drag.distance/(float)((rgGetCurrentTime() - GESTURES.Swipe.startTime));
+            GESTURES.Drag.intensityLevel = GESTURES.Drag.distance/(float)((rgGetCurrentTime() - GESTURES.Swipe.startTime));
 
             // Detect GESTURE_SWIPE
-            if ((GESTURES.Drag.intensity > FORCE_TO_SWIPE) && (GESTURES.current != GESTURE_DRAG))
+            if ((GESTURES.Drag.intensityLevel > FORCE_TO_SWIPE) && (GESTURES.current != GESTURE_DRAG))
             {
                 // NOTE: Angle should be inverted in Y
                 GESTURES.Drag.angle = 360.0f - rgVector2Angle(GESTURES.Touch.downPositionA, GESTURES.Touch.upPosition);
@@ -319,7 +319,7 @@ void ProcessGestureEvent(GestureEvent event)
             else
             {
                 GESTURES.Drag.distance = 0.0f;
-                GESTURES.Drag.intensity = 0.0f;
+                GESTURES.Drag.intensityLevel = 0.0f;
                 GESTURES.Drag.angle = 0.0f;
 
                 GESTURES.current = GESTURE_NONE;

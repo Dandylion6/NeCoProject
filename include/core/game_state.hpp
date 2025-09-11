@@ -2,6 +2,7 @@
 #include "core/scene.hpp"
 #include "utility/bounds.hpp"
 #include "utility/vector2.hpp"
+#include <cstdint>
 
 
 struct AnomalyState
@@ -10,7 +11,8 @@ struct AnomalyState
 
 	float lastSpawnTime = 0.0f;
 	float spawnWaitMinutes = 0.1f;
-	uint8_t intensity = 1u;
+	float attractionPercentage = 10.0f;
+	uint8_t intensityLevel = 1u;
 };
 
 

@@ -15,6 +15,7 @@ namespace Component
 
 		float sability = 100.0f;
 		TextState textState = TextState::None;
+		bool isActive = false;
 	};
 }
 
