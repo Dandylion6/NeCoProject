@@ -4,7 +4,7 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/object/comms/radar/blip_coord_text_system.hpp"
+#include "systems/object/comms/radar/blip_glitch_system.hpp"
 #include "utility/vector2.hpp"
 #include "systems/object/comms/radar/radar_stability_system.hpp"
 #include <cmath>
@@ -54,7 +54,7 @@ void RadarStabilitySystem::UpdateBlipStability(entt::registry& registry, Compone
 	auto view = registry.view<Component::Blip>();
 	for (auto [entity, blip] : view.each())
 	{
-		if (isStable) blip.coordState = Component::Blip::CoordTextState::Stable;
+		if (isStable) blip.state = Component::Blip::Stable;
 		++blipCount;
 	}
 
@@ -66,9 +66,12 @@ void RadarStabilitySystem::UpdateBlipStability(entt::registry& registry, Compone
 		if (!ShouldBlipGlitch(blip, machine, secondsSinceLastGlitch, blipIndex++, blipCount)) continue;
 		SetRandomGlitchSpawnInterval(machine);
 		
-		blip.coordState = Component::Blip::CoordTextState::CoordinateJumble;
+		blip.state = Component::Blip::CoordinateJumble;
 		Component::Blip::JumbledCoordindate& jumble = registry.emplace<Component::Blip::JumbledCoordindate>(entity);
-		jumble = BlipCoordTextSystem::GenerateRandomJumble();
+		jumble = BlipGlitchSystem::GenerateRandomJumble();
+
+		Nc::Vector2i glitchTimeRange = Component::Blip::BASE_GLITCH_TIME_RANGE;
+		blip.remainingGlitchSeconds = static_cast<float>(GetRandomValue(glitchTimeRange.x * 10, glitchTimeRange.y * 10)) * 0.1f;
 
 		// TODO: Add more glitch logic.
 	}
@@ -84,7 +87,7 @@ bool RadarStabilitySystem::ShouldBlipGlitch(
 #endif
 
 	if (secondsSinceLastGlitch <= machine.nextGlitchSpawnSeconds) return false;
-	if (blip.coordState != Component::Blip::CoordTextState::Stable) return false;
+	if (blip.state != Component::Blip::Stable) return false;
 	
 	float chance = static_cast<float>(blipIndex) / static_cast<float>(blipCount);
 	float deterministicValue = static_cast<float>(GetRandomValue(0, 100)) * 0.01f;

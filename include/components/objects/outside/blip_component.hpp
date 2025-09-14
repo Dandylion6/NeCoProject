@@ -1,4 +1,5 @@
 #pragma once
+#include "utility/vector2.hpp"
 #include <cstdint>
 
 
@@ -6,13 +7,15 @@ namespace Component
 {
 	struct Blip
 	{
+		static constexpr Nc::Vector2i BASE_GLITCH_TIME_RANGE = Nc::Vector2i(10, 25); // How many seconds a blip will glitch for in seconds.
+
 		enum Tweens
 		{
 			BlipFadeIn,
 			BlipFadeOut
 		};
 
-		enum class CoordTextState: uint8_t
+		enum State: uint8_t
 		{
 			Stable,
 			CoordinateJumble,
@@ -21,6 +24,8 @@ namespace Component
 
 		struct JumbledCoordindate
 		{
+			static constexpr Nc::Vector2i JUMBLE_INTERVAL_RANGE = Nc::Vector2i(30, 520); // Interval in miliseconds.
+
 			float lastJumbleTime = 0.0f;
 			float nextJumbleSeconds = 0.0f;
 			bool flippedAxis = false;
@@ -29,7 +34,8 @@ namespace Component
 			bool flippedSignY = false;
 		};
 
+		float remainingGlitchSeconds = 0.0f;
+		State state = Stable;
 		bool isActive = true;
-		CoordTextState coordState = CoordTextState::Stable;
 	};
 }

@@ -5,7 +5,7 @@
 #include "entt/entity/fwd.hpp"
 
 
-class BlipCoordTextSystem
+class BlipGlitchSystem
 {
 public:
 	static void Update(entt::registry& registry, float time, float deltaTime);
@@ -14,8 +14,6 @@ public:
 
 private:
 	static void UpdateBlipTextStable(const Component::Transform& transform, const Component::Blip& blip, Component::Text& text);
-	static void UpdateBlipTextJumble(
-		const Component::Transform& transform, const Component::Blip& blip, Component::Text& text, Component::Blip::JumbledCoordindate& jumble
-	);
+	static void UpdateBlipTextJumble(entt::registry& registry, entt::entity entity, float time);
 
 };

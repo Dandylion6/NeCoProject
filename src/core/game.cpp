@@ -30,7 +30,7 @@
 #include "systems/object/comms/morse_sound_system.hpp"
 #include "systems/object/comms/morse_transceiver_system.hpp"
 #include "systems/object/comms/radar/blip_blink_system.hpp"
-#include "systems/object/comms/radar/blip_coord_text_system.hpp"
+#include "systems/object/comms/radar/blip_glitch_system.hpp"
 #include "systems/object/comms/radar/radar_artillery_system.hpp"
 #include "systems/object/comms/radar/radar_render_system.hpp"
 #include "systems/object/comms/radar/radar_stability_system.hpp"
@@ -230,7 +230,7 @@ void Game::UpdateRegistries(float deltaTime)
 	RadarStabilitySystem::Update(registry, gameState.anomalyState, gameState.time, deltaTime);
 	BlipDeathSystem::Update(registry);
 	BlipBlinkSystem::Update(registry);
-	BlipCoordTextSystem::Update(registry, gameState.time, deltaTime);
+	BlipGlitchSystem::Update(registry, gameState.time, deltaTime);
 	RadarArtillerySystem::Update(registry, deltaTime);
 	ReceiverInterpretingSystem::Update(registry, resourceStore);
 	ReceiverCodeResponseSystem::Update(registry, resourceStore);
