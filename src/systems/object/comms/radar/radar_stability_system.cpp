@@ -47,7 +47,7 @@ void RadarStabilitySystem::Update(entt::registry& registry, AnomalyState& anomal
 
 void RadarStabilitySystem::UpdateBlipStability(entt::registry& registry, Component::RadarMachine& machine, float time)
 {
-	bool isStable = machine.sability >= 80.0f;
+	bool isStable = machine.sability >= Component::RadarMachine::STABLE_LEVEL;
 	float secondsSinceLastGlitch = time - machine.lastGlitchTime;
 
 	uint8_t blipCount = 0u;
@@ -71,7 +71,29 @@ void RadarStabilitySystem::UpdateBlipStability(entt::registry& registry, Compone
 		if (!ShouldBlipGlitch(blip, machine, secondsSinceLastGlitch, blipIndex++, blipCount)) continue;
 		SetRandomGlitchSpawnInterval(machine);
 		
-		// TODO: Add glitching logic.
+		// Glitch spawning logic:
+		// - If radar stability < 80%, glitches can occur.
+		// - Check if enough time has passed since the last glitch (interval scales with stability).
+		// - For each stable blip:
+		//     - Use weighted random selection for glitch severity based on current stability:
+		//         - 50–80%: Only jumble glitches.
+		//         - 20–50%: Mostly jumble, some text errors.
+		//         - 0–20%: Jumble, text errors, and complete failures.
+		//     - Scale glitch duration by severity and stability (lower stability = longer duration).
+		// - After glitching, reset the glitch spawn timer.
+
+		if (machine.sability >= Component::RadarMachine::HEALTHY_LEVEL)
+		{
+			// Jumble
+		}
+		else if (machine.sability >= Component::RadarMachine::UNSTABLE_LEVEL)
+		{
+			// 50% Jumble / 50% Error
+		}
+		else
+		{
+			// 60% Failure / 30% Error / 10% Jumble
+		}
 	}
 }
 
