@@ -63,7 +63,7 @@ const entt::entity Construct::MoveTransitionEntity(
 {
 	const entt::entity entity = registry.create();
 
-	registry.emplace<Component::Rectangle>(entity, BACKGROUND_COLOR);
+	registry.emplace<Component::Rectangle>(entity, Palette::BACKGROUND_COLOR);
 	Component::UiTransform& transform = registry.emplace<Component::UiTransform>(
 		entity,
 		Nc::Vector2f::Zero(),

@@ -34,7 +34,7 @@ namespace Construct
 			entity, transform.anchor, transform.origin, transform.size, transform.offset, transform.index + 1, transform.rotation
 		);
 
-		registry.emplace<Component::Text>(entity, std::move(label), RADAR_COLOR, WDXL, FontSize::Large, Alignment::Center, 4u);
+		registry.emplace<Component::Text>(entity, std::move(label), Palette::RADAR_COLOR, WDXL, FontSize::Large, Alignment::Center, 4u);
 
 		return entity;
 	};
@@ -47,7 +47,7 @@ namespace Construct
         const entt::entity entity = registry.create();
 
         registry.emplace<Component::UiTransform>(entity, std::move(transform));
-        registry.emplace<Component::Rectangle>(entity, BACKGROUND_COLOR);
+        registry.emplace<Component::Rectangle>(entity, Palette::BACKGROUND_COLOR);
         registry.emplace<Component::ButtonAction>(entity, std::move(onClick));
 
         return entity;

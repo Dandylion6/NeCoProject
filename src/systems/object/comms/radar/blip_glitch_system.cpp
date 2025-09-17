@@ -20,11 +20,13 @@ void BlipGlitchSystem::Update(entt::registry& registry, float time, float deltaT
 				UpdateBlipTextStable(transform, blip, text);
 				break;
 			case Component::Blip::CoordinateJumble:
-			{
 				UpdateBlipTextJumble(registry, entity, time);
 				break;
-			}
+			case Component::Blip::CoordinateError:
+				UpdateBlipTextError(registry, entity, time);
+				break;
 			case Component::Blip::CompleteFailure:
+				UpdateBlipFailure(registry, entity, time);
 				break;
         }
 
@@ -34,16 +36,40 @@ void BlipGlitchSystem::Update(entt::registry& registry, float time, float deltaT
 }
 
 
-Component::Blip::JumbledCoordindate BlipGlitchSystem::GenerateRandomJumble()
+void BlipGlitchSystem::JumbleBlip(
+	entt::registry& registry, entt::entity entity, Component::Blip& blip
+)
 {
-	Component::Blip::JumbledCoordindate jumble { };
+	blip.state = Component::Blip::CoordinateJumble;
+	Component::Blip::JumbledCoordindate& jumble = registry.emplace<Component::Blip::JumbledCoordindate>(entity);
+	jumble = BlipGlitchSystem::GenerateRandomJumble();
 
-	jumble.duplicateFirstAxis = GetRandomValue(0, 10) <= 2;
-	jumble.flippedAxis = GetRandomValue(0, 10) <= 6;
-	jumble.flippedSignX = GetRandomValue(0, 10) <= 4;
-	jumble.flippedSignY = GetRandomValue(0, 10) <= 4;
+	Nc::Vector2i glitchTimeRange = Component::Blip::BASE_GLITCH_TIME_RANGE;
+	blip.remainingGlitchSeconds = static_cast<float>(GetRandomValue(glitchTimeRange.x * 10, glitchTimeRange.y * 10)) * 0.1f;
+}
 
-	return jumble;
+
+void BlipGlitchSystem::GlitchBlipText(
+	entt::registry& registry, entt::entity entity, Component::Blip& blip
+)
+{
+	blip.state = Component::Blip::CompleteFailure;
+	registry.emplace<Component::Blip::CoordinateErrorData>(entity);
+
+	Nc::Vector2i glitchTimeRange = Component::Blip::BASE_GLITCH_TIME_RANGE;
+	blip.remainingGlitchSeconds = static_cast<float>(GetRandomValue(glitchTimeRange.x * 10, glitchTimeRange.y * 10)) * 0.1f;
+}
+
+
+void BlipGlitchSystem::TriggerBlipFailure(
+	entt::registry& registry, entt::entity entity, Component::Blip& blip
+)
+{
+	blip.state = Component::Blip::CompleteFailure;
+	registry.emplace<Component::Blip::CoordinateErrorData>(entity);
+
+	Nc::Vector2i glitchTimeRange = Component::Blip::BASE_GLITCH_TIME_RANGE;
+	blip.remainingGlitchSeconds = static_cast<float>(GetRandomValue(glitchTimeRange.x * 10, glitchTimeRange.y * 10)) * 0.1f;
 }
 
 
@@ -71,7 +97,6 @@ void BlipGlitchSystem::UpdateBlipTextJumble(
 	{
 		blip.state = Component::Blip::Stable;
 		registry.remove<Component::Blip::JumbledCoordindate>(entity);
-		UpdateBlipTextStable(transform, blip, text);
 		return;
 	}
 
@@ -87,15 +112,9 @@ void BlipGlitchSystem::UpdateBlipTextJumble(
 	displayedPosition.y = jumble.duplicateFirstAxis ? displayedPosition.x : displayedPosition.y;
 	displayedPosition.x *= jumble.flippedSignX ? -1.0f : 1.0f;
 
-#ifdef DEBUG_BUILD
-	std::ostringstream stringStream;
-	stringStream << "*(" << displayedPosition.x << " , " << displayedPosition.y << ")";
-	text.text = stringStream.str();
-#else
 	std::ostringstream stringStream;
 	stringStream << "(" << displayedPosition.x << " , " << displayedPosition.y << ")";
 	text.text = stringStream.str();
-#endif
 
 	if (time - jumble.lastJumbleTime < jumble.nextJumbleSeconds) return;
 
@@ -104,4 +123,85 @@ void BlipGlitchSystem::UpdateBlipTextJumble(
 
 	Nc::Vector2i range = Component::Blip::JumbledCoordindate::JUMBLE_INTERVAL_RANGE;
 	jumble.nextJumbleSeconds = static_cast<float>(GetRandomValue(range.x, range.y)) * 0.001f;
+}
+
+
+void BlipGlitchSystem::UpdateBlipTextError(
+	entt::registry& registry, entt::entity entity, float time
+)
+{
+	Component::Text& text = registry.get<Component::Text>(entity);
+	Component::Blip::CoordinateErrorData& error = registry.get<Component::Blip::CoordinateErrorData>(entity);
+	Component::Blip& blip = registry.get<Component::Blip>(entity);
+	
+	if (blip.remainingGlitchSeconds <= 0.0f)
+	{
+		blip.state = Component::Blip::Stable;
+		registry.remove<Component::Blip::CoordinateErrorData>(entity);
+		return;
+	}
+
+	// Update each character.
+	for (uint8_t i = 0u; i < 4u; ++i)
+	{
+		if (time - error.lastGlitchTimes[i] < error.nextGlitchSeconds[i]) continue;
+		
+		error.glitchedCharacters[i] = static_cast<char>(GetRandomValue(32, 126));
+		error.lastGlitchTimes[i] = time;
+		Nc::Vector2i range = Component::Blip::CoordinateErrorData::GLITCH_INTERVAL_RANGE;
+		error.nextGlitchSeconds[i] = static_cast<float>(GetRandomValue(range.x, range.y)) * 0.001f;
+	}
+
+	// Construct the display string.
+	char coordDisplayX[] = { error.glitchedCharacters[0u], error.glitchedCharacters[1u], '\0' };
+	char coordDisplayY[] = { error.glitchedCharacters[2u], error.glitchedCharacters[3u], '\0' };
+
+	std::ostringstream stringStream;
+	stringStream << "(" << coordDisplayX << " , " << coordDisplayY << ")";
+	text.text = stringStream.str();
+}
+
+
+void BlipGlitchSystem::UpdateBlipFailure(
+	entt::registry& registry, entt::entity entity, float time
+)
+{
+	constexpr int RANDOM_OFFSET = Component::Blip::CompleteFailureData::OFFSET_RANGE;
+
+	Component::Text& text = registry.get<Component::Text>(entity);
+	Component::Blip::CompleteFailureData& failure = registry.get<Component::Blip::CompleteFailureData>(entity);
+	const Component::Transform& transfrom = registry.get<const Component::Transform>(entity);
+	Component::Blip& blip = registry.get<Component::Blip>(entity);
+	
+	if (blip.remainingGlitchSeconds <= 0.0f)
+	{
+		blip.state = Component::Blip::Stable;
+		registry.remove<Component::Blip::CompleteFailureData>(entity);
+		return;
+	}
+
+	text.text = "???";
+	if (time - failure.lastGlitchTime < failure.nextGlitchSeconds) return;
+
+	failure.lastGlitchTime = time;
+	Nc::Vector2i range = Component::Blip::CompleteFailureData::GLITCH_INTERVAL_RANGE;
+	failure.nextGlitchSeconds = static_cast<float>(GetRandomValue(range.x, range.y)) * 0.001f;
+	
+	Nc::Vector2f newGlitchOffset = Nc::Vector2f::Zero();
+	newGlitchOffset.x = static_cast<float>(GetRandomValue(-RANDOM_OFFSET, RANDOM_OFFSET)) * 0.01f;
+	newGlitchOffset.y = static_cast<float>(GetRandomValue(-RANDOM_OFFSET, RANDOM_OFFSET)) * 0.01f;
+	failure.glitchedOffset = newGlitchOffset;
+}
+
+
+Component::Blip::JumbledCoordindate BlipGlitchSystem::GenerateRandomJumble()
+{
+	Component::Blip::JumbledCoordindate jumble { };
+
+	jumble.duplicateFirstAxis = GetRandomValue(0, 10) <= 2;
+	jumble.flippedAxis = GetRandomValue(0, 10) <= 6;
+	jumble.flippedSignX = GetRandomValue(0, 10) <= 4;
+	jumble.flippedSignY = GetRandomValue(0, 10) <= 4;
+
+	return jumble;
 }

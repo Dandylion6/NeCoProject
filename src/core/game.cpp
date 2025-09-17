@@ -150,7 +150,7 @@ void Game::InitialiseAssemblers()
 	const entt::entity entity = registry.create();
 
 	registry.emplace<Component::UiTransform>(entity, Nc::Vector2f(0.06f, 0.9f), Nc::Vector2f::Scale(0.5f), Nc::Vector2f(180.0f, 32.0f));
-	registry.emplace<Component::Text>(entity, "SAVE STATE", RADAR_COLOR);
+	registry.emplace<Component::Text>(entity, "SAVE STATE", Palette::RADAR_COLOR);
 	
 	std::function<void()> onClick = [&gameState = gameState]() { Save::SaveGameState(gameState); };
 	registry.emplace<Component::ButtonAction>(entity, std::move(onClick));
@@ -254,7 +254,7 @@ void Game::DrawGame(float deltaTime)
 	cameraPosition.y += std::sinf((gameState.time * 2.8f) - 0.3f) * 4.0f;
 
 	BeginTextureMode(renderContext.renderTexture);
-	ClearBackground(BACKGROUND_COLOR);
+	ClearBackground(Palette::BACKGROUND_COLOR);
 
 	Shader& shader = resourceStore.GetShader("assets/lighting.fs");
 	LightingSystem::Update(registry, renderContext.lightingContext, shader, gameState, cameraPosition, deltaTime);
@@ -266,7 +266,7 @@ void Game::DrawGame(float deltaTime)
 	EndTextureMode();
 
 	BeginDrawing();
-	ClearBackground(BACKGROUND_COLOR);
+	ClearBackground(Palette::BACKGROUND_COLOR);
 
 	BeginShaderMode(shader);
 	DrawRenderTexture();

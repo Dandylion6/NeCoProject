@@ -11,6 +11,7 @@
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
 #include "utility/color.hpp"
+#include "utility/color_palette.hpp"
 #include "utility/tween.hpp"
 #include "utility/vector2.hpp"
 #include <cstdint>
@@ -37,6 +38,7 @@ void Construct::RadarObject(entt::registry& registry)
 
 	Construct::RadarPathEntity(registry);
 	Construct::RadarArtilleryEntity(registry);
+	Construct::RadarErrorWarningEntity(registry);
 }
 
 
@@ -93,12 +95,10 @@ const entt::entity Construct::RadarBlipEntity(
 	Texture2D texture = LoadTexture("assets/environment/objects/radar/radar_blip.png");
 	Nc::Vector2i size = Nc::Vector2i(texture.width, texture.height);
 
-	constexpr Nc::Hex TEXT_COLOR = 0x7cff3cff;
-
 	registry.emplace<Component::Blip>(entity);
 	registry.emplace<Component::Health>(entity, health);
 	registry.emplace<Component::Transform>(entity, Radar, position, size, size * 0.5f);
-	registry.emplace<Component::Text>(entity, "( , )", TEXT_COLOR, WDXL, FontSize::Tiny);
+	registry.emplace<Component::Text>(entity, "( , )", Palette::RADAR_COLOR, WDXL, FontSize::Tiny);
 
 	Component::Sprite& sprite = registry.emplace<Component::Sprite>(entity, texture);
 	Component::TweenCollection& tweens = registry.emplace<Component::TweenCollection>(entity);
@@ -115,4 +115,26 @@ const entt::entity Construct::RadarBlipEntity(
 	fadeOutTween.Build(&sprite.alpha, 1.0f, 0.0f, FADE_OUT_TIME, QuadOut);
 
 	return entity;
+}
+
+
+const entt::entity Construct::RadarErrorWarningEntity(entt::registry &registry)
+{
+	const entt::entity entity = registry.create();
+
+	constexpr Nc::Vector2f POSITION = Nc::Vector2f(8.0f, RenderContext::RADAR_BOUNDS.max.y - 8.0f);
+
+	Component::RadarErrorWarning& errorWarning = registry.emplace<Component::RadarErrorWarning>(entity);
+	registry.emplace<Component::Transform>(entity, Radar, POSITION);
+	Component::Text& text = registry.emplace<Component::Text>(entity, "( , )", Palette::RADAR_COLOR, WDXL, FontSize::Tiny, Alignment::BottomLeft);
+
+	// Basic blink tweening
+	Component::TweenCollection& collection = registry.emplace<Component::TweenCollection>(entity);
+	Tween& blinkFade = collection.tweens.at(Component::RadarErrorWarning::BlinkFade);
+
+	blinkFade.Build(&errorWarning.alpha, 1.0f, 0.0f, 0.4f, QuadIn, 0.16f);
+	blinkFade.onComplete = [&blinkFade]() { Tween::Replay(blinkFade); };
+	Tween::Play(blinkFade);
+
+    return entity;
 }

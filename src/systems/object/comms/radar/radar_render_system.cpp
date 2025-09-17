@@ -14,6 +14,7 @@
 #include "raylib.h"
 #include "systems/object/comms/radar/radar_render_system.hpp"
 #include "utility/vector2.hpp"
+#include <sstream>
 
 
 void RadarRenderSystem::DrawRenderTexture(
@@ -30,11 +31,11 @@ void RadarRenderSystem::DrawRenderTexture(
 
 	ClearBackground(BLANK);
 
-	DrawScreen(registry);
+	Component::RadarMachine& machine = DrawScreen(registry);
 	DrawPath(registry);
 	DrawRadarArtillery(registry);
 	DrawBlips(registry, resourceStore);
-	auto view = registry.view<Component::Transform>();
+	DrawErrorWarning(registry, resourceStore, machine);
 
 	EndTextureMode();
 	EndBlendMode();
@@ -67,12 +68,13 @@ void RadarRenderSystem::DrawRadar(
 }
 
 
-void RadarRenderSystem::DrawScreen(entt::registry& registry)
+Component::RadarMachine& RadarRenderSystem::DrawScreen(entt::registry& registry)
 {
 	auto view = registry.view<Component::RadarMachine, const Component::Sprite>();
 	for (auto [entity, machine, sprite] : view.each())
 	{
 		Renderer::DrawSprite(sprite, Nc::Vector2f::Zero());
+		return machine;
 	}
 }
 
@@ -104,11 +106,18 @@ void RadarRenderSystem::DrawBlips(
 {
 	constexpr Nc::Vector2f TEXT_OFFSET = Nc::Vector2f::Down(12.0f);
 	
-	auto blipView = registry.view<Component::Blip, const Component::Transform, const Component::Sprite, Component::Text>();
-	for (auto [entity, blip, transform, sprite, text] : blipView.each())
+	auto view = registry.view<Component::Blip, const Component::Transform, const Component::Sprite, Component::Text>();
+	for (auto [entity, blip, transform, sprite, text] : view.each())
 	{
+		Nc::Vector2f glitchOffset = Nc::Vector2f::Zero();
+		if (blip.state == Component::Blip::CompleteFailure)
+		{
+			Component::Blip::CompleteFailureData& failure = registry.get<Component::Blip::CompleteFailureData>(entity);
+			glitchOffset = failure.glitchedOffset;
+		}
 		
 		Nc::Vector2f position = Nc::Vector2f::Remap(GameState::WORLD_BOUNDS, RenderContext::RADAR_BOUNDS, transform.position);
+		position += glitchOffset;
 		Renderer::DrawSprite(sprite, position, transform.offset, transform.rotation);
 		
 		Nc::Vector2f textPosition = position + TEXT_OFFSET;
@@ -116,5 +125,25 @@ void RadarRenderSystem::DrawBlips(
 		
 		text.color.SetAlpha(sprite.alpha);
 		Renderer::DrawText(text, textPosition, offset, resourceStore);
+	}
+}
+
+
+void RadarRenderSystem::DrawErrorWarning(
+	entt::registry &registry, ResourceStore &resourceStore, Component::RadarMachine& machine
+)
+{
+	auto view = registry.view<const Component::RadarErrorWarning, const Component::Transform, Component::Text>();
+	for (auto [entity, errorWarning, transform, text] : view.each())
+	{
+		if (machine.glitchCount == 0u) continue;
+
+		std::ostringstream stringStream;
+		stringStream << "ERRORS ( " << std::to_string(machine.glitchCount) << " )";
+		text.text = stringStream.str();
+		text.color.SetAlpha(errorWarning.alpha);
+
+		Nc::Vector2f offset = transform.offset + Renderer::GetTextOffset(text, resourceStore);
+		Renderer::DrawText(text, transform.position, offset, resourceStore);
 	}
 }

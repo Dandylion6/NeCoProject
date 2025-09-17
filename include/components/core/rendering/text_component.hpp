@@ -28,7 +28,8 @@ enum class Alignment: uint8_t
 {
 	Left,
 	Center,
-	Right
+	Right,
+	BottomLeft,
 };
 
 

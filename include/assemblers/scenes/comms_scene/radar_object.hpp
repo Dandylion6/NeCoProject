@@ -15,4 +15,6 @@ namespace Construct
 	const entt::entity RadarBlipEntity(
 		entt::registry& registry, Nc::Vector2f position, int16_t health = 10
 	);
+
+	const entt::entity RadarErrorWarningEntity(entt::registry& registry);
 }

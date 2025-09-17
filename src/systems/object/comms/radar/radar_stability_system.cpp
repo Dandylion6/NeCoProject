@@ -50,30 +50,28 @@ void RadarStabilitySystem::UpdateBlipStability(entt::registry& registry, Compone
 	bool isStable = machine.sability >= 80.0f;
 	float secondsSinceLastGlitch = time - machine.lastGlitchTime;
 
-	uint32_t blipCount = 0u;
+	uint8_t blipCount = 0u;
+	uint8_t glitchCount = 0u;
+
 	auto view = registry.view<Component::Blip>();
 	for (auto [entity, blip] : view.each())
 	{
 		if (isStable) blip.state = Component::Blip::Stable;
+		if (blip.state != Component::Blip::Stable) ++glitchCount;
 		++blipCount;
 	}
 
+	machine.glitchCount = glitchCount; // Keeps glictch count up to date.
+
 	if (isStable) return;
 	
-	uint32_t blipIndex = 0u;
+	uint8_t blipIndex = 0u;
 	for (auto [entity, blip] : view.each())
 	{
 		if (!ShouldBlipGlitch(blip, machine, secondsSinceLastGlitch, blipIndex++, blipCount)) continue;
 		SetRandomGlitchSpawnInterval(machine);
 		
-		blip.state = Component::Blip::CoordinateJumble;
-		Component::Blip::JumbledCoordindate& jumble = registry.emplace<Component::Blip::JumbledCoordindate>(entity);
-		jumble = BlipGlitchSystem::GenerateRandomJumble();
-
-		Nc::Vector2i glitchTimeRange = Component::Blip::BASE_GLITCH_TIME_RANGE;
-		blip.remainingGlitchSeconds = static_cast<float>(GetRandomValue(glitchTimeRange.x * 10, glitchTimeRange.y * 10)) * 0.1f;
-
-		// TODO: Add more glitch logic.
+		// TODO: Add glitching logic.
 	}
 }
 

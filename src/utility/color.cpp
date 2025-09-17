@@ -36,6 +36,11 @@ namespace Nc
 	}
 
 
+	/// @brief Sets the alpha channel of the color.
+	/// @details This method takes a float value between 0.0 and 1.0 and converts it to an 8-bit unsigned integer (uint8_t)
+	/// to represent the alpha channel. A value of 0.0 corresponds to fully transparent, and 1.0 corresponds to fully opaque.
+	/// The conversion is done by multiplying the float by 255 and casting the result to a uint8_t.
+	/// @param alpha A float representing the desired transparency, where 0.0 is transparent and 1.0 is opaque.
 	void RGBa::SetAlpha(float alpha)
 	{
 		this->alpha = static_cast<uint8_t>(alpha * 255.0f);

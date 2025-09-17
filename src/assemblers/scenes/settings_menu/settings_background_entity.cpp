@@ -29,7 +29,7 @@ namespace Construct
 
 		registry.emplace<Tag::Settings>(entity);
 		registry.emplace<Component::UiTransform>(entity, center, center, windowSize);
-		registry.emplace<Component::Rectangle>(entity, BACKGROUND_COLOR);
+		registry.emplace<Component::Rectangle>(entity, Palette::BACKGROUND_COLOR);
 
 		return entity;
 	};

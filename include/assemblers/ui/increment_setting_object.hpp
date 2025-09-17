@@ -36,7 +36,7 @@ namespace Construct
         const entt::entity entity = registry.create();
 
         registry.emplace<Component::UiTransform>(entity, position, Nc::Vector2f::Zero(), Nc::Vector2f::Zero(), Nc::Vector2f::Zero(), 2);
-        registry.emplace<Component::Text>(entity, std::move(display), RADAR_COLOR, WDXL, FontSize::Medium, Alignment::Left);
+        registry.emplace<Component::Text>(entity, std::move(display), Palette::RADAR_COLOR, WDXL, FontSize::Medium, Alignment::Left);
 
         return entity;
     };
@@ -52,7 +52,7 @@ namespace Construct
         const entt::entity entity = registry.create();
 
         registry.emplace<Component::UiTransform>(entity, position, Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Zero(), offset, 2);
-        registry.emplace<Component::Text>(entity, "", RADAR_COLOR, WDXL, FontSize::Medium);
+        registry.emplace<Component::Text>(entity, "", Palette::RADAR_COLOR, WDXL, FontSize::Medium);
         registry.emplace<Component::UiIncrement>(entity, increment);
 
         return entity;

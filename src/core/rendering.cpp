@@ -109,6 +109,9 @@ Nc::Vector2f Renderer::GetTextOffset(const Component::Text& text,  ResourceStore
 	case Alignment::Center: 
 		offset = textSize * 0.5f;
 		break;
+	case Alignment::BottomLeft:
+		offset.y = textSize.y;
+		break;
 	default: break;
 	}
 	return offset;
