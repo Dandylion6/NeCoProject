@@ -5,8 +5,9 @@
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
 #include "systems/object/comms/radar/blip_glitch_system.hpp"
-#include "utility/vector2.hpp"
 #include "systems/object/comms/radar/radar_stability_system.hpp"
+#include "utility/random.hpp"
+#include "utility/vector2.hpp"
 #include <cmath>
 #include <cstdint>
 #ifdef  DEBUG_BUILD
@@ -25,12 +26,13 @@ void RadarStabilitySystem::Update(entt::registry& registry, AnomalyState& anomal
 	{
 #ifdef DEBUG_BUILD
 		Game::debugContext.radarStabilityPercentage = machine.sability;
-		if (IsKeyPressed(KEY_K)) machine.sability = std::fminf(machine.sability + 10.0f, 100.0f);
-		if (IsKeyPressed(KEY_L)) machine.sability = std::fmaxf(machine.sability - 10.0f, 0.0f);
+		if (IsKeyPressed(KEY_K)) machine.sability = std::fminf(machine.sability + 5.0f, 100.0f);
+		if (IsKeyPressed(KEY_L)) machine.sability = std::fmaxf(machine.sability - 15.0f, 0.0f);
 #endif
 
 		if (!machine.isActive) continue;
-		if (machine.nextGlitchSpawnSeconds == 0.0f) SetRandomGlitchSpawnInterval(machine);
+		if (machine.nextGlitchSpawnSeconds == 0.0f) 
+			SetRandomGlitchSpawnInterval(machine);
 
 		if (anomalyState.attractionPercentage >= AnomalyState::DEGRADATION_THRESHOLD)
 		{
@@ -84,15 +86,20 @@ void RadarStabilitySystem::UpdateBlipStability(entt::registry& registry, Compone
 
 		if (machine.sability >= Component::RadarMachine::HEALTHY_LEVEL)
 		{
-			// Jumble
+			BlipGlitchSystem::GlitchBlipText(registry, entity, blip);
 		}
 		else if (machine.sability >= Component::RadarMachine::UNSTABLE_LEVEL)
 		{
-			// 50% Jumble / 50% Error
+			int determiniticValue = Nc::Random::Range(0, 100);
+			if (determiniticValue > 50) BlipGlitchSystem::JumbleBlip(registry, entity, blip);
+			else BlipGlitchSystem::GlitchBlipText(registry, entity, blip);
 		}
 		else
 		{
-			// 60% Failure / 30% Error / 10% Jumble
+			int determiniticValue = Nc::Random::Range(0, 100);
+			if (determiniticValue > 40) BlipGlitchSystem::TriggerBlipFailure(registry, entity, blip);
+			else if (determiniticValue > 10) BlipGlitchSystem::GlitchBlipText(registry, entity, blip);
+			else BlipGlitchSystem::JumbleBlip(registry, entity, blip);
 		}
 	}
 }
@@ -121,7 +128,7 @@ void RadarStabilitySystem::SetRandomGlitchSpawnInterval(Component::RadarMachine&
 {
 	constexpr Nc::Vector2f BASE_GLITCH_SPAWN_RANGE = Nc::Vector2f(1.0f, 3.0f); // The base interval range for new glitches to appear. Measured in minutes.
 
-	float minutesToNextGlitch = GetRandomValue(static_cast<int>(BASE_GLITCH_SPAWN_RANGE.x * 50.0f), static_cast<int>(BASE_GLITCH_SPAWN_RANGE.y * 50.0f)) * 0.02f;
+	float minutesToNextGlitch = Nc::Random::Range(BASE_GLITCH_SPAWN_RANGE.x, BASE_GLITCH_SPAWN_RANGE.y);
 	// TODO: Add intensity scaling based intervals.
 
 	machine.nextGlitchSpawnSeconds = minutesToNextGlitch * 60.0f;
