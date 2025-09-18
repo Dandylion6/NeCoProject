@@ -31,11 +31,11 @@ void RadarRenderSystem::DrawRenderTexture(
 
 	ClearBackground(BLANK);
 
-	Component::RadarMachine& machine = DrawScreen(registry);
+	Component::RadarMachine* machine = DrawScreen(registry);
 	DrawPath(registry);
 	DrawRadarArtillery(registry);
 	DrawBlips(registry, resourceStore);
-	DrawErrorWarning(registry, resourceStore, machine);
+	DrawErrorWarning(registry, resourceStore, *machine);
 
 	EndTextureMode();
 	EndBlendMode();
@@ -68,14 +68,15 @@ void RadarRenderSystem::DrawRadar(
 }
 
 
-Component::RadarMachine& RadarRenderSystem::DrawScreen(entt::registry& registry)
+Component::RadarMachine* RadarRenderSystem::DrawScreen(entt::registry& registry)
 {
 	auto view = registry.view<Component::RadarMachine, const Component::Sprite>();
 	for (auto [entity, machine, sprite] : view.each())
 	{
 		Renderer::DrawSprite(sprite, Nc::Vector2f::Zero());
-		return machine;
+		return &machine;
 	}
+	return nullptr;
 }
 
 

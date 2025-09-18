@@ -26,7 +26,7 @@ public:
 
 private:
 	
-	static Component::RadarMachine& DrawScreen(entt::registry& registry);
+	static Component::RadarMachine* DrawScreen(entt::registry& registry);
 	static void DrawPath(entt::registry& registry);
 	static void DrawRadarArtillery(entt::registry& registry);
 	static void DrawBlips(entt::registry& registry, ResourceStore& resourceStore);
