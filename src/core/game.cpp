@@ -167,7 +167,6 @@ void Game::SetupWindow() const
 
 	Nc::Vector2i monitorSize = Nc::Vector2i(GetMonitorWidth(0), GetMonitorHeight(0));
 	InitWindow(monitorSize.x, monitorSize.y, "Negative Contact");
-	SetWindowState(FLAG_WINDOW_MAXIMIZED);
 
 #ifdef DEBUG_BUILD
 	SetExitKey(KEY_BACKSPACE);
@@ -209,6 +208,9 @@ void Game::Update(float deltaTime)
 	
 	if (IsKeyPressed(KEY_MINUS)) ++gameState.anomalyState.intensityLevel;
 	if (IsKeyPressed(KEY_EQUAL)) --gameState.anomalyState.intensityLevel;
+
+	if (IsKeyPressed(KEY_NINE)) gameState.anomalyState.attractionPercentage += 5.0f;
+	if (IsKeyPressed(KEY_ZERO)) gameState.anomalyState.attractionPercentage -= 5.0f;
 #endif
 }
 
@@ -282,7 +284,7 @@ void Game::DrawGame(float deltaTime)
 }
 
 
-void Game::DrawRenderTexture()
+void Game::DrawRenderTexture() const
 {
 	Nc::Vector2f displaySize = RenderContext::DISPLAY_SIZE;
 	Rectangle source { 0, 0, displaySize.x, -displaySize.y };
@@ -299,7 +301,7 @@ void Game::DrawRenderTexture()
 
 
 #ifdef DEBUG_BUILD
-void Game::DrawDebugUi()
+void Game::DrawDebugUi() const
 {
 	Game::debugContext.frames.pop_back();
 	Game::debugContext.frames.push_front(GetFPS());
@@ -332,13 +334,17 @@ void Game::DrawDebugUi()
 	text = "DNGER LVL: " + std::to_string(gameState.anomalyState.intensityLevel);
 	DrawText(text.c_str(), 32, 148, 32, GREEN);
 
-	text = "RADAR: " + std::to_string(static_cast<int32_t>(Game::debugContext.radarStabilityPercentage));
+	text = "ATRCTION: " + std::to_string(static_cast<int32_t>(gameState.anomalyState.attractionPercentage)) + "%";
 	DrawText(text.c_str(), 32, 186, 32, GREEN);
+
+	text = "RADAR: " + std::to_string(static_cast<int32_t>(Game::debugContext.radarStabilityPercentage)) + "%";
+	DrawText(text.c_str(), 32, 224, 32, GREEN);
 
 	DrawText("Press [/] to delete msg", 32, 340, 24, GREEN);
 	DrawText("Press [.] to spawn roamer", 32, 380, 24, GREEN);
 	DrawText("Press [G] to glitch a blip", 32, 420, 24, GREEN);
 	DrawText("Press [-/=] to mod intensity", 32, 460, 18, GREEN);
-	DrawText("Press [K/L] to mod radar stability", 32, 500, 18, GREEN);
+	DrawText("Press [9/0] to mod attraction", 32, 500, 18, GREEN);
+	DrawText("Press [K/L] to mod radar stability", 32, 540, 18, GREEN);
 }
 #endif // DEBUG_BUILD

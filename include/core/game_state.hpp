@@ -7,7 +7,7 @@
 
 struct AnomalyState
 {
-	static constexpr float DEGRADATION_THRESHOLD = 80.0f; // The attraction percentage needed to start degrading stability.
+	static constexpr float DEGRADATION_THRESHOLD = 12.0f; // The attraction percentage needed to start degrading stability.
 	static constexpr float PRECENTAGE_FACTOR = 1.0f / (100.0f - DEGRADATION_THRESHOLD);
 
 	float lastSpawnTime = 0.0f;

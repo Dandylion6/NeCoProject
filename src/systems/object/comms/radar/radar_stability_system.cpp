@@ -27,7 +27,7 @@ void RadarStabilitySystem::Update(entt::registry& registry, AnomalyState& anomal
 #ifdef DEBUG_BUILD
 		Game::debugContext.radarStabilityPercentage = machine.sability;
 		if (IsKeyPressed(KEY_K)) machine.sability = std::fminf(machine.sability + 5.0f, 100.0f);
-		if (IsKeyPressed(KEY_L)) machine.sability = std::fmaxf(machine.sability - 15.0f, 0.0f);
+		if (IsKeyPressed(KEY_L)) machine.sability = std::fmaxf(machine.sability - 5.0f, 0.0f);
 #endif
 
 		if (!machine.isActive) continue;
@@ -37,7 +37,7 @@ void RadarStabilitySystem::Update(entt::registry& registry, AnomalyState& anomal
 		if (anomalyState.attractionPercentage >= AnomalyState::DEGRADATION_THRESHOLD)
 		{
 			float adjustedPercentage = anomalyState.attractionPercentage - AnomalyState::DEGRADATION_THRESHOLD;
-			float curve = DEGRADATION_FACTOR * std::powf(DEGRADATION_CURVE, adjustedPercentage * AnomalyState::PRECENTAGE_FACTOR);
+			float curve = DEGRADATION_FACTOR * std::powf(DEGRADATION_CURVE, adjustedPercentage * AnomalyState::PRECENTAGE_FACTOR) - 1.0f;
 			float degredation = curve * 0.016f;
 			machine.sability -= degredation * deltaTime;
 		}
@@ -84,11 +84,11 @@ void RadarStabilitySystem::UpdateBlipStability(entt::registry& registry, Compone
 		//     - Scale glitch duration by severity and stability (lower stability = longer duration).
 		// - After glitching, reset the glitch spawn timer.
 
-		if (machine.sability >= Component::RadarMachine::HEALTHY_LEVEL)
+		if (machine.sability > Component::RadarMachine::HEALTHY_LEVEL)
 		{
-			BlipGlitchSystem::GlitchBlipText(registry, entity, blip);
+			BlipGlitchSystem::JumbleBlip(registry, entity, blip);
 		}
-		else if (machine.sability >= Component::RadarMachine::UNSTABLE_LEVEL)
+		else if (machine.sability > Component::RadarMachine::UNSTABLE_LEVEL)
 		{
 			int determiniticValue = Nc::Random::Range(0, 100);
 			if (determiniticValue > 50) BlipGlitchSystem::JumbleBlip(registry, entity, blip);

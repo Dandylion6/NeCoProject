@@ -43,10 +43,10 @@ private:
 	Settings pendingSettings { };
 	ResourceStore resourceStore { };
 
-	void DrawRenderTexture();
+	void DrawRenderTexture() const;
 
 #ifdef DEBUG_BUILD
-	void DrawDebugUi();
+	void DrawDebugUi() const;
 #endif // DEBUG_BUILD
 
 };

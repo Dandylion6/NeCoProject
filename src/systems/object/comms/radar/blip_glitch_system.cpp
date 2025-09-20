@@ -54,7 +54,7 @@ void BlipGlitchSystem::GlitchBlipText(
 	entt::registry& registry, entt::entity entity, Component::Blip& blip
 )
 {
-	blip.state = Component::Blip::CompleteFailure;
+	blip.state = Component::Blip::CoordinateError;
 	registry.emplace<Component::Blip::CoordinateErrorData>(entity);
 
 	Nc::Vector2f glitchTimeRange = Component::Blip::BASE_GLITCH_TIME_RANGE;
@@ -167,7 +167,7 @@ void BlipGlitchSystem::UpdateBlipFailure(
 	entt::registry& registry, entt::entity entity, float time
 )
 {
-	constexpr int RANDOM_OFFSET = Component::Blip::CompleteFailureData::OFFSET_RANGE;
+	constexpr float RANDOM_OFFSET = Component::Blip::CompleteFailureData::OFFSET_RANGE;
 
 	Component::Text& text = registry.get<Component::Text>(entity);
 	Component::Blip::CompleteFailureData& failure = registry.get<Component::Blip::CompleteFailureData>(entity);
