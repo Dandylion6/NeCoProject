@@ -18,8 +18,8 @@
 
 void RadarStabilitySystem::Update(entt::registry& registry, AnomalyState& anomalyState, float time, float deltaTime)
 {
-	constexpr float DEGRADATION_FACTOR = 9.0f;
-	constexpr float DEGRADATION_CURVE = 1.4f;
+	constexpr float DEGRADATION_FACTOR = 11.0f;
+	constexpr float DEGRADATION_CURVE = 2.8f;
 
 	auto view = registry.view<Component::RadarMachine>();
 	for (auto [entity, machine] : view.each())
@@ -126,10 +126,12 @@ bool RadarStabilitySystem::ShouldBlipGlitch(
 
 void RadarStabilitySystem::SetRandomGlitchSpawnInterval(Component::RadarMachine& machine)
 {
-	constexpr Nc::Vector2f BASE_GLITCH_SPAWN_RANGE = Nc::Vector2f(1.0f, 3.0f); // The base interval range for new glitches to appear. Measured in minutes.
+	constexpr Nc::Vector2f BASE_GLITCH_SPAWN_RANGE = Nc::Vector2f(1.6f, 2.4f); // The base interval range for new glitches to appear. Measured in minutes.
+	constexpr float DEGRADATION_AFFECT_SCALE = 0.7f; // How much the degradation affects the spawn interval.
 
 	float minutesToNextGlitch = Nc::Random::Range(BASE_GLITCH_SPAWN_RANGE.x, BASE_GLITCH_SPAWN_RANGE.y);
-	// TODO: Add intensity scaling based intervals.
+	float degradationScale = (100.0f - machine.sability) * 0.01f;
+	minutesToNextGlitch *= 1.0f - degradationScale * DEGRADATION_AFFECT_SCALE;
 
 	machine.nextGlitchSpawnSeconds = minutesToNextGlitch * 60.0f;
 }
