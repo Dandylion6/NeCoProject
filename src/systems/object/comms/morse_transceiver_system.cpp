@@ -1,17 +1,18 @@
 #include "components/core/transform_component.hpp"
 #include "components/objects/comms/morse_transceiver_component.hpp"
 #include "components/objects/outside/receiver_component.hpp"
-#include "core/settings.hpp"
+#include "core/game_state.hpp"
 #include "core/scene.hpp"
+#include "core/settings.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
 #include "systems/object/comms/morse_transceiver_system.hpp"
 #include "utility/morse_code.hpp"
+#include "utility/vector2.hpp"
 #include <cmath>
 #include <cstdint>
 #include <string>
-#include "utility/vector2.hpp"
 #ifdef DEBUG_BUILD
 #include "core/debug_context.hpp"
 #include "core/game.hpp"
@@ -20,7 +21,7 @@
 
 void MorseTransceiverSystem::Update(
 	entt::registry& registry, 
-	Scene currentScene, 
+	GameState& gameState, 
 	MorseSettings settings,
 	float deltaTime
 )
@@ -28,13 +29,13 @@ void MorseTransceiverSystem::Update(
 	auto view = registry.view<Component::Transform, Component::MorseTransceiver>();
 	for (auto [entity, transform, transceiver] : view.each())
 	{
-		if (currentScene != transform.boundScene) continue;
+		if (gameState.currentScene != transform.boundScene) continue;
 
 		bool inputKeyPressed = IsKeyDown(Component::MorseTransceiver::INPUT_KEY);
 		bool inputStateChanged = inputKeyPressed != transceiver.isInputActive;
 
 		if (inputStateChanged) InputChanged(transceiver, settings);
-		else if (!inputKeyPressed) TryEndCharacter(registry, transceiver, settings);
+		else if (!inputKeyPressed) TryEndCharacter(registry, gameState.anomalyState, transceiver, settings);
 
 		transceiver.isInputActive = inputKeyPressed;
 		
@@ -68,6 +69,7 @@ void MorseTransceiverSystem::InputChanged(
 
 void MorseTransceiverSystem::TryEndCharacter(
 	entt::registry& registry, 
+	AnomalyState& anomalyState,
 	Component::MorseTransceiver& transceiver, 
 	MorseSettings settings
 )
@@ -80,18 +82,22 @@ void MorseTransceiverSystem::TryEndCharacter(
 
 	int8_t character = PulsesToChar(transceiver.pulses, transceiver.pulseCount);
 
-	TransmitCharacter(registry, character);
+	TransmitCharacter(registry, anomalyState, character);
 	ClearTransceiver(transceiver);
 }
 
 
 void MorseTransceiverSystem::TransmitCharacter(
-	entt::registry& registry, char character
+	entt::registry& registry, AnomalyState& anomalyState, char character
 )
 {
+	constexpr float ATTRACTION_INCREASE = 0.33f;
+
 	auto receiverView = registry.view<Component::Receiver>();
 	for (auto [entity, receiver] : receiverView.each())
 	{
+		// Transmission inncreases attraction level
+		anomalyState.attractionPercentage += ATTRACTION_INCREASE;
 		receiver.incomingCharacter = character;
 	}
 }
