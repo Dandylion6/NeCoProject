@@ -42,6 +42,9 @@ void RadarStabilitySystem::Update(entt::registry& registry, AnomalyState& anomal
 			machine.stability -= degredation * deltaTime;
 		}
 
+		// Turns off the radar if stability is 0.
+		if (machine.stability <= 0.0f) machine.isActive = false;
+
 		UpdateBlipStability(registry, machine, time);
 	}
 }

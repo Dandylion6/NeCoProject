@@ -25,7 +25,11 @@ public:
 	);
 
 private:
-	
+	/// <summary>
+	/// Draws the radar screen and returns a pointer to the RadarMachine component.
+	/// </summary>
+	/// <param name="registry">Reference to the entity registry containing game objects and components.</param>
+	/// <returns>Pointer to the RadarMachine component if machine is active.</returns>
 	static Component::RadarMachine* DrawScreen(entt::registry& registry);
 	static void DrawPath(entt::registry& registry);
 	static void DrawRadarArtillery(entt::registry& registry);

@@ -29,13 +29,16 @@ void RadarRenderSystem::DrawRenderTexture(
 	BeginTextureMode(radarRenderTexture);
 	BeginBlendMode(BLEND_ADDITIVE);
 
-	ClearBackground(BLANK);
-
 	Component::RadarMachine* machine = DrawScreen(registry);
-	DrawPath(registry);
-	DrawRadarArtillery(registry);
-	DrawBlips(registry, resourceStore);
-	DrawErrorWarning(registry, resourceStore, *machine);
+	bool hasActiveMachine = machine != nullptr;
+
+	if (hasActiveMachine)
+	{
+		DrawPath(registry);
+		DrawRadarArtillery(registry);
+		DrawBlips(registry, resourceStore);
+		DrawErrorWarning(registry, resourceStore, *machine);
+	}
 
 	EndTextureMode();
 	EndBlendMode();
@@ -73,6 +76,15 @@ Component::RadarMachine* RadarRenderSystem::DrawScreen(entt::registry& registry)
 	auto view = registry.view<Component::RadarMachine, const Component::Sprite>();
 	for (auto [entity, machine, sprite] : view.each())
 	{
+		// Don't draw if inactive.
+		if (!machine.isActive)
+		{
+			ClearBackground(BLACK);
+			// TODO: Implement machine when inactive rendering.
+			return nullptr;
+		}
+
+		ClearBackground(BLANK);
 		Renderer::DrawSprite(sprite, Nc::Vector2f::Zero());
 		return &machine;
 	}
