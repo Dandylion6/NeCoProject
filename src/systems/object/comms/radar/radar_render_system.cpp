@@ -2,6 +2,7 @@
 #include "components/core/rendering/text_component.hpp"
 #include "components/core/transform_component.hpp"
 #include "components/objects/comms/radar.hpp"
+#include "components/objects/machine.hpp"
 #include "components/objects/outside/blip_component.hpp"
 #include "core/game_state.hpp"
 #include "core/render_context.hpp"
@@ -73,8 +74,8 @@ void RadarRenderSystem::DrawRadar(
 
 Component::RadarMachine* RadarRenderSystem::DrawScreen(entt::registry& registry)
 {
-	auto view = registry.view<Component::RadarMachine, const Component::Sprite>();
-	for (auto [entity, machine, sprite] : view.each())
+	auto view = registry.view<Component::RadarMachine, Component::Machine, const Component::Sprite>();
+	for (auto [entity, radar, machine, sprite] : view.each())
 	{
 		// Don't draw if inactive.
 		if (!machine.isActive)
@@ -86,7 +87,7 @@ Component::RadarMachine* RadarRenderSystem::DrawScreen(entt::registry& registry)
 
 		ClearBackground(BLANK);
 		Renderer::DrawSprite(sprite, Nc::Vector2f::Zero());
-		return &machine;
+		return &radar;
 	}
 	return nullptr;
 }

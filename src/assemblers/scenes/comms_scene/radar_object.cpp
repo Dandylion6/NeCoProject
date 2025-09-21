@@ -5,6 +5,7 @@
 #include "components/core/tween_component.hpp"
 #include "components/objects/comms/radar.hpp"
 #include "components/objects/health_component.hpp"
+#include "components/objects/machine.hpp"
 #include "components/objects/outside/blip_component.hpp"
 #include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
@@ -22,19 +23,22 @@
 
 void Construct::RadarObject(entt::registry& registry)
 {
+	constexpr float ATTRACTION_REDUCTION = 1.0f;
+	constexpr float POWER_USAGE = 500.0f;
+
 	const entt::entity entity = registry.create();
 
 	Texture2D texture = LoadTexture("assets/environment/objects/radar/radar_screen.png");
-	Nc::Vector2i size = Nc::Vector2i(texture.width, texture.height);
+
+	registry.emplace<Component::Transform>(entity, Radar);
+	registry.emplace<Component::Sprite>(entity, texture);
 
 	bool radarActive = false;
 #ifdef DEBUG_BUILD
 	radarActive = Game::debugContext.isRadarActiveOnStart;	
 #endif
-
-	registry.emplace<Component::RadarMachine>(entity, radarActive);
-	registry.emplace<Component::Transform>(entity, Radar);
-	registry.emplace<Component::Sprite>(entity, texture);
+	registry.emplace<Component::Machine>(entity, ATTRACTION_REDUCTION, POWER_USAGE, radarActive);
+	registry.emplace<Component::RadarMachine>(entity);
 
 	Construct::RadarPathEntity(registry);
 	Construct::RadarArtilleryEntity(registry);

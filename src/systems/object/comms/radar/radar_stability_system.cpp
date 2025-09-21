@@ -1,4 +1,5 @@
 #include "components/objects/comms/radar.hpp"
+#include "components/objects/machine.hpp"
 #include "components/objects/outside/blip_component.hpp"
 #include "core/game_state.hpp"
 #include "entt/entity/fwd.hpp"
@@ -21,31 +22,31 @@ void RadarStabilitySystem::Update(entt::registry& registry, AnomalyState& anomal
 	constexpr float DEGRADATION_FACTOR = 8.5f;
 	constexpr float DEGRADATION_CURVE = 2.8f;
 
-	auto view = registry.view<Component::RadarMachine>();
-	for (auto [entity, machine] : view.each())
+	auto view = registry.view<Component::Machine, Component::RadarMachine>();
+	for (auto [entity, machine, radar] : view.each())
 	{
 #ifdef DEBUG_BUILD
-		Game::debugContext.radarStabilityPercentage = machine.stability;
-		if (IsKeyPressed(KEY_K)) machine.stability = std::fminf(machine.stability + 5.0f, 100.0f);
-		if (IsKeyPressed(KEY_L)) machine.stability = std::fmaxf(machine.stability - 5.0f, 0.0f);
+		Game::debugContext.radarStabilityPercentage = radar.stability;
+		if (IsKeyPressed(KEY_K)) radar.stability = std::fminf(radar.stability + 5.0f, 100.0f);
+		if (IsKeyPressed(KEY_L)) radar.stability = std::fmaxf(radar.stability - 5.0f, 0.0f);
 #endif
 
 		if (!machine.isActive) continue;
-		if (machine.nextGlitchSpawnSeconds == 0.0f) 
-			SetRandomGlitchSpawnInterval(machine);
+		if (radar.nextGlitchSpawnSeconds == 0.0f)
+			SetRandomGlitchSpawnInterval(radar);
 
 		if (anomalyState.attractionPercentage >= AnomalyState::DEGRADATION_THRESHOLD)
 		{
 			float adjustedPercentage = anomalyState.attractionPercentage - AnomalyState::DEGRADATION_THRESHOLD;
 			float curveValue = DEGRADATION_FACTOR * std::powf(DEGRADATION_CURVE, adjustedPercentage * AnomalyState::PRECENTAGE_FACTOR) - 1.0f;
 			float degredation = curveValue * 0.016f;
-			machine.stability -= degredation * deltaTime;
+			radar.stability -= degredation * deltaTime;
 		}
 
 		// Turns off the radar if stability is 0.
-		if (machine.stability <= 0.0f) machine.isActive = false;
+		if (radar.stability <= 0.0f) machine.isActive = false;
 
-		UpdateBlipStability(registry, machine, time);
+		UpdateBlipStability(registry, radar, time);
 	}
 }
 

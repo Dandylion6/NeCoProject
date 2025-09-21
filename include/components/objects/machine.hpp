@@ -12,5 +12,10 @@ namespace Component
 		float attractionReduction = 0.0f;
 		uint16_t powerUsage = 0u; // Power usage in watts.
 		bool isActive = false;
+
+		Machine() = default;
+		Machine(float attractionReduction, uint16_t powerUsage, bool isActive = false)
+			: attractionReduction(attractionReduction), powerUsage(powerUsage), isActive(isActive)
+		{ };
 	};
 }
