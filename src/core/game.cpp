@@ -35,6 +35,7 @@
 #include "systems/object/comms/radar/radar_render_system.hpp"
 #include "systems/object/comms/radar/radar_stability_system.hpp"
 #include "systems/object/comms/radio_sound_system.hpp"
+#include "systems/object/machine_system.hpp"
 #include "systems/object/outside/blip_death_system.hpp"
 #include "systems/object/outside/projectile_hit_system.hpp"
 #include "systems/object/outside/receiver/artillery_aiming_systerm.hpp"
@@ -229,6 +230,7 @@ void Game::UpdateRegistries(float deltaTime)
 	MorseTransceiverSystem::Update(registry, gameState.currentScene, settings.morseSettings, deltaTime);
 	MorseMonitorDisplaySystem::Update(registry, settings.morseSettings, deltaTime);
 	MorseSoundSystem::Update(registry, gameState.currentScene, deltaTime);
+	MachineSystem::Update(registry, gameState.anomalyState, deltaTime);
 	RadarStabilitySystem::Update(registry, gameState.anomalyState, gameState.time, deltaTime);
 	BlipDeathSystem::Update(registry);
 	BlipBlinkSystem::Update(registry);
