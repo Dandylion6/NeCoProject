@@ -8,8 +8,6 @@ namespace Component
 {
 	struct Blip
 	{
-		static constexpr Nc::Vector2f BASE_GLITCH_TIME_RANGE = Nc::Vector2f(10.0f, 25.0f); // How many seconds a blip will glitch for in seconds.
-
 		enum Tweens
 		{
 			BlipFadeIn,

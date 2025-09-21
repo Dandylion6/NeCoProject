@@ -1,9 +1,11 @@
 #include "components/core/rendering/text_component.hpp"
 #include "components/core/transform_component.hpp"
+#include "components/objects/comms/radar.hpp"
 #include "components/objects/outside/blip_component.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "systems/object/comms/radar/blip_glitch_system.hpp"
+#include "utility/interpolation.hpp"
 #include "utility/random.hpp"
 #include "utility/vector2.hpp"
 #include <cstdint>
@@ -38,39 +40,34 @@ void BlipGlitchSystem::Update(entt::registry& registry, float time, float deltaT
 
 
 void BlipGlitchSystem::JumbleBlip(
-	entt::registry& registry, entt::entity entity, Component::Blip& blip
+	entt::registry& registry, entt::entity entity, Component::Blip& blip, float stability
 )
 {
 	blip.state = Component::Blip::CoordinateJumble;
+	blip.remainingGlitchSeconds = GenerateGlitchDuration(stability);
+
 	Component::Blip::JumbledCoordindate& jumble = registry.emplace<Component::Blip::JumbledCoordindate>(entity);
 	jumble = BlipGlitchSystem::GenerateRandomJumble();
-
-	Nc::Vector2f glitchTimeRange = Component::Blip::BASE_GLITCH_TIME_RANGE;
-	blip.remainingGlitchSeconds = Nc::Random::Range(glitchTimeRange.x, glitchTimeRange.y);
 }
 
 
 void BlipGlitchSystem::GlitchBlipText(
-	entt::registry& registry, entt::entity entity, Component::Blip& blip
+	entt::registry& registry, entt::entity entity, Component::Blip& blip, float stability
 )
 {
 	blip.state = Component::Blip::CoordinateError;
+	blip.remainingGlitchSeconds = GenerateGlitchDuration(stability);
 	registry.emplace<Component::Blip::CoordinateErrorData>(entity);
-
-	Nc::Vector2f glitchTimeRange = Component::Blip::BASE_GLITCH_TIME_RANGE;
-	blip.remainingGlitchSeconds = Nc::Random::Range(glitchTimeRange.x, glitchTimeRange.y);
 }
 
 
 void BlipGlitchSystem::TriggerBlipFailure(
-	entt::registry& registry, entt::entity entity, Component::Blip& blip
+	entt::registry& registry, entt::entity entity, Component::Blip& blip, float stability
 )
 {
 	blip.state = Component::Blip::CompleteFailure;
+	blip.remainingGlitchSeconds = GenerateGlitchDuration(stability);
 	registry.emplace<Component::Blip::CoordinateErrorData>(entity);
-
-	Nc::Vector2f glitchTimeRange = Component::Blip::BASE_GLITCH_TIME_RANGE;
-	blip.remainingGlitchSeconds = Nc::Random::Range(glitchTimeRange.x, glitchTimeRange.y);
 }
 
 
@@ -192,6 +189,23 @@ void BlipGlitchSystem::UpdateBlipFailure(
 	newGlitchOffset.x = Nc::Random::Range(-RANDOM_OFFSET, RANDOM_OFFSET);
 	newGlitchOffset.y = Nc::Random::Range(-RANDOM_OFFSET, RANDOM_OFFSET);
 	failure.glitchedOffset = newGlitchOffset;
+}
+
+
+float BlipGlitchSystem::GenerateGlitchDuration(float stability)
+{
+	// The time range when radar stability is just below unstable theshold.
+	constexpr Nc::Vector2f BASE_GLITCH_TIME_RANGE = Nc::Vector2f(5.0f, 14.0f);
+	// The time range when radar stability is at 0.
+	constexpr Nc::Vector2f MAX_GLITCH_TIME_RANGE = Nc::Vector2f(45.0f, 120.0f);
+	constexpr float STABLE_FACTOR = 1.0f / Component::RadarMachine::STABLE_LEVEL;
+
+	float degradationScale = (Component::RadarMachine::STABLE_LEVEL - stability) * STABLE_FACTOR;
+	degradationScale = Math::SineIn(degradationScale);
+	float glitchTimeMin = Math::Lerp(BASE_GLITCH_TIME_RANGE.x, MAX_GLITCH_TIME_RANGE.x, degradationScale);
+	float glitchTimeMax = Math::Lerp(BASE_GLITCH_TIME_RANGE.y, MAX_GLITCH_TIME_RANGE.y, degradationScale);
+
+	return Nc::Random::Range(glitchTimeMin, glitchTimeMax);
 }
 
 

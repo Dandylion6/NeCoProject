@@ -10,7 +10,7 @@ namespace Component
 		static constexpr float HEALTHY_LEVEL = 50.0f;
 		static constexpr float UNSTABLE_LEVEL = 20.0f;
 
-		float sability = 100.0f;
+		float stability = 100.0f;
 		float nextGlitchSpawnSeconds = 0.0f;
 		float lastGlitchTime = 0.0f;
 		uint8_t glitchCount = 0u;

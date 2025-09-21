@@ -25,9 +25,14 @@ float Math::SmoothApproach(float a, float b, float deltaTime, float speed)
 	return a + (b - a) * (1.0f - std::expf(-speed * deltaTime));
 }
 
+float Math::SineIn(float x)
+{
+	return 1.0f - std::cosf((x * PI) * 0.5f);
+}
+
 float Math::SineInOut(float x)
 {
-	return -(std::cosf(PI * x) - 1.0f) / 2.0f;
+	return -(std::cosf(PI * x) - 1.0f) * 0.5f;
 }
 
 float Math::QuadIn(float x)

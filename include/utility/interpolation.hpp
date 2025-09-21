@@ -10,6 +10,7 @@ namespace Math
 	float InverseLerp(float a, float b, float value);
 	float Remap(Nc::Vector2f a, Nc::Vector2f b, float value);
 	float SmoothApproach(float a, float b, float deltaTime, float speed);
+	float SineIn(float x);
 	float SineInOut(float x);
 	float QuadIn(float x);
 	float QuadOut(float x);

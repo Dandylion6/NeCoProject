@@ -10,9 +10,9 @@ class BlipGlitchSystem
 public:
 	static void Update(entt::registry& registry, float time, float deltaTime);
 	
-	static void JumbleBlip(entt::registry& registry, entt::entity entity, Component::Blip& blip);
-	static void GlitchBlipText(entt::registry& registry, entt::entity entity, Component::Blip& blip);
-	static void TriggerBlipFailure(entt::registry& registry, entt::entity entity, Component::Blip& blip);
+	static void JumbleBlip(entt::registry& registry, entt::entity entity, Component::Blip& blip, float stability);
+	static void GlitchBlipText(entt::registry& registry, entt::entity entity, Component::Blip& blip, float stability);
+	static void TriggerBlipFailure(entt::registry& registry, entt::entity entity, Component::Blip& blip, float stability);
 
 private:
 	static void UpdateBlipTextStable(const Component::Transform& transform, const Component::Blip& blip, Component::Text& text);
@@ -20,6 +20,12 @@ private:
 	static void UpdateBlipTextError(entt::registry& registry, entt::entity entity, float time);
 	static void UpdateBlipFailure(entt::registry& registry, entt::entity entity, float time);
 
+	/// <summary>
+	/// Generates and returns a duration value for a glitch effect.
+	/// </summary>
+	/// <param name="stability">The current stability level of the radar machine, from 0 to 100.</param>
+	/// <returns>A duration in seconds.</returns>
+	static float GenerateGlitchDuration(float stability);
 	static Component::Blip::JumbledCoordindate GenerateRandomJumble();
 
 };
