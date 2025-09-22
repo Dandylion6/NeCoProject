@@ -10,6 +10,7 @@
 #include "systems/object/outside/receiver/adjust_interpreting_system.hpp"
 #include "systems/object/outside/receiver/aim_interpreting_system.hpp"
 #include "systems/object/outside/receiver/artillery_fire_system.hpp"
+#include "systems/object/outside/receiver/recalibrate_interpreting_system.hpp"
 #include "systems/object/outside/receiver/receiver_interpreting_system.hpp"
 #include "utility/morse_code.hpp"
 #include <string>
@@ -72,10 +73,7 @@ void ReceiverInterpretingSystem::Update(
 
 
 void ReceiverInterpretingSystem::TryInterpretMessage(
-	entt::registry& registry,
-	ResourceStore& resourceStore,
-	Component::Receiver& receiver, 
-	const std::string& message
+	entt::registry& registry, ResourceStore& resourceStore, Component::Receiver& receiver, const std::string& message
 )
 {
 	TransmissionContext newContext = TryGetContext(receiver, message);
@@ -91,6 +89,8 @@ void ReceiverInterpretingSystem::TryInterpretMessage(
 		return AdjustInterpretingSystem::HandleReceivedMessage(registry, resourceStore, receiver, message);
 	case FiringArtillery:
 		return ArtilleryFireSystem::HandleReceivedMessage(registry, resourceStore, receiver, message);
+	case RecalibrateRadar:
+		return RecalibrateInterpretingSystem::HandleReceivedMessage(registry, resourceStore, receiver, message);
 	default:
 		break;
 	}
@@ -107,6 +107,7 @@ TransmissionContext ReceiverInterpretingSystem::TryGetContext(
 		map[AimInterpretingSystem::COMMAND] = AimingArtillery;
 		map[AdjustInterpretingSystem::COMMAND] = AdjustArtillery;
 		map[ArtilleryFireSystem::COMMAND] = FiringArtillery;
+		map[RecalibrateInterpretingSystem::COMMAND] = RecalibrateRadar;
 		return map;
 	}();
 

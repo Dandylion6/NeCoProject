@@ -9,8 +9,7 @@ class ReceiverInterpretingSystem
 {
 public:
 	static void Update(
-		entt::registry& registry,
-		ResourceStore& resourceStore
+		entt::registry& registry, ResourceStore& resourceStore
 	);
 
 private:

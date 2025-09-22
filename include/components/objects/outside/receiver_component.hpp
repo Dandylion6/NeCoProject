@@ -10,6 +10,7 @@ enum TransmissionContext: int8_t
 	AimingArtillery,
 	AdjustArtillery,
 	FiringArtillery,
+	RecalibrateRadar,
 };
 
 
