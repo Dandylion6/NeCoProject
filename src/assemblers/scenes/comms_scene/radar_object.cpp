@@ -7,6 +7,7 @@
 #include "components/objects/health_component.hpp"
 #include "components/objects/machine.hpp"
 #include "components/objects/outside/blip_component.hpp"
+#include "core/resource_store.hpp"
 #include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -21,14 +22,14 @@
 #endif
 
 
-void Construct::RadarObject(entt::registry& registry)
+void Construct::RadarObject(entt::registry& registry, ResourceStore& resourceStore)
 {
 	constexpr float ATTRACTION_REDUCTION = 1.0f;
 	constexpr float POWER_USAGE = 500.0f;
 
 	const entt::entity entity = registry.create();
 
-	Texture2D texture = LoadTexture("assets/environment/objects/radar/radar_screen.png");
+	Texture2D& texture = resourceStore.GetTexture("assets/environment/objects/radar/radar_screen.png");
 
 	registry.emplace<Component::Transform>(entity, Radar);
 	registry.emplace<Component::Sprite>(entity, texture);
@@ -43,6 +44,7 @@ void Construct::RadarObject(entt::registry& registry)
 	Construct::RadarPathEntity(registry);
 	Construct::RadarArtilleryEntity(registry);
 	Construct::RadarErrorWarningEntity(registry);
+	Construct::RadarRecalibrationTextEntity(registry);
 }
 
 
@@ -124,9 +126,9 @@ const entt::entity Construct::RadarBlipEntity(
 
 const entt::entity Construct::RadarErrorWarningEntity(entt::registry &registry)
 {
-	const entt::entity entity = registry.create();
-
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(8.0f, RenderContext::RADAR_BOUNDS.max.y - 8.0f);
+	
+	const entt::entity entity = registry.create();
 
 	Component::RadarErrorWarning& errorWarning = registry.emplace<Component::RadarErrorWarning>(entity);
 	registry.emplace<Component::Transform>(entity, Radar, POSITION);
@@ -139,6 +141,20 @@ const entt::entity Construct::RadarErrorWarningEntity(entt::registry &registry)
 	blinkFade.Build(&errorWarning.alpha, 1.0f, 0.0f, 0.4f, QuadIn, 0.16f);
 	blinkFade.onComplete = [&blinkFade]() { Tween::Replay(blinkFade); };
 	Tween::Play(blinkFade);
+
+    return entity;
+}
+
+
+const entt::entity Construct::RadarRecalibrationTextEntity(entt::registry &registry)
+{
+	constexpr Nc::Vector2f POSITION = RenderContext::RADAR_BOUNDS.max * 0.5f;
+	
+	const entt::entity entity = registry.create();
+	registry.emplace<Tag::RadarRecalibration>(entity);
+
+	registry.emplace<Component::Transform>(entity, Radar, POSITION);
+	Component::Text& text = registry.emplace<Component::Text>(entity, "RECALIBRATING", Palette::RADAR_COLOR, WDXL, FontSize::Small, Alignment::Center);
 
     return entity;
 }

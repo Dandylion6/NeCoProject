@@ -17,9 +17,6 @@ void RecalibrateInterpretingSystem::HandleReceivedMessage(
 	const std::string& message
 )
 {
-	// The time it takes to recalibrate the radar machine in seconds.
-	constexpr float RECALIBRATION_TIME = 10.0f;
-
 	auto view = registry.view<Component::RadarMachine, Component::Machine>();
 	for (auto [entity, radar, machine] : view.each())
 	{
@@ -31,7 +28,7 @@ void RecalibrateInterpretingSystem::HandleReceivedMessage(
 		}
 
 		// Starts recalibration.
-		radar.recalibrationTimeLeft = RECALIBRATION_TIME;
+		radar.recalibrationTimeLeft = Component::RadarMachine::RECALIBRATION_TIME;
 	}
 
 	ConfirmRecalibrationCommand(registry, resourceStore, receiver);

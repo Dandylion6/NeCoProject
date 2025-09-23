@@ -22,7 +22,7 @@ void CommsScene::Build(
 	ResourceStore& resourceStore
 )
 {
-	Construct::RadarObject(registry);
+	Construct::RadarObject(registry, resourceStore);
 	Construct::MorseMonitorObject(registry, resourceStore);
 	Construct::MorseTransceiverEntity(registry);
 	Construct::RadioEntity(registry);

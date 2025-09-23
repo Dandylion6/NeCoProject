@@ -15,6 +15,7 @@
 #include "raylib.h"
 #include "systems/object/comms/radar/radar_render_system.hpp"
 #include "utility/vector2.hpp"
+#include <string>
 #include <sstream>
 
 
@@ -27,18 +28,28 @@ void RadarRenderSystem::DrawRenderTexture(
 {
 	if (currentScene != CommsRoom) return;
 
+	auto view = registry.view<Component::Machine, Component::RadarMachine,  Component::Sprite>();
+
 	BeginTextureMode(radarRenderTexture);
 	BeginBlendMode(BLEND_ADDITIVE);
 
-	Component::RadarMachine* machine = DrawScreen(registry);
-	bool hasActiveMachine = machine != nullptr;
-
-	if (hasActiveMachine)
+	for (auto [entity, machine, radar, sprite] : view.each())
 	{
-		DrawPath(registry);
-		DrawRadarArtillery(registry);
-		DrawBlips(registry, resourceStore);
-		DrawErrorWarning(registry, resourceStore, *machine);
+		if (!machine.isActive)
+		{
+			ClearBackground(BLACK);
+			// TODO: Implement machine when inactive rendering.
+			continue;
+		}
+
+		bool isRecalibrating = radar.recalibrationTimeLeft > 0.0f;
+		if (isRecalibrating)
+		{
+			DrawRecalibratingScreen(registry, resourceStore, radar, sprite);
+			continue;
+		}
+
+		DrawActiveScreen(registry, resourceStore, radar, sprite);
 	}
 
 	EndTextureMode();
@@ -72,24 +83,24 @@ void RadarRenderSystem::DrawRadar(
 }
 
 
-Component::RadarMachine* RadarRenderSystem::DrawScreen(entt::registry& registry)
+void RadarRenderSystem::DrawActiveScreen(
+	entt::registry& registry, ResourceStore& resourceStore, Component::RadarMachine& radar, Component::Sprite& sprite
+)
 {
-	auto view = registry.view<Component::RadarMachine, Component::Machine, const Component::Sprite>();
-	for (auto [entity, radar, machine, sprite] : view.each())
-	{
-		// Don't draw if inactive.
-		if (!machine.isActive)
-		{
-			ClearBackground(BLACK);
-			// TODO: Implement machine when inactive rendering.
-			return nullptr;
-		}
+	const std::string BACKGROUND_FILE = "assets/environment/objects/radar/radar_screen.png";
 
-		ClearBackground(BLANK);
-		Renderer::DrawSprite(sprite, Nc::Vector2f::Zero());
-		return &radar;
-	}
-	return nullptr;
+	ClearBackground(BLANK);
+	
+	sprite.texture = resourceStore.GetTexture(BACKGROUND_FILE);
+	Renderer::DrawSprite(sprite, Nc::Vector2f::Zero());
+
+	DrawPath(registry);
+	DrawRadarArtillery(registry);
+	DrawBlips(registry, resourceStore);
+
+	bool hasWarnings = radar.glitchCount > 0u;
+	if (hasWarnings) 
+		DrawErrorWarning(registry, resourceStore, radar);
 }
 
 
@@ -150,12 +161,40 @@ void RadarRenderSystem::DrawErrorWarning(
 	auto view = registry.view<const Component::RadarErrorWarning, const Component::Transform, Component::Text>();
 	for (auto [entity, errorWarning, transform, text] : view.each())
 	{
-		if (machine.glitchCount == 0u) continue;
-
 		std::ostringstream stringStream;
 		stringStream << "ERRORS ( " << std::to_string(machine.glitchCount) << " )";
 		text.text = stringStream.str();
 		text.color.SetAlpha(errorWarning.alpha);
+
+		Nc::Vector2f offset = transform.offset + Renderer::GetTextOffset(text, resourceStore);
+		Renderer::DrawText(text, transform.position, offset, resourceStore);
+	}
+}
+
+
+void RadarRenderSystem::DrawRecalibratingScreen(
+	entt::registry& registry, ResourceStore& resourceStore, Component::RadarMachine& radar, Component::Sprite& sprite
+)
+{
+	constexpr float ANIMATION_SPEED = 6.0f;
+	constexpr float BLINK_TIME = 1.4f;
+	const std::array<std::string, 6u> loadingStrings = {"[O o o o]", "[o O o o]", "[o o O o]", "[o o o O]", "[o o O o]", "[o O o o]"};
+
+	// TODO: Add custom recalibration background
+	ClearBackground(BLACK);
+	
+	auto view = registry.view<const Tag::RadarRecalibration, const Component::Transform, Component::Text>();
+	for (auto [entity, transform, text] : view.each())
+	{
+		float time = Component::RadarMachine::RECALIBRATION_TIME - radar.recalibrationTimeLeft;
+		uint8_t index = static_cast<uint8_t>(time * ANIMATION_SPEED) % loadingStrings.size();
+		const std::string& loadingCharacter = loadingStrings.at(index);
+
+		text.color.SetAlpha(0.7f + std::cosf(time * PI * 2.0f / BLINK_TIME) * 0.3f);
+
+		std::ostringstream stringStream;
+		stringStream << "RECALIBRATING " << loadingCharacter;
+		text.text = stringStream.str();
 
 		Nc::Vector2f offset = transform.offset + Renderer::GetTextOffset(text, resourceStore);
 		Renderer::DrawText(text, transform.position, offset, resourceStore);

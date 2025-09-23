@@ -2,11 +2,12 @@
 #include "entt/entity/fwd.hpp"
 #include "utility/vector2.hpp"
 #include <cstdint>
+class ResourceStore;
 
 
 namespace Construct
 {
-	void RadarObject(entt::registry& registry);
+	void RadarObject(entt::registry& registry, ResourceStore& resourceStore);
 
 	const entt::entity RadarPathEntity(entt::registry& registry);
 
@@ -17,4 +18,6 @@ namespace Construct
 	);
 
 	const entt::entity RadarErrorWarningEntity(entt::registry& registry);
+
+	const entt::entity RadarRecalibrationTextEntity(entt::registry& registry);
 }
