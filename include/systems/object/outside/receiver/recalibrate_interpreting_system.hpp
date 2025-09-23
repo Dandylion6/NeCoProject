@@ -19,4 +19,7 @@ public:
 
 	static void Update(entt::registry& registry, float deltaTime);
 
+private:
+	static void ConfirmRecalibrationCommand(entt::registry& registry, ResourceStore& resourceStore, Component::Receiver& receiver);
+
 };

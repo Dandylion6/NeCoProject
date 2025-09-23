@@ -1,7 +1,10 @@
 #include "components/objects/comms/radar.hpp"
 #include "components/objects/machine.hpp"
+#include "core/resource_store.hpp"
 #include "entt/entity/registry.hpp"
 #include "systems/object/outside/receiver/recalibrate_interpreting_system.hpp"
+#include "systems/object/comms/radio_sound_system.hpp"
+#include "raylib.h"
 
 
 const std::string RecalibrateInterpretingSystem::COMMAND = "OPTSIG";
@@ -23,14 +26,15 @@ void RecalibrateInterpretingSystem::HandleReceivedMessage(
 		if (radar.recalibrationTimeLeft > 0.0f)
 		{
 			// Already recalibrating
-			// TODO: Add machine response
+			// TODO: Add machine feedback
 			continue;
 		}
 
-		// Turns off the machine to recalibrate.
+		// Starts recalibration.
 		radar.recalibrationTimeLeft = RECALIBRATION_TIME;
-		machine.isActive = false;
 	}
+
+	ConfirmRecalibrationCommand(registry, resourceStore, receiver);
 };
 
 
@@ -46,7 +50,6 @@ void RecalibrateInterpretingSystem::Update(entt::registry& registry, float delta
 		if (radar.recalibrationTimeLeft <= 0.0f)
 		{
 			// TODO: Reboot sequence
-			machine.isActive = true;
 			float newStability = std::fminf(radar.stability + STABILITY_INCREASE, 100.0f);
 			radar.stability = newStability;
 			continue;
@@ -54,4 +57,18 @@ void RecalibrateInterpretingSystem::Update(entt::registry& registry, float delta
 
 		radar.recalibrationTimeLeft -= deltaTime;
 	}
+}
+
+
+void RecalibrateInterpretingSystem::ConfirmRecalibrationCommand(
+	entt::registry& registry, ResourceStore& resourceStore, Component::Receiver& receiver
+)
+{
+	// TODO: Add response
+    const std::string COORDINATE_RESPONSE = "assets/audio/voicelines/receiver/commands/coordinate_received.wav";
+
+	Sound response = LoadSoundAlias(resourceStore.GetSound(COORDINATE_RESPONSE));
+	RadioSoundSystem::Broadcast(registry, std::move(response), Medium);
+
+	receiver.message.clear();
 }

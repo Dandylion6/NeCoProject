@@ -41,6 +41,7 @@
 #include "systems/object/outside/receiver/artillery_aiming_systerm.hpp"
 #include "systems/object/outside/receiver/artillery_fire_system.hpp"
 #include "systems/object/outside/receiver/receiver_code_response_system.hpp"
+#include "systems/object/outside/receiver/recalibrate_interpreting_system.hpp"
 #include "systems/object/outside/receiver/receiver_interpreting_system.hpp"
 #include "systems/scene/ambient_sound_system.hpp"
 #include "systems/ui/increment_number_system.hpp"
@@ -201,18 +202,22 @@ bool Game::ShouldRun() const
 
 void Game::Update(float deltaTime)
 {
-	if (!gameState.isPaused) gameState.time += deltaTime;
-
-#ifdef DEBUG_BUILD
+	#ifdef DEBUG_BUILD
 	constexpr Nc::Vector2f FIXED_ROAMER_SPAWN = Nc::Vector2f(0.0f, -90.0f);
 	if (IsKeyPressed(KEY_PERIOD)) RoamerSpawningSystem::SpawnRoamer(registry, FIXED_ROAMER_SPAWN, gameState.anomalyState);
 	
 	if (IsKeyPressed(KEY_MINUS)) ++gameState.anomalyState.intensityLevel;
 	if (IsKeyPressed(KEY_EQUAL)) --gameState.anomalyState.intensityLevel;
-
+	
 	if (IsKeyPressed(KEY_NINE)) gameState.anomalyState.attractionPercentage += 5.0f;
 	if (IsKeyPressed(KEY_ZERO)) gameState.anomalyState.attractionPercentage -= 5.0f;
-#endif
+	#endif
+
+	if (gameState.isPaused) return;
+
+	gameState.time += deltaTime;
+	// TODO: this only applies to when the entity is active.
+	gameState.anomalyState.attractionPercentage = std::fmaxf(gameState.anomalyState.attractionPercentage, AnomalyState::BASE_ATTRACTION);
 }
 
 
@@ -232,6 +237,7 @@ void Game::UpdateRegistries(float deltaTime)
 	MorseSoundSystem::Update(registry, gameState.currentScene, deltaTime);
 	MachineSystem::Update(registry, gameState.anomalyState, deltaTime);
 	RadarStabilitySystem::Update(registry, gameState.anomalyState, gameState.time, deltaTime);
+	RecalibrateInterpretingSystem::Update(registry, deltaTime);
 	BlipDeathSystem::Update(registry);
 	BlipBlinkSystem::Update(registry);
 	BlipGlitchSystem::Update(registry, gameState.time, deltaTime);
