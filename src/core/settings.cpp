@@ -1,7 +1,7 @@
 #include "core/settings.hpp"
 
 
-void ApplyMorseSettings(MorseSettings& morseSettings)
+static void ApplyMorseSettings(MorseSettings& morseSettings)
 {
     morseSettings.dashTime = morseSettings.dotTime * 3.0f;
     morseSettings.errorMargin = morseSettings.dotTime * MorseCode::ERROR_MARGIN;
