@@ -32,7 +32,10 @@ public:
 	void Shutdown();
 
 	void Update(float deltaTime);
+	// @brief Updates systems.
 	void UpdateRegistries(float deltaTime);
+	// @brief Updates after systems have run, but before drawing.
+	void LateUpdate(float deltaTime);
 	void DrawGame(float deltaTime);
 
 private:

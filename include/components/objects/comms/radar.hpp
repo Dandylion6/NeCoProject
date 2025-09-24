@@ -39,4 +39,6 @@ namespace Tag
 	struct RadarArtillery { };
 
 	struct RadarRecalibration { };
+
+	struct RadarButton { };
 }

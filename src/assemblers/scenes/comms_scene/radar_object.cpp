@@ -1,4 +1,6 @@
 #include "assemblers/scenes/comms_scene/radar_object.hpp"
+#include "components/core/button_action_component.hpp"
+#include "components/core/rendering/rectangle_component.hpp"
 #include "components/core/rendering/sprite_component.hpp"
 #include "components/core/rendering/text_component.hpp"
 #include "components/core/transform_component.hpp"
@@ -45,6 +47,7 @@ void Construct::RadarObject(entt::registry& registry, ResourceStore& resourceSto
 	Construct::RadarArtilleryEntity(registry);
 	Construct::RadarErrorWarningEntity(registry);
 	Construct::RadarRecalibrationTextEntity(registry);
+	Construct::RadarPowerButtonEntity(registry);
 }
 
 
@@ -157,4 +160,32 @@ const entt::entity Construct::RadarRecalibrationTextEntity(entt::registry &regis
 	Component::Text& text = registry.emplace<Component::Text>(entity, "RECALIBRATING", Palette::RADAR_COLOR, WDXL, FontSize::Small, Alignment::Center);
 
     return entity;
+}
+
+
+const entt::entity Construct::RadarPowerButtonEntity(entt::registry& registry)
+{
+	// TODO: Replace with proper button graphics and size.
+	constexpr Nc::Vector2f POSITION = RenderContext::RADAR_POSITION + Nc::Vector2f(280.0f, 340.0f);
+	constexpr Nc::Vector2f SIZE = Nc::Vector2f(20.0f, 20.0f);
+
+	const entt::entity entity = registry.create();
+	registry.emplace<Tag::RadarButton>(entity);
+
+	registry.emplace<Component::Transform>(entity, CommsRoom, POSITION, SIZE, SIZE * 0.5f);
+	registry.emplace<Component::Rectangle>(entity, RED);
+
+	// Toggles radar machine
+	Component::ButtonAction& action = registry.emplace<Component::ButtonAction>(entity);
+	action.onClick = [&registry, &action]()
+	{
+		auto view = registry.view<const Component::RadarMachine, Component::Machine>();
+		for (auto [entity, radar, machine] : view.each())
+			machine.isActive = !machine.isActive;
+
+		// TODO: Add active/inactive visual state change and prevent spamming.
+		action.isActive = true;
+	};
+
+	return entity;
 }

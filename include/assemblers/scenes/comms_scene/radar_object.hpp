@@ -20,4 +20,6 @@ namespace Construct
 	const entt::entity RadarErrorWarningEntity(entt::registry& registry);
 
 	const entt::entity RadarRecalibrationTextEntity(entt::registry& registry);
+
+	const entt::entity RadarPowerButtonEntity(entt::registry& registry);
 }

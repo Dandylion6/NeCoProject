@@ -213,11 +213,8 @@ void Game::Update(float deltaTime)
 	if (IsKeyPressed(KEY_ZERO)) gameState.anomalyState.attractionPercentage -= 5.0f;
 	#endif
 
-	if (gameState.isPaused) return;
-
-	gameState.time += deltaTime;
-	// TODO: this only applies to when the entity is active.
-	gameState.anomalyState.attractionPercentage = std::fmaxf(gameState.anomalyState.attractionPercentage, AnomalyState::BASE_ATTRACTION);
+	if (!gameState.isPaused)
+		gameState.time += deltaTime;
 }
 
 
@@ -250,6 +247,15 @@ void Game::UpdateRegistries(float deltaTime)
 	ProjectileHitSystem::Update(registry, deltaTime);
 	RoamerSpawningSystem::Update(registry, gameState.anomalyState, gameState.time);
 	RoamerMovementSystem::Update(registry, deltaTime);
+}
+
+
+void Game::LateUpdate(float deltaTime)
+{
+	// TODO: Attraction should be zero at down time.
+	float currentAttraction = gameState.anomalyState.attractionPercentage;
+	float clampedAttraction = std::clamp<float>(currentAttraction, AnomalyState::BASE_ATTRACTION, 100.0f);
+	gameState.anomalyState.attractionPercentage = clampedAttraction;
 }
 
 
