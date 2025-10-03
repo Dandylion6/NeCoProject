@@ -19,7 +19,7 @@
 
 namespace Construct 
 {
-	const entt::entity BackdropEntity(
+	static const entt::entity SettingsBackdropEntity(
 		entt::registry& registry, Nc::Vector2f windowSize
 	)	
 	{
@@ -40,7 +40,7 @@ const entt::entity Construct::SettingsBackgroundEntity(
 	entt::registry& registry, GameState& gameState, Nc::Vector2f windowSize
 )
 {
-	Construct::BackdropEntity(registry, windowSize);
+	Construct::SettingsBackdropEntity(registry, windowSize);
 
     const entt::entity entity = registry.create();
 

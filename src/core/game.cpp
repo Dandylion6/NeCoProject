@@ -1,5 +1,6 @@
 #include "assemblers/entities/ambient_sound_entity.hpp"
 #include "assemblers/entities/move_transition_entity.hpp"
+#include "assemblers/menus/restart_menu/restart_menu.hpp"
 #include "assemblers/scenes/comms_scene/comms_scene.hpp"
 #include "assemblers/scenes/desk_scene/desk_scene.hpp"
 #include "assemblers/scenes/doorway_scene/doorway_scene.hpp"
@@ -140,6 +141,7 @@ void Game::InitialiseAssemblers()
 
 	MainMenu::Build(registry, gameState, resourceStore);
 	SettingsMenu::Build(settings, pendingSettings, gameState, renderContext.windowSize, registry, resourceStore);
+	RestartMenu::Build(registry, gameState, resourceStore);
 
 #ifdef DEBUG_BUILD
 	if (!Game::debugContext.ignoreMainMenu) MainMenu::Open(registry, gameState);
