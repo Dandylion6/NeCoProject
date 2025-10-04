@@ -38,6 +38,9 @@ public:
 	void LateUpdate(float deltaTime);
 	void DrawGame(float deltaTime);
 
+	// @brief Handles player death.
+	static void Death(entt::registry& registry, GameState& gameState);
+
 private:
 	entt::registry registry { };
 	RenderContext renderContext { };

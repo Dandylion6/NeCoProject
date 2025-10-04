@@ -1,4 +1,3 @@
-#include "algorithm"
 #include "components/core/transform_component.hpp"
 #include "components/core/tween_component.hpp"
 #include "core/game_state.hpp"
@@ -6,6 +5,8 @@
 #include "entt/entity/registry.hpp"
 #include "systems/core/tween_system.hpp"
 #include "utility/interpolation.hpp"
+#include "utility/tween.hpp"
+#include <algorithm>
 
 
 void TweenSystem::Update(entt::registry& registry, GameState& gameState, float deltaTime)

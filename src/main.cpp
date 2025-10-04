@@ -19,6 +19,10 @@ int main(int args, char* argv[])
 	{
 		float deltaTime = GetFrameTime();
 
+#ifdef DEBUG_BUILD
+		deltaTime *= Game::debugContext.timeScale;
+#endif // DEBUG_BUILD
+
 		game->Update(deltaTime);
 		game->UpdateRegistries(deltaTime);
 		game->LateUpdate(deltaTime);

@@ -2,6 +2,13 @@
 #include "systems/object/comms/radio_sound_system.hpp"
 #include <cstdint>
 #include "systems/object/outside/receiver/coordinate_interpreting_system.hpp"
+#include "cctype"
+#include <string>
+#include <utility>
+#include "entt/entity/fwd.hpp"
+#include "raylib.h"
+#include "components/objects/comms/radio_component.hpp"
+#include "components/objects/outside/receiver_component.hpp"
 
 
 CoordResult CoordinateInterpretingSystem::InterpretMessageAsCoord(
@@ -28,11 +35,11 @@ CoordResult CoordinateInterpretingSystem::InterpretMessageAsCoord(
 	}
 
 	uint32_t startingIndex = 0u;
-	float sign = 1.0f;
+	int16_t sign = 1;
 	const char prefix = message.at(0u);
 	if (prefix == 'N')
 	{
-		sign = -1.0f;
+		sign = -1;
 		++startingIndex;
 	}
 

@@ -1,6 +1,7 @@
 #include "assemblers/scenes/outside_scene/artillery_entity.hpp"
 #include "components/core/sound_emitter_component.hpp"
 #include "components/core/transform_component.hpp"
+#include "components/objects/health_component.hpp"
 #include "components/objects/outside/artillery_component.hpp"
 #include "components/objects/outside/receiver_component.hpp"
 #include "core/render_context.hpp"
@@ -21,6 +22,8 @@ void Construct::ArtilleryEntity(entt::registry& registry)
 
 	registry.emplace<Component::Receiver>(entity);
 	registry.emplace<Component::Artillery>(entity);
+	// Artillery has 3 people, this might be useful in the future
+	registry.emplace<Component::Health>(entity, 3);
 
 	Sound sound = LoadSound("assets/audio/object/artillery_fire.wav");
 	registry.emplace<Component::SoundEmitter>(entity, std::move(sound));

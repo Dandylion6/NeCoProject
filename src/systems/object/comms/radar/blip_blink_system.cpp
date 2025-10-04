@@ -11,6 +11,11 @@
 #include "utility/tween.hpp"
 #include "utility/vector2.hpp"
 #include <cmath>
+#ifdef DEBUG_BUILD
+#include "core/debug_context.hpp"
+#include "core/game.hpp"
+#endif // DEBUG_BUILD
+
 
 
 void BlipBlinkSystem::Update(entt::registry& registry)
@@ -38,12 +43,18 @@ bool BlipBlinkSystem::BlipShouldAppear(
 {
 	constexpr Nc::Vector2f WORLD_Y_RANGE = Nc::Vector2f(GameState::WORLD_BOUNDS.min.y, GameState::WORLD_BOUNDS.max.y);
 	constexpr Nc::Vector2f RADAR_Y_RANGE = Nc::Vector2f(RenderContext::RADAR_BOUNDS.min.y, RenderContext::RADAR_BOUNDS.max.y);
+	constexpr float DIFFERENCE_THRESHOLD = 0.8f;
 
 	float pathHeight = path.position.y + path.offset.y;
 	float blipHeight = Math::Remap(WORLD_Y_RANGE, RADAR_Y_RANGE, blip.position.y);
 	float distance = std::fabsf(pathHeight - blipHeight);
 	
-	if (distance > 0.8f) return false;
+	float threshold = DIFFERENCE_THRESHOLD;
+#ifdef DEBUG_BUILD
+	threshold *= Game::debugContext.timeScale;
+#endif // DEBUG_BUILD
+
+	if (distance > threshold) return false;
 	if (tween.isPlaying) return false;
 	return true;
 }

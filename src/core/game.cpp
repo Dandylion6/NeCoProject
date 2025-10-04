@@ -1,3 +1,4 @@
+#include "algorithm"
 #include "assemblers/entities/ambient_sound_entity.hpp"
 #include "assemblers/entities/move_transition_entity.hpp"
 #include "assemblers/menus/restart_menu/restart_menu.hpp"
@@ -17,7 +18,8 @@
 #include "core/save.hpp"
 #include "entt/entity/fwd.hpp"
 #include "raylib.h"
-#include "systems/anomaly/roamer_movement_system.hpp"
+#include "systems/anomaly/roamer_behaviour_system.hpp"
+#include "systems/anomaly/roamer_kill_system.hpp"
 #include "systems/anomaly/roamer_spawning_system.hpp"
 #include "systems/core/button_action_system.hpp"
 #include "systems/core/input_action_system.hpp"
@@ -39,8 +41,8 @@
 #include "systems/object/outside/projectile_hit_system.hpp"
 #include "systems/object/outside/receiver/artillery_aiming_systerm.hpp"
 #include "systems/object/outside/receiver/artillery_fire_system.hpp"
-#include "systems/object/outside/receiver/receiver_code_response_system.hpp"
 #include "systems/object/outside/receiver/recalibrate_interpreting_system.hpp"
+#include "systems/object/outside/receiver/receiver_code_response_system.hpp"
 #include "systems/object/outside/receiver/receiver_interpreting_system.hpp"
 #include "systems/scene/ambient_sound_system.hpp"
 #include "systems/ui/increment_number_system.hpp"
@@ -141,7 +143,7 @@ void Game::InitialiseAssemblers()
 
 	MainMenu::Build(registry, gameState, resourceStore);
 	SettingsMenu::Build(settings, pendingSettings, gameState, renderContext.windowSize, registry, resourceStore);
-	RestartMenu::Build(registry, gameState, resourceStore);
+	RestartMenu::Build(registry, gameState, resourceStore, renderContext.windowSize);
 
 #ifdef DEBUG_BUILD
 	if (!Game::debugContext.ignoreMainMenu) MainMenu::Open(registry, gameState);
@@ -209,6 +211,9 @@ void Game::Update(float deltaTime)
 	
 	if (IsKeyPressed(KEY_NINE)) gameState.anomalyState.attractionPercentage += 5.0f;
 	if (IsKeyPressed(KEY_ZERO)) gameState.anomalyState.attractionPercentage -= 5.0f;
+
+	if (IsKeyPressed(KEY_M)) Game::debugContext.timeScale += 0.5f;
+	if (IsKeyPressed(KEY_N)) Game::debugContext.timeScale = std::fmaxf(Game::debugContext.timeScale - 0.5f, 0.0f);
 	#endif
 
 	if (!gameState.isPaused)
@@ -244,7 +249,8 @@ void Game::UpdateRegistries(float deltaTime)
 	ArtilleryFireSystem::Update(registry, resourceStore, deltaTime);
 	ProjectileHitSystem::Update(registry, deltaTime);
 	RoamerSpawningSystem::Update(registry, gameState.anomalyState, gameState.time);
-	RoamerMovementSystem::Update(registry, deltaTime);
+	RoamerBehaviourSystem::Update(registry, deltaTime);
+	RoamerKillSystem::Update(registry, gameState, deltaTime);
 }
 
 
@@ -293,6 +299,12 @@ void Game::DrawGame(float deltaTime)
 #endif // DEBUG_BUILD
 
 	EndDrawing();
+}
+
+
+void Game::Death(entt::registry& registry, GameState& gameState)
+{
+	RestartMenu::Open(registry, gameState);
 }
 
 
@@ -352,11 +364,15 @@ void Game::DrawDebugUi() const
 	text = "RADAR: " + std::to_string(static_cast<int32_t>(Game::debugContext.radarStabilityPercentage)) + "%";
 	DrawText(text.c_str(), 32, 224, 32, GREEN);
 
+	text = "TIME: " + std::to_string(Game::debugContext.timeScale);
+	DrawText(text.c_str(), 32, 272, 32, GREEN);
+
 	DrawText("Press [/] to delete msg", 32, 340, 24, GREEN);
 	DrawText("Press [.] to spawn roamer", 32, 380, 24, GREEN);
 	DrawText("Press [G] to glitch a blip", 32, 420, 24, GREEN);
 	DrawText("Press [-/=] to mod intensity", 32, 460, 18, GREEN);
 	DrawText("Press [9/0] to mod attraction", 32, 500, 18, GREEN);
 	DrawText("Press [K/L] to mod radar stability", 32, 540, 18, GREEN);
+	DrawText("Press [M/N] to mod time scale", 32, 580, 18, GREEN);
 }
 #endif // DEBUG_BUILD

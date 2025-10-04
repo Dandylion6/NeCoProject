@@ -1,20 +1,13 @@
-#include "assemblers/scenes/settings_menu/settings_menu.hpp"
-#include "assemblers/scenes/main_menu/main_menu.hpp"
-#include "assemblers/scenes/main_menu/main_menu.hpp"
 #include "assemblers/scenes/settings_menu/settings_background_entity.hpp"
 #include "assemblers/scenes/settings_menu/settings_buttons.hpp"
 #include "assemblers/scenes/settings_menu/settings_headers.hpp"
-#include "assemblers/scenes/settings_menu/settings_headers.hpp"
+#include "assemblers/scenes/settings_menu/settings_menu.hpp"
 #include "assemblers/ui/increment_setting_object.hpp"
-#include "components/core/transform_component.hpp"
 #include "components/core/transform_component.hpp"
 #include "components/ui/increment_component.hpp"
 #include "components/ui/settings_tag.hpp"
 #include "components/ui/toggle_state_component.hpp"
-#include "components/ui/settings_tag.hpp"
-#include "components/ui/toggle_state_component.hpp"
 #include "core/game_state.hpp"
-#include "core/save.hpp"
 #include "core/scene.hpp"
 #include "core/settings.hpp"
 #include "entt/entity/fwd.hpp"
@@ -48,35 +41,34 @@ void SettingsMenu::Build(
 }
 
 
+namespace SettingsMenu 
+{
+    static void Toggle(entt::registry& registry, GameState& gameState, bool active)
+    {
+        auto view = registry.view<const Tag::Settings, Component::UiTransform>();
+        for (auto [entity, transform] : view.each())
+        {
+            if (registry.any_of<Component::ToggleState>(entity))
+            {
+                Component::ToggleState& toggle = registry.get<Component::ToggleState>(entity);
+                toggle.isActive = active;
+            }
+            transform.isVisible = active;
+        }
+        gameState.isPaused = active;
+    }
+}
+
+
 void SettingsMenu::Open(entt::registry& registry, GameState& gameState)
 {
-    auto view = registry.view<const Tag::Settings, Component::UiTransform>();
-	for (auto [entity, transform] : view.each())
-	{
-        if (registry.any_of<Component::ToggleState>(entity))
-        {
-            Component::ToggleState& toggle = registry.get<Component::ToggleState>(entity);
-            toggle.isActive = true;
-            gameState.isPaused = true;
-        }
-        transform.isVisible = true;
-	}
+	Toggle(registry, gameState, true);
 }
 
 
 void SettingsMenu::Close(entt::registry& registry, GameState& gameState)
 {
-    auto view = registry.view<const Tag::Settings, Component::UiTransform>();
-	for (auto [entity, transform] : view.each())
-	{
-        if (registry.any_of<Component::ToggleState>(entity))
-        {
-            Component::ToggleState& toggle = registry.get<Component::ToggleState>(entity);
-            toggle.isActive = false;
-            gameState.isPaused = false;
-        }
-        transform.isVisible = false;
-	}
+	Toggle(registry, gameState, false);
 }
 
 
@@ -94,7 +86,7 @@ void SettingsMenu::Toggle(entt::registry& registry, GameState& gameState)
     auto view = registry.view<const Tag::Settings, Component::ToggleState>();
 	for (auto [settingsEntity, toggle] : view.each())
 	{
-        if (gameState.currentScene == NullScene) return;
-        return toggle.isActive ? SettingsMenu::Close(registry, gameState) : SettingsMenu::Open(registry, gameState);
+        if (gameState.currentScene != NullScene) return;
+		    SettingsMenu::Toggle(registry, gameState, !toggle.isActive);
 	}
 }

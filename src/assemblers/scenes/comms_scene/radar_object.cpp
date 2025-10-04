@@ -28,7 +28,7 @@
 void Construct::RadarObject(entt::registry& registry, ResourceStore& resourceStore)
 {
 	constexpr float ATTRACTION_REDUCTION = 1.0f;
-	constexpr float POWER_USAGE = 500.0f;
+	constexpr uint16_t POWER_USAGE = 500u;
 
 	const entt::entity entity = registry.create();
 

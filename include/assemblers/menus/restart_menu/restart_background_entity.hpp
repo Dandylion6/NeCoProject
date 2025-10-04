@@ -7,6 +7,6 @@ struct GameState;
 namespace Construct
 {
 	const entt::entity RestartMenuBackgroundEntity(
-		entt::registry& registry, GameState& gameState, Nc::Vector2f windowSize
+		entt::registry& registry, Nc::Vector2f windowSize
 	);
 }
