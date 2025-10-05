@@ -15,7 +15,8 @@
 #include "core/game.hpp"
 #include "core/game_state.hpp"
 #include "core/render_context.hpp"
-#include "core/save.hpp"
+#include "core/save_game.hpp"
+#include "core/save_settings.hpp"
 #include "entt/entity/fwd.hpp"
 #include "raylib.h"
 #include "systems/anomaly/roamer_behaviour_system.hpp"
@@ -147,14 +148,14 @@ void Game::InitialiseAssemblers()
 
 #ifdef DEBUG_BUILD
 	if (!Game::debugContext.ignoreMainMenu) MainMenu::Open(registry, gameState);
-	else Save::LoadGameState(gameState);
+	else Save::LoadGame(registry, gameState);
 
 	const entt::entity entity = registry.create();
 
 	registry.emplace<Component::UiTransform>(entity, Nc::Vector2f(0.06f, 0.9f), Nc::Vector2f::Scale(0.5f), Nc::Vector2f(180.0f, 32.0f));
 	registry.emplace<Component::Text>(entity, "SAVE STATE", Palette::RADAR_COLOR);
 	
-	std::function<void()> onClick = [&gameState = gameState]() { Save::SaveGameState(gameState); };
+	std::function<void()> onClick = [&registry = registry, &gameState = gameState]() { Save::SaveGame(registry, gameState); };
 	registry.emplace<Component::ButtonAction>(entity, std::move(onClick));
 
 #else

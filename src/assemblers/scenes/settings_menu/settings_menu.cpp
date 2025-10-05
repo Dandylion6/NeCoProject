@@ -62,13 +62,13 @@ namespace SettingsMenu
 
 void SettingsMenu::Open(entt::registry& registry, GameState& gameState)
 {
-	Toggle(registry, gameState, true);
+    SettingsMenu::Toggle(registry, gameState, true);
 }
 
 
 void SettingsMenu::Close(entt::registry& registry, GameState& gameState)
 {
-	Toggle(registry, gameState, false);
+    SettingsMenu::Toggle(registry, gameState, false);
 }
 
 
@@ -86,7 +86,7 @@ void SettingsMenu::Toggle(entt::registry& registry, GameState& gameState)
     auto view = registry.view<const Tag::Settings, Component::ToggleState>();
 	for (auto [settingsEntity, toggle] : view.each())
 	{
-        if (gameState.currentScene != NullScene) return;
+        if (gameState.currentScene != NullScene)
 		    SettingsMenu::Toggle(registry, gameState, !toggle.isActive);
 	}
 }

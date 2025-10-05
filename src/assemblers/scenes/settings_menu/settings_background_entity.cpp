@@ -1,20 +1,19 @@
 #include "assemblers/scenes/settings_menu/settings_background_entity.hpp"
 #include "assemblers/scenes/settings_menu/settings_menu.hpp"
+#include "components/core/input_component.hpp"
 #include "components/core/rendering/rectangle_component.hpp"
 #include "components/core/rendering/sprite_component.hpp"
 #include "components/core/transform_component.hpp"
+#include "components/ui/settings_tag.hpp"
 #include "components/ui/toggle_state_component.hpp"
 #include "core/game_state.hpp"
-#include "core/render_context.hpp"
-#include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "components/ui/settings_tag.hpp"
 #include "utility/color_palette.hpp"
 #include "utility/vector2.hpp"
-#include "components/core/input_component.hpp"
 #include <functional>
+#include <utility>
 
 
 namespace Construct 

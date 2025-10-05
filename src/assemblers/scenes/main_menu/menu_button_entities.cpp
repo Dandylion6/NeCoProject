@@ -1,17 +1,16 @@
-#include "assemblers/scenes/main_menu/menu_button_entities.hpp"
 #include "assemblers/scenes/main_menu/main_menu.hpp"
+#include "assemblers/scenes/main_menu/menu_button_entities.hpp"
 #include "assemblers/scenes/settings_menu/settings_menu.hpp"
 #include "assemblers/ui/label_button_object.hpp"
 #include "components/core/transform_component.hpp"
 #include "components/ui/main_menu_tag.hpp"
 #include "core/game_state.hpp"
 #include "core/resource_store.hpp"
-#include "core/save.hpp"
+#include "core/save_game.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "utility/vector2.hpp"
 #include <functional>
-#include <string>
 #include <utility>
 
 
@@ -25,7 +24,7 @@ void Construct::PlayButtonObject(
 	
 	std::function<void()> onClick = [&gameState, &registry]()
 	{
-		Save::LoadGameState(gameState);
+		Save::LoadGame(registry, gameState);
 		MainMenu::Close(registry, gameState);
 	};
 	 
