@@ -6,7 +6,7 @@ struct GameState;
 
 namespace Save
 {
-	void SaveGame(entt::registry& registry, GameState& gameState, const std::string& save = "auto");
+	bool SaveGame(entt::registry& registry, GameState& gameState);
 
-	void LoadGame(entt::registry& registry, GameState& gameState, const std::string& save = "auto");
+	bool LoadGame(entt::registry& registry, GameState& gameState);
 }

@@ -1,4 +1,3 @@
-#include "algorithm"
 #include "assemblers/entities/ambient_sound_entity.hpp"
 #include "assemblers/entities/move_transition_entity.hpp"
 #include "assemblers/menus/restart_menu/restart_menu.hpp"
@@ -50,6 +49,7 @@
 #include "utility/color_palette.hpp"
 #include "utility/morse_code.hpp"
 #include "utility/vector2.hpp"
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <cstring>
@@ -59,6 +59,7 @@
 
 
 #ifdef DEBUG_BUILD
+#include "core/scene.hpp"
 DebugContext Game::debugContext { };
 #endif // DEBUG_BUILD
 
@@ -147,8 +148,12 @@ void Game::InitialiseAssemblers()
 	RestartMenu::Build(registry, gameState, resourceStore, renderContext.windowSize);
 
 #ifdef DEBUG_BUILD
-	if (!Game::debugContext.ignoreMainMenu) MainMenu::Open(registry, gameState);
-	else Save::LoadGame(registry, gameState);
+ 	if (!Game::debugContext.ignoreMainMenu) MainMenu::Open(registry, gameState);
+	else
+	{
+		gameState.save = "debug";
+		Save::LoadGame(registry, gameState);
+	}
 
 	const entt::entity entity = registry.create();
 

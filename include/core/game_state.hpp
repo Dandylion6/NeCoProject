@@ -3,6 +3,7 @@
 #include "utility/bounds.hpp"
 #include "utility/vector2.hpp"
 #include <cstdint>
+#include <string>
 
 
 struct AnomalyState
@@ -25,6 +26,7 @@ struct GameState
 	static constexpr Nc::Bounds WORLD_BOUNDS = Nc::Bounds(-100.0f, 100.0f, 100.0f, -100.0f); // Y-axis is flipped.
 
 	AnomalyState anomalyState { };
+	std::string save { };
 	float time = 0.0f;
 	Scene currentScene = NullScene;
 	Scene movingToScene = NullScene;
