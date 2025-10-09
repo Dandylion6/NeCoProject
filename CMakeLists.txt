@@ -46,6 +46,7 @@ target_include_directories(
 	NeCoProject
 	PRIVATE
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external/base64/include>
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external/entt/src>
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external/raylib/src>
 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/external/json/src>

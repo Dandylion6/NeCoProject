@@ -44,9 +44,10 @@ void RecalibrateInterpretingSystem::Update(entt::registry& registry, float delta
 	for (auto [entity, machine, radar] : view.each())
 	{
 		bool isDoneRecalibrating = radar.recalibrationTimeLeft <= -1.0f;
+		if (isDoneRecalibrating) continue;
 
 		// Restart the radar machine if it's done recalibrating.
-		if (radar.recalibrationTimeLeft <= 0.0f && !isDoneRecalibrating)
+		if (radar.recalibrationTimeLeft <= 0.0f)
 		{
 			// TODO: Reboot sequence
 			radar.recalibrationTimeLeft = -1.5f;

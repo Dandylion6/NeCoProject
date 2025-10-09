@@ -1,5 +1,7 @@
+#include "base64.hpp"
 #include "components/objects/comms/radar.hpp"
 #include "components/objects/machine.hpp"
+#include "components/scene/address_component.hpp"
 #include "components/scene/dont_destroy_on_load_tag.hpp"
 #include "core/game.hpp"
 #include "core/game_state.hpp"
@@ -23,59 +25,79 @@ namespace Save
 {
 
 
-    static bool SaveGameState(GameState& gameState, std::ofstream& stream)
+    static bool SaveGameState(GameState& gameState, nlohmann::json& data)
     {
-        stream.write(reinterpret_cast<char*>(&gameState.anomalyState.attractionPercentage), sizeof(float));
-        stream.write(reinterpret_cast<char*>(&gameState.time), sizeof(float));
-        uint8_t rawScene = gameState.currentScene;
-        stream.write(reinterpret_cast<char*>(&rawScene), sizeof(rawScene));
+        nlohmann::json& gameStateData = data["game_state"];
+        gameStateData["attraction_percentage"] = gameState.anomalyState.attractionPercentage;
+        gameStateData["time"] = gameState.time;
+        gameStateData["current_scene"] = static_cast<uint8_t>(gameState.currentScene);
         return true;
     }
 
 
-    static bool LoadGameState(GameState& gameState, std::ifstream& stream)
+    static bool LoadGameState(GameState& gameState, nlohmann::json& data)
     {
-        stream.read(reinterpret_cast<char*>(&gameState.anomalyState.attractionPercentage), sizeof(float));
-        stream.read(reinterpret_cast<char*>(&gameState.time), sizeof(float));
-        uint8_t rawScene = static_cast<uint8_t>(CommsRoom);
-        stream.read(reinterpret_cast<char*>(&rawScene), sizeof(rawScene));
-        gameState.currentScene = static_cast<Scene>(rawScene);
-        return true;
-    }
-
-
-    static bool SaveMachineComponents(entt::registry& registry, std::ofstream& stream)
-    {
-        auto view = registry.view<Component::Machine>();
-        for (auto [entity, machine] : view.each())
+        if (!data.contains("game_state"))
         {
-            stream.write(reinterpret_cast<char*>(&machine.isActive), sizeof(bool));
+            // Load starting data
+            nlohmann::json& gameStateData = data["game_state"];
+            gameStateData["attraction_percentage"] = AnomalyState::BASE_ATTRACTION;
+            gameStateData["time"] = 0.0f;
+            gameStateData["current_scene"] = static_cast<uint8_t>(CommsRoom);
+        }
+        
+        nlohmann::json& gameStateData = data["game_state"];
+        gameState.anomalyState.attractionPercentage = gameStateData["attraction_percentage"];
+        gameState.time = gameStateData["time"];
+        gameState.currentScene = static_cast<Scene>(gameStateData["current_scene"]);
+        return true;
+    }
+
+
+    static bool SaveMachineComponents(entt::registry& registry, nlohmann::json& data)
+    {
+        auto view = registry.view<const Component::Address, const Component::Machine>();
+        for (auto [entity, address, machine] : view.each())
+        {
+            if (address.address.empty()) return false;
+
+            nlohmann::json& entityData = data["entities"][address.address];
+
+            entityData["entity_id"] = static_cast<uint32_t>(entity);
+            entityData["machine_is_active"] = machine.isActive;
 
             // In the case where the machine has other relevant components
             if (registry.any_of<Component::RadarMachine>(entity))
             {
                 Component::RadarMachine& radar = registry.get<Component::RadarMachine>(entity);
-                stream.write(reinterpret_cast<char*>(&radar.stability), sizeof(float));
-                stream.write(reinterpret_cast<char*>(&radar.recalibrationTimeLeft), sizeof(float));
+                entityData["radar_stability"] = radar.stability;
+                entityData["radar_recalibration_time"] = radar.recalibrationTimeLeft;
             }
         }
         return true;
     }
 
 
-    static bool LoadMachineComponents(entt::registry& registry, std::ifstream& stream)
+    static bool LoadMachineComponents(entt::registry& registry, nlohmann::json& data)
     {
-        auto view = registry.view<Component::Machine>();
-        for (auto [entity, machine] : view.each())
+        nlohmann::json& entitiesData = data["entities"];
+        auto view = registry.view<Component::Address, Component::Machine>();
+        for (auto [entity, address, machine] : view.each())
         {
-            stream.read(reinterpret_cast<char*>(&machine.isActive), sizeof(bool));
+            if (!entitiesData.contains(address.address)) return false;
+            
+            nlohmann::json& entityData = entitiesData[address.address];
+            if (!entityData.contains("machine_is_active")) return false;
+            machine.isActive = entityData["machine_is_active"];
 
-            // In the case where the machine has other relevant components
             if (registry.any_of<Component::RadarMachine>(entity))
             {
+                if (!entityData.contains("radar_stability")) return false;
+                if (!entityData.contains("radar_recalibration_time")) return false;
+
                 Component::RadarMachine& radar = registry.get<Component::RadarMachine>(entity);
-                stream.read(reinterpret_cast<char*>(&radar.stability), sizeof(float));
-                stream.read(reinterpret_cast<char*>(&radar.recalibrationTimeLeft), sizeof(float));
+                radar.stability = entityData["radar_stability"];
+                radar.recalibrationTimeLeft = entityData["radar_recalibration_time"];
             }
         }
         return true;
@@ -91,11 +113,18 @@ bool Save::SaveGame(entt::registry& registry, GameState& gameState)
     if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
     std::ofstream stream(dataDirectoryPath / (gameState.save + ".save"), std::ios::out);
 
-    //nlohmann::json data;
+    nlohmann::json data;
 
-    Save::SaveGameState(gameState, stream);
-    Save::SaveMachineComponents(registry, stream);
+    Save::SaveGameState(gameState, data);
+    Save::SaveMachineComponents(registry, data);
 
+#ifdef DEBUG_BUILD
+    stream << data.dump(4) << std::endl;
+#elif
+    std::string dataString = data.dump();
+    std::string encodedData = base64::to_base64(dataString);
+    stream << encodedData;
+#endif
     stream.close();
     return true;
 }
@@ -115,10 +144,21 @@ bool Save::LoadGame(Game& game, entt::registry& registry, GameState& gameState)
 
     std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
     if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
-    std::ifstream stream(dataDirectoryPath / (gameState.save + ".save"), std::ios::in);
+    std::ifstream stream(dataDirectoryPath / (gameState.save + ".json"), std::ios::in);
+    
+#ifdef DEBUG_BUILD
+    nlohmann::json data = nlohmann::json::parse(stream);
+#elif
+    std::stringstream stringBuffer;
+    stringBuffer << stream.rdbuf();
+    
+    std::string decodedData = base64::from_base64(stringBuffer.view());
+    nlohmann::json data;
+    if (!decodedData.empty()) data = nlohmann::json::parse(decodedData);
+#endif
 
-    Save::LoadGameState(gameState, stream);
-    Save::LoadMachineComponents(registry, stream);
+    Save::LoadGameState(gameState, data);
+    Save::LoadMachineComponents(registry, data);
 
     stream.close();
     return true;

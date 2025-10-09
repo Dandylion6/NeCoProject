@@ -9,6 +9,7 @@
 #include "components/objects/health_component.hpp"
 #include "components/objects/machine.hpp"
 #include "components/objects/outside/blip_component.hpp"
+#include "components/scene/address_component.hpp"
 #include "core/render_context.hpp"
 #include "core/resource_store.hpp"
 #include "core/scene.hpp"
@@ -41,6 +42,7 @@ void Construct::RadarObject(entt::registry& registry, ResourceStore& resourceSto
 #ifdef DEBUG_BUILD
 	radarActive = Game::debugContext.isRadarActiveOnStart;	
 #endif
+	registry.emplace<Component::Address>(entity, "radar");
 	registry.emplace<Component::Machine>(entity, ATTRACTION_REDUCTION, POWER_USAGE, radarActive);
 	registry.emplace<Component::RadarMachine>(entity);
 
