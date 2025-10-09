@@ -220,6 +220,8 @@ void Game::Update(float deltaTime)
 
 	if (IsKeyPressed(KEY_M)) Game::debugContext.timeScale += 0.5f;
 	if (IsKeyPressed(KEY_N)) Game::debugContext.timeScale = std::fmaxf(Game::debugContext.timeScale - 0.5f, 0.0f);
+
+	if (IsKeyPressed(KEY_P)) Game::Death(registry, gameState);
 	#endif
 
 	if (!gameState.isPaused)
@@ -376,9 +378,10 @@ void Game::DrawDebugUi() const
 	DrawText("Press [/] to delete msg", 32, 340, 24, GREEN);
 	DrawText("Press [.] to spawn roamer", 32, 380, 24, GREEN);
 	DrawText("Press [G] to glitch a blip", 32, 420, 24, GREEN);
-	DrawText("Press [-/=] to mod intensity", 32, 460, 18, GREEN);
-	DrawText("Press [9/0] to mod attraction", 32, 500, 18, GREEN);
-	DrawText("Press [K/L] to mod radar stability", 32, 540, 18, GREEN);
-	DrawText("Press [M/N] to mod time scale", 32, 580, 18, GREEN);
+	DrawText("Press [P] to kill player", 32, 460, 24, GREEN);
+	DrawText("Press [-/=] to mod intensity", 32, 500, 18, GREEN);
+	DrawText("Press [9/0] to mod attraction", 32, 540, 18, GREEN);
+	DrawText("Press [K/L] to mod radar stability", 32, 580, 18, GREEN);
+	DrawText("Press [M/N] to mod time scale", 32, 620, 18, GREEN);
 }
 #endif // DEBUG_BUILD

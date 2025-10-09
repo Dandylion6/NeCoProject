@@ -1,4 +1,5 @@
 #include "assemblers/menus/restart_menu/restart_background_entity.hpp"
+#include "assemblers/menus/restart_menu/restart_buttons.hpp"
 #include "assemblers/menus/restart_menu/restart_menu.hpp"
 #include "components/core/transform_component.hpp"
 #include "components/ui/restart_menu_tag.hpp"
@@ -13,7 +14,8 @@ void RestartMenu::Build(
 )
 {
 	Construct::RestartMenuBackgroundEntity(registry, windowSize);
-
+	Construct::RestartButton(registry, resourceStore, gameState);
+	Construct::RestartToMainButton(registry, resourceStore, gameState);
 	RestartMenu::Close(registry, gameState);
 }
 
