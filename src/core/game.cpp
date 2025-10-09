@@ -133,26 +133,18 @@ void Game::SetupDebug(int args, char* argv[])
 #endif // DEBUG_BUILD
 
 
-void Game::InitialiseAssemblers()
+void Game::BuildMenuUI()
 {
-	Construct::MoveTransitionEntity(registry, renderContext, gameState);
-	Construct::AmbientSoundEntity(registry);
-
-	CommsScene::Build(registry, renderContext, gameState, resourceStore);
-	DeskScene::Build(registry, renderContext, gameState, resourceStore);
-	DoorwayScene::Build(registry, gameState, resourceStore);
-	OutsideScene::Build(registry, gameState, resourceStore);
-
-	MainMenu::Build(registry, gameState, resourceStore);
+	MainMenu::Build(*this, registry, gameState, resourceStore);
 	SettingsMenu::Build(settings, pendingSettings, gameState, renderContext.windowSize, registry, resourceStore);
-	RestartMenu::Build(registry, gameState, resourceStore, renderContext.windowSize);
+	RestartMenu::Build(*this, registry, gameState, resourceStore, renderContext.windowSize);
 
 #ifdef DEBUG_BUILD
  	if (!Game::debugContext.ignoreMainMenu) MainMenu::Open(registry, gameState);
 	else
 	{
 		gameState.save = "debug";
-		Save::LoadGame(registry, gameState);
+		Save::LoadGame(*this, registry, gameState);
 	}
 
 	const entt::entity entity = registry.create();
@@ -166,6 +158,18 @@ void Game::InitialiseAssemblers()
 #else
 	MainMenu::Open(registry, gameState);
 #endif // DEBUG_BUILD
+}
+
+
+void Game::BuildRuntimeScenes()
+{
+	Construct::MoveTransitionEntity(registry, renderContext, gameState);
+	Construct::AmbientSoundEntity(registry);
+
+	CommsScene::Build(registry, renderContext, gameState, resourceStore);
+	DeskScene::Build(registry, renderContext, gameState, resourceStore);
+	DoorwayScene::Build(registry, gameState, resourceStore);
+	OutsideScene::Build(registry, gameState, resourceStore);
 }
 
 

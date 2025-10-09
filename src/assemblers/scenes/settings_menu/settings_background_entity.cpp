@@ -4,6 +4,7 @@
 #include "components/core/rendering/rectangle_component.hpp"
 #include "components/core/rendering/sprite_component.hpp"
 #include "components/core/transform_component.hpp"
+#include "components/scene/dont_destroy_on_load_tag.hpp"
 #include "components/ui/settings_tag.hpp"
 #include "components/ui/toggle_state_component.hpp"
 #include "core/game_state.hpp"
@@ -26,6 +27,7 @@ namespace Construct
 
 		Nc::Vector2f center = Nc::Vector2f::Scale(0.5f);
 
+		registry.emplace<Tag::DontDestroyOnLoad>(entity);
 		registry.emplace<Tag::Settings>(entity);
 		registry.emplace<Component::UiTransform>(entity, center, center, windowSize);
 		registry.emplace<Component::Rectangle>(entity, Palette::BACKGROUND_COLOR);
@@ -47,8 +49,9 @@ const entt::entity Construct::SettingsBackgroundEntity(
 	Nc::Vector2i size = Nc::Vector2i(texture.width, texture.height);
 	Nc::Vector2f center = Nc::Vector2f::Scale(0.5f);
 
-	registry.emplace<Component::ToggleState>(entity);
+	registry.emplace<Tag::DontDestroyOnLoad>(entity);
 	registry.emplace<Tag::Settings>(entity);
+	registry.emplace<Component::ToggleState>(entity);
 	registry.emplace<Component::UiTransform>(entity, center, center, size, Nc::Vector2f::Zero(), 1);
 	registry.emplace<Component::Sprite>(entity, texture, 0.4f);
 

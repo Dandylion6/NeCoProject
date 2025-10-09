@@ -13,7 +13,7 @@ int main(int args, char* argv[])
 
 	game->SetupWindow();
 	game->SetupRenderContext();
-	game->InitialiseAssemblers();
+	game->BuildMenuUI();
 
 	while (game->ShouldRun())
 	{

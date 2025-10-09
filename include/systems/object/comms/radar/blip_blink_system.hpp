@@ -1,5 +1,6 @@
 #pragma once
 #include "components/core/transform_component.hpp"
+#include "components/objects/comms/radar.hpp"
 #include "entt/entity/fwd.hpp"
 struct Tween;
 
@@ -10,10 +11,7 @@ public:
 	static void Update(entt::registry& registry);
 
 private:
-	static bool BlipShouldAppear(
-		Component::Transform blip, 
-		Component::Transform path,
-		Tween& tween
-	);
+	static void UpdateBlips(entt::registry& registry, const Component::Transform& pathTransform);
+	static bool BlipShouldAppear(Component::Transform blip, Component::Transform path, Tween& tween);
 
 };

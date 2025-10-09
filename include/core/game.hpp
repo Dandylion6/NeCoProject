@@ -21,6 +21,8 @@ public:
 
 	bool ShouldRun() const;
 	
+	void BuildMenuUI();
+	void BuildRuntimeScenes();
 	void SetupWindow() const;
 	void SetupRenderContext();
 
@@ -28,7 +30,6 @@ public:
 	void SetupDebug(int args, char* argv[]);
 #endif // DEBUG_BUILD
 
-	void InitialiseAssemblers();
 	void Shutdown();
 
 	void Update(float deltaTime);

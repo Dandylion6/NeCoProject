@@ -14,7 +14,7 @@ namespace Component
 
 		float stability = 100.0f;
 		// Remaining seconds of recalibration. If the value is above zero then the machine is recalibrating.
-		float recalibrationTimeLeft = 0.0f;
+		float recalibrationTimeLeft = -1.5f;
 		float nextGlitchSpawnSeconds = 0.0f;
 		float lastGlitchTime = 0.0f;
 		uint8_t glitchCount = 0u;

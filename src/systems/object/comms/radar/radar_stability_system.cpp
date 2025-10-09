@@ -26,9 +26,9 @@ void RadarStabilitySystem::Update(entt::registry& registry, AnomalyState& anomal
 	for (auto [entity, machine, radar] : view.each())
 	{
 #ifdef DEBUG_BUILD
-		Game::debugContext.radarStabilityPercentage = radar.stability;
 		if (IsKeyPressed(KEY_K)) radar.stability = std::fminf(radar.stability + 5.0f, 100.0f);
 		if (IsKeyPressed(KEY_L)) radar.stability = std::fmaxf(radar.stability - 5.0f, 0.0f);
+		Game::debugContext.radarStabilityPercentage = radar.stability;
 #endif
 
 		if (!machine.isActive) continue;

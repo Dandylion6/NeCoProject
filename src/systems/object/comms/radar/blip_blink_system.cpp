@@ -20,9 +20,17 @@
 
 void BlipBlinkSystem::Update(entt::registry& registry)
 {
-	entt::entity radarPathEntity = registry.view<const Tag::RadarPath>().front();
-	const Component::Transform& pathTransform = registry.get<const Component::Transform>(radarPathEntity);
+	
+	auto view = registry.view<const Tag::RadarPath, const Component::Transform>();
+	for (auto [entity, transform] : view.each())
+	{
+		UpdateBlips(registry, transform);
+	}
+}
 
+
+void BlipBlinkSystem::UpdateBlips(entt::registry &registry, const Component::Transform& pathTransform)
+{
 	auto view = registry.view<const Component::Blip, const Component::Transform, Component::TweenCollection>();
 	for (auto [entity, blip, transform, tweens] : view.each())
 	{

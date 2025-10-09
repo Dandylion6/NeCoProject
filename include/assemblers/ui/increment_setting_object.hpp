@@ -107,7 +107,7 @@ namespace Construct
     };
 
 
-    template<class T>
+    template<class... T>
     inline void IncrementSettingObject(
         Nc::Vector2f position,
         std::string&& display,
@@ -132,9 +132,9 @@ namespace Construct
         const entt::entity decrease = Construct::DecreaseButton(position, size + Nc::Vector2f::Right(72.0f), increment, valueText, registry);
         const entt::entity increase = Construct::IncreaseButton(position, size + Nc::Vector2f::Right(98.0f), increment, valueText, registry);
 
-        registry.emplace<T>(label);
-        registry.emplace<T>(valueDisplay);
-        registry.emplace<T>(decrease);
-        registry.emplace<T>(increase);
+        (registry.emplace<T>(label), ...);
+        (registry.emplace<T>(valueDisplay), ...);
+        (registry.emplace<T>(decrease), ...);
+        (registry.emplace<T>(increase), ...);
     };
 }

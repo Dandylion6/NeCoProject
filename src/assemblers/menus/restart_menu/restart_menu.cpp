@@ -3,6 +3,7 @@
 #include "assemblers/menus/restart_menu/restart_menu.hpp"
 #include "components/core/transform_component.hpp"
 #include "components/ui/restart_menu_tag.hpp"
+#include "core/game.hpp"
 #include "core/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -10,11 +11,11 @@
 
 
 void RestartMenu::Build(
-	entt::registry& registry, GameState& gameState, ResourceStore& resourceStore, Nc::Vector2f windowSize
+	Game& game, entt::registry& registry, GameState& gameState, ResourceStore& resourceStore, Nc::Vector2f windowSize
 )
 {
 	Construct::RestartMenuBackgroundEntity(registry, windowSize);
-	Construct::RestartButton(registry, resourceStore, gameState);
+	Construct::RestartButton(game, registry, resourceStore, gameState);
 	Construct::RestartToMainButton(registry, resourceStore, gameState);
 	RestartMenu::Close(registry, gameState);
 }

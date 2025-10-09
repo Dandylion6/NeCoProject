@@ -2,6 +2,7 @@
 #include "components/core/rendering/sprite_component.hpp"
 #include "components/core/transform_component.hpp"
 #include "components/ui/main_menu_tag.hpp"
+#include "components/scene/dont_destroy_on_load_tag.hpp"
 #include "entt/entity/registry.hpp"
 #include "utility/vector2.hpp"
 
@@ -14,6 +15,7 @@ const entt::entity Construct::MainMenuBackgroundEntity(entt::registry& registry)
 	Nc::Vector2i size = Nc::Vector2i(texture.width, texture.height);
 	Nc::Vector2f center = Nc::Vector2f::Scale(0.5f);
 
+	registry.emplace<Tag::DontDestroyOnLoad>(entity);
 	registry.emplace<Tag::MainMenu>(entity);
 	registry.emplace<Component::UiTransform>(entity, center, center, size);
 	registry.emplace<Component::Sprite>(entity, texture);

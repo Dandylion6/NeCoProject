@@ -1,5 +1,6 @@
 #pragma once
 #include "entt/entity/fwd.hpp"
+class Game;
 struct GameState;
 class ResourceStore;
 
@@ -7,9 +8,7 @@ class ResourceStore;
 namespace MainMenu
 {
 	void Build(
-		entt::registry& registry,
-		GameState& gameState,
-		ResourceStore& resourceStore
+		Game& game, entt::registry& registry, GameState& gameState, ResourceStore& resourceStore
 	);
 
 	void Open(entt::registry& registry, GameState& gameState);

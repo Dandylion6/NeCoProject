@@ -43,10 +43,13 @@ void RecalibrateInterpretingSystem::Update(entt::registry& registry, float delta
 	auto view = registry.view<Component::Machine, Component::RadarMachine>();
 	for (auto [entity, machine, radar] : view.each())
 	{
+		bool isDoneRecalibrating = radar.recalibrationTimeLeft <= -1.0f;
+
 		// Restart the radar machine if it's done recalibrating.
-		if (radar.recalibrationTimeLeft <= 0.0f)
+		if (radar.recalibrationTimeLeft <= 0.0f && !isDoneRecalibrating)
 		{
 			// TODO: Reboot sequence
+			radar.recalibrationTimeLeft = -1.5f;
 			float newStability = std::fminf(radar.stability + STABILITY_INCREASE, 100.0f);
 			radar.stability = newStability;
 			continue;

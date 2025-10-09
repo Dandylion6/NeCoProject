@@ -3,6 +3,7 @@
 #include "assemblers/scenes/settings_menu/settings_menu.hpp"
 #include "assemblers/ui/label_button_object.hpp"
 #include "components/core/transform_component.hpp"
+#include "components/scene/dont_destroy_on_load_tag.hpp"
 #include "components/ui/settings_tag.hpp"
 #include "core/resource_store.hpp"
 #include "core/save_settings.hpp"
@@ -26,7 +27,7 @@ LabelButton Construct::SettingsToMainButton(
         MainMenu::Open(registry, gameState);
     };
 
-    return Construct::LabelButtonObject<Tag::Settings>(
+    return Construct::LabelButtonObject<Tag::Settings, Tag::DontDestroyOnLoad>(
         std::move(transform), "BACK TO MAIN", std::move(toMainMenu), registry, resourceStore
     );
 }
@@ -45,7 +46,7 @@ LabelButton Construct::ApplySettingsButton(
         Settings::Apply(settings, pendingSettings);
     };
 
-    return Construct::LabelButtonObject<Tag::Settings>(
+    return Construct::LabelButtonObject<Tag::Settings, Tag::DontDestroyOnLoad>(
         std::move(transform), "APPLY", std::move(applySettings), registry, resourceStore
     );
 }

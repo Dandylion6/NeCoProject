@@ -38,4 +38,5 @@ Nc::Vector2f RoamerBehaviourSystem::GetTargetPosition(Component::AnomalyRoamer::
 	case Component::AnomalyRoamer::Target::Artillery:
 		return GameState::ARTILLERY_POSITION;
 	}
+	return Nc::Vector2f::Zero();
 }

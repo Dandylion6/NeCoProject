@@ -3,6 +3,7 @@
 #include "assemblers/scenes/main_menu/menu_button_entities.hpp"
 #include "components/core/transform_component.hpp"
 #include "components/ui/main_menu_tag.hpp"
+#include "core/game.hpp"
 #include "core/game_state.hpp"
 #include "core/resource_store.hpp"
 #include "core/scene.hpp"
@@ -11,12 +12,10 @@
 
 
 void MainMenu::Build(
-	entt::registry& registry, 
-	GameState& gameState,
-	ResourceStore& resourceStore
+	Game& game, entt::registry& registry, GameState& gameState, ResourceStore& resourceStore
 )
 {
-	Construct::PlayButtonObject(registry, gameState, resourceStore);
+	Construct::PlayButtonObject(game, registry, gameState, resourceStore);
 	Construct::SettingsButtonObject(registry, gameState, resourceStore);
 	Construct::ExitButtonObject(registry, gameState, resourceStore);
 

@@ -4,6 +4,7 @@
 #include "assemblers/scenes/settings_menu/settings_menu.hpp"
 #include "assemblers/ui/increment_setting_object.hpp"
 #include "components/core/transform_component.hpp"
+#include "components/scene/dont_destroy_on_load_tag.hpp"
 #include "components/ui/increment_component.hpp"
 #include "components/ui/settings_tag.hpp"
 #include "components/ui/toggle_state_component.hpp"
@@ -21,13 +22,10 @@ void SettingsMenu::Build(
     Construct::SettingsHeaderEntity(registry);
     Construct::GameplaySettingsHeaderEntity(registry);
 
-    Construct::SettingsHeaderEntity(registry);
-    Construct::GameplaySettingsHeaderEntity(registry);
-
     Construct::SettingsToMainButton(settings, pendingSettings, gameState, registry, resourceStore);
     Construct::ApplySettingsButton(settings, pendingSettings, registry, resourceStore);
 
-    Construct::IncrementSettingObject<Tag::Settings>(
+    Construct::IncrementSettingObject<Tag::Settings, Tag::DontDestroyOnLoad>(
         Nc::Vector2f(0.3f, 0.3f),
         "Morse code DOT duration",
         Component::UiIncrement(&pendingSettings.morseSettings.dotTime, 0.02f, Nc::Vector2f(0.1f, 0.4f), 2u), 

@@ -1,6 +1,7 @@
 #pragma once
 #include "entt/entity/fwd.hpp"
 #include <functional>
+class Game;
 struct GameState;
 class ResourceStore;
 
@@ -8,9 +9,7 @@ class ResourceStore;
 namespace Construct
 {
 	void PlayButtonObject(
-		entt::registry& registry,
-		GameState& gameState,
-		ResourceStore& resourceStore
+		Game& game, entt::registry& registry, GameState& gameState, ResourceStore& resourceStore
 	);
 
 	void SettingsButtonObject(

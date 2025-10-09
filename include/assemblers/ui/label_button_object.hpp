@@ -53,7 +53,7 @@ namespace Construct
         return entity;
     };
 
-    template<class T>
+    template<class... T>
     inline LabelButton LabelButtonObject(
         Component::UiTransform&& transform, 
         std::string &&display,
@@ -68,8 +68,8 @@ namespace Construct
         const Component::UiTransform& entityTransform = registry.get<Component::UiTransform>(button);
         const entt::entity label = Construct::ButtonLabelEntity(registry, std::move(display), entityTransform);
 
-        registry.emplace<T>(button);
-        registry.emplace<T>(label);
+        (registry.emplace<T>(button), ...);
+        (registry.emplace<T>(label), ...);
 
         LabelButton labelButton = LabelButton(label, button);
         return labelButton;

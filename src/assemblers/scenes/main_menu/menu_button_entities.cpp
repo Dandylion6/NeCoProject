@@ -3,7 +3,9 @@
 #include "assemblers/scenes/settings_menu/settings_menu.hpp"
 #include "assemblers/ui/label_button_object.hpp"
 #include "components/core/transform_component.hpp"
+#include "components/scene/dont_destroy_on_load_tag.hpp"
 #include "components/ui/main_menu_tag.hpp"
+#include "core/game.hpp"
 #include "core/game_state.hpp"
 #include "core/resource_store.hpp"
 #include "core/save_game.hpp"
@@ -15,20 +17,20 @@
 
 
 void Construct::PlayButtonObject(
-	entt::registry& registry, GameState& gameState, ResourceStore& resourceStore
+	Game& game, entt::registry& registry, GameState& gameState, ResourceStore& resourceStore
 )
 {
 	Component::UiTransform transform = Component::UiTransform(
 		Nc::Vector2f(0.5f, 0.5f), Nc::Vector2f::Scale(0.5f)
 	);
 	
-	std::function<void()> onClick = [&gameState, &registry]()
+	std::function<void()> onClick = [&game, &gameState, &registry]()
 	{
-		Save::LoadGame(registry, gameState);
+		Save::LoadGame(game, registry, gameState);
 		MainMenu::Close(registry, gameState);
 	};
 	 
-	LabelButton button = Construct::LabelButtonObject<Tag::MainMenu>(
+	LabelButton button = Construct::LabelButtonObject<Tag::MainMenu, Tag::DontDestroyOnLoad>(
 		std::move(transform), "PLAY", std::move(onClick), registry, resourceStore
 	);
 }
@@ -52,7 +54,7 @@ void Construct::SettingsButtonObject(
 		SettingsMenu::Open(registry, gameState);
 	};
 	 
-	LabelButton button = Construct::LabelButtonObject<Tag::MainMenu>(
+	LabelButton button = Construct::LabelButtonObject<Tag::MainMenu, Tag::DontDestroyOnLoad>(
 		std::move(transform), "SETTINGS", std::move(onClick), registry, resourceStore
 	);
 }
@@ -71,7 +73,7 @@ void Construct::ExitButtonObject(
 		gameState.shouldExit = true;
 	};
 	 
-	LabelButton button = Construct::LabelButtonObject<Tag::MainMenu>(
+	LabelButton button = Construct::LabelButtonObject<Tag::MainMenu, Tag::DontDestroyOnLoad>(
 		std::move(transform), "EXIT", std::move(onClick), registry, resourceStore
 	);
 }
