@@ -7,24 +7,20 @@
 #include "core/game_state.hpp"
 #include "core/save_game.hpp"
 #include "core/scene.hpp"
-#include "core/settings.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "nlohmann/json.hpp"
 #include "nlohmann/json_fwd.hpp"
 #include <cstdint>
-#include <cstdio>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <string>
-#include <vector>
 
 
 namespace Save
 {
-
-
     static bool SaveGameState(GameState& gameState, nlohmann::json& data)
     {
         nlohmann::json& gameStateData = data["game_state"];
@@ -120,7 +116,7 @@ bool Save::SaveGame(entt::registry& registry, GameState& gameState)
 
 #ifdef DEBUG_BUILD
     stream << data.dump(4) << std::endl;
-#elif
+#else
     std::string dataString = data.dump();
     std::string encodedData = base64::to_base64(dataString);
     stream << encodedData;
@@ -144,11 +140,13 @@ bool Save::LoadGame(Game& game, entt::registry& registry, GameState& gameState)
 
     std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
     if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
-    std::ifstream stream(dataDirectoryPath / (gameState.save + ".json"), std::ios::in);
+    std::ifstream stream(dataDirectoryPath / (gameState.save + ".save"), std::ios::in);
     
 #ifdef DEBUG_BUILD
-    nlohmann::json data = nlohmann::json::parse(stream);
-#elif
+    nlohmann::json data{ };
+    if (stream.is_open())
+        data = nlohmann::json::parse(stream);
+#else
     std::stringstream stringBuffer;
     stringBuffer << stream.rdbuf();
     

@@ -1,10 +1,16 @@
 #include "components/objects/comms/radar.hpp"
+#include "components/objects/comms/radio_component.hpp"
 #include "components/objects/machine.hpp"
+#include "components/objects/outside/receiver_component.hpp"
 #include "core/resource_store.hpp"
+#include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/object/outside/receiver/recalibrate_interpreting_system.hpp"
-#include "systems/object/comms/radio_sound_system.hpp"
 #include "raylib.h"
+#include "systems/object/comms/radio_sound_system.hpp"
+#include "systems/object/outside/receiver/recalibrate_interpreting_system.hpp"
+#include <cmath>
+#include <string>
+#include <utility>
 
 
 const std::string RecalibrateInterpretingSystem::COMMAND = "OPTSIG";
@@ -31,7 +37,8 @@ void RecalibrateInterpretingSystem::HandleReceivedMessage(
 		radar.recalibrationTimeLeft = Component::RadarMachine::RECALIBRATION_TIME;
 	}
 
-	ConfirmRecalibrationCommand(registry, resourceStore, receiver);
+	// TODO: Add confirmation response
+	//ConfirmRecalibrationCommand(registry, resourceStore, receiver);
 };
 
 
