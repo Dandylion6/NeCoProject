@@ -5,17 +5,19 @@
 #include "components/ui/restart_menu_tag.hpp"
 #include "core/game.hpp"
 #include "core/game_state.hpp"
+#include "core/resource_store.hpp"
+#include "core/save_game.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "utility/vector2.hpp"
 
 
 void RestartMenu::Build(
-	Game& game, entt::registry& registry, GameState& gameState, ResourceStore& resourceStore, Nc::Vector2f windowSize
+	Game& game, entt::registry& registry, SaveContext& saveContext, GameState& gameState, ResourceStore& resourceStore, Nc::Vector2f windowSize
 )
 {
 	Construct::RestartMenuBackgroundEntity(registry, windowSize);
-	Construct::RestartButton(game, registry, resourceStore, gameState);
+	Construct::RestartButton(game, registry, resourceStore, saveContext, gameState);
 	Construct::RestartToMainButton(registry, resourceStore, gameState);
 	RestartMenu::Close(registry, gameState);
 }

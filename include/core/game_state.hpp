@@ -28,8 +28,6 @@ struct GameState
 	float time = 0.0f;
 	Scene currentScene = NullScene;
 	Scene movingToScene = NullScene;
-	// @brief The save identifier, defaults to the first slot.
-	uint8_t saveSlot = 1u;
 	bool isPaused = false;
 	bool shouldExit = false;
 };

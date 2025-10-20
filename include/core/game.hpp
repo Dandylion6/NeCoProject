@@ -1,13 +1,15 @@
  #pragma once
-#ifdef DEBUG_BUILD
-#include "core/debug_context.hpp"
-#endif // DEBUG_BUILD
 #include "core/game_state.hpp"
 #include "core/render_context.hpp"
 #include "core/resource_store.hpp"
+#include "core/save_game.hpp"
 #include "core/settings.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp" 
+
+#ifdef DEBUG_BUILD
+#include "core/debug_context.hpp"
+#endif // DEBUG_BUILD
 
 
 class Game
@@ -44,11 +46,12 @@ public:
 
 private:
 	entt::registry registry { };
+	ResourceStore resourceStore { };
 	RenderContext renderContext { };
+	SaveContext saveContext { };
 	GameState gameState { };
 	Settings settings { };
 	Settings pendingSettings { };
-	ResourceStore resourceStore { };
 
 	void DrawRenderTexture() const;
 

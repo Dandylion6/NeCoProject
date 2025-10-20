@@ -4,11 +4,14 @@
 class Game;
 struct GameState;
 class ResourceStore;
+struct SaveContext;
 
 
 namespace Construct
 {
-    LabelButton RestartButton(Game& game, entt::registry& registry, ResourceStore& resourceStore, GameState& gameState);
+    LabelButton RestartButton(
+        Game& game, entt::registry& registry, ResourceStore& resourceStore, SaveContext& saveContext, GameState& gameState
+    );
 
     LabelButton RestartToMainButton(entt::registry& regsitry, ResourceStore& resourseStore, GameState& gameState);
 }

@@ -1,4 +1,3 @@
-#include "base64.hpp"
 #include "components/objects/comms/radar.hpp"
 #include "components/objects/machine.hpp"
 #include "components/scene/address_component.hpp"
@@ -16,6 +15,11 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+
+#ifdef RELEASE_BUILD
+#include "base64.hpp"
+#endif // RELEASE_BUILD
+
 // @todo: Error handling for file I/O and JSON parsing.
 
 
@@ -101,14 +105,14 @@ namespace Save
 }
 
 
-bool Save::SaveGame(entt::registry& registry, GameState& gameState)
+bool Save::SaveGame(entt::registry& registry, SaveContext& saveContext, GameState& gameState)
 {
-	if (gameState.saveSlot > Save::MAX_SAVE_SLOTS) return false; // Invalid save slot.
+	if (saveContext.currentSaveSlot > SaveContext::MAX_SAVE_SLOTS) return false; // Invalid save slot.
 
     std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
     if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
 
-	std::string fileName = "slot_" + std::to_string(gameState.saveSlot);
+	std::string fileName = "slot_" + std::to_string(saveContext.currentSaveSlot);
     std::ofstream stream(dataDirectoryPath / (fileName + ".save"), std::ios::out);
 
     nlohmann::json data;
@@ -128,9 +132,9 @@ bool Save::SaveGame(entt::registry& registry, GameState& gameState)
 }
 
 
-bool Save::LoadGame(Game& game, entt::registry& registry, GameState& gameState)
+bool Save::LoadGame(Game& game, entt::registry& registry, SaveContext& saveContext, GameState& gameState)
 {
-	if (gameState.saveSlot > Save::MAX_SAVE_SLOTS) return false; // Invalid save slot.
+	if (saveContext.currentSaveSlot > SaveContext::MAX_SAVE_SLOTS) return false; // Invalid save slot.
 
     // Cleans up the game before rebuilding
     for (const entt::entity entity : registry.view<const entt::entity>())
@@ -143,7 +147,7 @@ bool Save::LoadGame(Game& game, entt::registry& registry, GameState& gameState)
     std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
     if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
 
-    std::string fileName = "slot_" + std::to_string(gameState.saveSlot);
+    std::string fileName = "slot_" + std::to_string(saveContext.currentSaveSlot);
     std::ifstream stream(dataDirectoryPath / (fileName + ".save"), std::ios::in);
     
 #ifdef DEBUG_BUILD
