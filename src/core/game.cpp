@@ -137,7 +137,7 @@ void Game::BuildMenuUI()
 	MainMenu::Build(*this, registry, saveContext, gameState, resourceStore);
 	SettingsMenu::Build(settings, pendingSettings, gameState, renderContext.windowSize, registry, resourceStore);
 	RestartMenu::Build(*this, registry, saveContext, gameState, resourceStore, renderContext.windowSize);
-	SaveMenu::Build(registry, resourceStore, saveContext, gameState);
+	SaveMenu::Build(registry, resourceStore, saveContext, gameState, renderContext.windowSize);
 
 #ifdef DEBUG_BUILD
  	if (!Game::debugContext.ignoreMainMenu) MainMenu::Open(registry, gameState);
