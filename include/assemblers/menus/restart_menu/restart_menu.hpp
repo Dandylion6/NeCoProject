@@ -10,7 +10,7 @@ struct SaveContext;
 namespace RestartMenu
 {
 	void Build(
-		Game& game, entt::registry& registry, SaveContext& saveContext, GameState& gameState, ResourceStore& resourceStore, Nc::Vector2f windowSize
+		Game& game, entt::registry& registry, GameState& gameState, ResourceStore& resourceStore, Nc::Vector2f windowSize
 	);
 
 	void Open(entt::registry& registry, GameState& gameState);

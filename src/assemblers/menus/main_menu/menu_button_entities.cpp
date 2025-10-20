@@ -17,16 +17,16 @@
 
 
 void Construct::PlayButtonObject(
-	Game& game, entt::registry& registry, SaveContext& saveContext, GameState& gameState, ResourceStore& resourceStore
+	Game& game, entt::registry& registry, GameState& gameState, ResourceStore& resourceStore
 )
 {
 	Component::UiTransform transform = Component::UiTransform(
 		Nc::Vector2f(0.5f, 0.5f), Nc::Vector2f::Scale(0.5f)
 	);
 	
-	std::function<void()> onClick = [&game, &saveContext, &gameState, &registry]()
+	std::function<void()> onClick = [&game, &gameState, &registry]()
 	{
-		Save::LoadGame(game, registry, saveContext, gameState);
+		Save::LoadGame(game, registry, gameState);
 		MainMenu::Close(registry, gameState);
 	};
 	 

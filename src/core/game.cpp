@@ -2,7 +2,6 @@
 #include "assemblers/entities/move_transition_entity.hpp"
 #include "assemblers/menus/main_menu/main_menu.hpp"
 #include "assemblers/menus/restart_menu/restart_menu.hpp"
-#include "assemblers/menus/save_menu/save_menu.hpp"
 #include "assemblers/scenes/comms_scene/comms_scene.hpp"
 #include "assemblers/scenes/desk_scene/desk_scene.hpp"
 #include "assemblers/scenes/doorway_scene/doorway_scene.hpp"
@@ -134,10 +133,9 @@ void Game::SetupDebug(int args, char* argv[])
 
 void Game::BuildMenuUI()
 {
-	MainMenu::Build(*this, registry, saveContext, gameState, resourceStore);
+	MainMenu::Build(*this, registry, gameState, resourceStore);
 	SettingsMenu::Build(settings, pendingSettings, gameState, renderContext.windowSize, registry, resourceStore);
-	RestartMenu::Build(*this, registry, saveContext, gameState, resourceStore, renderContext.windowSize);
-	SaveMenu::Build(registry, resourceStore, saveContext, gameState, renderContext.windowSize);
+	RestartMenu::Build(*this, registry, gameState, resourceStore, renderContext.windowSize);
 
 #ifdef DEBUG_BUILD
  	if (!Game::debugContext.ignoreMainMenu) MainMenu::Open(registry, gameState);
@@ -147,7 +145,7 @@ void Game::BuildMenuUI()
 	registry.emplace<Component::UiTransform>(entity, Nc::Vector2f(0.06f, 0.9f), Nc::Vector2f::Scale(0.5f), Nc::Vector2f(180.0f, 32.0f));
 	registry.emplace<Component::Text>(entity, "SAVE STATE", Palette::RADAR_COLOR);
 	
-	std::function<void()> onClick = [&registry = registry, &saveContext = saveContext, &gameState = gameState]() { Save::SaveGame(registry, saveContext, gameState); };
+	std::function<void()> onClick = [&registry = registry, &gameState = gameState]() { Save::SaveGame(registry, gameState); };
 	registry.emplace<Component::ButtonAction>(entity, std::move(onClick));
 
 #else

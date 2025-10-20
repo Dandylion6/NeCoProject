@@ -3,13 +3,12 @@
 class Game;
 struct GameState;
 class ResourceStore;
-struct SaveContext;
 
 
 namespace Construct
 {
 	void PlayButtonObject(
-		Game& game, entt::registry& registry, SaveContext& saveContext, GameState& gameState, ResourceStore& resourceStore
+		Game& game, entt::registry& registry, GameState& gameState, ResourceStore& resourceStore
 	);
 
 	void SettingsButtonObject(

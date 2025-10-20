@@ -103,39 +103,15 @@ namespace Save
         }
         return LoadResult::Success;
     }
-
-
-    static nlohmann::json GetMetaDataJson(std::filesystem::path metaFilePath)
-    {
-        nlohmann::json data;
-        if (std::filesystem::exists(metaFilePath))
-        {
-            std::ifstream inputStream(metaFilePath);
-            try {
-                inputStream >> data;
-                inputStream.close();
-				return data;
-            }
-            catch (nlohmann::json::parse_error& e)
-            {
-                return nlohmann::json::object();
-            }
-        }
-        return nlohmann::json::object();
-    }
 }
 
 
-Save::SaveResult Save::SaveGame(entt::registry& registry, SaveContext& saveContext, GameState& gameState)
+Save::SaveResult Save::SaveGame(entt::registry& registry, GameState& gameState)
 {
-	if (saveContext.currentSaveSlot > SaveContext::MAX_SAVE_SLOTS) 
-        return SaveResult::Failure; // Invalid save slot.
-
     std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
     if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
 
-	std::string fileName = "slot_" + std::to_string(saveContext.currentSaveSlot);
-    std::ofstream stream(dataDirectoryPath / (fileName + ".save"), std::ios::out);
+    std::ofstream stream(dataDirectoryPath / "game.save", std::ios::out);
     nlohmann::json data;
 
     Save::SaveGameState(gameState, data);
@@ -153,11 +129,8 @@ Save::SaveResult Save::SaveGame(entt::registry& registry, SaveContext& saveConte
 }
 
 
-Save::LoadResult Save::LoadGame(Game& game, entt::registry& registry, SaveContext& saveContext, GameState& gameState)
+Save::LoadResult Save::LoadGame(Game& game, entt::registry& registry, GameState& gameState)
 {
-	if (saveContext.currentSaveSlot > SaveContext::MAX_SAVE_SLOTS) 
-        return LoadResult::Failure; // Invalid save slot.
-
     // Cleans up the game before rebuilding
     for (const entt::entity entity : registry.view<const entt::entity>())
     {
@@ -169,8 +142,7 @@ Save::LoadResult Save::LoadGame(Game& game, entt::registry& registry, SaveContex
     std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
     if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
 
-    std::string fileName = "slot_" + std::to_string(saveContext.currentSaveSlot);
-    std::ifstream stream(dataDirectoryPath / (fileName + ".save"), std::ios::in);
+    std::ifstream stream(dataDirectoryPath / "game.save", std::ios::in);
     
 #ifdef DEBUG_BUILD
     nlohmann::json data { };
@@ -187,45 +159,6 @@ Save::LoadResult Save::LoadGame(Game& game, entt::registry& registry, SaveContex
 
     Save::LoadGameState(gameState, data);
     Save::LoadMachineComponents(registry, data);
-
-    return LoadResult::Success;
-}
-
-
-Save::SaveResult Save::SaveMetaData(SaveContext& saveContext, GameState& gameState)
-{
-    std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
-    if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
-    std::filesystem::path metaFilePath = dataDirectoryPath / "saves.metadata";
-
-	nlohmann::json metaData = Save::GetMetaDataJson(metaFilePath);
-    nlohmann::json slotData = metaData["save_slots"][std::to_string(saveContext.currentSaveSlot)];
-	slotData["last_saved_time"] = std::time(nullptr);
-	// @todo: Add more metadata fields as needed.
-
-    std::ofstream outputStream(metaFilePath, std::ios::out | std::ios::trunc);
-    outputStream << metaData.dump(4);
-
-    outputStream.close();
-    return SaveResult::Success;
-}
-
-
-Save::LoadResult Save::LoadMetaData(SaveContext& saveContext, GameState& gameState)
-{
-    std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
-    if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
-    
-	nlohmann::json metaData = Save::GetMetaDataJson(dataDirectoryPath / "saves.metadata");
-    
-    for (uint8_t slot = 0u; slot <= SaveContext::MAX_SAVE_SLOTS; ++slot)
-    {
-        if (!metaData["save_slots"].contains(std::to_string(slot))) continue;
-        
-		nlohmann::json slotData = metaData["save_slots"][std::to_string(slot)];
-        saveContext.saveMetaData[slot].isUsed = true;
-		saveContext.saveMetaData[slot].lastSavedTime = static_cast<time_t>(slotData["last_saved_time"]);
-    }
 
     return LoadResult::Success;
 }

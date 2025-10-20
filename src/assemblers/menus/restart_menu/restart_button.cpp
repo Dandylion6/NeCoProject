@@ -16,16 +16,16 @@
 
 
 LabelButton Construct::RestartButton(
-    Game& game, entt::registry& registry, ResourceStore& resourceStore, SaveContext& saveContext, GameState& gameState
+    Game& game, entt::registry& registry, ResourceStore& resourceStore, GameState& gameState
 )
 {
     Component::UiTransform transform = Component::UiTransform(
         Nc::Vector2f(0.5f, 0.5f), Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Zero(), Nc::Vector2f::Zero(), 2
     );
-    std::function<void()> toMainMenu = [&game, &registry, &saveContext, &gameState]()
+    std::function<void()> toMainMenu = [&game, &registry, &gameState]()
     {
         RestartMenu::Close(registry, gameState);
-        Save::LoadGame(game, registry, saveContext, gameState);
+        Save::LoadGame(game, registry, gameState);
     };
 
     return Construct::LabelButtonObject<Tag::RestartMenu, Tag::DontDestroyOnLoad>(std::move(transform), "RESTART FROM SAVE", std::move(toMainMenu), registry, resourceStore);

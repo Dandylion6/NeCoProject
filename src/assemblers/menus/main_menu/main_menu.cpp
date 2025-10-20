@@ -6,17 +6,16 @@
 #include "core/game.hpp"
 #include "core/game_state.hpp"
 #include "core/resource_store.hpp"
-#include "core/save_game.hpp"
 #include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 
 
 void MainMenu::Build(
-	Game& game, entt::registry& registry, SaveContext& saveContext, GameState& gameState, ResourceStore& resourceStore
+	Game& game, entt::registry& registry, GameState& gameState, ResourceStore& resourceStore
 )
 {
-	Construct::PlayButtonObject(game, registry, saveContext, gameState, resourceStore);
+	Construct::PlayButtonObject(game, registry, gameState, resourceStore);
 	Construct::SettingsButtonObject(registry, gameState, resourceStore);
 	Construct::ExitButtonObject(registry, gameState, resourceStore);
 
