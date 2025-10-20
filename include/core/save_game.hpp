@@ -11,15 +11,13 @@ struct GameState;
 struct SaveMetaData
 {
 	std::time_t lastSavedTime { };
+	bool isUsed = false;
 	// @todo: Add in-game date once implemented.
 };
 
 
 struct SaveContext
 {
-#ifdef DEBUG_BUILD
-	static constexpr uint8_t DEBUG_SAVE_SLOT = 0u;
-#endif // DEBUG_BUILD
 	static constexpr uint8_t MAX_SAVE_SLOTS = 3u;
 
 	std::array<SaveMetaData, MAX_SAVE_SLOTS> saveMetaData = { };
@@ -30,7 +28,25 @@ struct SaveContext
 
 namespace Save
 {
-	bool SaveGame(entt::registry& registry, SaveContext& saveContext, GameState& gameState);
+	enum class SaveResult : uint8_t
+	{
+		Success,
+		Failure
+	};
 
-	bool LoadGame(Game& game, entt::registry& registry, SaveContext& saveContext, GameState& gameState);
+
+	enum class LoadResult : uint8_t
+	{
+		Success,
+		Failure
+	};
+
+
+	SaveResult SaveGame(entt::registry& registry, SaveContext& saveContext, GameState& gameState);
+
+	LoadResult LoadGame(Game& game, entt::registry& registry, SaveContext& saveContext, GameState& gameState);
+
+	SaveResult SaveMetaData(SaveContext& saveContext, GameState& gameState);
+
+	LoadResult LoadMetaData(SaveContext& saveContext, GameState& gameState);
 }

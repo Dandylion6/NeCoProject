@@ -4,6 +4,9 @@
 #include "entt/entity/fwd.hpp"
 
 
-void SaveMenu::Build(entt::registry& registry, ResourceStore& resourceStore, GameState& gameState)
+void SaveMenu::Build(
+	entt::registry& registry, ResourceStore& resourceStore, SaveContext& saveContext, GameState& gameState
+)
 {
+	
 }

@@ -2,6 +2,7 @@
 #include "assemblers/entities/move_transition_entity.hpp"
 #include "assemblers/menus/main_menu/main_menu.hpp"
 #include "assemblers/menus/restart_menu/restart_menu.hpp"
+#include "assemblers/menus/save_menu/save_menu.hpp"
 #include "assemblers/scenes/comms_scene/comms_scene.hpp"
 #include "assemblers/scenes/desk_scene/desk_scene.hpp"
 #include "assemblers/scenes/doorway_scene/doorway_scene.hpp"
@@ -136,14 +137,10 @@ void Game::BuildMenuUI()
 	MainMenu::Build(*this, registry, saveContext, gameState, resourceStore);
 	SettingsMenu::Build(settings, pendingSettings, gameState, renderContext.windowSize, registry, resourceStore);
 	RestartMenu::Build(*this, registry, saveContext, gameState, resourceStore, renderContext.windowSize);
+	SaveMenu::Build(registry, resourceStore, saveContext, gameState);
 
 #ifdef DEBUG_BUILD
  	if (!Game::debugContext.ignoreMainMenu) MainMenu::Open(registry, gameState);
-	else
-	{
-		saveContext.currentSaveSlot = SaveContext::DEBUG_SAVE_SLOT;
-		Save::LoadGame(*this, registry, saveContext, gameState);
-	}
 
 	const entt::entity entity = registry.create();
 
