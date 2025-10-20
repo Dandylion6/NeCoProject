@@ -1,4 +1,4 @@
-#include "assemblers/scenes/main_menu/main_menu.hpp"
+#include "assemblers/menus/main_menu/main_menu.hpp"
 #include "assemblers/scenes/settings_menu/settings_buttons.hpp"
 #include "assemblers/scenes/settings_menu/settings_menu.hpp"
 #include "assemblers/ui/label_button_object.hpp"

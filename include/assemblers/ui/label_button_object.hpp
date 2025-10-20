@@ -6,10 +6,10 @@
 #include "core/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "utility/color.hpp"
 #include "utility/color_palette.hpp"
 #include "utility/vector2.hpp"
 #include <functional>
+#include <string>
 #include <utility>
 
 

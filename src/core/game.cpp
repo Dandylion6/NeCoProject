@@ -1,20 +1,15 @@
 #include "assemblers/entities/ambient_sound_entity.hpp"
 #include "assemblers/entities/move_transition_entity.hpp"
+#include "assemblers/menus/main_menu/main_menu.hpp"
 #include "assemblers/menus/restart_menu/restart_menu.hpp"
 #include "assemblers/scenes/comms_scene/comms_scene.hpp"
 #include "assemblers/scenes/desk_scene/desk_scene.hpp"
 #include "assemblers/scenes/doorway_scene/doorway_scene.hpp"
-#include "assemblers/scenes/main_menu/main_menu.hpp"
 #include "assemblers/scenes/outside_scene/outside_scene.hpp"
 #include "assemblers/scenes/settings_menu/settings_menu.hpp"
-#include "components/core/button_action_component.hpp"
-#include "components/core/rendering/text_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "core/debug_context.hpp"
 #include "core/game.hpp"
 #include "core/game_state.hpp"
 #include "core/render_context.hpp"
-#include "core/save_game.hpp"
 #include "core/save_settings.hpp"
 #include "entt/entity/fwd.hpp"
 #include "raylib.h"
@@ -47,19 +42,22 @@
 #include "systems/scene/ambient_sound_system.hpp"
 #include "systems/ui/increment_number_system.hpp"
 #include "utility/color_palette.hpp"
-#include "utility/morse_code.hpp"
 #include "utility/vector2.hpp"
 #include <algorithm>
 #include <cmath>
+
+#ifdef DEBUG_BUILD
+#include "core/debug_context.hpp"
+#include "core/save_game.hpp"
+#include "components/core/button_action_component.hpp"
+#include "components/core/rendering/text_component.hpp"
+#include "components/core/transform_component.hpp"
+#include "utility/morse_code.hpp"
 #include <cstdint>
 #include <cstring>
 #include <functional>
 #include <string>
 #include <utility>
-
-
-#ifdef DEBUG_BUILD
-#include "core/scene.hpp"
 DebugContext Game::debugContext { };
 #endif // DEBUG_BUILD
 
@@ -143,7 +141,7 @@ void Game::BuildMenuUI()
  	if (!Game::debugContext.ignoreMainMenu) MainMenu::Open(registry, gameState);
 	else
 	{
-		gameState.save = "debug";
+		gameState.saveSlot = Save::DEBUG_SAVE_SLOT;
 		Save::LoadGame(*this, registry, gameState);
 	}
 
@@ -286,7 +284,7 @@ void Game::DrawGame(float deltaTime)
 	cameraPosition.y += std::sinf((gameState.time * 2.8f) - 0.3f) * 4.0f;
 
 	BeginTextureMode(renderContext.renderTexture);
-	ClearBackground(Palette::BACKGROUND_COLOR);
+	ClearBackground(BLANK);
 
 	Shader& shader = resourceStore.GetShader("assets/lighting.fs");
 	LightingSystem::Update(registry, renderContext.lightingContext, shader, gameState, cameraPosition, deltaTime);

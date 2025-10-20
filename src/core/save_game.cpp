@@ -15,8 +15,8 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <sstream>
 #include <string>
+// @todo: Error handling for file I/O and JSON parsing.
 
 
 namespace Save
@@ -103,11 +103,13 @@ namespace Save
 
 bool Save::SaveGame(entt::registry& registry, GameState& gameState)
 {
-    if (gameState.save.empty()) return false; // No specified save.
+	if (gameState.saveSlot > Save::MAX_SAVE_SLOTS) return false; // Invalid save slot.
 
     std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
     if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
-    std::ofstream stream(dataDirectoryPath / (gameState.save + ".save"), std::ios::out);
+
+	std::string fileName = "slot_" + std::to_string(gameState.saveSlot);
+    std::ofstream stream(dataDirectoryPath / (fileName + ".save"), std::ios::out);
 
     nlohmann::json data;
 
@@ -128,7 +130,7 @@ bool Save::SaveGame(entt::registry& registry, GameState& gameState)
 
 bool Save::LoadGame(Game& game, entt::registry& registry, GameState& gameState)
 {
-    if (gameState.save.empty()) return false; // No save specified to load from.
+	if (gameState.saveSlot > Save::MAX_SAVE_SLOTS) return false; // Invalid save slot.
 
     // Cleans up the game before rebuilding
     for (const entt::entity entity : registry.view<const entt::entity>())
@@ -140,12 +142,13 @@ bool Save::LoadGame(Game& game, entt::registry& registry, GameState& gameState)
 
     std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
     if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
-    std::ifstream stream(dataDirectoryPath / (gameState.save + ".save"), std::ios::in);
+
+    std::string fileName = "slot_" + std::to_string(gameState.saveSlot);
+    std::ifstream stream(dataDirectoryPath / (fileName + ".save"), std::ios::in);
     
 #ifdef DEBUG_BUILD
-    nlohmann::json data{ };
-    if (stream.is_open())
-        data = nlohmann::json::parse(stream);
+    nlohmann::json data { };
+    if (stream.is_open()) data = nlohmann::json::parse(stream);
 #else
     std::stringstream stringBuffer;
     stringBuffer << stream.rdbuf();

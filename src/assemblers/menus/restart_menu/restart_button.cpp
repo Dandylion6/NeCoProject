@@ -1,11 +1,18 @@
+#include "assemblers/menus/main_menu/main_menu.hpp"
 #include "assemblers/menus/restart_menu/restart_buttons.hpp"
 #include "assemblers/menus/restart_menu/restart_menu.hpp"
 #include "assemblers/ui/label_button_object.hpp"
-#include "assemblers/scenes/main_menu/main_menu.hpp"
+#include "components/core/transform_component.hpp"
 #include "components/scene/dont_destroy_on_load_tag.hpp"
 #include "components/ui/restart_menu_tag.hpp"
 #include "core/game.hpp"
+#include "core/game_state.hpp"
+#include "core/resource_store.hpp"
 #include "core/save_game.hpp"
+#include "entt/entity/fwd.hpp"
+#include "utility/vector2.hpp"
+#include <functional>
+#include <utility>
 
 
 LabelButton Construct::RestartButton(Game& game, entt::registry& registry, ResourceStore& resourceStore, GameState& gameState)

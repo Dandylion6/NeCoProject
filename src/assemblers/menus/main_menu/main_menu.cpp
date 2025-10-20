@@ -1,6 +1,6 @@
-#include "assemblers/scenes/main_menu/main_menu.hpp"
-#include "assemblers/scenes/main_menu/menu_background_entity.hpp"
-#include "assemblers/scenes/main_menu/menu_button_entities.hpp"
+#include "assemblers/menus/main_menu/main_menu.hpp"
+#include "assemblers/menus/main_menu/menu_background_entity.hpp"
+#include "assemblers/menus/main_menu/menu_button_entities.hpp"
 #include "components/core/transform_component.hpp"
 #include "components/ui/main_menu_tag.hpp"
 #include "core/game.hpp"
@@ -19,7 +19,7 @@ void MainMenu::Build(
 	Construct::SettingsButtonObject(registry, gameState, resourceStore);
 	Construct::ExitButtonObject(registry, gameState, resourceStore);
 
-	Construct::MainMenuBackgroundEntity(registry);
+	Construct::MainMenuBackgroundEntity(registry, resourceStore);
 
 	Close(registry, gameState);
 }
