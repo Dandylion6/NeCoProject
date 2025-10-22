@@ -16,11 +16,12 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "utility/color.hpp"
+#include "systems/object/comms/radar/radar_stability_system.hpp"
 #include "utility/color_palette.hpp"
 #include "utility/tween.hpp"
 #include "utility/vector2.hpp"
 #include <cstdint>
+
 #ifdef DEBUG_BUILD
 #include "core/game.hpp"
 #endif
@@ -33,7 +34,7 @@ void Construct::RadarObject(entt::registry& registry, ResourceStore& resourceSto
 
 	const entt::entity entity = registry.create();
 
-	Texture2D& texture = resourceStore.GetTexture("assets/environment/objects/radar/radar_screen.png");
+	Texture2D texture = resourceStore.GetTexture("assets/environment/objects/radar/radar_screen.png");
 
 	registry.emplace<Component::Transform>(entity, Radar);
 	registry.emplace<Component::Sprite>(entity, texture);
@@ -44,7 +45,9 @@ void Construct::RadarObject(entt::registry& registry, ResourceStore& resourceSto
 #endif
 	registry.emplace<Component::Address>(entity, "radar");
 	registry.emplace<Component::Machine>(entity, ATTRACTION_REDUCTION, POWER_USAGE, radarActive);
-	registry.emplace<Component::RadarMachine>(entity);
+	
+	Component::Radar& radar = registry.emplace<Component::Radar>(entity);
+	RadarStabilitySystem::GenerateCurveCache(radar);
 
 	Construct::RadarPathEntity(registry);
 	Construct::RadarArtilleryEntity(registry);
@@ -182,7 +185,7 @@ const entt::entity Construct::RadarPowerButtonEntity(entt::registry& registry)
 	Component::ButtonAction& action = registry.emplace<Component::ButtonAction>(entity);
 	action.onClick = [&registry, &action]()
 	{
-		auto view = registry.view<const Component::RadarMachine, Component::Machine>();
+		auto view = registry.view<const Component::Radar, Component::Machine>();
 		for (auto [entity, radar, machine] : view.each())
 			machine.isActive = !machine.isActive;
 

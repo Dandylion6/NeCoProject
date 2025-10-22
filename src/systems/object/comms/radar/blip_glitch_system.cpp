@@ -67,7 +67,7 @@ void BlipGlitchSystem::TriggerBlipFailure(
 {
 	blip.state = Component::Blip::CompleteFailure;
 	blip.remainingGlitchSeconds = GenerateGlitchDuration(stability);
-	registry.emplace<Component::Blip::CoordinateErrorData>(entity);
+	registry.emplace<Component::Blip::CompleteFailureData>(entity);
 }
 
 
@@ -198,9 +198,9 @@ float BlipGlitchSystem::GenerateGlitchDuration(float stability)
 	constexpr Nc::Vector2f BASE_GLITCH_TIME_RANGE = Nc::Vector2f(5.0f, 14.0f);
 	// The time range when radar stability is at 0.
 	constexpr Nc::Vector2f MAX_GLITCH_TIME_RANGE = Nc::Vector2f(45.0f, 120.0f);
-	constexpr float STABLE_FACTOR = 1.0f / Component::RadarMachine::STABLE_LEVEL;
+	constexpr float STABLE_FACTOR = 1.0f / Component::Radar::STABLE_LEVEL;
 
-	float degradationScale = (Component::RadarMachine::STABLE_LEVEL - stability) * STABLE_FACTOR;
+	float degradationScale = (Component::Radar::STABLE_LEVEL - stability) * STABLE_FACTOR;
 	degradationScale = Math::SineIn(degradationScale);
 	float glitchTimeMin = Math::Lerp(BASE_GLITCH_TIME_RANGE.x, MAX_GLITCH_TIME_RANGE.x, degradationScale);
 	float glitchTimeMax = Math::Lerp(BASE_GLITCH_TIME_RANGE.y, MAX_GLITCH_TIME_RANGE.y, degradationScale);

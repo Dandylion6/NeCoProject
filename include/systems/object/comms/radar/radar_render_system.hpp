@@ -21,17 +21,17 @@ public:
 
 private:
 	static void DrawActiveScreen(
-		entt::registry& registry, ResourceStore& resourceStore, Component::RadarMachine& radar, Component::Sprite& sprite
+		entt::registry& registry, ResourceStore& resourceStore, Component::Radar& radar, Component::Sprite& sprite
 	);
 	static void DrawPath(entt::registry& registry);
 	static void DrawRadarArtillery(entt::registry& registry);
 	static void DrawBlips(entt::registry& registry, ResourceStore& resourceStore);
 	static void DrawErrorWarning(
-		entt::registry& registry, ResourceStore& resourceStore, Component::RadarMachine& radar
+		entt::registry& registry, ResourceStore& resourceStore, Component::Radar& radar
 	);
 
 	static void DrawRecalibratingScreen(
-		entt::registry& registry, ResourceStore& resourceStore, Component::RadarMachine& radar, Component::Sprite& sprite
+		entt::registry& registry, ResourceStore& resourceStore, Component::Radar& radar, Component::Sprite& sprite
 	);
 
 };

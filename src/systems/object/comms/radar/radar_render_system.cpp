@@ -28,7 +28,7 @@ void RadarRenderSystem::DrawRenderTexture(
 {
 	if (currentScene != CommsRoom) return;
 
-	auto view = registry.view<Component::Machine, Component::RadarMachine,  Component::Sprite>();
+	auto view = registry.view<Component::Machine, Component::Radar,  Component::Sprite>();
 
 	BeginTextureMode(radarRenderTexture);
 	BeginBlendMode(BLEND_ADDITIVE);
@@ -84,7 +84,7 @@ void RadarRenderSystem::DrawRadar(
 
 
 void RadarRenderSystem::DrawActiveScreen(
-	entt::registry& registry, ResourceStore& resourceStore, Component::RadarMachine& radar, Component::Sprite& sprite
+	entt::registry& registry, ResourceStore& resourceStore, Component::Radar& radar, Component::Sprite& sprite
 )
 {
 	const std::string BACKGROUND_FILE = "assets/environment/objects/radar/radar_screen.png";
@@ -98,7 +98,7 @@ void RadarRenderSystem::DrawActiveScreen(
 	DrawRadarArtillery(registry);
 	DrawBlips(registry, resourceStore);
 
-	bool hasWarnings = radar.glitchCount > 0u;
+	bool hasWarnings = radar.glitchCount > 0u && radar.stability <= Component::Radar::HEALTHY_LEVEL;
 	if (hasWarnings) 
 		DrawErrorWarning(registry, resourceStore, radar);
 }
@@ -155,7 +155,7 @@ void RadarRenderSystem::DrawBlips(
 
 
 void RadarRenderSystem::DrawErrorWarning(
-	entt::registry &registry, ResourceStore &resourceStore, Component::RadarMachine& machine
+	entt::registry &registry, ResourceStore &resourceStore, Component::Radar& machine
 )
 {
 	auto view = registry.view<const Component::RadarErrorWarning, const Component::Transform, Component::Text>();
@@ -173,7 +173,7 @@ void RadarRenderSystem::DrawErrorWarning(
 
 
 void RadarRenderSystem::DrawRecalibratingScreen(
-	entt::registry& registry, ResourceStore& resourceStore, Component::RadarMachine& radar, Component::Sprite& sprite
+	entt::registry& registry, ResourceStore& resourceStore, Component::Radar& radar, Component::Sprite& sprite
 )
 {
 	constexpr float ANIMATION_SPEED = 6.0f;
@@ -186,7 +186,7 @@ void RadarRenderSystem::DrawRecalibratingScreen(
 	auto view = registry.view<const Tag::RadarRecalibration, const Component::Transform, Component::Text>();
 	for (auto [entity, transform, text] : view.each())
 	{
-		float time = Component::RadarMachine::RECALIBRATION_TIME - radar.recalibrationTimeLeft;
+		float time = Component::Radar::RECALIBRATION_TIME - radar.recalibrationTimeLeft;
 		uint8_t index = static_cast<uint8_t>(time * ANIMATION_SPEED) % loadingStrings.size();
 		const std::string& loadingCharacter = loadingStrings.at(index);
 

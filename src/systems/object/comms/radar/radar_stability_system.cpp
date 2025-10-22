@@ -11,6 +11,7 @@
 #include "utility/vector2.hpp"
 #include <cmath>
 #include <cstdint>
+
 #ifdef  DEBUG_BUILD
 #include "core/game.hpp"
 #include "core/debug_context.hpp"
@@ -19,10 +20,7 @@
 
 void RadarStabilitySystem::Update(entt::registry& registry, AnomalyState& anomalyState, float time, float deltaTime)
 {
-	constexpr float DEGRADATION_FACTOR = 8.5f;
-	constexpr float DEGRADATION_CURVE = 2.8f;
-
-	auto view = registry.view<Component::Machine, Component::RadarMachine>();
+	auto view = registry.view<Component::Machine, Component::Radar>();
 	for (auto [entity, machine, radar] : view.each())
 	{
 #ifdef DEBUG_BUILD
@@ -32,15 +30,15 @@ void RadarStabilitySystem::Update(entt::registry& registry, AnomalyState& anomal
 #endif
 
 		if (!machine.isActive) continue;
-		if (radar.nextGlitchSpawnSeconds == 0.0f)
-			SetRandomGlitchSpawnInterval(radar);
 
-		if (anomalyState.attractionPercentage >= AnomalyState::DEGRADATION_THRESHOLD)
+		if (anomalyState.attractionPercentage >= Component::Radar::DEGRADATION_THRESHOLD)
 		{
-			float adjustedPercentage = anomalyState.attractionPercentage - AnomalyState::DEGRADATION_THRESHOLD;
-			float curveValue = DEGRADATION_FACTOR * std::powf(DEGRADATION_CURVE, adjustedPercentage * AnomalyState::PRECENTAGE_FACTOR) - 1.0f;
-			float degredation = curveValue * 0.016f;
-			radar.stability -= degredation * deltaTime;
+			float attractionToLength = std::roundf(anomalyState.attractionPercentage  / Component::Radar::CURVE_CACHE_SIZE);
+			uint8_t cacheIndex = static_cast<uint8_t>(attractionToLength);
+			radar.stability -= radar.degredationCurveCache[cacheIndex] * deltaTime;
+
+			if (radar.nextGlitchSpawnSeconds == 0.0f)
+				SetRandomGlitchSpawnInterval(radar);
 		}
 
 		// Turns off the radar if stability is 0.
@@ -51,80 +49,114 @@ void RadarStabilitySystem::Update(entt::registry& registry, AnomalyState& anomal
 }
 
 
-void RadarStabilitySystem::UpdateBlipStability(entt::registry& registry, Component::RadarMachine& machine, float time)
+void RadarStabilitySystem::UpdateBlipStability(entt::registry& registry, Component::Radar& machine, float time)
 {
-	bool isStable = machine.stability >= Component::RadarMachine::STABLE_LEVEL;
+	bool isStable = machine.stability >= Component::Radar::STABLE_LEVEL;
 	float secondsSinceLastGlitch = time - machine.lastGlitchTime;
 
-	uint8_t blipCount = 0u;
-	uint8_t glitchCount = 0u;
+	bool spawnNewGlitch = false;
+	if (!isStable && secondsSinceLastGlitch >= machine.nextGlitchSpawnSeconds)
+	{
+		SetRandomGlitchSpawnInterval(machine);
+		spawnNewGlitch = true;
+	}
 
+	uint8_t glitchCount = 0u;
 	auto view = registry.view<Component::Blip>();
 	for (auto [entity, blip] : view.each())
 	{
-		if (isStable) blip.state = Component::Blip::Stable;
-		if (blip.state != Component::Blip::Stable) ++glitchCount;
-		++blipCount;
+#ifdef DEBUG_BUILD
+		if (IsKeyPressed(KEY_G)) 
+		{
+			RadarStabilitySystem::GlitchBlip(registry, machine, blip, entity, time);
+			break;
+		}
+#endif // DEBUG_BUILD
+
+		if (isStable)
+		{
+			blip.state = Component::Blip::Stable;
+			continue;
+		}
+
+		if (blip.state != Component::Blip::Stable)
+		{
+			++glitchCount;
+			continue;
+		}
+
+		if (!spawnNewGlitch) continue;
+		if (!ShouldBlipGlitch(blip, machine, secondsSinceLastGlitch, view.size())) continue;
+
+		machine.lastGlitchTime = time;
+		spawnNewGlitch = false;
+		RadarStabilitySystem::GlitchBlip(registry, machine, blip, entity, time);
 	}
 
-	machine.glitchCount = glitchCount; // Keeps glictch count up to date.
-
-	if (isStable) return;
-	
-	uint8_t blipIndex = 0u;
-	for (auto [entity, blip] : view.each())
-	{
-		if (!ShouldBlipGlitch(blip, machine, secondsSinceLastGlitch, blipIndex++, blipCount)) continue;
-		SetRandomGlitchSpawnInterval(machine);
-
-		if (machine.stability > Component::RadarMachine::HEALTHY_LEVEL)
-		{
-			BlipGlitchSystem::JumbleBlip(registry, entity, blip, machine.stability);
-		}
-		else if (machine.stability > Component::RadarMachine::UNSTABLE_LEVEL)
-		{
-			int determiniticValue = Nc::Random::Range(0, 100);
-			if (determiniticValue > 50) BlipGlitchSystem::JumbleBlip(registry, entity, blip, machine.stability);
-			else BlipGlitchSystem::GlitchBlipText(registry, entity, blip, machine.stability);
-		}
-		else
-		{
-			int determiniticValue = Nc::Random::Range(0, 100);
-			if (determiniticValue > 40) BlipGlitchSystem::TriggerBlipFailure(registry, entity, blip, machine.stability);
-			else if (determiniticValue > 10) BlipGlitchSystem::GlitchBlipText(registry, entity, blip, machine.stability);
-			else BlipGlitchSystem::JumbleBlip(registry, entity, blip, machine.stability);
-		}
-	}
+	machine.glitchCount = glitchCount;
 }
 
 
 bool RadarStabilitySystem::ShouldBlipGlitch(
-	Component::Blip& blip, Component::RadarMachine& machine, float secondsSinceLastGlitch, uint32_t blipIndex, uint32_t blipCount
+	Component::Blip& blip, Component::Radar& machine, float secondsSinceLastGlitch, size_t blipCount
 )
 {
-#ifdef DEBUG_BUILD
-	if (IsKeyPressed(KEY_G)) return true;
-#endif
-
-	if (secondsSinceLastGlitch <= machine.nextGlitchSpawnSeconds) return false;
-	if (blip.state != Component::Blip::Stable) return false;
-	
-	float chance = static_cast<float>(blipIndex) / static_cast<float>(blipCount);
-	float deterministicValue = static_cast<float>(GetRandomValue(0, 100)) * 0.01f;
-	if (chance < deterministicValue) return false;
-
-	return true;
+	float deterministicValue = Nc::Random::Range(0.0f, 100.0f);
+	float chance = 100.0f / static_cast<float>(blipCount);
+	return deterministicValue < chance;
 }
 
 
-void RadarStabilitySystem::SetRandomGlitchSpawnInterval(Component::RadarMachine& machine)
+void RadarStabilitySystem::GlitchBlip(
+	entt::registry& registry, Component::Radar& radar, Component::Blip& blip, const entt::entity entity, float time
+)
 {
-	constexpr Nc::Vector2f BASE_GLITCH_SPAWN_RANGE = Nc::Vector2f(1.6f, 2.4f); // The base interval range for new glitches to appear. Measured in minutes.
-	constexpr float DEGRADATION_AFFECT_SCALE = 0.7f; // How much the degradation affects the spawn interval.
+	int determiniticValue = Nc::Random::Range(0, 100);
+	if (radar.stability > Component::Radar::HEALTHY_LEVEL)
+	{
+		BlipGlitchSystem::JumbleBlip(registry, entity, blip, radar.stability);
+		return;
+	}
+
+	if (radar.stability > Component::Radar::UNSTABLE_LEVEL)
+	{
+		if (determiniticValue > 30) BlipGlitchSystem::GlitchBlipText(registry, entity, blip, radar.stability);
+		else BlipGlitchSystem::JumbleBlip(registry, entity, blip, radar.stability);
+		return;
+	}
+	
+	if (determiniticValue > 20) BlipGlitchSystem::TriggerBlipFailure(registry, entity, blip, radar.stability);
+	else BlipGlitchSystem::GlitchBlipText(registry, entity, blip, radar.stability);
+}
+
+
+void RadarStabilitySystem::SetRandomGlitchSpawnInterval(Component::Radar& machine)
+{
+	// @brief The base interval range for new glitches to appear. Measured in minutes.
+	constexpr Nc::Vector2f BASE_GLITCH_SPAWN_RANGE = Nc::Vector2f(0.8f, 1.6f);
+	// @brief How much the degradation affects the spawn interval.
+	constexpr float DEGRADATION_AFFECT_SCALE = 0.7f;
 
 	float minutesToNextGlitch = Nc::Random::Range(BASE_GLITCH_SPAWN_RANGE.x, BASE_GLITCH_SPAWN_RANGE.y);
 	float degradationScale = (100.0f - machine.stability) * 0.01f;
 	minutesToNextGlitch *= 1.0f - degradationScale * DEGRADATION_AFFECT_SCALE;
 
 	machine.nextGlitchSpawnSeconds = minutesToNextGlitch * 60.0f;
+}
+
+
+void RadarStabilitySystem::GenerateCurveCache(Component::Radar& radar)
+{
+	constexpr float DEGRADATION_FACTOR = 7.6f;
+	constexpr float DEGRADATION_CURVE = 3.1f;
+	constexpr float MINUTE_TO_SECOND_FACTOR = 1.0f / 60.0f;
+
+	float percentagePerIndex = 100.0f / static_cast<float>(Component::Radar::CURVE_CACHE_SIZE);
+	for (int i = 0; i < Component::Radar::CURVE_CACHE_SIZE; ++i)
+	{
+		float percentage = static_cast<float>(i) * percentagePerIndex;
+		float adjustedPercentage = percentage - Component::Radar::DEGRADATION_THRESHOLD;
+		float curveValue = DEGRADATION_FACTOR * std::powf(DEGRADATION_CURVE, adjustedPercentage * Component::Radar::PERCENTAGE_FACTOR) - 1.0f;
+		radar.degredationCurveCache[i] = curveValue * MINUTE_TO_SECOND_FACTOR;
+	}
 }

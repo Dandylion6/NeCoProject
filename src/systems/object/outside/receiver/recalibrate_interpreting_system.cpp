@@ -23,7 +23,7 @@ void RecalibrateInterpretingSystem::HandleReceivedMessage(
 	const std::string& message
 )
 {
-	auto view = registry.view<Component::RadarMachine, Component::Machine>();
+	auto view = registry.view<Component::Radar, Component::Machine>();
 	for (auto [entity, radar, machine] : view.each())
 	{
 		if (radar.recalibrationTimeLeft > 0.0f)
@@ -34,7 +34,7 @@ void RecalibrateInterpretingSystem::HandleReceivedMessage(
 		}
 
 		// Starts recalibration.
-		radar.recalibrationTimeLeft = Component::RadarMachine::RECALIBRATION_TIME;
+		radar.recalibrationTimeLeft = Component::Radar::RECALIBRATION_TIME;
 	}
 
 	// TODO: Add confirmation response
@@ -47,7 +47,7 @@ void RecalibrateInterpretingSystem::Update(entt::registry& registry, float delta
 	// The amount of stability the radar machine regains after a successful recalibration.
 	constexpr float STABILITY_INCREASE = 33.33f;
 
-	auto view = registry.view<Component::Machine, Component::RadarMachine>();
+	auto view = registry.view<Component::Machine, Component::Radar>();
 	for (auto [entity, machine, radar] : view.each())
 	{
 		bool isDoneRecalibrating = radar.recalibrationTimeLeft <= -1.0f;

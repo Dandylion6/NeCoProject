@@ -68,9 +68,9 @@ namespace Save
             entityData["machine_is_active"] = machine.isActive;
 
             // In the case where the machine has other relevant components
-            if (registry.any_of<Component::RadarMachine>(entity))
+            if (registry.any_of<Component::Radar>(entity))
             {
-                Component::RadarMachine& radar = registry.get<Component::RadarMachine>(entity);
+                Component::Radar& radar = registry.get<Component::Radar>(entity);
                 entityData["radar_stability"] = radar.stability;
                 entityData["radar_recalibration_time"] = radar.recalibrationTimeLeft;
             }
@@ -91,12 +91,12 @@ namespace Save
             if (!entityData.contains("machine_is_active")) return LoadResult::Failure;
             machine.isActive = entityData["machine_is_active"];
 
-            if (registry.any_of<Component::RadarMachine>(entity))
+            if (registry.any_of<Component::Radar>(entity))
             {
                 if (!entityData.contains("radar_stability")) return LoadResult::Failure;
                 if (!entityData.contains("radar_recalibration_time")) return LoadResult::Failure;
 
-                Component::RadarMachine& radar = registry.get<Component::RadarMachine>(entity);
+                Component::Radar& radar = registry.get<Component::Radar>(entity);
                 radar.stability = entityData["radar_stability"];
                 radar.recalibrationTimeLeft = entityData["radar_recalibration_time"];
             }

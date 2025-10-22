@@ -24,7 +24,7 @@ namespace Component
 
 		struct JumbledCoordindate
 		{
-			static constexpr Nc::Vector2f JUMBLE_INTERVAL_RANGE = Nc::Vector2f(0.03f, 0.52f);
+			static constexpr Nc::Vector2f JUMBLE_INTERVAL_RANGE = Nc::Vector2f(0.6f, 3.2f);
 
 			float lastJumbleTime = 0.0f;
 			float nextJumbleSeconds = 0.0f;
@@ -46,8 +46,8 @@ namespace Component
 
 		struct CompleteFailureData
 		{
-			static constexpr Nc::Vector2f GLITCH_INTERVAL_RANGE = Nc::Vector2f(0.026f, 0.78f);
-			static constexpr float OFFSET_RANGE = 6.0f;
+			static constexpr Nc::Vector2f GLITCH_INTERVAL_RANGE = Nc::Vector2f(0.012f, 0.62f);
+			static constexpr float OFFSET_RANGE = 8.6f;
 			
 			Nc::Vector2f glitchedOffset = Nc::Vector2f::Zero();
 			float lastGlitchTime = 0.0f;

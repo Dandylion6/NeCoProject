@@ -49,6 +49,7 @@
 #ifdef DEBUG_BUILD
 #include "core/debug_context.hpp"
 #include "core/save_game.hpp"
+#include "core/scene.hpp"
 #include "components/core/button_action_component.hpp"
 #include "components/core/rendering/text_component.hpp"
 #include "components/core/transform_component.hpp"
@@ -139,6 +140,12 @@ void Game::BuildMenuUI()
 
 #ifdef DEBUG_BUILD
  	if (!Game::debugContext.ignoreMainMenu) MainMenu::Open(registry, gameState);
+	else
+	{
+		// Load a mock game state for testing.
+		gameState.currentScene = CommsRoom;
+		BuildRuntimeScenes();
+	}
 
 	const entt::entity entity = registry.create();
 
