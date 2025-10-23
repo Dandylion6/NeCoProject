@@ -6,6 +6,7 @@
 #include "core/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
+#include "systems/anomaly/roamer_behaviour_system.hpp"
 #include "systems/anomaly/roamer_kill_system.hpp"
 #include "utility/vector2.hpp"
 
@@ -17,24 +18,26 @@ void RoamerKillSystem::Update(
 	auto view = registry.view<const Component::Transform, const Component::AnomalyRoamer, Component::Health>();
 	for (auto [entity, transform, roamer, health] : view.each())
 	{
+		// Phantom roamers don't kill.
+		if (roamer.behaviour == Component::AnomalyRoamer::Behaviour::Phantom)
+		{
+			// Roamer self-destructs if very close to target.
+			Nc::Vector2f targetPosition = RoamerBehaviourSystem::GetTargetPosition(roamer.target);
+			if (CanKill(transform.position, targetPosition, 32.0f))
+				health.health = 0;
+			continue;
+		}
+
 		switch (roamer.target)
 		{
 		case Component::AnomalyRoamer::Target::Bunker:
 		{
-			if (!CanKill(transform.position, GameState::BUNKER_POSITION))
-				break;
-
-			health.health = 0; // Roamer kills itself.
-			Game::Death(registry, gameState); // Player dies.
+			UpdateBunkerRoamer(registry, entity, transform, roamer, health, gameState);
 			break;
 		}
 		case Component::AnomalyRoamer::Target::Artillery:
 		{
-			if (!CanKill(transform.position, GameState::BUNKER_POSITION))
-				break;
-
-			health.health = 0; // Roamer kills itself.
-			KillArtillery(registry);
+			UpdateBunkerRoamer(registry, entity, transform, roamer, health, gameState);
 			break;
 		}
 		default:
@@ -44,17 +47,46 @@ void RoamerKillSystem::Update(
 }
 
 
-bool RoamerKillSystem::CanKill(
-	Nc::Vector2f roamerPosition, Nc::Vector2f targetPosition
+void RoamerKillSystem::UpdateBunkerRoamer(
+	entt::registry& registry, 
+	const entt::entity entity, 
+	const Component::Transform& transform, 
+	const Component::AnomalyRoamer& roamer, 
+	Component::Health& health, 
+	GameState& gameState
 )
 {
-	constexpr float KILL_DISTANCE = 6.0f;
-	constexpr float KILL_DISTANCE_SQR = KILL_DISTANCE * KILL_DISTANCE;
+	if (!CanKill(transform.position, GameState::BUNKER_POSITION))
+		return;
 
-	float distance = (targetPosition - roamerPosition).GetSqrDistance();
-	if (distance > KILL_DISTANCE_SQR) return false;
+	health.health = 0; // Roamer kills itself.
+	Game::Death(registry, gameState); // Player dies.
+}
 
-	return true;
+
+void RoamerKillSystem::UpdateArtilleryRoamer(
+	entt::registry& registry, 
+	const entt::entity entity, 
+	const Component::Transform& transform, 
+	const Component::AnomalyRoamer& roamer,
+	Component::Health& health
+)
+{
+	if (!CanKill(transform.position, GameState::BUNKER_POSITION))
+		return;
+
+	health.health = 0; // Roamer kills itself.
+	KillArtillery(registry);
+}
+
+
+bool RoamerKillSystem::CanKill(
+	Nc::Vector2f roamerPosition, Nc::Vector2f targetPosition, float killDistance
+)
+{
+	float killDistanceSqr = killDistance * killDistance;
+	float distanceSqr = (targetPosition - roamerPosition).GetSqrDistance();
+	return distanceSqr <= killDistance;
 }
 
 

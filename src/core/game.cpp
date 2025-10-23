@@ -213,8 +213,11 @@ bool Game::ShouldRun() const
 void Game::Update(float deltaTime)
 {
 	#ifdef DEBUG_BUILD
-	constexpr Nc::Vector2f FIXED_ROAMER_SPAWN = Nc::Vector2f(0.0f, -90.0f);
-	if (IsKeyPressed(KEY_PERIOD)) RoamerSpawningSystem::SpawnRoamer(registry, FIXED_ROAMER_SPAWN, gameState.anomalyState);
+	if (IsKeyPressed(KEY_PERIOD))
+	{
+		Nc::Vector2f spawnPoint = RoamerSpawningSystem::GenerateRandomSpawnPoint();
+		RoamerSpawningSystem::SpawnRoamer(registry, resourceStore, spawnPoint, gameState.anomalyState);
+	}
 	
 	if (IsKeyPressed(KEY_MINUS)) ++gameState.anomalyState.intensityLevel;
 	if (IsKeyPressed(KEY_EQUAL)) --gameState.anomalyState.intensityLevel;
@@ -260,7 +263,7 @@ void Game::UpdateRegistries(float deltaTime)
 	ArtilleryAimingSystem::Update(registry, deltaTime);
 	ArtilleryFireSystem::Update(registry, resourceStore, deltaTime);
 	ProjectileHitSystem::Update(registry, deltaTime);
-	RoamerSpawningSystem::Update(registry, gameState.anomalyState, gameState.time);
+	RoamerSpawningSystem::Update(registry, resourceStore, gameState.anomalyState, deltaTime);
 	RoamerBehaviourSystem::Update(registry, deltaTime);
 	RoamerKillSystem::Update(registry, gameState, deltaTime);
 }

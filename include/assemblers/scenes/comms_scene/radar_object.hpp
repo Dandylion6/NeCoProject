@@ -14,7 +14,7 @@ namespace Construct
 	const entt::entity RadarArtilleryEntity(entt::registry& registry);
 
 	const entt::entity RadarBlipEntity(
-		entt::registry& registry, Nc::Vector2f position, int16_t health = 10
+		entt::registry& registry, ResourceStore& resourceStore, Nc::Vector2f position, int16_t health = 10
 	);
 
 	const entt::entity RadarErrorWarningEntity(entt::registry& registry);

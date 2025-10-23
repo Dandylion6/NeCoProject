@@ -11,8 +11,7 @@ struct AnomalyState
 	static constexpr float BASE_ATTRACTION = 10.0f;
 
 	float attractionPercentage = BASE_ATTRACTION;
-	float lastSpawnTime = 0.0f;
-	float spawnWaitMinutes = 0.1f;
+	float nextSpawnSecondsLeft = 0.0f;
 	uint8_t intensityLevel = 1u;
 };
 

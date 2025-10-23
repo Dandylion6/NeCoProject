@@ -84,6 +84,7 @@ void RadarStabilitySystem::UpdateBlipStability(entt::registry& registry, Compone
 
 		if (isStable)
 		{
+			// Will restore blip stability within 1 second.
 			blip.remainingGlitchSeconds = std::fminf(blip.remainingGlitchSeconds, 1.0f);
 			continue;
 		}

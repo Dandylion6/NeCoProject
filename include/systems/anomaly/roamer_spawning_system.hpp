@@ -2,27 +2,21 @@
 #include "core/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "utility/vector2.hpp"
+class ResourceStore;
 
 
 class RoamerSpawningSystem
 {
 public:
 	static void Update(
-		entt::registry& registry, 
-		AnomalyState& anomalyState,
-		float time
+		entt::registry& registry, ResourceStore& resourceStore, AnomalyState& anomalyState, float time
 	);
-
 	static const entt::entity SpawnRoamer(
-		entt::registry& registry, Nc::Vector2f spawnPoint, AnomalyState anomalyState
+		entt::registry& registry, ResourceStore& resourceStore, Nc::Vector2f spawnPoint, const AnomalyState& anomalyState
 	);
+	static Nc::Vector2f GenerateRandomSpawnPoint();
 
 private:
-
-	static bool ShouldSpawnRoamer(
-		AnomalyState anomalyState, float time
-	);
-
-	static bool GenerateRandomSpawnPoint(Nc::Vector2f& spawnPoint);
+	static bool ShouldSpawnRoamer(const AnomalyState& anomalyState);
 
 };

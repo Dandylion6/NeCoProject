@@ -102,12 +102,12 @@ const entt::entity Construct::RadarArtilleryEntity(entt::registry& registry)
 
 
 const entt::entity Construct::RadarBlipEntity(
-	entt::registry& registry, Nc::Vector2f position, int16_t health
+	entt::registry& registry, ResourceStore& resourceStore, Nc::Vector2f position, int16_t health
 )
 {
 	const entt::entity entity = registry.create();
 
-	Texture2D texture = LoadTexture("assets/environment/objects/radar/radar_blip.png");
+	Texture2D texture = resourceStore.GetTexture("assets/environment/objects/radar/radar_blip.png");
 	Nc::Vector2i size = Nc::Vector2i(texture.width, texture.height);
 
 	registry.emplace<Component::Blip>(entity);

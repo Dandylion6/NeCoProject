@@ -3,6 +3,8 @@
 #include "core/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
+#include "systems/anomaly/roamer/phantom_behaviour_system.hpp"
+#include "systems/anomaly/roamer/phaser_behaviour_system.hpp" 
 #include "systems/anomaly/roamer/strider_behaviour_system.hpp"
 #include "systems/anomaly/roamer_behaviour_system.hpp"
 #include "utility/vector2.hpp"
@@ -12,16 +14,20 @@ void RoamerBehaviourSystem::Update(
 	entt::registry& registry, float deltaTime
 )
 {
-	auto view = registry.view<Component::AnomalyRoamer>();
-	for (auto [entity, roamer] : view.each())
+	auto view = registry.view<Component::Transform, Component::AnomalyRoamer>();
+	for (auto [entity, transform, roamer] : view.each())
 	{
 		switch (roamer.behaviour)
 		{
 		case Component::AnomalyRoamer::Strider:
-		{
-			StriderBehvaiourSystem::Update(registry, entity, roamer, deltaTime);
+			StriderBehaviourSystem::Update(registry, entity, transform, roamer, deltaTime);
 			break;
-		}
+		case Component::AnomalyRoamer::Phaser:
+			PhaserBehaviourSystem::Update(registry, entity, transform, roamer, deltaTime);
+			break;
+		case Component::AnomalyRoamer::Phantom:
+			PhantomBehaviourSystem::Update(registry, entity, transform, roamer, deltaTime);
+			break;
 		default:
 			break;
 		}
