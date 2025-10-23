@@ -57,12 +57,14 @@ namespace Nc
 		constexpr static Vector2f Scale(const float scale) { return Vector2f(scale, scale); };
 		static Vector2f Round(const Vector2f& vector);
 		static Nc::Vector2f Remap(Bounds from, Bounds to, const Vector2f value); 
+		static Nc::Vector2f Lerp(const Vector2f& start, const Vector2f& end, const float t);
 		
 		float GetDistance() const;
 		float GetSqrDistance() const;
 		float GetMin() const;
 
 		Nc::Vector2f Normalized() const;
+		Nc::Vector2f LerpTo(const Vector2f& end, const float t) const;
 		void Normalize();
 
 		operator Vector2() const;

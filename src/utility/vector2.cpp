@@ -63,6 +63,12 @@ namespace Nc
 	}
 
 
+	Nc::Vector2f Vector2f::Lerp(const Vector2f& start, const Vector2f& end, const float t)
+	{
+		return start.LerpTo(end, t);
+	}
+
+
 	float Vector2f::GetDistance() const
 	{
 		return std::sqrtf(GetSqrDistance());
@@ -85,6 +91,15 @@ namespace Nc
 	{
 		float length = GetDistance();
 		return Nc::Vector2f(x, y) / length;
+	}
+
+
+	Nc::Vector2f Vector2f::LerpTo(const Vector2f& end, const float t) const
+	{
+		Nc::Vector2f result = Nc::Vector2f(x, y);
+		result.x = Math::Lerp(x, end.x, t);
+		result.y = Math::Lerp(y, end.y, t);
+		return result;
 	}
 
 

@@ -11,10 +11,13 @@ namespace Math
 	float Remap(Nc::Vector2f a, Nc::Vector2f b, float value);
 	float SmoothApproach(float a, float b, float deltaTime, float speed);
 	float SineIn(float x);
+	float SineOut(float x);
 	float SineInOut(float x);
 	float QuadIn(float x);
 	float QuadOut(float x);
+	float CubicIn(float x);
 	float CubicOut(float x);
+	float CubicInOut(float x);
 	float ExpoIn(float x);
 	float ExpoOut(float x);
 	float BackOut(float x);

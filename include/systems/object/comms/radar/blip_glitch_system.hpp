@@ -26,6 +26,6 @@ private:
 	/// <param name="stability">The current stability level of the radar machine, from 0 to 100.</param>
 	/// <returns>A duration in seconds.</returns>
 	static float GenerateGlitchDuration(float stability);
-	static Component::Blip::JumbledCoordindate GenerateRandomJumble();
+	static Component::Blip::JumbledCoordindate GenerateRandomJumble(float stability);
 
 };

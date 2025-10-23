@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include "utility/interpolation.hpp"
+#include "utility/vector2.hpp"
 #include <cmath>
 
 
@@ -30,6 +31,11 @@ float Math::SineIn(float x)
 	return 1.0f - std::cosf((x * PI) * 0.5f);
 }
 
+float Math::SineOut(float x)
+{
+	return std::sinf((x * PI) * 0.5f);
+}
+
 float Math::SineInOut(float x)
 {
 	return -(std::cosf(PI * x) - 1.0f) * 0.5f;
@@ -45,9 +51,24 @@ float Math::QuadOut(float x)
 	return 1.0f - (1.0f - x) * (1.0f - x);
 }
 
+float Math::CubicIn(float x)
+{
+	return x * x * x;
+}
+
 float Math::CubicOut(float x)
 {
 	return 1.0f - (1.0f - x) * (1.0f - x) * (1.0f - x);
+}
+
+float Math::CubicInOut(float x)
+{
+	if (x < 0.5f) return 4.0f * x * x * x;
+	else
+	{
+		float f = (2.0f * x) - 2.0f;
+		return 0.5f * (f * f * f + 2.0f);
+	}
 }
 
 float Math::ExpoIn(float x)

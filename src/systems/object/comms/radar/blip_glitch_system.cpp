@@ -1,4 +1,4 @@
-#include "components/core/rendering/text_component.hpp"
+﻿#include "components/core/rendering/text_component.hpp"
 #include "components/core/transform_component.hpp"
 #include "components/objects/comms/radar.hpp"
 #include "components/objects/outside/blip_component.hpp"
@@ -10,6 +10,7 @@
 #include "utility/vector2.hpp"
 #include <cstdint>
 #include <sstream>
+#include <cmath>
 
 
 void BlipGlitchSystem::Update(entt::registry& registry, float time, float deltaTime)
@@ -20,16 +21,16 @@ void BlipGlitchSystem::Update(entt::registry& registry, float time, float deltaT
 		switch (blip.state) 
 		{
 			case Component::Blip::Stable: 
-				UpdateBlipTextStable(transform, blip, text);
+				BlipGlitchSystem:: UpdateBlipTextStable(transform, blip, text);
 				break;
 			case Component::Blip::CoordinateJumble:
-				UpdateBlipTextJumble(registry, entity, time);
+				BlipGlitchSystem::UpdateBlipTextJumble(registry, entity, time);
 				break;
 			case Component::Blip::CoordinateError:
-				UpdateBlipTextError(registry, entity, time);
+				BlipGlitchSystem::UpdateBlipTextError(registry, entity, time);
 				break;
 			case Component::Blip::CompleteFailure:
-				UpdateBlipFailure(registry, entity, time);
+				BlipGlitchSystem::UpdateBlipFailure(registry, entity, time);
 				break;
         }
 
@@ -46,8 +47,8 @@ void BlipGlitchSystem::JumbleBlip(
 	blip.state = Component::Blip::CoordinateJumble;
 	blip.remainingGlitchSeconds = GenerateGlitchDuration(stability);
 
-	Component::Blip::JumbledCoordindate& jumble = registry.emplace<Component::Blip::JumbledCoordindate>(entity);
-	jumble = BlipGlitchSystem::GenerateRandomJumble();
+	Component::Blip::JumbledCoordindate& jumble = registry.emplace<Component::Blip::JumbledCoordindate>(entity, stability);
+	jumble = BlipGlitchSystem::GenerateRandomJumble(stability);
 }
 
 
@@ -86,10 +87,7 @@ void BlipGlitchSystem::UpdateBlipTextJumble(
 	entt::registry& registry, entt::entity entity, float time
 )
 {
-	const Component::Transform& transform = registry.get<Component::Transform>(entity);
 	Component::Blip& blip = registry.get<Component::Blip>(entity);
-	Component::Text& text = registry.get<Component::Text>(entity);
-	Component::Blip::JumbledCoordindate& jumble = registry.get<Component::Blip::JumbledCoordindate>(entity);
 
 	if (blip.remainingGlitchSeconds <= 0.0f)
 	{
@@ -97,6 +95,10 @@ void BlipGlitchSystem::UpdateBlipTextJumble(
 		registry.remove<Component::Blip::JumbledCoordindate>(entity);
 		return;
 	}
+
+	const Component::Transform& transform = registry.get<Component::Transform>(entity);
+	Component::Text& text = registry.get<Component::Text>(entity);
+	Component::Blip::JumbledCoordindate& jumble = registry.get<Component::Blip::JumbledCoordindate>(entity);
 
 	Nc::Vector2i pixelPosition = transform.position.ToInt();
 	Nc::Vector2i displayedPosition = pixelPosition;
@@ -116,11 +118,22 @@ void BlipGlitchSystem::UpdateBlipTextJumble(
 
 	if (time - jumble.lastJumbleTime < jumble.nextJumbleSeconds) return;
 
-	jumble = GenerateRandomJumble();
+	jumble = GenerateRandomJumble(jumble.stability);
 	jumble.lastJumbleTime = time;
 
-	Nc::Vector2f range = Component::Blip::JumbledCoordindate::JUMBLE_INTERVAL_RANGE;
-	jumble.nextJumbleSeconds = Nc::Random::Range(range.x, range.y);
+	constexpr Nc::Vector2f INTERVAL_LOW_STABILITY = Component::Blip::JumbledCoordindate::JUMBLE_INTERVAL_LOW_RANGE;
+	constexpr Nc::Vector2f INTERVAL_HIGH_STABILITY = Component::Blip::JumbledCoordindate::JUMBLE_INTERVAL_HIGH_RANGE;
+	constexpr Nc::Vector2f STABILITY_RANGE = Nc::Vector2f(Component::Radar::STABLE_LEVEL, Component::Radar::HEALTHY_LEVEL);
+	constexpr Nc::Vector2f DEGREDATION_SCALE_RANGE = Nc::Vector2f(0.0f, 1.0f);
+
+	float degradationScale = Math::Remap(STABILITY_RANGE, DEGREDATION_SCALE_RANGE, std::fmaxf(jumble.stability, Component::Radar::HEALTHY_LEVEL));
+	degradationScale = Math::SineInOut(degradationScale);
+	Nc::Vector2f range = Nc::Vector2f::Lerp(INTERVAL_HIGH_STABILITY, INTERVAL_LOW_STABILITY, degradationScale);
+
+	float randomValue = Nc::Random::Range(0.0f, 1.0f);
+	randomValue = Math::QuadIn(randomValue);
+	jumble.nextJumbleSeconds = Math::Lerp(range.x, range.y, randomValue);
+
 }
 
 
@@ -146,8 +159,10 @@ void BlipGlitchSystem::UpdateBlipTextError(
 		
 		error.glitchedCharacters[i] = Nc::Random::Range(32, 126);
 		error.lastGlitchTimes[i] = time;
+
+		float randomValue = Nc::Random::Range(0.0f, 1.0f);
 		Nc::Vector2f range = Component::Blip::CoordinateErrorData::GLITCH_INTERVAL_RANGE;
-		error.nextGlitchSeconds[i] = Nc::Random::Range(range.x, range.y);
+		error.nextGlitchSeconds[i] = Math::Lerp(range.x, range.y, randomValue);
 	}
 
 	// Construct the display string.
@@ -195,9 +210,9 @@ void BlipGlitchSystem::UpdateBlipFailure(
 float BlipGlitchSystem::GenerateGlitchDuration(float stability)
 {
 	// The time range when radar stability is just below unstable theshold.
-	constexpr Nc::Vector2f BASE_GLITCH_TIME_RANGE = Nc::Vector2f(5.0f, 14.0f);
+	constexpr Nc::Vector2f BASE_GLITCH_TIME_RANGE = Nc::Vector2f(1.6f, 6.4f);
 	// The time range when radar stability is at 0.
-	constexpr Nc::Vector2f MAX_GLITCH_TIME_RANGE = Nc::Vector2f(45.0f, 120.0f);
+	constexpr Nc::Vector2f MAX_GLITCH_TIME_RANGE = Nc::Vector2f(58.0f, 96.0f);
 	constexpr float STABLE_FACTOR = 1.0f / Component::Radar::STABLE_LEVEL;
 
 	float degradationScale = (Component::Radar::STABLE_LEVEL - stability) * STABLE_FACTOR;
@@ -209,9 +224,9 @@ float BlipGlitchSystem::GenerateGlitchDuration(float stability)
 }
 
 
-Component::Blip::JumbledCoordindate BlipGlitchSystem::GenerateRandomJumble()
+Component::Blip::JumbledCoordindate BlipGlitchSystem::GenerateRandomJumble(float stability)
 {
-	Component::Blip::JumbledCoordindate jumble { };
+	Component::Blip::JumbledCoordindate jumble = Component::Blip::JumbledCoordindate(stability);
 
 	jumble.duplicateFirstAxis = Nc::Random::Range(0, 10) <= 2;
 	jumble.flippedAxis = Nc::Random::Range(0, 10) <= 6;

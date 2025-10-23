@@ -61,21 +61,30 @@ void RadarStabilitySystem::UpdateBlipStability(entt::registry& registry, Compone
 		spawnNewGlitch = true;
 	}
 
+#ifdef DEBUG_BUILD
+	bool hasCommandGliched = IsKeyPressed(KEY_G);
+#endif // DEBUG_BUILD
+
+
 	uint8_t glitchCount = 0u;
 	auto view = registry.view<Component::Blip>();
 	for (auto [entity, blip] : view.each())
 	{
 #ifdef DEBUG_BUILD
-		if (IsKeyPressed(KEY_G)) 
+		if (hasCommandGliched)
 		{
-			RadarStabilitySystem::GlitchBlip(registry, machine, blip, entity, time);
-			break;
+			if (blip.state == Component::Blip::Stable) 
+			{
+				hasCommandGliched = false;
+				RadarStabilitySystem::GlitchBlip(registry, machine, blip, entity, time);
+				break;
+			}
 		}
 #endif // DEBUG_BUILD
 
 		if (isStable)
 		{
-			blip.state = Component::Blip::Stable;
+			blip.remainingGlitchSeconds = std::fminf(blip.remainingGlitchSeconds, 1.0f);
 			continue;
 		}
 
