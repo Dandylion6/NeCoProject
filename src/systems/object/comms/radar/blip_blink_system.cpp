@@ -2,7 +2,6 @@
 #include "components/core/tween_component.hpp"
 #include "components/objects/comms/radar.hpp"
 #include "components/objects/outside/blip_component.hpp"
-#include "core/context/render_context.hpp"
 #include "core/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -50,8 +49,8 @@ bool BlipBlinkSystem::BlipShouldAppear(
 	Tween& tween
 )
 {
-	constexpr Nc::Vector2f WORLD_Y_RANGE = Nc::Vector2f(GameState::WORLD_BOUNDS.min.y, GameState::WORLD_BOUNDS.max.y);
-	constexpr Nc::Vector2f RADAR_Y_RANGE = Nc::Vector2f(RenderContext::RADAR_BOUNDS.min.y, RenderContext::RADAR_BOUNDS.max.y);
+	constexpr Nc::Vector2f WORLD_Y_RANGE = Nc::Vector2f(WORLD_BOUNDS.min.y, WORLD_BOUNDS.max.y);
+	constexpr Nc::Vector2f RADAR_Y_RANGE = Nc::Vector2f(RADAR_BOUNDS.min.y, RADAR_BOUNDS.max.y);
 	constexpr float DIFFERENCE_THRESHOLD = 0.8f;
 
 	float pathHeight = path.position.y + path.offset.y;

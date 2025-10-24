@@ -78,7 +78,7 @@ void Game::SetupRenderContext()
 	renderContext.windowSize = monitorSize;
 
 	const Nc::Vector2i displaySize = RenderContext::DISPLAY_SIZE;
-	const Nc::Vector2i radarSize = RenderContext::RADAR_BOUNDS.max;
+	const Nc::Vector2i radarSize = RADAR_BOUNDS.max;
 
 	renderContext.renderTexture = LoadRenderTexture(displaySize.x, displaySize.y);
 	renderContext.radarRenderTexture = LoadRenderTexture(radarSize.x, radarSize.y);

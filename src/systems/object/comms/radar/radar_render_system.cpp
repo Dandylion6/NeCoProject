@@ -4,7 +4,6 @@
 #include "components/objects/comms/radar.hpp"
 #include "components/objects/machine.hpp"
 #include "components/objects/outside/blip_component.hpp"
-#include "core/context/render_context.hpp"
 #include "core/rendering.hpp"
 #include "core/resource_store.hpp"
 #include "core/scene.hpp"
@@ -16,6 +15,9 @@
 #include "utility/vector2.hpp"
 #include <sstream>
 #include <string>
+#include <array>
+#include <cmath>
+#include <cstdint>
 
 
 void RadarRenderSystem::DrawRenderTexture(
@@ -65,8 +67,8 @@ void RadarRenderSystem::DrawRadar(
 {
 	if (currentScene != CommsRoom) return;
 
-	Nc::Vector2f radarSize = RenderContext::RADAR_BOUNDS.max;
-	Nc::Vector2f position = RenderContext::RADAR_POSITION + cameraPosition;
+	Nc::Vector2f radarSize = RADAR_BOUNDS.max;
+	Nc::Vector2f position = RADAR_POSITION + cameraPosition;
 
 	Rectangle source { 0, 0, radarSize.x, -radarSize.y };
 	Rectangle destination { position.x, position.y, radarSize.x, radarSize.y };
@@ -118,7 +120,7 @@ void RadarRenderSystem::DrawRadarArtillery(entt::registry& registry)
 	auto view = registry.view<Tag::RadarArtillery, const Component::Transform, const Component::Sprite>();
 	for (auto [entity, transform, sprite] : view.each())
 	{
-		Nc::Vector2f position = Nc::Vector2f::Remap(GameState::WORLD_BOUNDS, RenderContext::RADAR_BOUNDS, transform.position);
+		Nc::Vector2f position = Nc::Vector2f::Remap(WORLD_BOUNDS, RADAR_BOUNDS, transform.position);
 		Renderer::DrawSprite(sprite, position, transform.offset, transform.rotation);
 	}
 }
@@ -140,7 +142,7 @@ void RadarRenderSystem::DrawBlips(
 			glitchOffset = failure.glitchedOffset;
 		}
 		
-		Nc::Vector2f position = Nc::Vector2f::Remap(GameState::WORLD_BOUNDS, RenderContext::RADAR_BOUNDS, transform.position);
+		Nc::Vector2f position = Nc::Vector2f::Remap(WORLD_BOUNDS, RADAR_BOUNDS, transform.position);
 		position += glitchOffset;
 		Renderer::DrawSprite(sprite, position, transform.offset, transform.rotation);
 		
@@ -177,7 +179,9 @@ void RadarRenderSystem::DrawRecalibratingScreen(
 {
 	constexpr float ANIMATION_SPEED = 6.0f;
 	constexpr float BLINK_TIME = 1.4f;
-	const std::array<std::string, 6u> loadingStrings = {"[O o o o]", "[o O o o]", "[o o O o]", "[o o o O]", "[o o O o]", "[o O o o]"};
+	const std::array<std::string, 6u> loadingStrings = {
+		"[O o o o]", "[o O o o]", "[o o O o]", "[o o o O]", "[o o O o]", "[o O o o]"
+	};
 
 	// TODO: Add custom recalibration background
 	ClearBackground(BLACK);

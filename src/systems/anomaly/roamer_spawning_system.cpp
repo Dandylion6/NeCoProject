@@ -81,8 +81,8 @@ const entt::entity RoamerSpawningSystem::SpawnRoamer(
 
 Nc::Vector2f RoamerSpawningSystem::GenerateRandomSpawnPoint()
 {
-	Nc::Vector2i worldMin = GameState::WORLD_BOUNDS.min;
-	Nc::Vector2i worldMax = GameState::WORLD_BOUNDS.max;
+	Nc::Vector2i worldMin = WORLD_BOUNDS.min;
+	Nc::Vector2i worldMax = WORLD_BOUNDS.max;
 
 	constexpr int OVERFLOW_RANGE = 4;
 	constexpr Nc::Vector2f SPAWN_WEIGHT_RANGE = Nc::Vector2f(64.0f, 92.0f);
@@ -99,8 +99,8 @@ Nc::Vector2f RoamerSpawningSystem::GenerateRandomSpawnPoint()
 		position.y = static_cast<float>(GetRandomValue(worldMin.y - OVERFLOW_RANGE, worldMax.y + OVERFLOW_RANGE));
 
 		float weight = 1.0f;
-		float distanceToArtillery = (position - GameState::ARTILLERY_POSITION).GetSqrDistance();
-		float distanceToBunker = (position - GameState::BUNKER_POSITION).GetSqrDistance();
+		float distanceToArtillery = (position - ARTILLERY_POSITION).GetSqrDistance();
+		float distanceToBunker = (position - BUNKER_POSITION).GetSqrDistance();
 
 		weight = Math::Remap(SPAWN_WEIGHT_RANGE_SQR, Nc::Vector2f(0.0f, 1.0f), distanceToArtillery);
 		weight *= Math::Remap(SPAWN_WEIGHT_RANGE_SQR, Nc::Vector2f(0.0f, 1.0f), distanceToBunker);

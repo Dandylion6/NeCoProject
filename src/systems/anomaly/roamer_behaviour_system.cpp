@@ -63,9 +63,9 @@ Nc::Vector2f RoamerBehaviourSystem::GetTargetPosition(Component::AnomalyRoamer::
 	switch (target)
 	{
 	case Component::AnomalyRoamer::Target::Bunker:
-		return GameState::BUNKER_POSITION;
+		return BUNKER_POSITION;
 	case Component::AnomalyRoamer::Target::Artillery:
-		return GameState::ARTILLERY_POSITION;
+		return ARTILLERY_POSITION;
 	}
 	return Nc::Vector2f::Zero();
 }

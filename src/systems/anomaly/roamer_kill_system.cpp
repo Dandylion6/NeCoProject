@@ -55,7 +55,7 @@ void RoamerKillSystem::UpdateBunkerRoamer(
 	GameState& gameState
 )
 {
-	if (!CanKill(transform.position, GameState::BUNKER_POSITION))
+	if (!CanKill(transform.position, BUNKER_POSITION))
 		return;
 
 	health.health = 0; // Roamer kills itself.
@@ -71,7 +71,7 @@ void RoamerKillSystem::UpdateArtilleryRoamer(
 	Component::Health& health
 )
 {
-	if (!CanKill(transform.position, GameState::BUNKER_POSITION))
+	if (!CanKill(transform.position, BUNKER_POSITION))
 		return;
 
 	health.health = 0; // Roamer kills itself.

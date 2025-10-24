@@ -13,6 +13,7 @@
 #include "core/context/render_context.hpp"
 #include "core/resource_store.hpp"
 #include "core/scene.hpp"
+#include "core/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
@@ -75,7 +76,7 @@ namespace Construct
 
 	static const entt::entity RadarErrorWarningEntity(entt::registry& registry)
 	{
-		constexpr Nc::Vector2f POSITION = Nc::Vector2f(8.0f, RenderContext::RADAR_BOUNDS.max.y - 8.0f);
+		constexpr Nc::Vector2f POSITION = Nc::Vector2f(8.0f, RADAR_BOUNDS.max.y - 8.0f);
 
 		const entt::entity entity = registry.create();
 
@@ -97,7 +98,7 @@ namespace Construct
 
 	static const entt::entity RadarRecalibrationTextEntity(entt::registry& registry)
 	{
-		constexpr Nc::Vector2f POSITION = RenderContext::RADAR_BOUNDS.max * 0.5f;
+		constexpr Nc::Vector2f POSITION = RADAR_BOUNDS.max * 0.5f;
 
 		const entt::entity entity = registry.create();
 		registry.emplace<Tag::RadarRecalibration>(entity);
@@ -114,7 +115,7 @@ namespace Construct
 	)
 	{
 		// TODO: Replace with proper button graphics and size.
-		constexpr Nc::Vector2f POSITION = RenderContext::RADAR_POSITION + Nc::Vector2f(280.0f, 340.0f);
+		constexpr Nc::Vector2f POSITION = RADAR_POSITION + Nc::Vector2f(280.0f, 340.0f);
 		constexpr Nc::Vector2f SIZE = Nc::Vector2f(20.0f, 20.0f);
 
 		const entt::entity entity = registry.create();
