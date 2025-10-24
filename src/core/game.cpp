@@ -127,6 +127,11 @@ void Game::SetupDebug(int args, char* argv[])
 			Game::debugContext.isRadarActiveOnStart = true;
 			continue;
 		}
+
+		if (strcmp(argv[i], "--start-at-night") == 0)
+		{
+			gameState.hour = GameState::NIGHT_RANGE.x;
+		}
 	}
 }
 #endif // DEBUG_BUILD
@@ -231,8 +236,21 @@ void Game::Update(float deltaTime)
 	if (IsKeyPressed(KEY_P)) Game::Death(registry, gameState);
 	#endif
 
-	if (!gameState.isPaused)
-		gameState.time += deltaTime;
+	if (gameState.isPaused) return;
+	gameState.time += deltaTime;
+
+	if (gameState.survivedNight) return;
+
+	constexpr float HOUR_INCREASE_RATE = 1.0f / (GameState::HOUR_MINUTES * 60.0f);
+	constexpr int HOURS_IN_DAY = 24.0f;
+
+	float oldHour = gameState.hour;
+	float newHour = std::fmodf(gameState.hour + HOUR_INCREASE_RATE * deltaTime, HOURS_IN_DAY);
+	gameState.hour = newHour;
+
+	float nightEndHour = GameState::NIGHT_RANGE.x + 1.0f;
+	if (oldHour < nightEndHour && newHour >= nightEndHour)
+		gameState.survivedNight = true;
 }
 
 
@@ -371,16 +389,19 @@ void Game::DrawDebugUi() const
 	text = "RADAR: " + std::to_string(static_cast<int32_t>(Game::debugContext.radarStabilityPercentage)) + "%";
 	DrawText(text.c_str(), 32, 224, 32, GREEN);
 
-	text = "TIME: " + std::to_string(Game::debugContext.timeScale);
+	text = "TIME SPD: " + std::to_string(Game::debugContext.timeScale);
 	DrawText(text.c_str(), 32, 272, 32, GREEN);
 
-	DrawText("Press [/] to delete msg", 32, 340, 24, GREEN);
-	DrawText("Press [.] to spawn roamer", 32, 380, 24, GREEN);
-	DrawText("Press [G] to glitch a blip", 32, 420, 24, GREEN);
-	DrawText("Press [P] to kill player", 32, 460, 24, GREEN);
-	DrawText("Press [-/=] to mod intensity", 32, 500, 18, GREEN);
-	DrawText("Press [9/0] to mod attraction", 32, 540, 18, GREEN);
-	DrawText("Press [K/L] to mod radar stability", 32, 580, 18, GREEN);
-	DrawText("Press [M/N] to mod time scale", 32, 620, 18, GREEN);
+	text = "DAY & H: " + std::to_string(gameState.day) + " / " + std::to_string(static_cast<int32_t>(gameState.hour));
+	DrawText(text.c_str(), 32, 320, 32, GREEN);
+
+	DrawText("Press [/] to delete msg", 32, 540, 24, GREEN);
+	DrawText("Press [.] to spawn roamer", 32, 580, 24, GREEN);
+	DrawText("Press [G] to glitch a blip", 32, 620, 24, GREEN);
+	DrawText("Press [P] to kill player", 32, 660, 24, GREEN);
+	DrawText("Press [-/=] to mod intensity", 32, 700, 18, GREEN);
+	DrawText("Press [9/0] to mod attraction", 32, 740, 18, GREEN);
+	DrawText("Press [K/L] to mod radar stability", 32, 780, 18, GREEN);
+	DrawText("Press [M/N] to mod time scale", 32, 820, 18, GREEN);
 }
 #endif // DEBUG_BUILD

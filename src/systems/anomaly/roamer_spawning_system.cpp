@@ -25,9 +25,9 @@ void RoamerSpawningSystem::Update(
 	if (anomalyState.totalRoamerCount >= maxRoamers) return;
 	
 	// @brief Spawn wait interval range in minutes for high attraction.
-	constexpr Nc::Vector2f SPAWN_WAIT_HIGH_RANGE = Nc::Vector2f(1.8f, 2.6f);
+	constexpr Nc::Vector2f SPAWN_WAIT_HIGH_RANGE = Nc::Vector2f(1.4f, 2.3f);
 	// @bried Spawn wait interval range in minutes for low attraction.
-	constexpr Nc::Vector2f SPAWN_WAIT_LOW_RANGE = Nc::Vector2f(2.5f, 3.5f);
+	constexpr Nc::Vector2f SPAWN_WAIT_LOW_RANGE = Nc::Vector2f(2.1f, 3.2f);
 
 	float pressureTarget = AnomalyState::GetPressureTarget(anomalyState.intensityLevel);
 	float pressureSurplus = std::clamp<float>(anomalyState.roamerPressureWeight - pressureTarget, -0.5f, 0.5f);

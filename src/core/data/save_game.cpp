@@ -5,6 +5,7 @@
 #include "core/data/save_game.hpp"
 #include "core/game.hpp"
 #include "core/scene.hpp"
+#include "core/state/anomaly_state.hpp"
 #include "core/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -29,6 +30,7 @@ namespace Save
     {
         nlohmann::json& gameStateData = data["game_state"];
         gameStateData["attraction_percentage"] = gameState.anomalyState.attractionPercentage;
+        gameStateData["day"] = gameState.day;
         gameStateData["time"] = gameState.time;
         gameStateData["current_scene"] = static_cast<uint8_t>(gameState.currentScene);
         return SaveResult::Success;
@@ -42,12 +44,15 @@ namespace Save
             // Load starting data
             nlohmann::json& gameStateData = data["game_state"];
             gameStateData["attraction_percentage"] = AnomalyState::BASE_ATTRACTION;
+            gameStateData["day"] = 0;
             gameStateData["time"] = 0.0f;
             gameStateData["current_scene"] = static_cast<uint8_t>(CommsRoom);
         }
         
         nlohmann::json& gameStateData = data["game_state"];
         gameState.anomalyState.attractionPercentage = gameStateData["attraction_percentage"];
+        gameState.day = gameStateData["day"];
+        gameState.hour = GameState::WAKE_HOUR;
         gameState.time = gameStateData["time"];
         gameState.currentScene = static_cast<Scene>(gameStateData["current_scene"]);
         return LoadResult::Success;

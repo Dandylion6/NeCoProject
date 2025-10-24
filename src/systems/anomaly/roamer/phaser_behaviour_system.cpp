@@ -34,8 +34,8 @@ void PhaserBehaviourSystem::Update(
 	float deltaTime
 )
 {
-	constexpr Nc::Vector2f IDLE_SECONDS_RANGE = Nc::Vector2f(14.0f, 21.0f);
-	constexpr float MOVE_DISTANCE = 9.6f;
+	constexpr Nc::Vector2f IDLE_SECONDS_RANGE = Nc::Vector2f(18.0f, 22.0f);
+	constexpr float MOVE_DISTANCE = 10.6f;
 	// @brief Distance from target that turns into striding movement
 	constexpr float STRIDING_DISTANCE = 26.0f;
 	constexpr float STRIDING_DISTANCE_SQR = STRIDING_DISTANCE * STRIDING_DISTANCE;

@@ -126,7 +126,7 @@ float RadarStabilitySystem::GetDegradationValue(float attractionPercentage)
 	constexpr float MIN_DECAY_RATE = 100.0f / MIN_DECAY_DURATION_MINUTES;
 	constexpr float MINUTE_TO_SECONDS = 1.0f / 60.0f;
 
-	float curveFactor = Math::QuadOut(attractionPercentage * 0.01f);
+	float curveFactor = Math::SineOut(attractionPercentage * 0.01f);
 	float decayMinutes = Math::Lerp(MAX_DECAY_RATE, MIN_DECAY_RATE, curveFactor);
 	return decayMinutes * MINUTE_TO_SECONDS;
 }

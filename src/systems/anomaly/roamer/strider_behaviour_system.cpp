@@ -13,7 +13,7 @@ void StriderBehaviourSystem::Spawn(
 	entt::registry& registry, const entt::entity entity, Component::AnomalyRoamer& roamer
 )
 {
-	constexpr Nc::Vector2f MOVE_SPEED_RANGE = Nc::Vector2f(0.12f, 0.16f);
+	constexpr Nc::Vector2f MOVE_SPEED_RANGE = Nc::Vector2f(0.16f, 0.21f);
 	float moveSpeed = Nc::Random::Range(MOVE_SPEED_RANGE.x, MOVE_SPEED_RANGE.y);
 	registry.emplace<Component::Strider>(entity, moveSpeed);
 }
