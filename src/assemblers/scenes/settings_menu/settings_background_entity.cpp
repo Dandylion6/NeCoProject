@@ -53,7 +53,7 @@ const entt::entity Construct::SettingsBackgroundEntity(
 	registry.emplace<Tag::Settings>(entity);
 	registry.emplace<Component::ToggleState>(entity);
 	registry.emplace<Component::UiTransform>(entity, center, center, size, Nc::Vector2f::Zero(), 1);
-	registry.emplace<Component::Sprite>(entity, texture, 0.4f);
+	registry.emplace<Component::Sprite>(entity, std::move(texture), 0.4f);
 
 	std::function<void()> toggleSettings = [&registry, &gameState]()
 	{

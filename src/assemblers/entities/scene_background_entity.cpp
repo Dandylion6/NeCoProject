@@ -7,6 +7,7 @@
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
 #include "utility/vector2.hpp"
+#include <utility>
 
 
 const entt::entity Construct::SceneBackgroundEntity(
@@ -19,7 +20,7 @@ const entt::entity Construct::SceneBackgroundEntity(
 	Nc::Vector2f position = RenderContext::DISPLAY_SIZE * 0.5f;
 
 	registry.emplace<Component::Transform>(entity, scene, position, size, size * 0.5f);
-	registry.emplace<Component::Sprite>(entity, texture);
+	registry.emplace<Component::Sprite>(entity, std::move(texture));
 
 	return entity;
 }

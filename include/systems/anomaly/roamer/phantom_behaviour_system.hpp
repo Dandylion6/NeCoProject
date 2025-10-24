@@ -2,6 +2,7 @@
 #include "components/anomaly/anomaly_roamer_component.hpp"
 #include "components/core/transform_component.hpp"
 #include "entt/entity/fwd.hpp"
+struct AnomalyState;
 class ResourceStore;
 
 
@@ -9,7 +10,7 @@ class PhantomBehaviourSystem
 {
 public:
 	static void Spawn(
-		entt::registry& registry, const entt::entity entity, Component::AnomalyRoamer& roamer
+		entt::registry& registry, AnomalyState& anomalyState, const entt::entity entity, Component::AnomalyRoamer& roamer
 	);
 	static void Update(
 		entt::registry& registry,

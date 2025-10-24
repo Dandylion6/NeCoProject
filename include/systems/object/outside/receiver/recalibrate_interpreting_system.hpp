@@ -1,4 +1,6 @@
 #pragma once
+#include "components/objects/comms/radar.hpp"
+#include "components/objects/machine.hpp"
 #include "components/objects/outside/receiver_component.hpp"
 #include "entt/entity/fwd.hpp"
 #include <string>
@@ -16,10 +18,10 @@ public:
 		Component::Receiver& receiver, 
 		const std::string& message
 	);
-
 	static void Update(entt::registry& registry, float deltaTime);
 
 private:
 	static void ConfirmRecalibrationCommand(entt::registry& registry, ResourceStore& resourceStore, Component::Receiver& receiver);
+	static void RecalibrationCompleted(Component::Machine& machine, Component::Radar& radar);
 
 };

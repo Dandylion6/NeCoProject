@@ -1,14 +1,14 @@
-#include "core/resource_store.hpp"
-#include "systems/object/comms/radio_sound_system.hpp"
-#include <cstdint>
-#include "systems/object/outside/receiver/coordinate_interpreting_system.hpp"
 #include "cctype"
-#include <string>
-#include <utility>
-#include "entt/entity/fwd.hpp"
-#include "raylib.h"
 #include "components/objects/comms/radio_component.hpp"
 #include "components/objects/outside/receiver_component.hpp"
+#include "core/resource_store.hpp"
+#include "entt/entity/fwd.hpp"
+#include "raylib.h"
+#include "systems/object/comms/radio_sound_system.hpp"
+#include "systems/object/outside/receiver/coordinate_interpreting_system.hpp"
+#include <cstdint>
+#include <string>
+#include <utility>
 
 
 CoordResult CoordinateInterpretingSystem::InterpretMessageAsCoord(
@@ -43,18 +43,21 @@ CoordResult CoordinateInterpretingSystem::InterpretMessageAsCoord(
 		++startingIndex;
 	}
 
+	// Check if there are any digits, if not don't assume it is a coordinate command.
+	bool hasDigit = false;
 	for (uint32_t i = startingIndex; i < message.length() - 1u; ++i)
 	{
 		const char character = message.at(i);
 
 		if (!std::isdigit(character)) return result;
+		hasDigit = true;
 
 		int16_t digit = character - '0';
 		result.coordinateLength *= 10;
 		result.coordinateLength += digit * sign;
 	}
 
-	result.isValid = true;
+	result.isValid = hasDigit;
 	return result;
 }
 

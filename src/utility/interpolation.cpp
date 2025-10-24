@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include "utility/interpolation.hpp"
 #include "utility/vector2.hpp"
+#include <algorithm>
 #include <cmath>
 
 
@@ -19,6 +20,12 @@ float Math::Remap(Nc::Vector2f a, Nc::Vector2f b, float value)
 {
 	float factor = Math::InverseLerp(a.x, a.y, value);
 	return Math::Lerp(b.x, b.y, factor);
+}
+
+float Math::ClampedRemap(Nc::Vector2f a, Nc::Vector2f b, float value)
+{
+	value = std::clamp<float>(value, a.x, a.y);
+	return Remap(a, b, value);
 }
 
 float Math::SmoothApproach(float a, float b, float deltaTime, float speed)

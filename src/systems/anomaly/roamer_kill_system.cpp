@@ -23,8 +23,7 @@ void RoamerKillSystem::Update(
 		{
 			// Roamer self-destructs if very close to target.
 			Nc::Vector2f targetPosition = RoamerBehaviourSystem::GetTargetPosition(roamer.target);
-			if (CanKill(transform.position, targetPosition, 32.0f))
-				health.health = 0;
+			if (CanKill(transform.position, targetPosition, 32.0f)) health.health = 0;
 			continue;
 		}
 

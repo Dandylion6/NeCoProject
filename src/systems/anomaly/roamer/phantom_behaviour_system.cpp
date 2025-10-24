@@ -2,18 +2,28 @@
 #include "components/anomaly/roamers/strider_component.hpp"
 #include "components/core/rendering/sprite_component.hpp"
 #include "components/core/transform_component.hpp"
+#include "core/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "systems/anomaly/roamer/phantom_behaviour_system.hpp"
+#include "systems/anomaly/roamer/strider_behaviour_system.hpp"
 #include "systems/anomaly/roamer_behaviour_system.hpp"
 #include "utility/random.hpp"
 #include "utility/vector2.hpp"
 
 
 void PhantomBehaviourSystem::Spawn(
-	entt::registry& registry, const entt::entity entity, Component::AnomalyRoamer& roamer
+	entt::registry& registry, AnomalyState& anomalyState, const entt::entity entity, Component::AnomalyRoamer& roamer
 )
 {
+	// Phantom doesn't spawn unless other roamers exist
+	if (anomalyState.roamerThreatCount > 0u)
+	{
+		roamer.behaviour = Component::AnomalyRoamer::Strider;
+		StriderBehaviourSystem::Spawn(registry, entity, roamer);
+		return;
+	}
+
 	constexpr Nc::Vector2f MOVE_SPEED_RANGE = Nc::Vector2f(0.13f, 0.18f);
 	float moveSpeed = Nc::Random::Range(MOVE_SPEED_RANGE.x, MOVE_SPEED_RANGE.y);
 	registry.emplace<Component::Strider>(entity, moveSpeed);

@@ -7,6 +7,7 @@
 #include "raylib.h"
 #include "systems/object/comms/radar/blip_glitch_system.hpp"
 #include "systems/object/comms/radar/radar_stability_system.hpp"
+#include "utility/interpolation.hpp"
 #include "utility/random.hpp"
 #include "utility/vector2.hpp"
 #include <cmath>
@@ -30,16 +31,13 @@ void RadarStabilitySystem::Update(entt::registry& registry, AnomalyState& anomal
 #endif
 
 		if (!machine.isActive) continue;
+		// TODO: Add night time check.
 
-		if (anomalyState.attractionPercentage >= Component::Radar::DEGRADATION_THRESHOLD)
-		{
-			float attractionToLength = std::roundf(anomalyState.attractionPercentage  / Component::Radar::CURVE_CACHE_SIZE);
-			uint8_t cacheIndex = static_cast<uint8_t>(attractionToLength);
-			radar.stability -= radar.degredationCurveCache[cacheIndex] * deltaTime;
+		float degradationValue = GetDegradationValue(anomalyState.attractionPercentage);
+		radar.stability -= degradationValue * deltaTime;
 
-			if (radar.nextGlitchSpawnSeconds == 0.0f)
-				SetRandomGlitchSpawnInterval(radar);
-		}
+		if (radar.nextGlitchSpawnSeconds == 0.0f)
+			SetRandomGlitchSpawnInterval(radar);
 
 		// Turns off the radar if stability is 0.
 		if (radar.stability <= 0.0f) machine.isActive = false;
@@ -117,6 +115,23 @@ bool RadarStabilitySystem::ShouldBlipGlitch(
 }
 
 
+float RadarStabilitySystem::GetDegradationValue(float attractionPercentage)
+{
+	// @brief The maximum duration going from 100% to 0% stability in minutes.
+	constexpr float MAX_DECAY_DURATION_MINUTES = 29.0f;
+	// @brief The minimum duration going from 100% to 0% stability in minutes.
+	constexpr float MIN_DECAY_DURATION_MINUTES = 5.6f;
+
+	constexpr float MAX_DECAY_RATE = 100.0f / MAX_DECAY_DURATION_MINUTES;
+	constexpr float MIN_DECAY_RATE = 100.0f / MIN_DECAY_DURATION_MINUTES;
+	constexpr float MINUTE_TO_SECONDS = 1.0f / 60.0f;
+
+	float curveFactor = Math::QuadOut(attractionPercentage * 0.01f);
+	float decayMinutes = Math::Lerp(MAX_DECAY_RATE, MIN_DECAY_RATE, curveFactor);
+	return decayMinutes * MINUTE_TO_SECONDS;
+}
+
+
 void RadarStabilitySystem::GlitchBlip(
 	entt::registry& registry, Component::Radar& radar, Component::Blip& blip, const entt::entity entity, float time
 )
@@ -152,21 +167,4 @@ void RadarStabilitySystem::SetRandomGlitchSpawnInterval(Component::Radar& machin
 	minutesToNextGlitch *= 1.0f - degradationScale * DEGRADATION_AFFECT_SCALE;
 
 	machine.nextGlitchSpawnSeconds = minutesToNextGlitch * 60.0f;
-}
-
-
-void RadarStabilitySystem::GenerateCurveCache(Component::Radar& radar)
-{
-	constexpr float DEGRADATION_FACTOR = 7.6f;
-	constexpr float DEGRADATION_CURVE = 3.1f;
-	constexpr float MINUTE_TO_SECOND_FACTOR = 1.0f / 60.0f;
-
-	float percentagePerIndex = 100.0f / static_cast<float>(Component::Radar::CURVE_CACHE_SIZE);
-	for (int i = 0; i < Component::Radar::CURVE_CACHE_SIZE; ++i)
-	{
-		float percentage = static_cast<float>(i) * percentagePerIndex;
-		float adjustedPercentage = percentage - Component::Radar::DEGRADATION_THRESHOLD;
-		float curveValue = DEGRADATION_FACTOR * std::powf(DEGRADATION_CURVE, adjustedPercentage * Component::Radar::PERCENTAGE_FACTOR) - 1.0f;
-		radar.degredationCurveCache[i] = curveValue * MINUTE_TO_SECOND_FACTOR;
-	}
 }

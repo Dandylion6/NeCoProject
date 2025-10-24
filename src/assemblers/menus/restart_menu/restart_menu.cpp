@@ -15,7 +15,7 @@ void RestartMenu::Build(
 	Game& game, entt::registry& registry, GameState& gameState, ResourceStore& resourceStore, Nc::Vector2f windowSize
 )
 {
-	Construct::RestartMenuBackgroundEntity(registry, windowSize);
+	Construct::RestartMenuBackgroundEntity(registry, resourceStore, windowSize);
 	Construct::RestartButton(game, registry, resourceStore, gameState);
 	Construct::RestartToMainButton(registry, resourceStore, gameState);
 	RestartMenu::Close(registry, gameState);

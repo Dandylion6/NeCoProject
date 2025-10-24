@@ -1,3 +1,4 @@
+#include "algorithm"
 #include "assemblers/scenes/comms_scene/radar_object.hpp"
 #include "components/anomaly/anomaly_roamer_component.hpp"
 #include "core/game_state.hpp"
@@ -19,24 +20,33 @@ void RoamerSpawningSystem::Update(
 )
 {
 	// todo: Implement roamer limit and more complex spawn logic.
+	uint8_t maxRoamers = AnomalyState::GetMaxRoamers(anomalyState.intensityLevel);
+	if (anomalyState.totalRoamerCount >= maxRoamers) return;
 	
-	// @brief Spawn wait interval range in minutes
-	constexpr Nc::Vector2f SPAWN_WAIT_INTERVAL_RANGE = Nc::Vector2f(2.5f, 3.5f);
+	// @brief Spawn wait interval range in minutes for high attraction.
+	constexpr Nc::Vector2f SPAWN_WAIT_HIGH_RANGE = Nc::Vector2f(1.8f, 2.6f);
+	// @bried Spawn wait interval range in minutes for low attraction.
+	constexpr Nc::Vector2f SPAWN_WAIT_LOW_RANGE = Nc::Vector2f(2.5f, 3.5f);
 
-	anomalyState.nextSpawnSecondsLeft -= deltaTime;
+	float pressureTarget = AnomalyState::GetPressureTarget(anomalyState.intensityLevel);
+	float pressureSurplus = std::clamp<float>(anomalyState.roamerPressureWeight - pressureTarget, -0.5f, 0.5f);
+	float timeScale = 1.0f - pressureSurplus;
+	anomalyState.nextSpawnSecondsLeft -= deltaTime * timeScale;
+
 	if (!ShouldSpawnRoamer(anomalyState)) return;
 
 	Nc::Vector2f spawnPoint = RoamerSpawningSystem::GenerateRandomSpawnPoint();
 	SpawnRoamer(registry, resourceStore, spawnPoint, anomalyState);
 	
-	float nextSpawnMinutes = Nc::Random::Range(SPAWN_WAIT_INTERVAL_RANGE.x, SPAWN_WAIT_INTERVAL_RANGE.y);
-	float nextSpawnSeconds = nextSpawnMinutes * 60.0f;
+	float attractionFactor = anomalyState.attractionPercentage * 0.01f;
+	Nc::Vector2f range = Nc::Vector2f::Lerp(SPAWN_WAIT_LOW_RANGE, SPAWN_WAIT_HIGH_RANGE, attractionFactor);
+	float nextSpawnSeconds = Nc::Random::Range(range.x, range.y) * 60.0f;
 	anomalyState.nextSpawnSecondsLeft = nextSpawnSeconds;
 }
 
 
 const entt::entity RoamerSpawningSystem::SpawnRoamer(
-	entt::registry& registry, ResourceStore& resourceStore, Nc::Vector2f spawnPoint, const AnomalyState& anomalyState
+	entt::registry& registry, ResourceStore& resourceStore, Nc::Vector2f spawnPoint, AnomalyState& anomalyState
 )
 {
 	constexpr int16_t BASE_HEALTH = 10;
@@ -58,7 +68,7 @@ const entt::entity RoamerSpawningSystem::SpawnRoamer(
 		PhaserBehaviourSystem::Spawn(registry, entity, roamer);
 		break;
 	case Component::AnomalyRoamer::Phantom:
-		PhantomBehaviourSystem::Spawn(registry, entity, roamer);
+		PhantomBehaviourSystem::Spawn(registry, anomalyState, entity, roamer);
 		break;
 	default:
 		break;

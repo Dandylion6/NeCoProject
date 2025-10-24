@@ -13,6 +13,7 @@
 #include "core/save_settings.hpp"
 #include "entt/entity/fwd.hpp"
 #include "raylib.h"
+#include "systems/anomaly/anomaly_attraction_system.hpp"
 #include "systems/anomaly/roamer_behaviour_system.hpp"
 #include "systems/anomaly/roamer_kill_system.hpp"
 #include "systems/anomaly/roamer_spawning_system.hpp"
@@ -264,17 +265,9 @@ void Game::UpdateRegistries(float deltaTime)
 	ArtilleryFireSystem::Update(registry, resourceStore, deltaTime);
 	ProjectileHitSystem::Update(registry, deltaTime);
 	RoamerSpawningSystem::Update(registry, resourceStore, gameState.anomalyState, deltaTime);
-	RoamerBehaviourSystem::Update(registry, deltaTime);
+	RoamerBehaviourSystem::Update(registry, gameState.anomalyState, deltaTime);
 	RoamerKillSystem::Update(registry, gameState, deltaTime);
-}
-
-
-void Game::LateUpdate(float deltaTime)
-{
-	// TODO: Attraction should be zero at down time.
-	float currentAttraction = gameState.anomalyState.attractionPercentage;
-	float clampedAttraction = std::clamp<float>(currentAttraction, AnomalyState::BASE_ATTRACTION, 100.0f);
-	gameState.anomalyState.attractionPercentage = clampedAttraction;
+	AnomalyAttractionSystem::Update(gameState.anomalyState, deltaTime);
 }
 
 

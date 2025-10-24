@@ -13,9 +13,7 @@
 #include <vector>
 
 
-void ProjectileHitSystem::Update(
-	entt::registry& registry, float deltaTime
-)
+void ProjectileHitSystem::Update(entt::registry& registry, float deltaTime)
 {
 	std::vector<Nc::Vector2f> hitPositions { };
 
@@ -45,10 +43,7 @@ void ProjectileHitSystem::Update(
 }
 
 
-void ProjectileHitSystem::CheckForHits(
-	entt::registry& registry, 
-	std::vector<Nc::Vector2f>& hitPositions
-)
+void ProjectileHitSystem::CheckForHits(entt::registry& registry, std::vector<Nc::Vector2f>& hitPositions)
 {
 	auto view = registry.view<Component::Blip, Component::Transform, Component::Health>();
 	for (auto [entity, blip, transform, health] : view.each())

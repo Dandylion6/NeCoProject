@@ -2,7 +2,6 @@
 #include "components/objects/comms/morse_transceiver_component.hpp"
 #include "components/objects/outside/receiver_component.hpp"
 #include "core/game_state.hpp"
-#include "core/scene.hpp"
 #include "core/settings.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -13,6 +12,7 @@
 #include <cmath>
 #include <cstdint>
 #include <string>
+
 #ifdef DEBUG_BUILD
 #include "core/debug_context.hpp"
 #include "core/game.hpp"
@@ -91,7 +91,7 @@ void MorseTransceiverSystem::TransmitCharacter(
 	entt::registry& registry, AnomalyState& anomalyState, char character
 )
 {
-	constexpr float ATTRACTION_INCREASE = 0.33f;
+	constexpr float ATTRACTION_INCREASE = 0.42f;
 
 	auto receiverView = registry.view<Component::Receiver>();
 	for (auto [entity, receiver] : receiverView.each())

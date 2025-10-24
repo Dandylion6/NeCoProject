@@ -21,12 +21,12 @@ const entt::entity Construct::NoteEntity(
 
 	registry.emplace<Component::Note>(entity);
 
-	Texture2D& texture = resourceStore.GetTexture("assets/environment/objects/note/page_0.png");
+	Texture2D texture = resourceStore.GetTexture("assets/environment/objects/note/page_0.png");
 	Nc::Vector2i size = Nc::Vector2i(texture.width, texture.height);
 
 	Nc::Vector2f position = RenderContext::DISPLAY_SIZE * 0.5f;
 	registry.emplace<Component::Transform>(entity, CommsDesk, position, size, size * 0.5f);
-	registry.emplace<Component::Sprite>(entity, texture);
+	registry.emplace<Component::Sprite>(entity, std::move(texture));
 
 	return entity;
 }

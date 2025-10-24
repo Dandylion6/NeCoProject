@@ -9,6 +9,7 @@ namespace Math
 	float Lerp(float a, float b, float t);
 	float InverseLerp(float a, float b, float value);
 	float Remap(Nc::Vector2f a, Nc::Vector2f b, float value);
+	float ClampedRemap(Nc::Vector2f a, Nc::Vector2f b, float value);
 	float SmoothApproach(float a, float b, float deltaTime, float speed);
 	float SineIn(float x);
 	float SineOut(float x);

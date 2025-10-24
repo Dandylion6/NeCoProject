@@ -26,7 +26,7 @@ void RecalibrateInterpretingSystem::HandleReceivedMessage(
 	auto view = registry.view<Component::Radar, Component::Machine>();
 	for (auto [entity, radar, machine] : view.each())
 	{
-		if (radar.recalibrationTimeLeft > 0.0f)
+		if (radar.isRecalibrating)
 		{
 			// Already recalibrating
 			// TODO: Add machine feedback
@@ -35,34 +35,26 @@ void RecalibrateInterpretingSystem::HandleReceivedMessage(
 
 		// Starts recalibration.
 		radar.recalibrationTimeLeft = Component::Radar::RECALIBRATION_TIME;
+		radar.isRecalibrating = true;
 	}
 
 	// TODO: Add confirmation response
+	receiver.message.clear();
 	//ConfirmRecalibrationCommand(registry, resourceStore, receiver);
 };
 
 
 void RecalibrateInterpretingSystem::Update(entt::registry& registry, float deltaTime)
 {
-	// The amount of stability the radar machine regains after a successful recalibration.
-	constexpr float STABILITY_INCREASE = 33.33f;
-
 	auto view = registry.view<Component::Machine, Component::Radar>();
 	for (auto [entity, machine, radar] : view.each())
 	{
-		bool isDoneRecalibrating = radar.recalibrationTimeLeft <= -1.0f;
-		if (isDoneRecalibrating) continue;
-
-		// Restart the radar machine if it's done recalibrating.
+		if (!radar.isRecalibrating) continue;
 		if (radar.recalibrationTimeLeft <= 0.0f)
 		{
-			// TODO: Reboot sequence
-			radar.recalibrationTimeLeft = -1.5f;
-			float newStability = std::fminf(radar.stability + STABILITY_INCREASE, 100.0f);
-			radar.stability = newStability;
+			RecalibrationCompleted(machine, radar);
 			continue;
 		}
-
 		radar.recalibrationTimeLeft -= deltaTime;
 	}
 }
@@ -79,4 +71,17 @@ void RecalibrateInterpretingSystem::ConfirmRecalibrationCommand(
 	RadioSoundSystem::Broadcast(registry, std::move(response), Medium);
 
 	receiver.message.clear();
+}
+
+
+void RecalibrateInterpretingSystem::RecalibrationCompleted(Component::Machine& machine, Component::Radar& radar)
+{
+	// The amount of stability the radar machine regains after a successful recalibration.
+	constexpr float STABILITY_INCREASE = 18.0f;
+
+	// TODO: Reboot sequence
+	radar.isRecalibrating = false;
+	machine.isActive = true;
+	float newStability = std::fminf(radar.stability + STABILITY_INCREASE, 100.0f);
+	radar.stability = newStability;
 }

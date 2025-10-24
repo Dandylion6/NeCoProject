@@ -8,6 +8,7 @@
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
 #include "utility/vector2.hpp"
+#include <utility>
 
 
 const entt::entity Construct::MainMenuBackgroundEntity(
@@ -23,7 +24,7 @@ const entt::entity Construct::MainMenuBackgroundEntity(
 	registry.emplace<Tag::DontDestroyOnLoad>(entity);
 	registry.emplace<Tag::MainMenu>(entity);
 	registry.emplace<Component::UiTransform>(entity, center, center, size);
-	registry.emplace<Component::Sprite>(entity, texture);
+	registry.emplace<Component::Sprite>(entity, std::move(texture));
 
 	return entity;
 }
