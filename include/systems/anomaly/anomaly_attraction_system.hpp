@@ -1,10 +1,10 @@
 #pragma once
-struct AnomalyState;
+struct GameState;
 
 
 class AnomalyAttractionSystem
 {
 public:
-	static void Update(AnomalyState& anomalyState, float deltaTime);
+	static void Update(GameState& gameState, float deltaTime);
 
 };

@@ -17,32 +17,37 @@
 
 
 void RoamerSpawningSystem::Update(
-	entt::registry& registry, ResourceStore& resourceStore, AnomalyState& anomalyState, float deltaTime
+	entt::registry& registry, ResourceStore& resourceStore, GameState& gameState, float deltaTime
 )
 {
-	// todo: Implement roamer limit and more complex spawn logic.
-	uint8_t maxRoamers = AnomalyState::GetMaxRoamers(anomalyState.intensityLevel);
-	if (anomalyState.totalRoamerCount >= maxRoamers) return;
+	if (!GameState::IsNight(gameState.hour))
+	{
+		gameState.anomalyState.nextSpawnSecondsLeft = 0.0f;
+		return;
+	}
+
+	uint8_t maxRoamers = AnomalyState::GetMaxRoamers(gameState.anomalyState.intensityLevel);
+	if (gameState.anomalyState.totalRoamerCount >= maxRoamers) return;
 	
 	// @brief Spawn wait interval range in minutes for high attraction.
 	constexpr Nc::Vector2f SPAWN_WAIT_HIGH_RANGE = Nc::Vector2f(1.4f, 2.3f);
 	// @bried Spawn wait interval range in minutes for low attraction.
 	constexpr Nc::Vector2f SPAWN_WAIT_LOW_RANGE = Nc::Vector2f(2.1f, 3.2f);
 
-	float pressureTarget = AnomalyState::GetPressureTarget(anomalyState.intensityLevel);
-	float pressureSurplus = std::clamp<float>(anomalyState.roamerPressureWeight - pressureTarget, -0.5f, 0.5f);
+	float pressureTarget = AnomalyState::GetPressureTarget(gameState.anomalyState.intensityLevel);
+	float pressureSurplus = std::clamp<float>(gameState.anomalyState.roamerPressureWeight - pressureTarget, -0.5f, 0.5f);
 	float timeScale = 1.0f - pressureSurplus;
-	anomalyState.nextSpawnSecondsLeft -= deltaTime * timeScale;
+	gameState.anomalyState.nextSpawnSecondsLeft -= deltaTime * timeScale;
 
-	if (!ShouldSpawnRoamer(anomalyState)) return;
+	if (!ShouldSpawnRoamer(gameState.anomalyState)) return;
 
 	Nc::Vector2f spawnPoint = RoamerSpawningSystem::GenerateRandomSpawnPoint();
-	SpawnRoamer(registry, resourceStore, spawnPoint, anomalyState);
+	SpawnRoamer(registry, resourceStore, spawnPoint, gameState.anomalyState);
 	
-	float attractionFactor = anomalyState.attractionPercentage * 0.01f;
+	float attractionFactor = gameState.anomalyState.attractionPercentage * 0.01f;
 	Nc::Vector2f range = Nc::Vector2f::Lerp(SPAWN_WAIT_LOW_RANGE, SPAWN_WAIT_HIGH_RANGE, attractionFactor);
 	float nextSpawnSeconds = Nc::Random::Range(range.x, range.y) * 60.0f;
-	anomalyState.nextSpawnSecondsLeft = nextSpawnSeconds;
+	gameState.anomalyState.nextSpawnSecondsLeft = nextSpawnSeconds;
 }
 
 

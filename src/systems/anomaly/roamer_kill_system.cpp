@@ -18,6 +18,13 @@ void RoamerKillSystem::Update(
 	auto view = registry.view<const Component::Transform, const Component::AnomalyRoamer, Component::Health>();
 	for (auto [entity, transform, roamer, health] : view.each())
 	{
+		// Kills all roamers
+		if (!GameState::IsNight(gameState.hour))
+		{
+			health.health = 0;
+			continue;
+		}
+
 		// Phantom roamers don't kill.
 		if (roamer.behaviour == Component::AnomalyRoamer::Behaviour::Phantom)
 		{

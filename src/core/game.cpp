@@ -281,10 +281,10 @@ void Game::UpdateRegistries(float deltaTime)
 	ArtilleryAimingSystem::Update(registry, deltaTime);
 	ArtilleryFireSystem::Update(registry, resourceStore, deltaTime);
 	ProjectileHitSystem::Update(registry, deltaTime);
-	RoamerSpawningSystem::Update(registry, resourceStore, gameState.anomalyState, deltaTime);
+	RoamerSpawningSystem::Update(registry, resourceStore, gameState, deltaTime);
 	RoamerBehaviourSystem::Update(registry, gameState.anomalyState, deltaTime);
 	RoamerKillSystem::Update(registry, gameState, deltaTime);
-	AnomalyAttractionSystem::Update(gameState.anomalyState, deltaTime);
+	AnomalyAttractionSystem::Update(gameState, deltaTime);
 }
 
 

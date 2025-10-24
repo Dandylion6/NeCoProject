@@ -1,7 +1,8 @@
 #pragma once
-#include "core/state/anomaly_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "utility/vector2.hpp"
+struct AnomalyState;
+struct GameState;
 class ResourceStore;
 
 
@@ -9,7 +10,7 @@ class RoamerSpawningSystem
 {
 public:
 	static void Update(
-		entt::registry& registry, ResourceStore& resourceStore, AnomalyState& anomalyState, float time
+		entt::registry& registry, ResourceStore& resourceStore, GameState& gameState, float time
 	);
 	static const entt::entity SpawnRoamer(
 		entt::registry& registry, ResourceStore& resourceStore, Nc::Vector2f spawnPoint, AnomalyState& anomalyState
