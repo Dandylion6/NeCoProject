@@ -2,7 +2,8 @@
 #include "components/core/sound_emitter_component.hpp"
 #include "components/core/transform_component.hpp"
 #include "components/objects/comms/morse_transceiver_component.hpp"
-#include "core/render_context.hpp"
+#include "core/context/render_context.hpp"
+#include "core/resource_store.hpp"
 #include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -13,7 +14,7 @@
 
 
 
-void Construct::MorseTransceiverEntity(entt::registry& registry)
+void Construct::MorseTransceiverEntity(entt::registry& registry, ResourceStore& resourceStore)
 {
 	const entt::entity entity = registry.create();
 
@@ -23,7 +24,7 @@ void Construct::MorseTransceiverEntity(entt::registry& registry)
 	registry.emplace<Component::Transform>(entity, CommsRoom, position);
 	registry.emplace<Component::MorseTransceiver>(entity);
 
-	Music morseTone = LoadMusicStream("assets/audio/object/morse_tone.wav");
+	Music morseTone = resourceStore.GetMusic("assets/audio/object/morse_tone.wav");
 	Component::LoopedSoundEmitter& emitter = registry.emplace<Component::LoopedSoundEmitter>(entity, std::move(morseTone));
 	emitter.volume = 0.0f;
 	SoundSystem::PlayEmitter(emitter);

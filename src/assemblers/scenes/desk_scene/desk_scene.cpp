@@ -3,12 +3,14 @@
 #include "assemblers/entities/scene_background_entity.hpp"
 #include "assemblers/scenes/desk_scene/desk_scene.hpp"
 #include "assemblers/scenes/desk_scene/note_entity.hpp"
-#include "core/render_context.hpp"
+#include "core/context/render_context.hpp"
+#include "core/resource_store.hpp"
 #include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "raylib.h"
 #include "utility/color.hpp"
 #include "utility/vector2.hpp"
+#include <utility>
 
 
 void DeskScene::Build(
@@ -20,13 +22,9 @@ void DeskScene::Build(
 {
 	Construct::NoteEntity(registry, resourceStore);
 
-	Construct::SceneBackgroundEntity(
-		LoadTexture("assets/environment/backgrounds/comms_desk.png"), registry, CommsDesk
-	);
-
-	Construct::MoveRegionEntity(
-		registry, gameState, resourceStore, Up, CommsDesk, CommsRoom, 0.15f
-	);
+	Texture2D texture = resourceStore.GetTexture("assets/environment/backgrounds/comms_desk.png");
+	Construct::SceneBackgroundEntity(std::move(texture), registry, CommsDesk);
+	Construct::MoveRegionEntity(registry, gameState, resourceStore, Up, CommsDesk, CommsRoom, 0.15f);
 
 	constexpr Nc::Hex LIGHT_COLOR = 0xfee8c8ff;
 

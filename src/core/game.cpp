@@ -7,10 +7,10 @@
 #include "assemblers/scenes/doorway_scene/doorway_scene.hpp"
 #include "assemblers/scenes/outside_scene/outside_scene.hpp"
 #include "assemblers/scenes/settings_menu/settings_menu.hpp"
+#include "core/context/render_context.hpp"
+#include "core/data/save_settings.hpp"
 #include "core/game.hpp"
-#include "core/game_state.hpp"
-#include "core/render_context.hpp"
-#include "core/save_settings.hpp"
+#include "core/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "raylib.h"
 #include "systems/anomaly/anomaly_attraction_system.hpp"
@@ -44,12 +44,11 @@
 #include "systems/ui/increment_number_system.hpp"
 #include "utility/color_palette.hpp"
 #include "utility/vector2.hpp"
-#include <algorithm>
 #include <cmath>
 
 #ifdef DEBUG_BUILD
-#include "core/debug_context.hpp"
-#include "core/save_game.hpp"
+#include "core/context/debug_context.hpp"
+#include "core/data/save_game.hpp"
 #include "core/scene.hpp"
 #include "components/core/button_action_component.hpp"
 #include "components/core/rendering/text_component.hpp"
@@ -242,7 +241,7 @@ void Game::UpdateRegistries(float deltaTime)
 	InputActionSystem::Update(registry, gameState);
 	ButtonActionSystem::Update(registry, gameState, renderContext, deltaTime);
 	IncrementNumberSystem::Update(registry);
-	AmbientSoundSystem::Update(registry, gameState, deltaTime);
+	AmbientSoundSystem::Update(registry, gameState, resourceStore, deltaTime);
 	TweenSystem::Update(registry, gameState, deltaTime);
 	SoundSystem::Update(registry, deltaTime);
 

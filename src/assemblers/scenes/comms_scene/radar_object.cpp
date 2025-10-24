@@ -10,7 +10,7 @@
 #include "components/objects/machine.hpp"
 #include "components/objects/outside/blip_component.hpp"
 #include "components/scene/address_component.hpp"
-#include "core/render_context.hpp"
+#include "core/context/render_context.hpp"
 #include "core/resource_store.hpp"
 #include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"

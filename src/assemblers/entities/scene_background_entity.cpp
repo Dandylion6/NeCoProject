@@ -1,7 +1,7 @@
 #include "assemblers/entities/scene_background_entity.hpp"
 #include "components/core/rendering/sprite_component.hpp"
 #include "components/core/transform_component.hpp"
-#include "core/render_context.hpp"
+#include "core/context/render_context.hpp"
 #include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"

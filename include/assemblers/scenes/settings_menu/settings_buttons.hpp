@@ -1,8 +1,8 @@
 #pragma once
 #include "assemblers/ui/label_button_object.hpp"
-#include "core/settings.hpp"
 #include "entt/entity/fwd.hpp"
 struct GameState;
+struct Settings;
 class ResourceStore;
 
 

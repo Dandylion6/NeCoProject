@@ -1,13 +1,14 @@
 #include "components/core/lights/light_source_component.hpp"
 #include "components/core/transform_component.hpp"
-#include "core/game_state.hpp"
-#include "core/render_context.hpp"
+#include "core/context/render_context.hpp"
 #include "core/resource_store.hpp"
+#include "core/state/game_state.hpp"
+#include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
+#include "systems/core/lighting_system.hpp"
 #include "utility/interpolation.hpp"
 #include "utility/vector2.hpp"
-#include "systems/core/lighting_system.hpp"
 
 
 
@@ -25,7 +26,12 @@ void LightingSystem::Initialize(LightingContext& context, ResourceStore& resourc
 
 
 void LightingSystem::Update(
-    entt::registry& registry, LightingContext& context, Shader& lightShader, GameState& gameState, Nc::Vector2f cameraPosition, float deltaTime
+    entt::registry& registry, 
+    LightingContext& context, 
+    Shader& lightShader, 
+    GameState& gameState, 
+    Nc::Vector2f cameraPosition, 
+    float deltaTime
 )
 {
     int lightSourceCount = 0;

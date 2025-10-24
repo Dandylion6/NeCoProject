@@ -2,7 +2,7 @@
 #include "components/core/sound_emitter_component.hpp"
 #include "components/core/transform_component.hpp"
 #include "components/objects/comms/radio_component.hpp"
-#include "core/render_context.hpp"
+#include "core/context/render_context.hpp"
 #include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"

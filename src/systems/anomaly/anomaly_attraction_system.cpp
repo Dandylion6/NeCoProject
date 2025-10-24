@@ -1,4 +1,4 @@
-#include "core/game_state.hpp"
+#include "core/state/anomaly_state.hpp"
 #include "systems/anomaly/anomaly_attraction_system.hpp"
 #include "utility/interpolation.hpp"
 #include "utility/vector2.hpp"

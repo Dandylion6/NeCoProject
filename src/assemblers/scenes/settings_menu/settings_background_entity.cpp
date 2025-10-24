@@ -7,7 +7,7 @@
 #include "components/scene/dont_destroy_on_load_tag.hpp"
 #include "components/ui/settings_tag.hpp"
 #include "components/ui/toggle_state_component.hpp"
-#include "core/game_state.hpp"
+#include "core/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"

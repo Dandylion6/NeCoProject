@@ -8,15 +8,21 @@
 #include "components/ui/increment_component.hpp"
 #include "components/ui/settings_tag.hpp"
 #include "components/ui/toggle_state_component.hpp"
-#include "core/game_state.hpp"
+#include "core/data/settings.hpp"
+#include "core/resource_store.hpp"
 #include "core/scene.hpp"
-#include "core/settings.hpp"
+#include "core/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "utility/vector2.hpp"
 
 
 void SettingsMenu::Build(
-    Settings& settings, Settings& pendingSettings, GameState& gameState, Nc::Vector2f windowSize, entt::registry& registry, ResourceStore& resourceStore
+    Settings& settings, 
+    Settings& pendingSettings, 
+    GameState& gameState, 
+    Nc::Vector2f windowSize, 
+    entt::registry& registry, 
+    ResourceStore& resourceStore
 ) 
 {
     Construct::SettingsHeaderEntity(registry);

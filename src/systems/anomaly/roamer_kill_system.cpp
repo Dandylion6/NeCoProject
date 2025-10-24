@@ -3,7 +3,7 @@
 #include "components/objects/health_component.hpp"
 #include "components/objects/outside/artillery_component.hpp"
 #include "core/game.hpp"
-#include "core/game_state.hpp"
+#include "core/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "systems/anomaly/roamer_behaviour_system.hpp"

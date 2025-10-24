@@ -1,6 +1,6 @@
 #pragma once
 #include "components/objects/comms/morse_transceiver_component.hpp"
-#include "core/game_state.hpp"
+#include "core/data/settings.hpp"
 #include "entt/entity/fwd.hpp"
 
 

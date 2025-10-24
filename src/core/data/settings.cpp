@@ -1,4 +1,5 @@
-#include "core/settings.hpp"
+#include "core/data/settings.hpp"
+#include "utility/morse_code.hpp"
 
 
 static void ApplyMorseSettings(MorseSettings& morseSettings)

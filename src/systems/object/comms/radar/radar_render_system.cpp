@@ -4,19 +4,18 @@
 #include "components/objects/comms/radar.hpp"
 #include "components/objects/machine.hpp"
 #include "components/objects/outside/blip_component.hpp"
-#include "core/game_state.hpp"
-#include "core/render_context.hpp"
+#include "core/context/render_context.hpp"
 #include "core/rendering.hpp"
 #include "core/resource_store.hpp"
 #include "core/scene.hpp"
+#include "core/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "format"
 #include "raylib.h"
 #include "systems/object/comms/radar/radar_render_system.hpp"
 #include "utility/vector2.hpp"
-#include <string>
 #include <sstream>
+#include <string>
 
 
 void RadarRenderSystem::DrawRenderTexture(

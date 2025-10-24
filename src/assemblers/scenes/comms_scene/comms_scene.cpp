@@ -6,7 +6,7 @@
 #include "assemblers/scenes/comms_scene/morse_transceiver_entity.hpp"
 #include "assemblers/scenes/comms_scene/radar_object.hpp"
 #include "assemblers/scenes/comms_scene/radio_entity.hpp"
-#include "core/render_context.hpp"
+#include "core/context/render_context.hpp"
 #include "core/resource_store.hpp"
 #include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
@@ -24,7 +24,7 @@ void CommsScene::Build(
 {
 	Construct::RadarObject(registry, resourceStore);
 	Construct::MorseMonitorObject(registry, resourceStore);
-	Construct::MorseTransceiverEntity(registry);
+	Construct::MorseTransceiverEntity(registry, resourceStore);
 	Construct::RadioEntity(registry);
 
 	Construct::SceneBackgroundEntity(

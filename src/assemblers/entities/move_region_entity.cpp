@@ -3,10 +3,10 @@
 #include "components/core/button_action_component.hpp"
 #include "components/core/transform_component.hpp"
 #include "components/scene/move_region_tag.hpp"
-#include "core/game_state.hpp"
-#include "core/render_context.hpp"
+#include "core/context/render_context.hpp"
 #include "core/resource_store.hpp"
 #include "core/scene.hpp"
+#include "core/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
@@ -26,19 +26,17 @@ entt::entity Construct::MoveRegionEntity(
 	registry.emplace<Tag::MoveRegion>(entity);
 	registry.emplace<Component::Transform>(entity, transform);
 
-	std::function<void()> onClick = std::function<void()>(
-		[&registry, &gameState, &resourceStore, nextScene, moveTime]()
-	{
-		if (gameState.movingToScene != NullScene) return;
-		gameState.movingToScene = nextScene;
+	std::function<void()> onClick = [&registry, &gameState, &resourceStore, nextScene, moveTime]()
+		{
+			if (gameState.movingToScene != NullScene) return;
+			gameState.movingToScene = nextScene;
 
-		MoveTransition::StartMoveScene(registry, gameState, nextScene, moveTime);
+			MoveTransition::StartMoveScene(registry, gameState, nextScene, moveTime);
 
-		Sound& transitionSound = resourceStore.GetSound("assets/audio/effects/scene_transition.wav");
-		PlaySound(transitionSound);
+			Sound& transitionSound = resourceStore.GetSound("assets/audio/effects/scene_transition.wav");
+			PlaySound(transitionSound);
 
-	}
-	);
+		};
 
 	registry.emplace<Component::ButtonAction>(entity, std::move(onClick));
 	return entity;

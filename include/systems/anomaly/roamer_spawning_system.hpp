@@ -1,5 +1,5 @@
 #pragma once
-#include "core/game_state.hpp"
+#include "core/state/anomaly_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "utility/vector2.hpp"
 class ResourceStore;

@@ -1,6 +1,6 @@
 #include "components/objects/comms/radio_component.hpp"
 #include "components/objects/outside/receiver_component.hpp"
-#include "core/debug_context.hpp"
+#include "core/context/debug_context.hpp"
 #include "core/game.hpp"
 #include "core/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
@@ -18,10 +18,7 @@
 #include <utility>
 
 
-void ReceiverInterpretingSystem::Update(
-	entt::registry& registry,
-	ResourceStore& resourceStore
-)
+void ReceiverInterpretingSystem::Update(entt::registry& registry, ResourceStore& resourceStore)
 {
 	auto view = registry.view<Component::Receiver>();
 	for (auto [entity, receiver] : view.each())

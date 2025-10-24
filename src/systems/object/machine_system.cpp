@@ -1,5 +1,5 @@
 #include "components/objects/machine.hpp"
-#include "core/game_state.hpp"
+#include "core/state/anomaly_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "systems/object/machine_system.hpp"

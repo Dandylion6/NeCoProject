@@ -1,6 +1,6 @@
 #include "components/core/transform_component.hpp"
 #include "components/core/tween_component.hpp"
-#include "core/game_state.hpp"
+#include "core/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "systems/core/tween_system.hpp"

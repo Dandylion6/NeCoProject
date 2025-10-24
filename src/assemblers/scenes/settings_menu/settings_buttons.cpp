@@ -5,9 +5,9 @@
 #include "components/core/transform_component.hpp"
 #include "components/scene/dont_destroy_on_load_tag.hpp"
 #include "components/ui/settings_tag.hpp"
+#include "core/data/save_settings.hpp"
+#include "core/data/settings.hpp"
 #include "core/resource_store.hpp"
-#include "core/save_settings.hpp"
-#include "core/settings.hpp"
 #include "entt/entity/fwd.hpp"
 #include "utility/vector2.hpp"
 #include <functional>

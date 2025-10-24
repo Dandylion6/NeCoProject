@@ -12,21 +12,15 @@ class AmbientSoundSystem
 {
 public:
 	static void Update(
-		entt::registry& registry, 
-		GameState& gameState,
-		float deltaTime
+		entt::registry& registry, GameState& gameState, ResourceStore& resourceStore, float deltaTime
 	);
 
 private:
 	static void TryPlayAmbience(
-		Component::Transform& transform,
-		Component::LoopedSoundEmitter& emitter,
-		Scene scene
+		Component::Transform& transform, Component::LoopedSoundEmitter& emitter, Scene scene, ResourceStore& resourceStore
 	);
-
 	static void TransitionAmbientAudio(
-		Component::LoopedSoundEmitter& emitter,
-		const std::string& filePath
+		Component::LoopedSoundEmitter& emitter, const std::string& filePath, ResourceStore& resourceStore
 	);
 
 };

@@ -4,9 +4,9 @@
 #include "components/core/transform_component.hpp"
 #include "components/ui/main_menu_tag.hpp"
 #include "core/game.hpp"
-#include "core/game_state.hpp"
 #include "core/resource_store.hpp"
 #include "core/scene.hpp"
+#include "core/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 

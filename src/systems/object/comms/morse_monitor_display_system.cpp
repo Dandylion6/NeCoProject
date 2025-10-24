@@ -2,7 +2,7 @@
 #include "components/core/transform_component.hpp"
 #include "components/objects/comms/morse_monitor.hpp"
 #include "components/objects/comms/morse_transceiver_component.hpp"
-#include "core/settings.hpp"
+#include "core/data/settings.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "systems/object/comms/morse_monitor_display_system.hpp"

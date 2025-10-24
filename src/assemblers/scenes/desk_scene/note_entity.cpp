@@ -2,7 +2,7 @@
 #include "components/core/rendering/sprite_component.hpp"
 #include "components/core/transform_component.hpp"
 #include "components/objects/note_component.hpp"
-#include "core/render_context.hpp"
+#include "core/context/render_context.hpp"
 #include "core/resource_store.hpp"
 #include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
@@ -13,8 +13,7 @@
 
 
 const entt::entity Construct::NoteEntity(
-	entt::registry& registry, 
-	ResourceStore& resourceStore
+	entt::registry& registry, ResourceStore& resourceStore
 )
 {
 	const entt::entity entity = registry.create();

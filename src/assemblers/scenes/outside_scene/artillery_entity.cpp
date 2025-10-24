@@ -4,7 +4,7 @@
 #include "components/objects/health_component.hpp"
 #include "components/objects/outside/artillery_component.hpp"
 #include "components/objects/outside/receiver_component.hpp"
-#include "core/render_context.hpp"
+#include "core/context/render_context.hpp"
 #include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"

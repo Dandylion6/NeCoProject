@@ -66,3 +66,14 @@ Sound& ResourceStore::GetSound(const std::string& filePath)
 	}
 	return soundStore.at(filePath);
 }
+
+
+Music& ResourceStore::GetMusic(const std::string& filePath)
+{
+    if (musicStore.find(filePath) == musicStore.end())
+    {
+        Music music = LoadMusicStream(filePath.c_str());
+        musicStore.emplace(filePath, std::move(music));
+    }
+    return musicStore.at(filePath);
+}

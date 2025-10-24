@@ -5,10 +5,10 @@
 #include "components/core/transform_component.hpp"
 #include "components/scene/dont_destroy_on_load_tag.hpp"
 #include "components/ui/restart_menu_tag.hpp"
+#include "core/data/save_game.hpp"
 #include "core/game.hpp"
-#include "core/game_state.hpp"
 #include "core/resource_store.hpp"
-#include "core/save_game.hpp"
+#include "core/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "utility/vector2.hpp"
 #include <functional>

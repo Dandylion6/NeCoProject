@@ -1,6 +1,7 @@
 #include "components/anomaly/anomaly_roamer_component.hpp"
 #include "components/core/transform_component.hpp"
-#include "core/game_state.hpp"
+#include "core/state/anomaly_state.hpp"
+#include "core/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "systems/anomaly/roamer/phantom_behaviour_system.hpp"

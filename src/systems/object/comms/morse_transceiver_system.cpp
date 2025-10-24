@@ -1,8 +1,9 @@
 #include "components/core/transform_component.hpp"
 #include "components/objects/comms/morse_transceiver_component.hpp"
 #include "components/objects/outside/receiver_component.hpp"
-#include "core/game_state.hpp"
-#include "core/settings.hpp"
+#include "core/data/settings.hpp"
+#include "core/state/anomaly_state.hpp"
+#include "core/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
@@ -14,16 +15,13 @@
 #include <string>
 
 #ifdef DEBUG_BUILD
-#include "core/debug_context.hpp"
+#include "core/context/debug_context.hpp"
 #include "core/game.hpp"
 #endif // DEBUG_BUILD
 
 
 void MorseTransceiverSystem::Update(
-	entt::registry& registry, 
-	GameState& gameState, 
-	MorseSettings settings,
-	float deltaTime
+	entt::registry& registry, GameState& gameState, MorseSettings settings, float deltaTime
 )
 {
 	auto view = registry.view<Component::Transform, Component::MorseTransceiver>();
@@ -55,8 +53,7 @@ void MorseTransceiverSystem::Update(
 
 
 void MorseTransceiverSystem::InputChanged(
-	Component::MorseTransceiver& transceiver,
-	MorseSettings settings
+	Component::MorseTransceiver& transceiver, MorseSettings settings
 )
 {
 	bool inputJustStarted = IsKeyPressed(Component::MorseTransceiver::INPUT_KEY);
@@ -68,10 +65,7 @@ void MorseTransceiverSystem::InputChanged(
 
 
 void MorseTransceiverSystem::TryEndCharacter(
-	entt::registry& registry, 
-	AnomalyState& anomalyState,
-	Component::MorseTransceiver& transceiver, 
-	MorseSettings settings
+	entt::registry& registry, AnomalyState& anomalyState, Component::MorseTransceiver& transceiver, MorseSettings settings
 )
 {
 	float longestTime = settings.dashTime + settings.errorMargin;
@@ -123,9 +117,7 @@ void MorseTransceiverSystem::ClearTransceiver(Component::MorseTransceiver& trans
 }
 
 
-MorseCode::Pulse MorseTransceiverSystem::GetPulseType(
-	float intervalSeconds, MorseSettings settings
-)
+MorseCode::Pulse MorseTransceiverSystem::GetPulseType(float intervalSeconds, MorseSettings settings)
 {
 	Nc::Vector2f margins = Nc::Vector2f::Zero();
 	margins.x = settings.dotTime - settings.errorMargin;
@@ -145,8 +137,7 @@ MorseCode::Pulse MorseTransceiverSystem::GetPulseType(
 
 
 char MorseTransceiverSystem::PulsesToChar(
-	const Component::MorseTransceiver::PulseArray& pulses,
-	uint8_t pulseCount
+	const Component::MorseTransceiver::PulseArray& pulses, uint8_t pulseCount
 )
 {
 	std::string codeString { };

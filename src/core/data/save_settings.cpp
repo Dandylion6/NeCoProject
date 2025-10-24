@@ -1,10 +1,7 @@
-#include "core/game_state.hpp"
-#include "core/save_settings.hpp"
-#include "core/scene.hpp"
-#include "core/settings.hpp"
+#include "core/data/save_settings.hpp"
+#include "core/data/settings.hpp"
 #include "nlohmann/json.hpp"
 #include "nlohmann/json_fwd.hpp"
-#include <cstdint>
 #include <cstdio>
 #include <filesystem>
 #include <fstream>

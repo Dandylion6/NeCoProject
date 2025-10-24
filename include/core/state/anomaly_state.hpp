@@ -1,7 +1,4 @@
 #pragma once
-#include "core/scene.hpp"
-#include "utility/bounds.hpp"
-#include "utility/vector2.hpp"
 #include <cstdint>
 
 
@@ -20,7 +17,7 @@ struct AnomalyState
 	/// </summary>
 	float attractionPercentage = BASE_ATTRACTION;
 	float nextSpawnSecondsLeft = 0.0f;
-	
+
 	/// <summary>
 	/// A dynamic scaling value influencing how the world responds to progression.
 	/// Provides deterministic difficulty growth beyond simply counting nights,
@@ -30,7 +27,7 @@ struct AnomalyState
 
 	// @brief The sum of pressure based on the roamers active.
 	float roamerPressureWeight = 0.0f;
-	
+
 	/// <summary>
 	/// Defines the current stage of anomaly development.
 	/// Used to introduce new systems, behaviours, and logic at predetermined points in progression.
@@ -53,19 +50,4 @@ struct AnomalyState
 		if (level <= 4) return 5u;
 		return 8u;
 	}
-};
-
-
-struct GameState
-{
-	static constexpr Nc::Vector2f BUNKER_POSITION = Nc::Vector2f(48.0f, -57.0f);
-	static constexpr Nc::Vector2f ARTILLERY_POSITION = Nc::Vector2f(-62.5f, 2.0f);
-	static constexpr Nc::Bounds WORLD_BOUNDS = Nc::Bounds(-100.0f, 100.0f, 100.0f, -100.0f); // Y-axis is flipped.
-
-	AnomalyState anomalyState { };
-	float time = 0.0f;
-	Scene currentScene = NullScene;
-	Scene movingToScene = NullScene;
-	bool isPaused = false;
-	bool shouldExit = false;
 };
