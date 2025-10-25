@@ -1,5 +1,4 @@
 #pragma once
-#include <array>
 #include <cstdint>
 
 
@@ -18,6 +17,7 @@ namespace Component
 		float recalibrationTimeLeft = 0.0f;
 		float nextGlitchSpawnSeconds = 0.0f;
 		float lastGlitchTime = 0.0f;
+		float breakdownCheckTimer = 0.0f;
 		uint8_t glitchCount = 0u;
 		bool isRecalibrating = false;
 	};

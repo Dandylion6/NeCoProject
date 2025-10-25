@@ -3,15 +3,16 @@
 #include "components/objects/outside/blip_component.hpp"
 #include "entt/entity/fwd.hpp"
 struct AnomalyState;
+struct GameState;
 
 
 class RadarStabilitySystem
 {
 public:
-	static void Update(entt::registry& registry, AnomalyState& anomalyState, float time, float deltaTime);
+	static void Update(entt::registry& registry, GameState& gameState, float time, float deltaTime);
 
 private:
-	static void UpdateBlipStability(entt::registry& registry, Component::Radar& machine, float time);
+	static void UpdateBlipStability(entt::registry& registry, AnomalyState& anomalyState, Component::Radar& machine, float time);
 	static bool ShouldBlipGlitch(Component::Blip& blip, Component::Radar& machine, float secondsSinceLastGlitch, size_t blipCount);
 	static float GetDegradationValue(float attractionPercentage);
 	static void GlitchBlip(entt::registry& registry, Component::Radar& radar, Component::Blip& blip, const entt::entity entity, float time);

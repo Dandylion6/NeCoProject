@@ -2,6 +2,7 @@
 #include "components/objects/machine.hpp"
 #include "components/objects/outside/blip_component.hpp"
 #include "core/state/anomaly_state.hpp"
+#include "core/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
@@ -19,8 +20,13 @@
 #endif
 
 
-void RadarStabilitySystem::Update(entt::registry& registry, AnomalyState& anomalyState, float time, float deltaTime)
+void RadarStabilitySystem::Update(entt::registry& registry, GameState& gameState, float time, float deltaTime)
 {
+	// @brief The probablity of spotanous breakdown of the radar every minute.
+	constexpr Nc::Vector2f BREAKDOWN_CHANCE_PER_MINUTE_RANGE = Nc::Vector2f(3.0f, 64.0f);
+	constexpr Nc::Vector2f BREAKDOWN_STABILITY_RANGE = Nc::Vector2f(Component::Radar::STABLE_LEVEL, Component::Radar::UNSTABLE_LEVEL);
+	constexpr float MINUTE_TO_SECOND = 1.0f / 60.0f;
+
 	auto view = registry.view<Component::Machine, Component::Radar>();
 	for (auto [entity, machine, radar] : view.each())
 	{
@@ -31,24 +37,48 @@ void RadarStabilitySystem::Update(entt::registry& registry, AnomalyState& anomal
 #endif
 
 		if (!machine.isActive) continue;
-		// TODO: Add night time check.
+		if (!GameState::IsNight(gameState.hour)) continue;
 
-		float degradationValue = GetDegradationValue(anomalyState.attractionPercentage);
+		float degradationValue = GetDegradationValue(gameState.anomalyState.attractionPercentage);
 		radar.stability -= degradationValue * deltaTime;
 
-		if (radar.nextGlitchSpawnSeconds == 0.0f)
-			SetRandomGlitchSpawnInterval(radar);
+		radar.breakdownCheckTimer += deltaTime;
+		if (radar.breakdownCheckTimer >= 1.0f)
+		{
+			// Check for breakdown
+			radar.breakdownCheckTimer = 0.0f;
+			float deterministcValue = Nc::Random::Range(0.0f, 100.0f);
+			float stabilityCurve = Math::SineInOut(radar.stability * 0.01f) * 100.0f;
 
+			float breakdownMapped = Math::ClampedRemap(BREAKDOWN_STABILITY_RANGE, BREAKDOWN_CHANCE_PER_MINUTE_RANGE, stabilityCurve);
+			float breakdownChance = breakdownMapped * MINUTE_TO_SECOND;
+
+			if (deterministcValue <= breakdownChance) 
+				radar.stability = 0.0f;
+		}
+
+		// TODO: Add effects for breakdown.
 		// Turns off the radar if stability is 0.
-		if (radar.stability <= 0.0f) machine.isActive = false;
+		if (radar.stability <= 0.0f)
+		{
+			machine.isActive = false;
+			continue;
+		}
 
-		UpdateBlipStability(registry, radar, time);
+		bool spawnNextGlitch = radar.nextGlitchSpawnSeconds == 0.0f;
+		if (spawnNextGlitch) SetRandomGlitchSpawnInterval(radar);
+		UpdateBlipStability(registry, gameState.anomalyState, radar, time);
 	}
 }
 
 
-void RadarStabilitySystem::UpdateBlipStability(entt::registry& registry, Component::Radar& machine, float time)
+void RadarStabilitySystem::UpdateBlipStability(
+	entt::registry& registry, AnomalyState& anomalyState, Component::Radar& machine, float time
+)
 {
+	constexpr float STABILITY_REDUCTION = 2.0f;
+	constexpr float ATTRACTION_GAIN = 1.2f;
+
 	bool isStable = machine.stability >= Component::Radar::STABLE_LEVEL;
 	float secondsSinceLastGlitch = time - machine.lastGlitchTime;
 
@@ -62,7 +92,6 @@ void RadarStabilitySystem::UpdateBlipStability(entt::registry& registry, Compone
 #ifdef DEBUG_BUILD
 	bool hasCommandGliched = IsKeyPressed(KEY_G);
 #endif // DEBUG_BUILD
-
 
 	uint8_t glitchCount = 0u;
 	auto view = registry.view<Component::Blip>();
@@ -95,6 +124,9 @@ void RadarStabilitySystem::UpdateBlipStability(entt::registry& registry, Compone
 
 		if (!spawnNewGlitch) continue;
 		if (!ShouldBlipGlitch(blip, machine, secondsSinceLastGlitch, view.size())) continue;
+
+		anomalyState.attractionPercentage += ATTRACTION_GAIN;
+		machine.stability -= STABILITY_REDUCTION;
 
 		machine.lastGlitchTime = time;
 		spawnNewGlitch = false;

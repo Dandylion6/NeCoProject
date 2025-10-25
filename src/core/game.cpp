@@ -269,7 +269,7 @@ void Game::UpdateRegistries(float deltaTime)
 	MorseMonitorDisplaySystem::Update(registry, settings.morseSettings, deltaTime);
 	MorseSoundSystem::Update(registry, gameState.currentScene, deltaTime);
 	MachineSystem::Update(registry, gameState.anomalyState, deltaTime);
-	RadarStabilitySystem::Update(registry, gameState.anomalyState, gameState.time, deltaTime);
+	RadarStabilitySystem::Update(registry, gameState, gameState.time, deltaTime);
 	RecalibrateInterpretingSystem::Update(registry, deltaTime);
 	BlipDeathSystem::Update(registry);
 	BlipBlinkSystem::Update(registry);

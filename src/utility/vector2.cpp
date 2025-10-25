@@ -86,6 +86,11 @@ namespace Nc
 		return std::fminf(x, y);
 	}
 
+	float Vector2f::GetMax() const
+	{
+		return std::fmaxf(x, y);
+	}
+
 
 	Nc::Vector2f Vector2f::Normalized() const
 	{

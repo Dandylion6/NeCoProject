@@ -24,7 +24,7 @@ float Math::Remap(Nc::Vector2f a, Nc::Vector2f b, float value)
 
 float Math::ClampedRemap(Nc::Vector2f a, Nc::Vector2f b, float value)
 {
-	value = std::clamp<float>(value, a.x, a.y);
+	value = std::clamp<float>(value, a.GetMin(), a.GetMax());
 	return Remap(a, b, value);
 }
 

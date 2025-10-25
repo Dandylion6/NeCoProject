@@ -62,6 +62,7 @@ namespace Nc
 		float GetDistance() const;
 		float GetSqrDistance() const;
 		float GetMin() const;
+		float GetMax() const;
 
 		Nc::Vector2f Normalized() const;
 		Nc::Vector2f LerpTo(const Vector2f& end, const float t) const;
