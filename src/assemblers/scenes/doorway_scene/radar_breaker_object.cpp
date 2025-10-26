@@ -1,5 +1,5 @@
+#include "assemblers/entities/interactive/lever_entity.hpp"
 #include "assemblers/scenes/doorway_scene/radar_breaker_object.hpp"
-#include "components/core/drag_action_component.hpp"
 #include "components/core/rendering/rectangle_component.hpp"
 #include "components/core/transform_component.hpp"
 #include "core/scene.hpp"
@@ -28,19 +28,16 @@ static const entt::entity RadarLeverBaseEntity(entt::registry& registry, Resourc
 
 static const entt::entity RadarLeverHandleEntity(entt::registry& registry, ResourceStore& resourceStore)
 {
-	constexpr Nc::Vector2f POSITION = Nc::Vector2f(200.0f, 70.0f);
+	constexpr Nc::Vector2f POSITION = Nc::Vector2f(200.0f, 100.0f);
 	constexpr Nc::Vector2f SIZE = Nc::Vector2f(55.0f, 20.0f);
 
-	const entt::entity entity = registry.create();
+	Component::Transform transform = Component::Transform(Doorway, POSITION, SIZE, SIZE * 0.5f);
 
-	registry.emplace<Component::Transform>(entity, Doorway, POSITION, SIZE, SIZE * 0.5f);
-	registry.emplace<Component::Rectangle>(entity, RAYWHITE);
+	Assembled::LeverData leverData = Construct::LeverEntity(registry, std::move(transform), 30.0f, "", "");
 
-	Component::DragAction& drag = registry.emplace<Component::DragAction>(entity);
-	drag.onDragging.connect<&RadarRestartSystem::OnLeverDrag>();
-	drag.onReleased.connect<&RadarRestartSystem::OnLeverRelease>();
+	registry.emplace<Component::Rectangle>(leverData.entity, RAYWHITE);
 
-	return entity;
+	return leverData.entity;
 }
 
 

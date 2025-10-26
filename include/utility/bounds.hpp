@@ -21,5 +21,6 @@ namespace Nc
 
 		static bool PointInBounds(const Bounds& bounds, const Nc::Vector2f point);
 		static Vector2f SizeOf(const Bounds& bounds);
+		static Nc::Vector2f CenterOf(const Bounds& bounds);
 	};
 }

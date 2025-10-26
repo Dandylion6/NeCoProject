@@ -22,12 +22,13 @@ bool DragActionSystem::Update(
 	{
 		if (drag.isTarget)
 		{
-			if (!clickReleased) drag.onDragging(registry, entity);
-			else 
-			{
-				drag.onReleased(registry, entity);
-				drag.isTarget = false;
-			}
+			Nc::Vector2f mousePosition = GetMousePosition();
+			mousePosition -= Nc::Vector2f(renderContext.renderRectangle.x, renderContext.renderRectangle.y);
+			mousePosition /= renderContext.renderScale;
+
+			drag.draggedDelta = mousePosition - drag.startPosition;
+
+			if (clickReleased) drag.isTarget = false;
 			return false;
 		}
 
@@ -65,7 +66,7 @@ DragActionSystem::DragResult DragActionSystem::UpdateSceneDrag(
 	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 	{
 		drag.isTarget = true;
-		drag.originPosition = mousePosition;
+		drag.startPosition = mousePosition;
 		return Pressed;
 	}
 	return Hovering;

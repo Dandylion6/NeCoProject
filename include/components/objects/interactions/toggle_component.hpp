@@ -18,20 +18,6 @@ namespace Component
 
         Toggle() = default;
         Toggle(ToggleState state) : state(state) { };
-
-        /// @brief Toggles based on state given.
-        /// @param state Is the state to change based on toggle behaviour.
-        /// @return 
-        static ToggleState SetToggle(ToggleState state)
-        {
-            switch (state)
-            {
-            case Disabled: return Disabled;
-            case Off: return On;
-            case On: return Off;
-            }
-            return Disabled;
-        }
     };
 }
 

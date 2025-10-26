@@ -49,4 +49,10 @@ namespace Nc
 	{
 		return bounds.max - bounds.min;
 	}
+
+
+	Nc::Vector2f Bounds::CenterOf(const Bounds& bounds)
+	{
+		return (bounds.min + bounds.max) * 0.5f;
+	}
 }

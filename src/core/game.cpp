@@ -33,6 +33,7 @@
 #include "systems/object/comms/radar/radar_render_system.hpp"
 #include "systems/object/comms/radar/radar_stability_system.hpp"
 #include "systems/object/comms/radio_sound_system.hpp"
+#include "systems/object/interactive/lever_system.hpp"
 #include "systems/object/machine_system.hpp"
 #include "systems/object/outside/blip_death_system.hpp"
 #include "systems/object/outside/projectile_hit_system.hpp"
@@ -283,6 +284,7 @@ void Game::UpdateRegistries(float deltaTime)
 	ReceiverInterpretingSystem::Update(registry, resourceStore);
 	ReceiverCodeResponseSystem::Update(registry, resourceStore);
 	RadioSoundSystem::Update(registry, deltaTime);
+	LeverSystem::Update(registry, deltaTime);
 	ArtilleryAimingSystem::Update(registry, deltaTime);
 	ArtilleryFireSystem::Update(registry, resourceStore, deltaTime);
 	ProjectileHitSystem::Update(registry, deltaTime);
