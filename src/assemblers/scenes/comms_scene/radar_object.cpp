@@ -1,4 +1,5 @@
 #include "assemblers/scenes/comms_scene/radar_object.hpp"
+#include "assemblers/scenes/doorway_scene/radar_breaker_object.hpp"
 #include "components/core/button_action_component.hpp"
 #include "components/core/rendering/rectangle_component.hpp"
 #include "components/core/rendering/sprite_component.hpp"
@@ -151,12 +152,13 @@ void Construct::RadarObject(entt::registry& registry, ResourceStore& resourceSto
 
 	registry.emplace<Component::Transform>(entity, Radar);
 	registry.emplace<Component::Sprite>(entity, std::move(texture));
-
 	
 	registry.emplace<Component::Address>(entity, "radar");
 	registry.emplace<Component::Machine>(entity, ATTRACTION_REDUCTION_PER_SECOND, POWER_USAGE);
 	Component::Radar& radar = registry.emplace<Component::Radar>(entity);
 
+	Construct::RadarBreakerObject(registry, resourceStore, entity);
+	
 #ifdef DEBUG_BUILD
 	ToggleState radarState = Game::debugContext.isRadarActiveOnStart ? On : Off;
 	Component::Toggle& toggle = registry.emplace<Component::Toggle>(entity, radarState);

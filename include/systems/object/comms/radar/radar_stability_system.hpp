@@ -9,12 +9,39 @@ struct GameState;
 class RadarStabilitySystem
 {
 public:
-	static void Update(entt::registry& registry, GameState& gameState, float time, float deltaTime);
+	static void Update(
+		entt::registry& registry, 
+		GameState& gameState, 
+		float time, 
+		float deltaTime
+	) noexcept;
+
+	static void Restart(entt::registry& registry, const entt::entity entity) noexcept;
 
 private:
-	static void UpdateBlipStability(entt::registry& registry, AnomalyState& anomalyState, Component::Radar& machine, float time);
-	static bool ShouldBlipGlitch(Component::Blip& blip, Component::Radar& machine, float secondsSinceLastGlitch, size_t blipCount);
-	static float GetDegradationValue(float attractionPercentage);
-	static void GlitchBlip(entt::registry& registry, Component::Radar& radar, Component::Blip& blip, const entt::entity entity, float time);
-	static void SetRandomGlitchSpawnInterval(Component::Radar& machine);
+	static void UpdateBlipStability(
+		entt::registry& registry, 
+		AnomalyState& anomalyState, 
+		Component::Radar& machine, 
+		float time
+	) noexcept;
+
+	static bool ShouldBlipGlitch(
+		Component::Blip& blip, 
+		Component::Radar& machine, 
+		float secondsSinceLastGlitch, 
+		size_t blipCount
+	) noexcept;
+
+	static float GetDegradationValue(float attractionPercentage) noexcept;
+
+	static void GlitchBlip(
+		entt::registry& registry, 
+		Component::Radar& radar, 
+		Component::Blip& blip, 
+		const entt::entity entity, 
+		float time
+	) noexcept;
+
+	static void SetRandomGlitchSpawnInterval(Component::Radar& machine) noexcept;
 };

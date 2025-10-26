@@ -1,0 +1,42 @@
+#pragma once
+#include "entt/entt.hpp"
+#include "entt/entity/registry.hpp"
+#include "entt/entity/fwd.hpp"
+#include <cstdint>
+
+
+namespace Component
+{
+    struct CircuitBreaker
+    {
+        using OnRestart = entt::delegate<void(entt::registry&, const entt::entity)>;
+        static constexpr float BREAKER_DISCHARGE_SECONDS = 6.0f;
+
+        enum Status : uint8_t
+        {
+            /// @brief The system is running as intended.
+            Operational,
+            /// @brief The system has been manually set to offline.
+            Offline,
+            /// @brief The system brokedown and requires attention.
+            Faulted,
+            /// @brief Breaker has been set off and is waiting for restart.
+            Discharging,
+            /// @brief The breaker is ready to restart.
+            ReadyToRestart,
+            /// @brief Restart was miss-timed.
+            DesyncedRestart
+        };
+
+        entt::entity system = entt::null;
+        entt::entity indicator = entt::null;
+        float cycleTimerSeconds = 0.0f;
+        float desyncWarningSecondsLeft = 0.0f;
+        Status status = Operational;
+        OnRestart onRestart { };
+
+
+        CircuitBreaker(entt::entity system, entt::entity indicator) :
+            system(system), indicator(indicator) { };
+    };   
+}

@@ -2,7 +2,6 @@
 #include "assemblers/entities/move_region_entity.hpp"
 #include "assemblers/entities/scene_background_entity.hpp"
 #include "assemblers/scenes/doorway_scene/doorway_scene.hpp"
-#include "assemblers/scenes/doorway_scene/radar_breaker_object.hpp"
 #include "core/context/render_context.hpp"
 #include "core/resource_store.hpp"
 #include "core/scene.hpp"
@@ -17,8 +16,6 @@ void DoorwayScene::Build(
 	entt::registry& registry, GameState& gameState, ResourceStore& resourceStore, RenderContext& renderContext
 )
 {
-	Construct::RadarBreakerObject(registry, resourceStore);
-
 	Texture2D backgroundText = resourceStore.GetTexture("assets/environment/backgrounds/doorway.png");
 	Construct::SceneBackgroundEntity(std::move(backgroundText), registry, Doorway);
 	Construct::MoveRegionEntity(registry, gameState, resourceStore, Left, Doorway, CommsRoom, 0.4f);

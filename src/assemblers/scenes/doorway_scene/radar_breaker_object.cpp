@@ -1,12 +1,12 @@
-#include "assemblers/entities/interactive/lever_entity.hpp"
+#include "assemblers/entities/interactive/circuit_breaker_object.hpp"
 #include "assemblers/scenes/doorway_scene/radar_breaker_object.hpp"
 #include "components/core/rendering/rectangle_component.hpp"
 #include "components/core/transform_component.hpp"
 #include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
+#include "systems/object/comms/radar/radar_stability_system.hpp"
 #include "raylib.h"
-#include "systems/object/breaker/radar_restart_system.hpp"
 #include "utility/vector2.hpp"
 
 // TODO: Add visuals
@@ -26,23 +26,24 @@ static const entt::entity RadarLeverBaseEntity(entt::registry& registry, Resourc
 }
 
 
-static const entt::entity RadarLeverHandleEntity(entt::registry& registry, ResourceStore& resourceStore)
+static const entt::entity RadarLeverHandleEntity(entt::registry& registry, ResourceStore& resourceStore, const entt::entity radar)
 {
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(200.0f, 100.0f);
 	constexpr Nc::Vector2f SIZE = Nc::Vector2f(55.0f, 20.0f);
 
 	Component::Transform transform = Component::Transform(Doorway, POSITION, SIZE, SIZE * 0.5f);
 
-	Assembled::LeverData leverData = Construct::LeverEntity(registry, std::move(transform), 30.0f, "", "");
+	Assembled::CircuitBreakerData breakerData = Construct::CircuitBreakerObject(registry, std::move(transform), radar);
 
-	registry.emplace<Component::Rectangle>(leverData.entity, RAYWHITE);
+	registry.emplace<Component::Rectangle>(breakerData.entity, RAYWHITE);
+	breakerData.breaker.onRestart.connect<&RadarStabilitySystem::Restart>();
 
-	return leverData.entity;
+	return breakerData.entity;
 }
 
 
-void Construct::RadarBreakerObject(entt::registry& registry, ResourceStore& resourceStore)
+void Construct::RadarBreakerObject(entt::registry& registry, ResourceStore& resourceStore, const entt::entity radar)
 {
-	RadarLeverHandleEntity(registry, resourceStore);
+	RadarLeverHandleEntity(registry, resourceStore, radar);
 	RadarLeverBaseEntity(registry, resourceStore);
 }

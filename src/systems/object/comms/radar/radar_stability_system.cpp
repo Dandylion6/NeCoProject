@@ -73,6 +73,13 @@ void RadarStabilitySystem::Update(entt::registry& registry, GameState& gameState
 }
 
 
+void RadarStabilitySystem::Restart(entt::registry& registry, const entt::entity entity)
+{
+	Component::Radar& radar = registry.get<Component::Radar>(entity);
+	radar.stability = Component::Radar::STABLE_LEVEL;
+}
+
+
 void RadarStabilitySystem::UpdateBlipStability(
 	entt::registry& registry, AnomalyState& anomalyState, Component::Radar& machine, float time
 )
