@@ -1,5 +1,5 @@
 #include "components/objects/comms/radar.hpp"
-#include "components/objects/machine.hpp"
+#include "components/objects/interactions/toggle_component.hpp"
 #include "components/scene/address_component.hpp"
 #include "components/scene/dont_destroy_on_load_tag.hpp"
 #include "core/data/save_game.hpp"
@@ -59,16 +59,16 @@ namespace Save
     }
 
 
-    static SaveResult SaveMachineComponents(entt::registry& registry, nlohmann::json& data)
+    static SaveResult SaveToggleComponents(entt::registry& registry, nlohmann::json& data)
     {
-        auto view = registry.view<const Component::Address, const Component::Machine>();
-        for (auto [entity, address, machine] : view.each())
+        auto view = registry.view<const Component::Address, const Component::Toggle>();
+        for (auto [entity, address, toggle] : view.each())
         {
             if (address.address.empty()) return SaveResult::Failure;
 
             nlohmann::json& entityData = data["entities"][address.address];
 
-            entityData["machine_is_active"] = machine.isActive;
+            entityData["toggle_state"] = toggle.state;
 
             // In the case where the machine has other relevant components
             if (registry.any_of<Component::Radar>(entity))
@@ -82,17 +82,17 @@ namespace Save
     }
 
 
-    static LoadResult LoadMachineComponents(entt::registry& registry, nlohmann::json& data)
+    static LoadResult LoadToggleComponents(entt::registry& registry, nlohmann::json& data)
     {
         nlohmann::json& entitiesData = data["entities"];
-        auto view = registry.view<Component::Address, Component::Machine>();
-        for (auto [entity, address, machine] : view.each())
+        auto view = registry.view<Component::Address, Component::Toggle>();
+        for (auto [entity, address, toggle] : view.each())
         {
             if (!entitiesData.contains(address.address)) return LoadResult::Failure;
             
             nlohmann::json& entityData = entitiesData[address.address];
             if (!entityData.contains("machine_is_active")) return LoadResult::Failure;
-            machine.isActive = entityData["machine_is_active"];
+            toggle.state = entityData["toggle_state"];
 
             if (registry.any_of<Component::Radar>(entity))
             {
@@ -118,7 +118,7 @@ Save::SaveResult Save::SaveGame(entt::registry& registry, GameState& gameState)
     nlohmann::json data;
 
     Save::SaveGameState(gameState, data);
-    Save::SaveMachineComponents(registry, data);
+    Save::SaveToggleComponents(registry, data);
 
 #ifdef DEBUG_BUILD
     stream << data.dump(4) << std::endl;
@@ -161,7 +161,7 @@ Save::LoadResult Save::LoadGame(Game& game, entt::registry& registry, GameState&
 #endif
 
     Save::LoadGameState(gameState, data);
-    Save::LoadMachineComponents(registry, data);
+    Save::LoadToggleComponents(registry, data);
 
     return LoadResult::Success;
 }

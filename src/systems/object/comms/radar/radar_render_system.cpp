@@ -2,7 +2,7 @@
 #include "components/core/rendering/text_component.hpp"
 #include "components/core/transform_component.hpp"
 #include "components/objects/comms/radar.hpp"
-#include "components/objects/machine.hpp"
+#include "components/objects/interactions/toggle_component.hpp"
 #include "components/objects/outside/blip_component.hpp"
 #include "core/rendering.hpp"
 #include "core/resource_store.hpp"
@@ -21,25 +21,22 @@
 
 
 void RadarRenderSystem::DrawRenderTexture(
-	entt::registry& registry,
-	const RenderTexture2D& radarRenderTexture,
-	Scene currentScene,
-	ResourceStore& resourceStore
+	entt::registry& registry, const RenderTexture2D& radarRenderTexture, Scene currentScene, ResourceStore& resourceStore
 )
 {
 	if (currentScene != CommsRoom) return;
 
-	auto view = registry.view<Component::Machine, Component::Radar,  Component::Sprite>();
+	auto view = registry.view<Component::Toggle, Component::Radar, Component::Sprite>();
 
 	BeginTextureMode(radarRenderTexture);
 	BeginBlendMode(BLEND_ADDITIVE);
 
-	for (auto [entity, machine, radar, sprite] : view.each())
+	for (auto [entity, toggle, radar, sprite] : view.each())
 	{
-		if (!machine.isActive)
+		// TODO: Add different visual states for on, off, and disabled (broken).
+		if (toggle.state != On)
 		{
 			ClearBackground(BLACK);
-			// TODO: Implement machine when inactive rendering.
 			continue;
 		}
 

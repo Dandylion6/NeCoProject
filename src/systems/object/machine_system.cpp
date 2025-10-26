@@ -1,4 +1,5 @@
-#include "components/objects/machine.hpp"
+#include "components/objects/interactions/toggle_component.hpp"
+#include "components/objects/machine_component.hpp"
 #include "core/state/anomaly_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -10,11 +11,15 @@ void MachineSystem::Update(entt::registry& registry, AnomalyState& anomalyState,
 	auto view = registry.view<Component::Machine>();
 	for (auto [entity, machine] : view.each())
 	{
-		if (machine.isActive)
+		if (registry.any_of<Component::Toggle>(entity))
 		{
-			// TODO: Add machine power consumption.
-			continue;
+			Component::Toggle toggle = registry.get<Component::Toggle>(entity);
+			if (toggle.state != On)
+			{
+				anomalyState.attractionPercentage -= machine.attractionReduction * deltaTime;
+				continue;
+			}
 		}
-		anomalyState.attractionPercentage -= machine.attractionReduction * deltaTime;
+		// TODO: Add machine power consumption.
 	}
 }

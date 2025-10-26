@@ -1,6 +1,6 @@
 #include "components/objects/comms/radar.hpp"
 #include "components/objects/comms/radio_component.hpp"
-#include "components/objects/machine.hpp"
+#include "components/objects/interactions/toggle_component.hpp"
 #include "components/objects/outside/receiver_component.hpp"
 #include "core/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
@@ -17,15 +17,18 @@ const std::string RecalibrateInterpretingSystem::COMMAND = "OPTSIG";
 
 
 void RecalibrateInterpretingSystem::HandleReceivedMessage(
-	entt::registry& registry,
-	ResourceStore& resourceStore,
-	Component::Receiver& receiver,
-	const std::string& message
+	entt::registry& registry, ResourceStore& resourceStore, Component::Receiver& receiver, const std::string& message
 )
 {
-	auto view = registry.view<Component::Radar, Component::Machine>();
-	for (auto [entity, radar, machine] : view.each())
+	auto view = registry.view<Component::Radar, Component::Toggle>();
+	for (auto [entity, radar, toggle] : view.each())
 	{
+		if (toggle.state == Disabled)
+		{
+			// TODO: Add failed recalibaration response.
+			continue;
+		}
+
 		if (radar.isRecalibrating)
 		{
 			// Already recalibrating
@@ -46,13 +49,13 @@ void RecalibrateInterpretingSystem::HandleReceivedMessage(
 
 void RecalibrateInterpretingSystem::Update(entt::registry& registry, float deltaTime)
 {
-	auto view = registry.view<Component::Machine, Component::Radar>();
-	for (auto [entity, machine, radar] : view.each())
+	auto view = registry.view<Component::Radar, Component::Toggle>();
+	for (auto [entity, radar, toggle] : view.each())
 	{
 		if (!radar.isRecalibrating) continue;
 		if (radar.recalibrationTimeLeft <= 0.0f)
 		{
-			RecalibrationCompleted(machine, radar);
+			RecalibrationCompleted(radar, toggle);
 			continue;
 		}
 		radar.recalibrationTimeLeft -= deltaTime;
@@ -74,14 +77,14 @@ void RecalibrateInterpretingSystem::ConfirmRecalibrationCommand(
 }
 
 
-void RecalibrateInterpretingSystem::RecalibrationCompleted(Component::Machine& machine, Component::Radar& radar)
+void RecalibrateInterpretingSystem::RecalibrationCompleted(Component::Radar& radar, Component::Toggle& toggle)
 {
 	// The amount of stability the radar machine regains after a successful recalibration.
 	constexpr float STABILITY_INCREASE = 18.0f;
 
 	// TODO: Reboot sequence
 	radar.isRecalibrating = false;
-	machine.isActive = true;
+	toggle.state = On;
 	float newStability = std::fminf(radar.stability + STABILITY_INCREASE, 100.0f);
 	radar.stability = newStability;
 }

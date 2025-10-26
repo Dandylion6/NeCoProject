@@ -10,12 +10,11 @@ namespace Component
 		/// The rate attraction percentage is reduced once the machine is inactive. Measured in percentage points per second.
 		/// </summary>
 		float attractionReduction = 0.0f;
-		uint16_t powerUsage = 0u; // Power usage in watts.
-		bool isActive = false;
-
+		/// @brief Power usage in watts.
+		uint16_t powerUsage = 0u;
+		
 		Machine() = default;
-		Machine(float attractionReduction, uint16_t powerUsage, bool isActive = false)
-			: attractionReduction(attractionReduction), powerUsage(powerUsage), isActive(isActive)
-		{ };
+		Machine(float attractionReduction, uint16_t powerUsage) : 
+			attractionReduction(attractionReduction), powerUsage(powerUsage) { };
 	};
 }

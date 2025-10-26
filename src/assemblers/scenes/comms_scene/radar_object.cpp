@@ -7,7 +7,8 @@
 #include "components/core/tween_component.hpp"
 #include "components/objects/comms/radar.hpp"
 #include "components/objects/health_component.hpp"
-#include "components/objects/machine.hpp"
+#include "components/objects/interactions/toggle_component.hpp"
+#include "components/objects/machine_component.hpp"
 #include "components/objects/outside/blip_component.hpp"
 #include "components/scene/address_component.hpp"
 #include "core/context/render_context.hpp"
@@ -111,7 +112,7 @@ namespace Construct
 
 
 	static const entt::entity RadarPowerButtonEntity(
-		entt::registry& registry, Component::Radar& radar, Component::Machine& machine
+		entt::registry& registry, Component::Radar& radar, Component::Toggle& toggle
 	)
 	{
 		// TODO: Replace with proper button graphics and size.
@@ -126,11 +127,11 @@ namespace Construct
 
 		// Toggles radar machine
 		Component::ButtonAction& action = registry.emplace<Component::ButtonAction>(entity);
-		action.onClick = [&registry, &action, &radar, &machine]()
+		action.onClick = [&action, &radar, &toggle]()
 			{
 				// TODO: Add active/inactive visual state change and prevent spamming.
 				if (!radar.isRecalibrating)
-					machine.isActive = !machine.isActive;
+				toggle.state = ToggleLogic::Next(toggle.state);
 				action.isActive = true;
 			};
 
@@ -151,19 +152,23 @@ void Construct::RadarObject(entt::registry& registry, ResourceStore& resourceSto
 	registry.emplace<Component::Transform>(entity, Radar);
 	registry.emplace<Component::Sprite>(entity, std::move(texture));
 
-	bool radarActive = false;
-#ifdef DEBUG_BUILD
-	radarActive = Game::debugContext.isRadarActiveOnStart;	
-#endif
+	
 	registry.emplace<Component::Address>(entity, "radar");
-	Component::Machine& machine = registry.emplace<Component::Machine>(entity, ATTRACTION_REDUCTION_PER_SECOND, POWER_USAGE, radarActive);
+	registry.emplace<Component::Machine>(entity, ATTRACTION_REDUCTION_PER_SECOND, POWER_USAGE);
 	Component::Radar& radar = registry.emplace<Component::Radar>(entity);
+
+#ifdef DEBUG_BUILD
+	ToggleState radarState = Game::debugContext.isRadarActiveOnStart ? On : Off;
+	Component::Toggle& toggle = registry.emplace<Component::Toggle>(entity, radarState);
+#else
+	Component::Toggle& toggle = registry.emplace<Component::Toggle>(entity, Off);
+#endif
 
 	Construct::RadarPathEntity(registry, resourceStore);
 	Construct::RadarArtilleryEntity(registry, resourceStore);
 	Construct::RadarErrorWarningEntity(registry);
 	Construct::RadarRecalibrationTextEntity(registry);
-	Construct::RadarPowerButtonEntity(registry, radar, machine);
+	Construct::RadarPowerButtonEntity(registry, radar, toggle);
 }
 
 

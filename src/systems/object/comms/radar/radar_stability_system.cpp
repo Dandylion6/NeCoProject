@@ -1,5 +1,6 @@
 #include "components/objects/comms/radar.hpp"
-#include "components/objects/machine.hpp"
+#include "components/objects/interactions/toggle_component.hpp"
+#include "components/objects/machine_component.hpp"
 #include "components/objects/outside/blip_component.hpp"
 #include "core/state/anomaly_state.hpp"
 #include "core/state/game_state.hpp"
@@ -27,8 +28,8 @@ void RadarStabilitySystem::Update(entt::registry& registry, GameState& gameState
 	constexpr Nc::Vector2f BREAKDOWN_STABILITY_RANGE = Nc::Vector2f(Component::Radar::STABLE_LEVEL, Component::Radar::UNSTABLE_LEVEL);
 	constexpr float MINUTE_TO_SECOND = 1.0f / 60.0f;
 
-	auto view = registry.view<Component::Machine, Component::Radar>();
-	for (auto [entity, machine, radar] : view.each())
+	auto view = registry.view<Component::Radar, Component::Toggle>();
+	for (auto [entity, radar, toggle] : view.each())
 	{
 #ifdef DEBUG_BUILD
 		if (IsKeyPressed(KEY_K)) radar.stability = std::fminf(radar.stability + 5.0f, 100.0f);
@@ -36,7 +37,7 @@ void RadarStabilitySystem::Update(entt::registry& registry, GameState& gameState
 		Game::debugContext.radarStabilityPercentage = radar.stability;
 #endif
 
-		if (!machine.isActive) continue;
+		if (toggle.state != On) continue;
 		if (!GameState::IsNight(gameState.hour)) continue;
 
 		float degradationValue = GetDegradationValue(gameState.anomalyState.attractionPercentage);
@@ -61,7 +62,7 @@ void RadarStabilitySystem::Update(entt::registry& registry, GameState& gameState
 		// Turns off the radar if stability is 0.
 		if (radar.stability <= 0.0f)
 		{
-			machine.isActive = false;
+			toggle.state = Disabled;
 			continue;
 		}
 

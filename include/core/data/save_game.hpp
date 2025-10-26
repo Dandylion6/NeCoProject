@@ -1,5 +1,4 @@
 #pragma once
-#include "corecrt.h"
 #include "entt/entity/fwd.hpp"
 #include <array>
 #include <cstdint>
