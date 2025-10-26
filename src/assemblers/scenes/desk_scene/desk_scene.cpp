@@ -14,10 +14,7 @@
 
 
 void DeskScene::Build(
-	entt::registry& registry, 
-	RenderContext& renderContext,
-	GameState& gameState, 
-	ResourceStore& resourceStore
+	entt::registry& registry, RenderContext& renderContext, GameState& gameState, ResourceStore& resourceStore
 )
 {
 	Construct::NoteEntity(registry, resourceStore);

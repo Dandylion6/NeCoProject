@@ -8,26 +8,10 @@ struct RenderContext;
 class ButtonActionSystem
 {
 public:
-	static void Update(
-		entt::registry& registry, 
-		GameState& gameState, 
-		RenderContext& renderContext,
-		float deltaTime
-	);
+	static bool Update(entt::registry& registry, GameState& gameState, RenderContext& renderContext);
 
 private:
-	static bool UpdateSceneButtons(
-		entt::registry& registry, 
-		GameState& gameState, 
-		RenderContext& renderContext,
-		float deltaTime
-	);
-
-	static bool UpdateUiButtons(
-		entt::registry& registry, 
-		GameState& gameState, 
-		Nc::Vector2i windowSize,
-		float deltaTime
-	);
+	static bool UpdateSceneButtons(entt::registry& registry, GameState& gameState, RenderContext& renderContext);
+	static bool UpdateUiButtons(entt::registry& registry, GameState& gameState, Nc::Vector2i windowSize);
 
 };

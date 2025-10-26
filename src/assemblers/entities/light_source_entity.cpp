@@ -1,8 +1,10 @@
 #include "assemblers/entities/light_source_entity.hpp"
 #include "components/core/lights/light_source_component.hpp"
 #include "components/core/transform_component.hpp"
+#include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
+#include "utility/color.hpp"
 #include "utility/vector2.hpp"
 
 

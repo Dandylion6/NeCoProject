@@ -10,26 +10,18 @@
 #include "utility/vector2.hpp"
 
 
-void ButtonActionSystem::Update(
-	entt::registry& registry, 
-	GameState& gameState, 
-	RenderContext& renderContext,
-	float deltaTime
+bool ButtonActionSystem::Update(
+	entt::registry& registry, GameState& gameState, RenderContext& renderContext
 )
 {
-	bool isHovering = UpdateUiButtons(registry, gameState, renderContext.windowSize, deltaTime);
-	if (!isHovering) isHovering = UpdateSceneButtons(registry, gameState, renderContext, deltaTime);
-	
-	MouseCursor cursor = isHovering ? MOUSE_CURSOR_POINTING_HAND : MOUSE_CURSOR_DEFAULT;
-	SetMouseCursor(cursor);
+	bool isHovering = UpdateUiButtons(registry, gameState, renderContext.windowSize);
+	if (!isHovering) isHovering = UpdateSceneButtons(registry, gameState, renderContext);
+	return isHovering;
 }
 
 
 bool ButtonActionSystem::UpdateSceneButtons(
-	entt::registry& registry, 
-	GameState& gameState, 
-	RenderContext& renderContext,
-	float deltaTime
+	entt::registry& registry, GameState& gameState, RenderContext& renderContext
 )
 {
 	if (gameState.isPaused) return false;
@@ -59,10 +51,7 @@ bool ButtonActionSystem::UpdateSceneButtons(
 
 
 bool ButtonActionSystem::UpdateUiButtons(
-	entt::registry& registry, 
-	GameState& gameState, 
-	Nc::Vector2i windowSize,
-	float deltaTime
+	entt::registry& registry, GameState& gameState, Nc::Vector2i windowSize
 )
 {
 	bool isHovering = false;

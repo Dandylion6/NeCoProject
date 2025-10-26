@@ -18,6 +18,7 @@
 #include "systems/anomaly/roamer_kill_system.hpp"
 #include "systems/anomaly/roamer_spawning_system.hpp"
 #include "systems/core/button_action_system.hpp"
+#include "systems/core/drag_action_system.hpp"
 #include "systems/core/input_action_system.hpp"
 #include "systems/core/lighting_system.hpp"
 #include "systems/core/rendering_system.hpp"
@@ -173,7 +174,7 @@ void Game::BuildRuntimeScenes()
 
 	CommsScene::Build(registry, renderContext, gameState, resourceStore);
 	DeskScene::Build(registry, renderContext, gameState, resourceStore);
-	DoorwayScene::Build(registry, gameState, resourceStore);
+	DoorwayScene::Build(registry, gameState, resourceStore, renderContext);
 	OutsideScene::Build(registry, gameState, resourceStore);
 }
 
@@ -242,7 +243,7 @@ void Game::Update(float deltaTime)
 	if (gameState.survivedNight) return;
 
 	constexpr float HOUR_INCREASE_RATE = 1.0f / (GameState::HOUR_MINUTES * 60.0f);
-	constexpr int HOURS_IN_DAY = 24.0f;
+	constexpr float HOURS_IN_DAY = 24.0f;
 
 	float oldHour = gameState.hour;
 	float newHour = std::fmodf(gameState.hour + HOUR_INCREASE_RATE * deltaTime, HOURS_IN_DAY);
@@ -257,11 +258,15 @@ void Game::Update(float deltaTime)
 void Game::UpdateRegistries(float deltaTime)
 {
 	InputActionSystem::Update(registry, gameState);
-	ButtonActionSystem::Update(registry, gameState, renderContext, deltaTime);
+	bool buttonHovering = ButtonActionSystem::Update(registry, gameState, renderContext);
+	bool dragHovering = DragActionSystem::Update(registry, gameState, renderContext);
 	IncrementNumberSystem::Update(registry);
 	AmbientSoundSystem::Update(registry, gameState, resourceStore, deltaTime);
 	TweenSystem::Update(registry, gameState, deltaTime);
 	SoundSystem::Update(registry, deltaTime);
+
+	MouseCursor cursor = (buttonHovering || dragHovering) ? MOUSE_CURSOR_POINTING_HAND : MOUSE_CURSOR_DEFAULT;
+	SetMouseCursor(cursor);
 
 	if (gameState.isPaused) return;
 
@@ -295,8 +300,8 @@ void Game::DrawGame(float deltaTime)
 	);
 
 	Nc::Vector2f cameraPosition = Nc::Vector2f::Zero();
-	cameraPosition.x += std::cosf(gameState.time * 1.4f) * 5.0f;
-	cameraPosition.y += std::sinf((gameState.time * 2.8f) - 0.3f) * 4.0f;
+	cameraPosition.x = std::cosf(gameState.time * 0.6f) * 5.0f;
+	cameraPosition.y = std::sinf((gameState.time * 2.4f) - 0.2f) * 4.0f;
 
 	BeginTextureMode(renderContext.renderTexture);
 	ClearBackground(BLANK);
