@@ -130,7 +130,7 @@ void CircuitBreakerSystem::UpdateNormalOperations(
     if (forceDeactivation)
         systemToggle.state = Off;
 
-    switch (systemToggle.state)
+    switch (breakerToggle.state)
     {
     case On:
         breaker.status = Component::CircuitBreaker::Operational;

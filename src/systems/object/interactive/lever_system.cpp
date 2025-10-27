@@ -32,6 +32,17 @@ void LeverSystem::Update(entt::registry &registry, float deltaTime) noexcept
 }
 
 
+float LeverSystem::GetHeightTarget(const Component::Toggle& toggle, const Component::Lever& lever) noexcept
+{
+    switch (toggle.state)
+    {
+    case On: return lever.heightRange.x;
+    default: return lever.heightRange.y;
+    }
+    return lever.heightRange.y;
+}
+
+
 ToggleState LeverSystem::GetToggleState(
     const Component::Toggle& toggle, const Component::Lever& lever, bool isHeld
 ) noexcept
@@ -48,15 +59,4 @@ ToggleState LeverSystem::GetToggleState(
     float distanceToOn = std::fabsf(lever.currentHeight - lever.heightRange.x);
     float distanceToOff = std::fabsf(lever.currentHeight - lever.heightRange.y);
     return distanceToOn <= distanceToOff ? On : Off;
-}
-
-
-float LeverSystem::GetHeightTarget(const Component::Toggle& toggle, const Component::Lever& lever) noexcept
-{
-    switch (toggle.state)
-    {
-    case On: return lever.heightRange.x;
-    default: return lever.heightRange.y;
-    }
-    return lever.heightRange.y;
 }
