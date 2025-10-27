@@ -5,9 +5,10 @@
 #include "core/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/object/comms/radar/radar_stability_system.hpp"
 #include "raylib.h"
+#include "systems/object/comms/radar/radar_stability_system.hpp"
 #include "utility/vector2.hpp"
+#include <utility>
 
 // TODO: Add visuals
 

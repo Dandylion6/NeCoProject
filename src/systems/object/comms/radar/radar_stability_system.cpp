@@ -1,6 +1,5 @@
 #include "components/objects/comms/radar.hpp"
 #include "components/objects/interactions/toggle_component.hpp"
-#include "components/objects/machine_component.hpp"
 #include "components/objects/outside/blip_component.hpp"
 #include "core/state/anomaly_state.hpp"
 #include "core/state/game_state.hpp"
@@ -21,7 +20,12 @@
 #endif
 
 
-void RadarStabilitySystem::Update(entt::registry& registry, GameState& gameState, float time, float deltaTime)
+void RadarStabilitySystem::Update(
+	entt::registry& registry, 
+	GameState& gameState, 
+	float time, 
+	float deltaTime
+) noexcept
 {
 	// @brief The probablity of spotanous breakdown of the radar every minute.
 	constexpr Nc::Vector2f BREAKDOWN_CHANCE_PER_MINUTE_RANGE = Nc::Vector2f(3.0f, 64.0f);
@@ -73,7 +77,7 @@ void RadarStabilitySystem::Update(entt::registry& registry, GameState& gameState
 }
 
 
-void RadarStabilitySystem::Restart(entt::registry& registry, const entt::entity entity)
+void RadarStabilitySystem::Restart(entt::registry& registry, const entt::entity entity) noexcept
 {
 	Component::Radar& radar = registry.get<Component::Radar>(entity);
 	radar.stability = Component::Radar::STABLE_LEVEL;
@@ -81,8 +85,11 @@ void RadarStabilitySystem::Restart(entt::registry& registry, const entt::entity 
 
 
 void RadarStabilitySystem::UpdateBlipStability(
-	entt::registry& registry, AnomalyState& anomalyState, Component::Radar& machine, float time
-)
+	entt::registry& registry, 
+	AnomalyState& anomalyState, 
+	Component::Radar& machine, 
+	float time
+) noexcept
 {
 	constexpr float STABILITY_REDUCTION = 2.0f;
 	constexpr float ATTRACTION_GAIN = 1.2f;
@@ -147,7 +154,7 @@ void RadarStabilitySystem::UpdateBlipStability(
 
 bool RadarStabilitySystem::ShouldBlipGlitch(
 	Component::Blip& blip, Component::Radar& machine, float secondsSinceLastGlitch, size_t blipCount
-)
+) noexcept
 {
 	float deterministicValue = Nc::Random::Range(0.0f, 100.0f);
 	float chance = 100.0f / static_cast<float>(blipCount);
@@ -155,11 +162,11 @@ bool RadarStabilitySystem::ShouldBlipGlitch(
 }
 
 
-float RadarStabilitySystem::GetDegradationValue(float attractionPercentage)
+float RadarStabilitySystem::GetDegradationValue(float attractionPercentage) noexcept
 {
-	// @brief The maximum duration going from 100% to 0% stability in minutes.
+	/// @brief The maximum duration going from 100% to 0% stability in minutes.
 	constexpr float MAX_DECAY_DURATION_MINUTES = 29.0f;
-	// @brief The minimum duration going from 100% to 0% stability in minutes.
+	/// @brief The minimum duration going from 100% to 0% stability in minutes.
 	constexpr float MIN_DECAY_DURATION_MINUTES = 5.6f;
 
 	constexpr float MAX_DECAY_RATE = 100.0f / MAX_DECAY_DURATION_MINUTES;
@@ -174,7 +181,7 @@ float RadarStabilitySystem::GetDegradationValue(float attractionPercentage)
 
 void RadarStabilitySystem::GlitchBlip(
 	entt::registry& registry, Component::Radar& radar, Component::Blip& blip, const entt::entity entity, float time
-)
+) noexcept
 {
 	int determiniticValue = Nc::Random::Range(0, 100);
 	if (radar.stability > Component::Radar::HEALTHY_LEVEL)
@@ -195,11 +202,11 @@ void RadarStabilitySystem::GlitchBlip(
 }
 
 
-void RadarStabilitySystem::SetRandomGlitchSpawnInterval(Component::Radar& machine)
+void RadarStabilitySystem::SetRandomGlitchSpawnInterval(Component::Radar& machine) noexcept
 {
-	// @brief The base interval range for new glitches to appear. Measured in minutes.
+	/// @brief The base interval range for new glitches to appear. Measured in minutes.
 	constexpr Nc::Vector2f BASE_GLITCH_SPAWN_RANGE = Nc::Vector2f(0.8f, 1.6f);
-	// @brief How much the degradation affects the spawn interval.
+	/// @brief How much the degradation affects the spawn interval.
 	constexpr float DEGRADATION_AFFECT_SCALE = 0.7f;
 
 	float minutesToNextGlitch = Nc::Random::Range(BASE_GLITCH_SPAWN_RANGE.x, BASE_GLITCH_SPAWN_RANGE.y);
