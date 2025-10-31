@@ -1,18 +1,18 @@
-#include "assemblers/scenes/settings_menu/settings_background_entity.hpp"
-#include "assemblers/scenes/settings_menu/settings_menu.hpp"
-#include "components/core/input_component.hpp"
-#include "components/core/rendering/rectangle_component.hpp"
-#include "components/core/rendering/sprite_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/scene/dont_destroy_on_load_tag.hpp"
-#include "components/ui/settings_tag.hpp"
-#include "components/ui/toggle_state_component.hpp"
-#include "core/state/game_state.hpp"
+#include "game/construction/ui/settings_menu/entity/settings_background_entity.hpp"
+#include "game/construction/ui/settings_menu/settings_menu.hpp"
+#include "game/component/core/interactive/input_component.hpp"
+#include "game/component/core/rendering/rectangle_component.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/tag/core/life_cycle/dont_destroy_on_load_tag.hpp"
+#include "game/tag/ui/settings_tag.hpp"
+#include "game/component/core/interactive/toggle_component.hpp"
+#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "utility/color_palette.hpp"
-#include "utility/vector2.hpp"
+#include "game/utility/color_palette.hpp"
+#include "core/data/vector2.hpp"
 #include <functional>
 #include <utility>
 
@@ -29,7 +29,7 @@ namespace Construct
 
 		registry.emplace<Tag::DontDestroyOnLoad>(entity);
 		registry.emplace<Tag::Settings>(entity);
-		registry.emplace<Component::UiTransform>(entity, center, center, windowSize);
+		registry.emplace<Component::UI::Transform>(entity, center, center, windowSize);
 		registry.emplace<Component::Rectangle>(entity, Palette::BACKGROUND_COLOR);
 
 		return entity;
@@ -51,8 +51,8 @@ const entt::entity Construct::SettingsBackgroundEntity(
 
 	registry.emplace<Tag::DontDestroyOnLoad>(entity);
 	registry.emplace<Tag::Settings>(entity);
-	registry.emplace<Component::ToggleState>(entity);
-	registry.emplace<Component::UiTransform>(entity, center, center, size, Nc::Vector2f::Zero(), 1);
+	registry.emplace<Component::Toggle>(entity);
+	registry.emplace<Component::UI::Transform>(entity, center, center, size, Nc::Vector2f::Zero(), 1);
 	registry.emplace<Component::Sprite>(entity, std::move(texture), 0.4f);
 
 	std::function<void()> toggleSettings = [&registry, &gameState]()

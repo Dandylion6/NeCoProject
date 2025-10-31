@@ -1,15 +1,15 @@
-#include "components/anomaly/anomaly_roamer_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "core/state/anomaly_state.hpp"
-#include "core/state/game_state.hpp"
+#include "game/component/shared/anomaly/roamer/anomaly_roamer_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/state/anomaly_state.hpp"
+#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/anomaly/roamer/phantom_behaviour_system.hpp"
-#include "systems/anomaly/roamer/phaser_behaviour_system.hpp" 
-#include "systems/anomaly/roamer/strider_behaviour_system.hpp"
-#include "systems/anomaly/roamer_behaviour_system.hpp"
-#include "utility/interpolation.hpp"
-#include "utility/vector2.hpp"
+#include "game/system/shared/anomaly/roamer/behaviour/strider_behaviour_system.hpp"
+#include "game/system/shared/anomaly/roamer/behaviour/phaser_behaviour_system.hpp" 
+#include "game/system/shared/anomaly/roamer/behaviour/phantom_behaviour_system.hpp"
+#include "game/system/shared/anomaly/roamer/roamer_behaviour_system.hpp"
+#include "core/data/interpolation.hpp"
+#include "core/data/vector2.hpp"
 #include <cstdint>
 
 
@@ -26,20 +26,20 @@ void RoamerBehaviourSystem::Update(
 	uint8_t totalRoamerCount = 0u;
 	uint8_t roamerThreatCount = 0u;
 
-	auto view = registry.view<Component::Transform, Component::AnomalyRoamer>();
+	auto view = registry.view<Component::Transform, Component::Anomaly::Roamer>();
 	for (auto [entity, transform, roamer] : view.each())
 	{
 		switch (roamer.behaviour)
 		{
-		case Component::AnomalyRoamer::Strider:
+		case Component::Anomaly::Roamer::Strider:
 			StriderBehaviourSystem::Update(registry, entity, transform, roamer, deltaTime);
 			roamerPressureWeight += STRIDER_PRESSURE;
 			break;
-		case Component::AnomalyRoamer::Phaser:
+		case Component::Anomaly::Roamer::Phaser:
 			PhaserBehaviourSystem::Update(registry, entity, transform, roamer, deltaTime);
 			roamerPressureWeight += PHASER_PRESSURE;
 			break;
-		case Component::AnomalyRoamer::Phantom:
+		case Component::Anomaly::Roamer::Phantom:
 			PhantomBehaviourSystem::Update(registry, entity, transform, roamer, deltaTime);
 			roamerPressureWeight += PHANTOM_PRESSURE;
 			--roamerThreatCount; // Doesn't count as a threat.
@@ -58,13 +58,13 @@ void RoamerBehaviourSystem::Update(
 };
 
 
-Nc::Vector2f RoamerBehaviourSystem::GetTargetPosition(Component::AnomalyRoamer::Target target)
+Nc::Vector2f RoamerBehaviourSystem::GetTargetPosition(Component::Anomaly::Roamer::Target target)
 {
 	switch (target)
 	{
-	case Component::AnomalyRoamer::Target::Bunker:
+	case Component::Anomaly::Roamer::Target::Bunker:
 		return BUNKER_POSITION;
-	case Component::AnomalyRoamer::Target::Artillery:
+	case Component::Anomaly::Roamer::Target::Artillery:
 		return ARTILLERY_POSITION;
 	}
 	return Nc::Vector2f::Zero();

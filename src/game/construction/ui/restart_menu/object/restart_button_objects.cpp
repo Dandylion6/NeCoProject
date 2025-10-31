@@ -1,16 +1,16 @@
-#include "assemblers/menus/main_menu/main_menu.hpp"
-#include "assemblers/menus/restart_menu/restart_buttons.hpp"
-#include "assemblers/menus/restart_menu/restart_menu.hpp"
-#include "assemblers/ui/label_button_object.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/scene/dont_destroy_on_load_tag.hpp"
-#include "components/ui/restart_menu_tag.hpp"
-#include "core/data/save_game.hpp"
-#include "core/game.hpp"
-#include "core/resource_store.hpp"
-#include "core/state/game_state.hpp"
+#include "game/construction/ui/main_menu/main_menu.hpp"
+#include "game/construction/ui/restart_menu/object/restart_button_objects.hpp"
+#include "game/construction/ui/restart_menu/restart_menu.hpp"
+#include "game/construction/ui/shared/object/label_button_object.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/tag/core/life_cycle/dont_destroy_on_load_tag.hpp"
+#include "game/tag/ui/restart_menu_tag.hpp"
+#include "game/save/save_game.hpp"
+#include "game/game.hpp"
+#include "core/runtime/resource_store.hpp"
+#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 #include <functional>
 #include <utility>
 
@@ -19,7 +19,7 @@ LabelButton Construct::RestartButton(
     Game& game, entt::registry& registry, ResourceStore& resourceStore, GameState& gameState
 )
 {
-    Component::UiTransform transform = Component::UiTransform(
+    Component::UI::Transform transform = Component::UI::Transform(
         Nc::Vector2f(0.5f, 0.5f), Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Zero(), Nc::Vector2f::Zero(), 2
     );
     std::function<void()> toMainMenu = [&game, &registry, &gameState]()
@@ -34,7 +34,7 @@ LabelButton Construct::RestartButton(
 
 LabelButton Construct::RestartToMainButton(entt::registry& registry, ResourceStore& resourceStore, GameState& gameState)
 {
-    Component::UiTransform transform = Component::UiTransform(
+    Component::UI::Transform transform = Component::UI::Transform(
         Nc::Vector2f(0.5f, 0.56f), Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Zero(), Nc::Vector2f::Zero(), 2
     );
     std::function<void()> toMainMenu = [&registry, &gameState]()

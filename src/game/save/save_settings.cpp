@@ -1,5 +1,5 @@
-#include "core/data/save_settings.hpp"
-#include "core/data/settings.hpp"
+#include "game/save/save_settings.hpp"
+#include "game/state/settings.hpp"
 #include "nlohmann/json.hpp"
 #include "nlohmann/json_fwd.hpp"
 #include <cstdio>

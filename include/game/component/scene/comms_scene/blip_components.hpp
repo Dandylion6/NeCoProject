@@ -1,10 +1,10 @@
 #pragma once
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 #include <array>
 #include <cstdint>
 
 
-namespace Componet::BlipState
+namespace Component::BlipState
 {
 	struct JumbledCoordindate
 		{

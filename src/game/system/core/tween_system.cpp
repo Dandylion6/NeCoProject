@@ -1,11 +1,11 @@
-#include "components/core/transform_component.hpp"
-#include "components/core/tween_component.hpp"
-#include "core/state/game_state.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/core/tween_component.hpp"
+#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/core/tween_system.hpp"
-#include "utility/interpolation.hpp"
-#include "utility/tween.hpp"
+#include "game/system/core/tween_system.hpp"
+#include "core/data/interpolation.hpp"
+#include "core/data/tween.hpp"
 #include <algorithm>
 
 

@@ -1,22 +1,22 @@
-#include "components/anomaly/anomaly_roamer_component.hpp"
-#include "components/anomaly/roamers/phaser_component.hpp"
-#include "components/core/transform_component.hpp"
+#include "game/component/shared/anomaly/roamer/anomaly_roamer_component.hpp"
+#include "game/component/shared/anomaly/roamer/phaser_component.hpp"
+#include "game/component/core/transform_component.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/anomaly/roamer/phaser_behaviour_system.hpp"
-#include "systems/anomaly/roamer_behaviour_system.hpp"
-#include "systems/anomaly/roamer_spawning_system.hpp"
-#include "utility/random.hpp"
-#include "utility/vector2.hpp"
+#include "game/system/shared/anomaly/roamer/behaviour/phaser_behaviour_system.hpp"
+#include "game/system/shared/anomaly/roamer/roamer_behaviour_system.hpp"
+#include "game/system/shared/anomaly/roamer/roamer_spawning_system.hpp"
+#include "core/data/random.hpp"
+#include "core/data/vector2.hpp"
 #include <cstdint>
-#include "systems/anomaly/roamer/strider_behaviour_system.hpp"
+#include "game/system/shared/anomaly/roamer/behaviour/strider_behaviour_system.hpp"
 
 
 void PhaserBehaviourSystem::Spawn(
-	entt::registry& registry, const entt::entity entity, Component::AnomalyRoamer& roamer
+	entt::registry& registry, const entt::entity entity, Component::Anomaly::Roamer& roamer
 )
 {
-	Component::Phaser& phaser = registry.emplace<Component::Phaser>(entity);
+	Component::Anomaly::Phaser& phaser = registry.emplace<Component::Anomaly::Phaser>(entity);
 	for (uint8_t i = 0u; i < phaser.pointCount; ++i)
 	{
 		phaser.points[i] = RoamerSpawningSystem::GenerateRandomSpawnPoint();
@@ -30,7 +30,7 @@ void PhaserBehaviourSystem::Update(
 	entt::registry& registry, 
 	const entt::entity entity, 
 	Component::Transform& transform, 
-	Component::AnomalyRoamer& roamer, 
+	Component::Anomaly::Roamer& roamer, 
 	float deltaTime
 )
 {
@@ -40,7 +40,7 @@ void PhaserBehaviourSystem::Update(
 	constexpr float STRIDING_DISTANCE = 26.0f;
 	constexpr float STRIDING_DISTANCE_SQR = STRIDING_DISTANCE * STRIDING_DISTANCE;
 
-	Component::Phaser& phaser = registry.get<Component::Phaser>(entity);
+	Component::Anomaly::Phaser& phaser = registry.get<Component::Anomaly::Phaser>(entity);
 	phaser.secondsUntilNextPoint -= deltaTime;
 	if (phaser.secondsUntilNextPoint > 0.0f) return;
 
@@ -54,8 +54,8 @@ void PhaserBehaviourSystem::Update(
 	bool switchToStriding = difference.GetSqrDistance() <= STRIDING_DISTANCE_SQR;
 	if (switchToStriding)
 	{
-		roamer.behaviour = Component::AnomalyRoamer::Behaviour::Strider;
-		registry.remove<Component::Phaser>(entity);
+		roamer.behaviour = Component::Anomaly::Roamer::Behaviour::Strider;
+		registry.remove<Component::Anomaly::Phaser>(entity);
 		StriderBehaviourSystem::Spawn(registry, entity, roamer);
 		return;
 	}

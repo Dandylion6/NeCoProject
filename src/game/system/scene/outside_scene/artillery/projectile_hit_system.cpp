@@ -1,14 +1,14 @@
-#include "components/core/sound_emitter_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/objects/health_component.hpp"
-#include "components/objects/outside/blip_component.hpp"
-#include "components/objects/outside/projectile_component.hpp"
+#include "game/component/core/audio/sound_emitter_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/shared/stat/health_component.hpp"
+#include "game/component/scene/comms_scene/blip_components.hpp"
+#include "game/component/scene/outside_scene/projectile_component.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/core/sound_system.hpp"
-#include "systems/object/outside/projectile_hit_system.hpp"
-#include "utility/vector2.hpp"
+#include "game/system/core/audio/sound_emitter_system.hpp"
+#include "game/system/scene/outside_scene/artillery/projectile_hit_system.hpp"
+#include "core/data/vector2.hpp"
 #include <cstdint>
 #include <vector>
 
@@ -34,7 +34,7 @@ void ProjectileHitSystem::Update(entt::registry& registry, float deltaTime)
 
 		projectile.isActive = false;
 		hitPositions.push_back(projectile.hitPosition);
-		SoundSystem::PlayEmitter(emitter);
+		SoundEmitterSystem::PlayEmitter(emitter);
 	}
 
 	if (hitPositions.empty()) return;

@@ -1,11 +1,11 @@
-#include "components/core/rendering/sprite_component.hpp"
-#include "components/core/rendering/text_component.hpp"
-#include "core/rendering.hpp"
-#include "core/resource_store.hpp"
-#include "core/scene.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
+#include "game/component/core/rendering/text_component.hpp"
+#include "game/utility/rendering.hpp"
+#include "core/runtime/resource_store.hpp"
+#include "game/state/scene.hpp"
 #include "raylib.h"
-#include "utility/color.hpp"
-#include "utility/vector2.hpp"
+#include "core/data/color.hpp"
+#include "core/data/vector2.hpp"
 #include <cstdint>
 
 

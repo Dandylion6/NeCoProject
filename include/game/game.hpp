@@ -1,13 +1,13 @@
  #pragma once
-#include "core/context/render_context.hpp"
-#include "core/data/settings.hpp"
-#include "core/resource_store.hpp"
-#include "core/state/game_state.hpp"
+#include "core/runtime/render_context.hpp"
+#include "game/state/settings.hpp"
+#include "core/runtime/resource_store.hpp"
+#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp" 
 
 #ifdef DEBUG_BUILD
-#include "core/context/debug_context.hpp"
+#include "game/debug/debug_context.hpp"
 #endif // DEBUG_BUILD
 
 

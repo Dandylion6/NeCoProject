@@ -1,6 +1,6 @@
 #pragma once
-#include "components/objects/comms/morse_transceiver_component.hpp"
-#include "core/data/settings.hpp"
+#include "game/component/scene/comms_scene/morse_components.hpp"
+#include "game/state/settings.hpp"
 #include "entt/entity/fwd.hpp"
 
 
@@ -20,7 +20,7 @@ private:
 		float deltaTime
 	);
 
-	static const Component::MorseTransceiver* GetTrasceiver(entt::registry& registry);
+	static const Component::Morse::Transceiver* GetTrasceiver(entt::registry& registry);
 
 	static void SetRegions(
 		entt::registry& registry,

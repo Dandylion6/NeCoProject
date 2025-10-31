@@ -1,12 +1,12 @@
-#include "components/objects/comms/radio_component.hpp"
-#include "components/objects/outside/receiver_component.hpp"
-#include "core/resource_store.hpp"
+#include "game/component/scene/comms_scene/radio_component.hpp"
+#include "game/component/scene/outside_scene/receiver_component.hpp"
+#include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/object/comms/radio_sound_system.hpp"
-#include "systems/object/outside/receiver/receiver_code_response_system.hpp"
-#include "utility/morse_code.hpp"
+#include "game/system/scene/comms_scene/radio/radio_sound_system.hpp"
+#include "game/system/scene/outside_scene/receiver/receiver_code_response_system.hpp"
+#include "game/utility/morse_code.hpp"
 #include <format>
 #include <string>
 #include <string_view>
@@ -46,5 +46,5 @@ void ReceiverCodeResponseSystem::RespondToCharacterCode(
 	std::string filePath = std::format(FORMAT, receiver.incomingCharacter);
 
 	Sound response = LoadSoundAlias(resourceStore.GetSound(filePath));
-	RadioSoundSystem::Broadcast(registry, std::move(response), Low);
+	RadioSoundEmitterSystem::Broadcast(registry, std::move(response), Low);
 }

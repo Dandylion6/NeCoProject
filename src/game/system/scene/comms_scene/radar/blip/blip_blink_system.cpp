@@ -1,19 +1,20 @@
-#include "components/core/transform_component.hpp"
-#include "components/core/tween_component.hpp"
-#include "components/objects/comms/radar.hpp"
-#include "components/objects/outside/blip_component.hpp"
-#include "core/state/game_state.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/core/tween_component.hpp"
+#include "game/component/scene/comms_scene/radar_components.hpp"
+#include "game/component/scene/comms_scene/blip_components.hpp"
+#include "game/state/game_state.hpp"
+#include "game/tag/scene/comms_scene/radar_tags.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/object/comms/radar/blip_blink_system.hpp"
-#include "utility/interpolation.hpp"
-#include "utility/tween.hpp"
-#include "utility/vector2.hpp"
+#include "game/system/scene/comms_scene/radar/blip/blip_blink_system.hpp"
+#include "core/data/interpolation.hpp"
+#include "core/data/tween.hpp"
+#include "core/data/vector2.hpp"
 #include <cmath>
 
 #ifdef DEBUG_BUILD
-#include "core/context/debug_context.hpp"
-#include "core/game.hpp"
+#include "game/debug/debug_context.hpp"
+#include "game/game.hpp"
 #endif // DEBUG_BUILD
 
 
@@ -21,7 +22,7 @@
 void BlipBlinkSystem::Update(entt::registry& registry)
 {
 	
-	auto view = registry.view<const Tag::RadarPath, const Component::Transform>();
+	auto view = registry.view<const Tag::Radar::Path, const Component::Transform>();
 	for (auto [entity, transform] : view.each())
 	{
 		UpdateBlips(registry, transform);

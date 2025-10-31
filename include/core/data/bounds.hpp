@@ -1,7 +1,9 @@
 #pragma once
-#include "components/core/transform_component.hpp"
 #include "raylib.h"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
+
+namespace Component { struct Transform; }
+namespace Component::UI { struct Transform; }
 
 
 namespace Nc
@@ -15,7 +17,7 @@ namespace Nc
 		constexpr Bounds(float minX, float minY, float maxX, float maxY): min(Nc::Vector2f(minX, minY)), max(Nc::Vector2f(maxX, maxY)) { };
 		constexpr Bounds(Nc::Vector2f min, Nc::Vector2f max): min(min), max(max) { };
 		Bounds(const Component::Transform& transform);
-		Bounds(const Component::UiTransform& transform, Nc::Vector2i screenSize);
+		Bounds(const Component::UI::Transform& transform, Nc::Vector2i screenSize);
 
 		operator Rectangle() const;
 

@@ -1,12 +1,12 @@
-#include "assemblers/entities/ambient_sound_entity.hpp"
-#include "components/core/sound_emitter_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/scene/ambient_sound_tag.hpp"
-#include "core/context/render_context.hpp"
-#include "core/scene.hpp"
+#include "game/construction/shared/entity/environment/ambient_sound_entity.hpp"
+#include "game/component/core/audio/sound_emitter_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/tag/core/ambient_sound_tag.hpp"
+#include "core/runtime/render_context.hpp"
+#include "game/state/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 
 
 const entt::entity Construct::AmbientSoundEntity(

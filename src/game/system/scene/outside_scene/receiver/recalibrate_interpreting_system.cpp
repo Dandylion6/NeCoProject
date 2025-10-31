@@ -1,13 +1,13 @@
-#include "components/objects/comms/radar.hpp"
-#include "components/objects/comms/radio_component.hpp"
-#include "components/objects/interactions/toggle_component.hpp"
-#include "components/objects/outside/receiver_component.hpp"
-#include "core/resource_store.hpp"
+#include "game/component/scene/comms_scene/radar_components.hpp"
+#include "game/component/scene/comms_scene/radio_component.hpp"
+#include "game/component/core/interactive/toggle_component.hpp"
+#include "game/component/scene/outside_scene/receiver_component.hpp"
+#include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/object/comms/radio_sound_system.hpp"
-#include "systems/object/outside/receiver/recalibrate_interpreting_system.hpp"
+#include "game/system/scene/comms_scene/radio/radio_sound_system.hpp"
+#include "game/system/scene/outside_scene/receiver/recalibrate_interpreting_system.hpp"
 #include <cmath>
 #include <string>
 #include <utility>
@@ -71,7 +71,7 @@ void RecalibrateInterpretingSystem::ConfirmRecalibrationCommand(
     const std::string COORDINATE_RESPONSE = "assets/audio/voicelines/receiver/commands/coordinate_received.wav";
 
 	Sound response = LoadSoundAlias(resourceStore.GetSound(COORDINATE_RESPONSE));
-	RadioSoundSystem::Broadcast(registry, std::move(response), Medium);
+	RadioSoundEmitterSystem::Broadcast(registry, std::move(response), Medium);
 
 	receiver.message.clear();
 }

@@ -1,10 +1,10 @@
 #pragma once
-#include "core/scene.hpp"
+#include "game/state/scene.hpp"
 #include "entt/entity/fwd.hpp"
 struct EcsContext;
 
 
-class MorseSoundSystem
+class MorseSoundEmitterSystem
 {
 public:
 	static void Update(

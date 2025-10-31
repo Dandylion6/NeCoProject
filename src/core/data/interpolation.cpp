@@ -1,6 +1,6 @@
 #include "raylib.h"
-#include "utility/interpolation.hpp"
-#include "utility/vector2.hpp"
+#include "core/data/interpolation.hpp"
+#include "core/data/vector2.hpp"
 #include <algorithm>
 #include <cmath>
 
@@ -10,11 +10,13 @@ float Math::Lerp(float a, float b, float t)
     return a + (b - a) * t;
 }
 
+
 float Math::InverseLerp(float a, float b, float value)
 {
 	if (a == b) return value <= a ? 0.0f : 1.0f;
 	return (value - a) / (b - a);
 }
+
 
 float Math::Remap(Nc::Vector2f a, Nc::Vector2f b, float value)
 {
@@ -22,51 +24,61 @@ float Math::Remap(Nc::Vector2f a, Nc::Vector2f b, float value)
 	return Math::Lerp(b.x, b.y, factor);
 }
 
+
 float Math::ClampedRemap(Nc::Vector2f a, Nc::Vector2f b, float value)
 {
 	value = std::clamp<float>(value, a.GetMin(), a.GetMax());
 	return Remap(a, b, value);
 }
 
+
 float Math::SmoothApproach(float a, float b, float deltaTime, float speed)
 {
 	return a + (b - a) * (1.0f - std::expf(-speed * deltaTime));
 }
+
 
 float Math::SineIn(float x)
 {
 	return 1.0f - std::cosf((x * PI) * 0.5f);
 }
 
+
 float Math::SineOut(float x)
 {
 	return std::sinf((x * PI) * 0.5f);
 }
+
 
 float Math::SineInOut(float x)
 {
 	return -(std::cosf(PI * x) - 1.0f) * 0.5f;
 }
 
+
 float Math::QuadIn(float x)
 {
 	return x * x;
 }
+
 
 float Math::QuadOut(float x)
 {
 	return 1.0f - (1.0f - x) * (1.0f - x);
 }
 
+
 float Math::CubicIn(float x)
 {
 	return x * x * x;
 }
 
+
 float Math::CubicOut(float x)
 {
 	return 1.0f - (1.0f - x) * (1.0f - x) * (1.0f - x);
 }
+
 
 float Math::CubicInOut(float x)
 {
@@ -78,15 +90,18 @@ float Math::CubicInOut(float x)
 	}
 }
 
+
 float Math::ExpoIn(float x)
 {
 	return std::exp2f(10.0f * (x - 1.0f));
 }
 
+
 float Math::ExpoOut(float x)
 {
 	return x == 1.0f ? 1.0f : 1.0f - std::exp2f(-10.0f * x);
 }
+
 
 float Math::BackOut(float x)
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include "components/core/tween_component.hpp"
+#include "game/component/core/tween_component.hpp"
 #include "entt/entity/fwd.hpp"
 struct GameState;
 struct Tween;

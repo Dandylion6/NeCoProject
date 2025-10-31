@@ -1,6 +1,6 @@
-#include "systems/ui/increment_number_system.hpp"
-#include "components/core/rendering/text_component.hpp"
-#include "components/ui/increment_component.hpp"
+#include "game/system/ui/interactive/increment_number_system.hpp"
+#include "game/component/core/rendering/text_component.hpp"
+#include "game/component/ui/increment_component.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include <array>
@@ -11,7 +11,7 @@
 
 void IncrementNumberSystem::Update(entt::registry& registry)
 {
-    auto view = registry.view<Component::UiIncrement, Component::Text>();
+    auto view = registry.view<Component::UI::Increment, Component::Text>();
     for (auto [entity, increment, text] : view.each())
     {
         std::array<char, 32u> buffer;

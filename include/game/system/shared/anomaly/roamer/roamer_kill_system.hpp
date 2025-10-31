@@ -1,9 +1,9 @@
 #pragma once
 #include "entt/entity/fwd.hpp"
-#include "utility/vector2.hpp"
-#include "components/anomaly/anomaly_roamer_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/objects/health_component.hpp"
+#include "core/data/vector2.hpp"
+#include "game/component/shared/anomaly/roamer/anomaly_roamer_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/shared/stat/health_component.hpp"
 struct GameState;
 
 
@@ -19,7 +19,7 @@ private:
 		entt::registry& registry,
 		const entt::entity entity,
 		const Component::Transform& transform,
-		const Component::AnomalyRoamer& roamer,
+		const Component::Anomaly::Roamer& roamer,
 		Component::Health& health,
 		GameState& gameState
 	);
@@ -27,7 +27,7 @@ private:
 		entt::registry& registry,
 		const entt::entity entity,
 		const Component::Transform& transform,
-		const Component::AnomalyRoamer& roamer,
+		const Component::Anomaly::Roamer& roamer,
 		Component::Health& health
 	);
 	// @brief Checks if the roamer can kill the target.

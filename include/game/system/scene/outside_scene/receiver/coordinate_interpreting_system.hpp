@@ -1,5 +1,5 @@
 #pragma once
-#include "components/objects/outside/receiver_component.hpp"
+#include "game/component/scene/outside_scene/receiver_component.hpp"
 #include "entt/entity/fwd.hpp"
 #include <string>
 class ResourceStore;

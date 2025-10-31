@@ -1,7 +1,7 @@
 #pragma once
 #include "entt/entity/fwd.hpp"
 #include "raylib.h"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 struct GameState;
 struct LightingContext;
 class ResourceStore;

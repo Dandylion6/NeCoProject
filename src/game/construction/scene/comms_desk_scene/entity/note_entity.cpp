@@ -1,20 +1,18 @@
-#include "assemblers/scenes/desk_scene/note_entity.hpp"
-#include "components/core/rendering/sprite_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/objects/note_component.hpp"
-#include "core/context/render_context.hpp"
-#include "core/resource_store.hpp"
-#include "core/scene.hpp"
+#include "game/construction/scene/comms_desk_scene/entity/note_entity.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/scene/comms_desk_scene/note_component.hpp"
+#include "core/runtime/render_context.hpp"
+#include "core/runtime/resource_store.hpp"
+#include "game/state/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 #include <utility>
 
 
-const entt::entity Construct::NoteEntity(
-	entt::registry& registry, ResourceStore& resourceStore
-)
+const entt::entity Construct::NoteEntity(entt::registry& registry, ResourceStore& resourceStore)
 {
 	const entt::entity entity = registry.create();
 

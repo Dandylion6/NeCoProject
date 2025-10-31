@@ -1,7 +1,7 @@
 #pragma once
-#include "components/objects/outside/receiver_component.hpp"
+#include "game/component/scene/outside_scene/receiver_component.hpp"
 #include "entt/entity/fwd.hpp"
-#include "systems/object/outside/receiver/coordinate_interpreting_system.hpp"
+#include "game/system/scene/outside_scene/receiver/coordinate_interpreting_system.hpp"
 #include <string>
 class ResourceStore;
 

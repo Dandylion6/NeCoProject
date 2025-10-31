@@ -1,9 +1,9 @@
-#include "components/core/transform_component.hpp"
-#include "components/core/drag_action_component.hpp"
-#include "components/objects/interactions/lever_component.hpp"
-#include "components/objects/interactions/toggle_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/core/interactive/drag_action_component.hpp"
+#include "game/component/shared/mechanical/lever_component.hpp"
+#include "game/component/core/interactive/toggle_component.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/object/interactive/lever_system.hpp"
+#include "game/system/shared/mechanical/lever_system.hpp"
 
 
 void LeverSystem::Update(entt::registry &registry, float deltaTime) noexcept

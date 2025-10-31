@@ -1,62 +1,62 @@
-#include "assemblers/entities/ambient_sound_entity.hpp"
-#include "assemblers/entities/move_transition_entity.hpp"
-#include "assemblers/menus/main_menu/main_menu.hpp"
-#include "assemblers/menus/restart_menu/restart_menu.hpp"
-#include "assemblers/scenes/comms_scene/comms_scene.hpp"
-#include "assemblers/scenes/desk_scene/desk_scene.hpp"
-#include "assemblers/scenes/doorway_scene/doorway_scene.hpp"
-#include "assemblers/scenes/outside_scene/outside_scene.hpp"
-#include "assemblers/scenes/settings_menu/settings_menu.hpp"
-#include "core/context/render_context.hpp"
-#include "core/data/save_settings.hpp"
-#include "core/game.hpp"
-#include "core/state/game_state.hpp"
+#include "game/construction/shared/entity/environment/ambient_sound_entity.hpp"
+#include "game/construction/ui/shared/entity/move_transition_entity.hpp"
+#include "game/construction/ui/main_menu/main_menu.hpp"
+#include "game/construction/ui/restart_menu/restart_menu.hpp"
+#include "game/construction/scene/comms_scene/comms_scene.hpp"
+#include "game/construction/scene/comms_desk_scene/comms_desk_scene.hpp"
+#include "game/construction/scene/doorway_scene/doorway_scene.hpp"
+#include "game/construction/scene/outside_scene/outside_scene.hpp"
+#include "game/construction/ui/settings_menu/settings_menu.hpp"
+#include "core/runtime/render_context.hpp"
+#include "game/save/save_settings.hpp"
+#include "game/game.hpp"
+#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "raylib.h"
-#include "systems/anomaly/anomaly_attraction_system.hpp"
-#include "systems/anomaly/roamer_behaviour_system.hpp"
-#include "systems/anomaly/roamer_kill_system.hpp"
-#include "systems/anomaly/roamer_spawning_system.hpp"
-#include "systems/core/button_action_system.hpp"
-#include "systems/core/drag_action_system.hpp"
-#include "systems/core/input_action_system.hpp"
-#include "systems/core/lighting_system.hpp"
-#include "systems/core/rendering_system.hpp"
-#include "systems/core/sound_system.hpp"
-#include "systems/core/tween_system.hpp"
-#include "systems/object/comms/morse_monitor_display_system.hpp"
-#include "systems/object/comms/morse_sound_system.hpp"
-#include "systems/object/comms/morse_transceiver_system.hpp"
-#include "systems/object/comms/radar/blip_blink_system.hpp"
-#include "systems/object/comms/radar/blip_glitch_system.hpp"
-#include "systems/object/comms/radar/radar_artillery_system.hpp"
-#include "systems/object/comms/radar/radar_render_system.hpp"
-#include "systems/object/comms/radar/radar_stability_system.hpp"
-#include "systems/object/comms/radio_sound_system.hpp"
-#include "systems/object/interactive/circuit_breaker_system.hpp"
-#include "systems/object/interactive/lever_system.hpp"
-#include "systems/object/machine_system.hpp"
-#include "systems/object/outside/blip_death_system.hpp"
-#include "systems/object/outside/projectile_hit_system.hpp"
-#include "systems/object/outside/receiver/artillery_aiming_systerm.hpp"
-#include "systems/object/outside/receiver/artillery_fire_system.hpp"
-#include "systems/object/outside/receiver/recalibrate_interpreting_system.hpp"
-#include "systems/object/outside/receiver/receiver_code_response_system.hpp"
-#include "systems/object/outside/receiver/receiver_interpreting_system.hpp"
-#include "systems/scene/ambient_sound_system.hpp"
-#include "systems/ui/increment_number_system.hpp"
-#include "utility/color_palette.hpp"
-#include "utility/vector2.hpp"
+#include "game/system/shared/anomaly/anomaly_attraction_system.hpp"
+#include "game/system/shared/anomaly/roamer/roamer_behaviour_system.hpp"
+#include "game/system/shared/anomaly/roamer/roamer_kill_system.hpp"
+#include "game/system/shared/anomaly/roamer/roamer_spawning_system.hpp"
+#include "game/system/core/interactive/button_action_system.hpp"
+#include "game/system/core/interactive/drag_action_system.hpp"
+#include "game/system/core/interactive/input_action_system.hpp"
+#include "game/system/core/rendering/lighting/lighting_system.hpp"
+#include "game/system/core/rendering/rendering_system.hpp"
+#include "game/system/core/audio/sound_emitter_system.hpp"
+#include "game/system/core/tween_system.hpp"
+#include "game/system/scene/comms_scene/morse_code/morse_monitor_display_system.hpp"
+#include "game/system/scene/comms_scene/morse_code/morse_sound_system.hpp"
+#include "game/system/scene/comms_scene/morse_code/morse_transceiver_system.hpp"
+#include "game/system/scene/comms_scene/radar/blip/blip_blink_system.hpp"
+#include "game/system/scene/comms_scene/radar/blip/blip_glitch_system.hpp"
+#include "game/system/scene/comms_scene/radar/radar_artillery_system.hpp"
+#include "game/system/scene/comms_scene/radar/radar_render_system.hpp"
+#include "game/system/scene/comms_scene/radar/radar_stability_system.hpp"
+#include "game/system/scene/comms_scene/radio/radio_sound_system.hpp"
+#include "game/system/shared/mechanical/circuit_breaker_system.hpp"
+#include "game/system/shared/mechanical/lever_system.hpp"
+#include "game/system/shared/mechanical/machine_system.hpp"
+#include "game/system/scene/comms_scene/radar/blip/blip_death_system.hpp"
+#include "game/system/scene/outside_scene/artillery/projectile_hit_system.hpp"
+#include "game/system/scene/outside_scene/artillery/artillery_aiming_system.hpp"
+#include "game/system/scene/outside_scene/receiver/fire_interpreting_system.hpp"
+#include "game/system/scene/outside_scene/receiver/recalibrate_interpreting_system.hpp"
+#include "game/system/scene/outside_scene/receiver/receiver_code_response_system.hpp"
+#include "game/system/scene/outside_scene/receiver/receiver_interpreting_system.hpp"
+#include "game/system/core/audio/ambient_sound_system.hpp"
+#include "game/system/ui/interactive/increment_number_system.hpp"
+#include "game/utility/color_palette.hpp"
+#include "core/data/vector2.hpp"
 #include <cmath>
 
 #ifdef DEBUG_BUILD
-#include "core/context/debug_context.hpp"
-#include "core/data/save_game.hpp"
-#include "core/scene.hpp"
-#include "components/core/button_action_component.hpp"
-#include "components/core/rendering/text_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "utility/morse_code.hpp"
+#include "game/debug/debug_context.hpp"
+#include "game/save/save_game.hpp"
+#include "game/state/scene.hpp"
+#include "game/component/core/interactive/button_action_component.hpp"
+#include "game/component/core/rendering/text_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/utility/morse_code.hpp"
 #include <cstdint>
 #include <cstring>
 #include <functional>
@@ -157,7 +157,7 @@ void Game::BuildMenuUI()
 
 	const entt::entity entity = registry.create();
 
-	registry.emplace<Component::UiTransform>(entity, Nc::Vector2f(0.06f, 0.9f), Nc::Vector2f::Scale(0.5f), Nc::Vector2f(180.0f, 32.0f));
+	registry.emplace<Component::UI::Transform>(entity, Nc::Vector2f(0.06f, 0.9f), Nc::Vector2f::Scale(0.5f), Nc::Vector2f(180.0f, 32.0f));
 	registry.emplace<Component::Text>(entity, "SAVE STATE", Palette::RADAR_COLOR);
 	
 	std::function<void()> onClick = [&registry = registry, &gameState = gameState]() { Save::SaveGame(registry, gameState); };
@@ -263,9 +263,9 @@ void Game::UpdateRegistries(float deltaTime)
 	bool buttonHovering = ButtonActionSystem::Update(registry, gameState, renderContext);
 	bool dragHovering = DragActionSystem::Update(registry, gameState, renderContext);
 	IncrementNumberSystem::Update(registry);
-	AmbientSoundSystem::Update(registry, gameState, resourceStore, deltaTime);
+	AmbientSoundEmitterSystem::Update(registry, gameState, resourceStore, deltaTime);
 	TweenSystem::Update(registry, gameState, deltaTime);
-	SoundSystem::Update(registry, deltaTime);
+	SoundEmitterSystem::Update(registry, deltaTime);
 
 	MouseCursor cursor = (buttonHovering || dragHovering) ? MOUSE_CURSOR_POINTING_HAND : MOUSE_CURSOR_DEFAULT;
 	SetMouseCursor(cursor);
@@ -274,7 +274,7 @@ void Game::UpdateRegistries(float deltaTime)
 
 	MorseTransceiverSystem::Update(registry, gameState, settings.morseSettings, deltaTime);
 	MorseMonitorDisplaySystem::Update(registry, settings.morseSettings, deltaTime);
-	MorseSoundSystem::Update(registry, gameState.currentScene, deltaTime);
+	MorseSoundEmitterSystem::Update(registry, gameState.currentScene, deltaTime);
 	MachineSystem::Update(registry, gameState.anomalyState, deltaTime);
 	RadarStabilitySystem::Update(registry, gameState, gameState.time, deltaTime);
 	RecalibrateInterpretingSystem::Update(registry, deltaTime);
@@ -284,11 +284,11 @@ void Game::UpdateRegistries(float deltaTime)
 	RadarArtillerySystem::Update(registry, deltaTime);
 	ReceiverInterpretingSystem::Update(registry, resourceStore);
 	ReceiverCodeResponseSystem::Update(registry, resourceStore);
-	RadioSoundSystem::Update(registry, deltaTime);
+	RadioSoundEmitterSystem::Update(registry, deltaTime);
 	LeverSystem::Update(registry, deltaTime);
 	CircuitBreakerSystem::Update(registry, gameState.anomalyState, deltaTime);
 	ArtilleryAimingSystem::Update(registry, deltaTime);
-	ArtilleryFireSystem::Update(registry, resourceStore, deltaTime);
+	FireInterpretingSystem::Update(registry, resourceStore, deltaTime);
 	ProjectileHitSystem::Update(registry, deltaTime);
 	RoamerSpawningSystem::Update(registry, resourceStore, gameState, deltaTime);
 	RoamerBehaviourSystem::Update(registry, gameState.anomalyState, deltaTime);

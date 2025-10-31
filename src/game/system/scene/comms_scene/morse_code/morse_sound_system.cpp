@@ -1,17 +1,17 @@
-#include "components/core/sound_emitter_component.hpp"
-#include "components/objects/comms/morse_transceiver_component.hpp"
-#include "core/scene.hpp"
+#include "game/component/core/audio/sound_emitter_component.hpp"
+#include "game/component/scene/comms_scene/morse_components.hpp"
+#include "game/state/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/object/comms/morse_sound_system.hpp"
-#include "utility/interpolation.hpp"
+#include "game/system/scene/comms_scene/morse_code/morse_sound_system.hpp"
+#include "core/data/interpolation.hpp"
 
 
-void MorseSoundSystem::Update(
+void MorseSoundEmitterSystem::Update(
 	entt::registry& registry, Scene currentScene, float deltaTime
 )
 {
-	auto view = registry.view<Component::MorseTransceiver, Component::LoopedSoundEmitter>();
+	auto view = registry.view<Component::Morse::Transceiver, Component::LoopedSoundEmitter>();
 	for (auto [entity, transceiver, emitter] : view.each())
 	{
 		constexpr float FADE_SPEED = 64.0f;

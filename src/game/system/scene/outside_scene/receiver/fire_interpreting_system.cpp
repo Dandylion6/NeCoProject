@@ -1,21 +1,21 @@
-#include "assemblers/entities/projectile_entity.hpp"
-#include "components/core/sound_emitter_component.hpp"
-#include "components/objects/comms/radio_component.hpp"
-#include "components/objects/outside/artillery_component.hpp"
-#include "components/objects/outside/receiver_component.hpp"
-#include "core/resource_store.hpp"
+#include "game/construction/scene/outside_scene/entity/projectile_entity.hpp"
+#include "game/component/core/audio/sound_emitter_component.hpp"
+#include "game/component/scene/comms_scene/radio_component.hpp"
+#include "game/component/scene/outside_scene/artillery_component.hpp"
+#include "game/component/scene/outside_scene/receiver_component.hpp"
+#include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/core/sound_system.hpp"
-#include "systems/object/comms/radio_sound_system.hpp"
-#include "systems/object/outside/receiver/artillery_fire_system.hpp"
+#include "game/system/core/audio/sound_emitter_system.hpp"
+#include "game/system/scene/comms_scene/radio/radio_sound_system.hpp"
+#include "game/system/scene/outside_scene/receiver/fire_interpreting_system.hpp"
 #include <string>
 #include <utility>
 
 
-const std::string ArtilleryFireSystem::COMMAND = "FIRE";
+const std::string FireInterpretingSystem::COMMAND = "FIRE";
 
 
 void FireInterpretingSystem::HandleReceivedMessage(
@@ -38,7 +38,7 @@ void FireInterpretingSystem::HandleReceivedMessage(
 	const std::string FIRE_RESPONSE = "assets/audio/voicelines/receiver/commands/fire_request.wav";
 
 	Sound response = LoadSoundAlias(resourceStore.GetSound(FIRE_RESPONSE));
-	RadioSoundSystem::Broadcast(registry, std::move(response), Medium);
+	RadioSoundEmitterSystem::Broadcast(registry, std::move(response), Medium);
 
 	receiver.currentContext = OnStandby;
 	receiver.message.clear();
@@ -65,6 +65,6 @@ void FireInterpretingSystem::Update(
 
 		artillery.receivedFireRequest = false;
 		Construct::ProjectileEntity(registry, resourceStore, artillery.aimPosition);
-		SoundSystem::PlayEmitter(emitter);
+		SoundEmitterSystem::PlayEmitter(emitter);
 	}
 };

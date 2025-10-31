@@ -1,7 +1,7 @@
 #pragma once
-#include "components/core/drag_action_component.hpp"
+#include "game/component/core/interactive/drag_action_component.hpp"
 #include "entt/entity/fwd.hpp"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 struct GameState;
 struct RenderContext;
 

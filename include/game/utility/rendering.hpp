@@ -1,9 +1,9 @@
 #pragma once
-#include "components/core/rendering/sprite_component.hpp"
-#include "components/core/rendering/text_component.hpp"
-#include "scene.hpp"
-#include "utility/color.hpp"
-#include "utility/vector2.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
+#include "game/component/core/rendering/text_component.hpp"
+#include "game/state/scene.hpp"
+#include "core/data/color.hpp"
+#include "core/data/vector2.hpp"
 class ResourceStore;
 
 

@@ -1,7 +1,7 @@
 #pragma once
-#include "components/objects/comms/radar.hpp"
-#include "components/objects/interactions/toggle_component.hpp"
-#include "components/objects/outside/receiver_component.hpp"
+#include "game/component/scene/comms_scene/radar_components.hpp"
+#include "game/component/core/interactive/toggle_component.hpp"
+#include "game/component/scene/outside_scene/receiver_component.hpp"
 #include "entt/entity/fwd.hpp"
 #include <string>
 class ResourceStore;

@@ -1,6 +1,6 @@
 #pragma once
-#include "components/core/sound_emitter_component.hpp"
-#include "components/core/transform_component.hpp"
+#include "game/component/core/audio/sound_emitter_component.hpp"
+#include "game/component/core/transform_component.hpp"
 #include "entt/entity/fwd.hpp"
 
 

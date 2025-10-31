@@ -1,7 +1,7 @@
 #pragma once
-#include "components/anomaly/anomaly_roamer_component.hpp"
+#include "game/component/shared/anomaly/roamer/anomaly_roamer_component.hpp"
 #include "entt/entity/fwd.hpp"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 struct AnomalyState;
 
 
@@ -9,6 +9,6 @@ class RoamerBehaviourSystem
 {
 public:
 	static void Update(entt::registry& registry, AnomalyState& anomalyState, float deltaTime);
-	static Nc::Vector2f GetTargetPosition(Component::AnomalyRoamer::Target target);
+	static Nc::Vector2f GetTargetPosition(Component::Anomaly::Roamer::Target target);
 
 };

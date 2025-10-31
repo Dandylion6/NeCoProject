@@ -1,7 +1,7 @@
 #pragma once
 #include "raylib.h"
-#include "utility/bounds.hpp"
-#include "utility/vector2.hpp"
+#include "core/data/bounds.hpp"
+#include "core/data/vector2.hpp"
 
 
 struct LightingContext

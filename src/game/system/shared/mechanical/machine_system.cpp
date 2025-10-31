@@ -1,9 +1,9 @@
-#include "components/objects/interactions/toggle_component.hpp"
-#include "components/objects/machine_component.hpp"
-#include "core/state/anomaly_state.hpp"
+#include "game/component/core/interactive/toggle_component.hpp"
+#include "game/component/shared/mechanical/machine_component.hpp"
+#include "game/state/anomaly_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/object/machine_system.hpp"
+#include "game/system/shared/mechanical/machine_system.hpp"
 
 
 void MachineSystem::Update(entt::registry& registry, AnomalyState& anomalyState, float deltaTime)

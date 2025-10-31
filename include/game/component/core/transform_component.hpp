@@ -1,6 +1,6 @@
 #pragma once
-#include "core/scene.hpp"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
+#include "game/state/game_state.hpp"
 #include <cstdint>
 #include <utility>
 
@@ -36,9 +36,12 @@ namespace Component
 			rotation(rotation)
 		{ };
 	};
+}
 
 
-	struct UiTransform
+namespace Component::UI
+{
+	struct Transform
 	{
 		Nc::Vector2f anchor = Nc::Vector2f::Zero();
 		Nc::Vector2f origin = Nc::Vector2f::Zero();
@@ -49,8 +52,8 @@ namespace Component
 		SortIndex index = 0;
 		bool isVisible = true;
 
-		UiTransform() = default;
-		UiTransform(
+		Transform() = default;
+		Transform(
 			Nc::Vector2f anchor,
 			Nc::Vector2f origin = Nc::Vector2f::Zero(),
 			Nc::Vector2f size = Nc::Vector2f::Zero(),

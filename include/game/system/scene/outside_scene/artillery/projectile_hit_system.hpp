@@ -1,6 +1,6 @@
 #pragma once
 #include "entt/entity/fwd.hpp"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 #include <vector>
 
 

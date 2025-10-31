@@ -1,15 +1,15 @@
-#include "components/objects/comms/radio_component.hpp"
-#include "components/objects/outside/artillery_component.hpp"
-#include "components/objects/outside/receiver_component.hpp"
-#include "core/resource_store.hpp"
+#include "game/component/scene/comms_scene/radio_component.hpp"
+#include "game/component/scene/outside_scene/artillery_component.hpp"
+#include "game/component/scene/outside_scene/receiver_component.hpp"
+#include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/object/comms/radio_sound_system.hpp"
-#include "systems/object/outside/receiver/aim_interpreting_system.hpp"
+#include "game/system/scene/comms_scene/radio/radio_sound_system.hpp"
+#include "game/system/scene/outside_scene/receiver/aim_interpreting_system.hpp"
 #include <string>
 #include <utility>
-#include "systems/object/outside/receiver/coordinate_interpreting_system.hpp"
+#include "game/system/scene/outside_scene/receiver/coordinate_interpreting_system.hpp"
 
 
 const std::string AimInterpretingSystem::COMMAND = "AIM";
@@ -46,7 +46,7 @@ void AimInterpretingSystem::ConfirmAimCommand(
 	const std::string AIM_RESPONSE = "assets/audio/voicelines/receiver/commands/aim_request.wav";
 
 	Sound response = LoadSoundAlias(resourceStore.GetSound(AIM_RESPONSE));
-	RadioSoundSystem::Broadcast(registry, std::move(response), Medium);
+	RadioSoundEmitterSystem::Broadcast(registry, std::move(response), Medium);
 
 	receiver.message.clear();
 }

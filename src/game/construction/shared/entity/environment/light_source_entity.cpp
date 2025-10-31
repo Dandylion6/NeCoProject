@@ -1,11 +1,11 @@
-#include "assemblers/entities/light_source_entity.hpp"
-#include "components/core/lights/light_source_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "core/scene.hpp"
+#include "game/construction/shared/entity/environment/light_source_entity.hpp"
+#include "game/component/core/rendering/lighting/light_source_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/state/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "utility/color.hpp"
-#include "utility/vector2.hpp"
+#include "core/data/color.hpp"
+#include "core/data/vector2.hpp"
 
 
 const entt::entity Construct::LightSourceEntity(

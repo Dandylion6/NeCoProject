@@ -1,8 +1,8 @@
-#include "core/state/anomaly_state.hpp"
-#include "core/state/game_state.hpp"
-#include "systems/anomaly/anomaly_attraction_system.hpp"
-#include "utility/interpolation.hpp"
-#include "utility/vector2.hpp"
+#include "game/state/anomaly_state.hpp"
+#include "game/state/game_state.hpp"
+#include "game/system/shared/anomaly/anomaly_attraction_system.hpp"
+#include "core/data/interpolation.hpp"
+#include "core/data/vector2.hpp"
 #include <cmath>
 
 

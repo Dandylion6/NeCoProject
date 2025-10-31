@@ -1,5 +1,5 @@
 #pragma once
-#include "utility/tween.hpp"
+#include "core/data/tween.hpp"
 #include <array>
 #include <cstdint>
 

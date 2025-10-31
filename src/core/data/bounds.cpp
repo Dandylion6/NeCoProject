@@ -1,7 +1,7 @@
-#include "components/core/transform_component.hpp"
+#include "game/component/core/transform_component.hpp"
 #include "raylib.h"
-#include "utility/bounds.hpp"
-#include "utility/vector2.hpp"
+#include "core/data/bounds.hpp"
+#include "core/data/vector2.hpp"
 
 
 namespace Nc
@@ -13,7 +13,7 @@ namespace Nc
 	}
 
 
-	Bounds::Bounds(const Component::UiTransform& transform, Nc::Vector2i screenSize)
+	Bounds::Bounds(const Component::UI::Transform& transform, Nc::Vector2i screenSize)
 	{
 		Nc::Vector2f anchorPoint = transform.anchor * screenSize;
 		Nc::Vector2f position = anchorPoint + transform.offset;

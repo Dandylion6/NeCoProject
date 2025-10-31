@@ -1,17 +1,17 @@
-#include "components/core/rendering/rectangle_component.hpp"
-#include "components/core/rendering/sprite_component.hpp"
-#include "components/core/rendering/text_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "core/context/render_context.hpp"
-#include "core/scene.hpp"
-#include "core/state/game_state.hpp"
+#include "game/component/core/rendering/rectangle_component.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
+#include "game/component/core/rendering/text_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "core/runtime/render_context.hpp"
+#include "game/state/scene.hpp"
+#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/core/rendering/rectangle_render_system.hpp"
-#include "systems/core/rendering/sprite_render_system.hpp"
-#include "systems/core/rendering/text_render_system.hpp"
-#include "systems/core/rendering_system.hpp"
-#include "utility/vector2.hpp"
+#include "game/system/core/rendering/rectangle_render_system.hpp"
+#include "game/system/core/rendering/sprite_render_system.hpp"
+#include "game/system/core/rendering/text_render_system.hpp"
+#include "game/system/core/rendering/rendering_system.hpp"
+#include "core/data/vector2.hpp"
 #include <algorithm>
 #include <vector>
 
@@ -64,7 +64,7 @@ void RenderingSystem::DrawUi(
 {
     std::vector<Renderable> entities { };
 
-    auto viewUi = registry.view<Component::UiTransform>();
+    auto viewUi = registry.view<Component::UI::Transform>();
     for (auto [entity, transform] : viewUi.each())
     {
         RenderType type = GetRenderType(registry, entity);
@@ -117,7 +117,7 @@ bool RenderingSystem::ShouldRender(
 
 
 bool RenderingSystem::ShouldRender(
-    const Component::UiTransform& transform
+    const Component::UI::Transform& transform
 )
 {
     return transform.isVisible;

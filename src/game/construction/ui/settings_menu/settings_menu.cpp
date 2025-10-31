@@ -1,19 +1,19 @@
-#include "assemblers/scenes/settings_menu/settings_background_entity.hpp"
-#include "assemblers/scenes/settings_menu/settings_buttons.hpp"
-#include "assemblers/scenes/settings_menu/settings_headers.hpp"
-#include "assemblers/scenes/settings_menu/settings_menu.hpp"
-#include "assemblers/ui/increment_setting_object.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/scene/dont_destroy_on_load_tag.hpp"
-#include "components/ui/increment_component.hpp"
-#include "components/ui/settings_tag.hpp"
-#include "components/ui/toggle_state_component.hpp"
-#include "core/data/settings.hpp"
-#include "core/resource_store.hpp"
-#include "core/scene.hpp"
-#include "core/state/game_state.hpp"
+#include "game/construction/ui/settings_menu/entity/settings_background_entity.hpp"
+#include "game/construction/ui/settings_menu/object/settings_button_objects.hpp"
+#include "game/construction/ui/settings_menu/entity/settings_header_entities.hpp"
+#include "game/construction/ui/settings_menu/settings_menu.hpp"
+#include "game/construction/ui/settings_menu/object/increment_setting_object.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/tag/core/life_cycle/dont_destroy_on_load_tag.hpp"
+#include "game/component/ui/increment_component.hpp"
+#include "game/tag/ui/settings_tag.hpp"
+#include "game/component/core/interactive/toggle_component.hpp"
+#include "game/state/settings.hpp"
+#include "core/runtime/resource_store.hpp"
+#include "game/state/scene.hpp"
+#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 
 
 void SettingsMenu::Build(
@@ -34,7 +34,7 @@ void SettingsMenu::Build(
     Construct::IncrementSettingObject<Tag::Settings, Tag::DontDestroyOnLoad>(
         Nc::Vector2f(0.3f, 0.3f),
         "Morse code DOT duration",
-        Component::UiIncrement(&pendingSettings.morseSettings.dotTime, 0.02f, Nc::Vector2f(0.1f, 0.4f), 2u), 
+        Component::UI::Increment(&pendingSettings.morseSettings.dotTime, 0.02f, Nc::Vector2f(0.1f, 0.4f), 2u), 
         registry, 
         resourceStore
     );
@@ -47,32 +47,32 @@ void SettingsMenu::Build(
 
 namespace SettingsMenu 
 {
-    static void Toggle(entt::registry& registry, GameState& gameState, bool active)
+    static void Toggle(entt::registry& registry, GameState& gameState, ToggleState state)
     {
-        auto view = registry.view<const Tag::Settings, Component::UiTransform>();
+        auto view = registry.view<const Tag::Settings, Component::UI::Transform>();
         for (auto [entity, transform] : view.each())
         {
-            if (registry.any_of<Component::ToggleState>(entity))
+            if (registry.any_of<Component::Toggle>(entity))
             {
-                Component::ToggleState& toggle = registry.get<Component::ToggleState>(entity);
-                toggle.isActive = active;
+                Component::Toggle& toggle = registry.get<Component::Toggle>(entity);
+                toggle.state = state;
             }
-            transform.isVisible = active;
+            transform.isVisible = state == On;
         }
-        gameState.isPaused = active;
+        gameState.isPaused = state == On;
     }
 }
 
 
 void SettingsMenu::Open(entt::registry& registry, GameState& gameState)
 {
-    SettingsMenu::Toggle(registry, gameState, true);
+    SettingsMenu::Toggle(registry, gameState, On);
 }
 
 
 void SettingsMenu::Close(entt::registry& registry, GameState& gameState)
 {
-    SettingsMenu::Toggle(registry, gameState, false);
+    SettingsMenu::Toggle(registry, gameState, Off);
 }
 
 
@@ -87,10 +87,10 @@ void SettingsMenu::Close(Settings& settings, Settings& pendingSettings, entt::re
 
 void SettingsMenu::Toggle(entt::registry& registry, GameState& gameState)
 {
-    auto view = registry.view<const Tag::Settings, Component::ToggleState>();
+    auto view = registry.view<const Tag::Settings, Component::Toggle>();
 	for (auto [settingsEntity, toggle] : view.each())
 	{
         if (gameState.currentScene != NullScene)
-		    SettingsMenu::Toggle(registry, gameState, !toggle.isActive);
+		    SettingsMenu::Toggle(registry, gameState, ToggleLogic::Next(toggle.state));
 	}
 }

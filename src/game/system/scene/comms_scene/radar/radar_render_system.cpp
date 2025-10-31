@@ -1,18 +1,19 @@
-#include "components/core/rendering/sprite_component.hpp"
-#include "components/core/rendering/text_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/objects/comms/radar.hpp"
-#include "components/objects/interactions/toggle_component.hpp"
-#include "components/objects/outside/blip_component.hpp"
-#include "core/rendering.hpp"
-#include "core/resource_store.hpp"
-#include "core/scene.hpp"
-#include "core/state/game_state.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
+#include "game/component/core/rendering/text_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/scene/comms_scene/radar_components.hpp"
+#include "game/component/core/interactive/toggle_component.hpp"
+#include "game/component/scene/comms_scene/blip_components.hpp"
+#include "game/utility/rendering.hpp"
+#include "core/runtime/resource_store.hpp"
+#include "game/state/scene.hpp"
+#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/object/comms/radar/radar_render_system.hpp"
-#include "utility/vector2.hpp"
+#include "game/system/scene/comms_scene/radar/radar_render_system.hpp"
+#include "game/tag/scene/comms_scene/radar_tags.hpp"
+#include "core/data/vector2.hpp"
 #include <sstream>
 #include <string>
 #include <array>
@@ -104,7 +105,7 @@ void RadarRenderSystem::DrawActiveScreen(
 
 void RadarRenderSystem::DrawPath(entt::registry& registry)
 {
-	auto view = registry.view<Tag::RadarPath, const Component::Transform, const Component::Sprite>();
+	auto view = registry.view<Tag::Radar::Path, const Component::Transform, const Component::Sprite>();
 	for (auto [entity, transform, sprite] : view.each())
 	{
 		Renderer::DrawSprite(sprite, transform.position, transform.offset, transform.rotation);
@@ -114,7 +115,7 @@ void RadarRenderSystem::DrawPath(entt::registry& registry)
 
 void RadarRenderSystem::DrawRadarArtillery(entt::registry& registry)
 {
-	auto view = registry.view<Tag::RadarArtillery, const Component::Transform, const Component::Sprite>();
+	auto view = registry.view<Tag::Radar::Artillery, const Component::Transform, const Component::Sprite>();
 	for (auto [entity, transform, sprite] : view.each())
 	{
 		Nc::Vector2f position = Nc::Vector2f::Remap(WORLD_BOUNDS, RADAR_BOUNDS, transform.position);
@@ -135,7 +136,7 @@ void RadarRenderSystem::DrawBlips(
 		Nc::Vector2f glitchOffset = Nc::Vector2f::Zero();
 		if (blip.state == Component::Blip::CompleteFailure)
 		{
-			Component::Blip::CompleteFailureData& failure = registry.get<Component::Blip::CompleteFailureData>(entity);
+			Component::BlipState::CompleteFailureData& failure = registry.get<Component::BlipState::CompleteFailureData>(entity);
 			glitchOffset = failure.glitchedOffset;
 		}
 		
@@ -183,7 +184,7 @@ void RadarRenderSystem::DrawRecalibratingScreen(
 	// TODO: Add custom recalibration background
 	ClearBackground(BLACK);
 	
-	auto view = registry.view<const Tag::RadarRecalibration, const Component::Transform, Component::Text>();
+	auto view = registry.view<const Tag::Radar::Recalibration, const Component::Transform, Component::Text>();
 	for (auto [entity, transform, text] : view.each())
 	{
 		float time = Component::Radar::RECALIBRATION_TIME - radar.recalibrationTimeLeft;

@@ -1,10 +1,10 @@
 #pragma once
-#include "components/objects/comms/radio_component.hpp"
+#include "game/component/scene/comms_scene/radio_component.hpp"
 #include "entt/entity/fwd.hpp"
 #include "raylib.h"
 
 
-class RadioSoundSystem
+class RadioSoundEmitterSystem
 {
 public:
 	static void Update(

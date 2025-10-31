@@ -1,21 +1,21 @@
-#include "components/core/sound_emitter_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/scene/ambient_sound_tag.hpp"
-#include "core/resource_store.hpp"
-#include "core/scene.hpp"
-#include "core/state/game_state.hpp"
+#include "game/component/core/audio/sound_emitter_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/tag/core/ambient_sound_tag.hpp"
+#include "core/runtime/resource_store.hpp"
+#include "game/state/scene.hpp"
+#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/core/sound_system.hpp"
-#include "systems/scene/ambient_sound_system.hpp"
-#include "utility/interpolation.hpp"
-#include "utility/random.hpp"
+#include "game/system/core/audio/sound_emitter_system.hpp"
+#include "game/system/core/audio/ambient_sound_system.hpp"
+#include "core/data/interpolation.hpp"
+#include "core/data/random.hpp"
 #include <string>
 #include <utility>
 
 
-void AmbientSoundSystem::Update(
+void AmbientSoundEmitterSystem::Update(
 	entt::registry& registry, GameState& gameState, ResourceStore& resourceStore, float deltaTime
 )
 {
@@ -39,7 +39,7 @@ void AmbientSoundSystem::Update(
 }
 
 
-void AmbientSoundSystem::TryPlayAmbience(
+void AmbientSoundEmitterSystem::TryPlayAmbience(
 	Component::Transform& transform, Component::LoopedSoundEmitter& emitter, Scene scene, ResourceStore& resourceStore
 )
 {
@@ -58,7 +58,7 @@ void AmbientSoundSystem::TryPlayAmbience(
 		filePath = "assets/audio/ambient/comms_ambience.wav";
 		break;
 	default:
-		SoundSystem::StopEmitter(emitter);
+		SoundEmitterSystem::StopEmitter(emitter);
 		break;
 	}
 
@@ -67,16 +67,16 @@ void AmbientSoundSystem::TryPlayAmbience(
 }
 
 
-void AmbientSoundSystem::TransitionAmbientAudio(
+void AmbientSoundEmitterSystem::TransitionAmbientAudio(
 	Component::LoopedSoundEmitter& emitter, const std::string& filePath, ResourceStore& resourceStore
 )
 {
-	SoundSystem::StopEmitter(emitter);
+	SoundEmitterSystem::StopEmitter(emitter);
 
 	Music ambience = resourceStore.GetMusic(filePath.c_str());
 	emitter.sound = std::move(ambience);
 
-	SoundSystem::PlayEmitter(emitter);
+	SoundEmitterSystem::PlayEmitter(emitter);
 
 	float soundLength = GetMusicTimeLength(emitter.sound);
 	float randomStart = Nc::Random::Range(0.0f, soundLength);

@@ -1,5 +1,5 @@
 #pragma once
-#include "assemblers/ui/label_button_object.hpp"
+#include "game/construction/ui/shared/object/label_button_object.hpp"
 #include "entt/entity/fwd.hpp"
 class Game;
 struct GameState;

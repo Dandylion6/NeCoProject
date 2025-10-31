@@ -1,13 +1,14 @@
-#include "assemblers/scenes/comms_scene/morse_monitor_object.hpp"
-#include "components/core/rendering/rectangle_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/objects/comms/morse_monitor.hpp"
-#include "core/scene.hpp"
+#include "game/construction/scene/comms_scene/object/morse_monitor_object.hpp"
+#include "game/component/core/rendering/rectangle_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/scene/comms_scene/morse_components.hpp"
+#include "game/tag/scene/comms_scene/morse_monitor_tag.hpp"
+#include "game/state/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "utility/color.hpp"
-#include "utility/vector2.hpp"
+#include "core/data/color.hpp"
+#include "core/data/vector2.hpp"
 
 
 void Construct::MorseMonitorObject(
@@ -16,8 +17,8 @@ void Construct::MorseMonitorObject(
 {
 	Construct::MorseMonitorPointerEntity(registry);
 
-	Construct::MorseMonitorRegionEntity(registry, Component::MorseMonitorRegion::Dot);
-	Construct::MorseMonitorRegionEntity(registry, Component::MorseMonitorRegion::Dash);
+	Construct::MorseMonitorRegionEntity(registry, Component::Morse::MonitorRegion::Dot);
+	Construct::MorseMonitorRegionEntity(registry, Component::Morse::MonitorRegion::Dash);
 
 	const entt::entity entity = registry.create();
 
@@ -46,14 +47,14 @@ const entt::entity Construct::MorseMonitorPointerEntity(
 		entity, CommsRoom, MorseMonitor::POSITION, POINTER_SIZE, offset
 	);
 	registry.emplace<Component::Rectangle>(entity, COLOR);
-	registry.emplace<Tag::MorseMonitorPointer>(entity);
+	registry.emplace<Tag::Morse::Monitor>(entity);
 
 	return entity;
 }
 
 
 const entt::entity Construct::MorseMonitorRegionEntity(
-	entt::registry& registry, Component::MorseMonitorRegion::Region region
+	entt::registry& registry, Component::Morse::MonitorRegion::Region region
 )
 {
 	const entt::entity entity = registry.create();
@@ -65,7 +66,7 @@ const entt::entity Construct::MorseMonitorRegionEntity(
 		entity, CommsRoom, MorseMonitor::POSITION, REGION_SIZE, REGION_SIZE * 0.5f
 	);
 	registry.emplace<Component::Rectangle>(entity, COLOR);
-	registry.emplace<Component::MorseMonitorRegion>(entity, region);
+	registry.emplace<Component::Morse::MonitorRegion>(entity, region);
 
 	return entity;
 }

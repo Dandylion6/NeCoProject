@@ -1,6 +1,6 @@
 #pragma once
-#include "components/objects/interactions/circuit_breaker_component.hpp"
-#include "components/objects/interactions/toggle_component.hpp"
+#include "game/component/shared/mechanical/circuit_breaker_component.hpp"
+#include "game/component/core/interactive/toggle_component.hpp"
 #include "entt/entity/fwd.hpp"
 struct AnomalyState;
 

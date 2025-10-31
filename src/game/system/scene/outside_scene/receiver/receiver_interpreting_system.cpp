@@ -1,18 +1,18 @@
-#include "components/objects/comms/radio_component.hpp"
-#include "components/objects/outside/receiver_component.hpp"
-#include "core/context/debug_context.hpp"
-#include "core/game.hpp"
-#include "core/resource_store.hpp"
+#include "game/component/scene/comms_scene/radio_component.hpp"
+#include "game/component/scene/outside_scene/receiver_component.hpp"
+#include "game/debug/debug_context.hpp"
+#include "game/game.hpp"
+#include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/object/comms/radio_sound_system.hpp"
-#include "systems/object/outside/receiver/adjust_interpreting_system.hpp"
-#include "systems/object/outside/receiver/aim_interpreting_system.hpp"
-#include "systems/object/outside/receiver/artillery_fire_system.hpp"
-#include "systems/object/outside/receiver/recalibrate_interpreting_system.hpp"
-#include "systems/object/outside/receiver/receiver_interpreting_system.hpp"
-#include "utility/morse_code.hpp"
+#include "game/system/scene/comms_scene/radio/radio_sound_system.hpp"
+#include "game/system/scene/outside_scene/receiver/adjust_interpreting_system.hpp"
+#include "game/system/scene/outside_scene/receiver/aim_interpreting_system.hpp"
+#include "game/system/scene/outside_scene/receiver/fire_interpreting_system.hpp"
+#include "game/system/scene/outside_scene/receiver/recalibrate_interpreting_system.hpp"
+#include "game/system/scene/outside_scene/receiver/receiver_interpreting_system.hpp"
+#include "game/utility/morse_code.hpp"
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -46,7 +46,7 @@ void ReceiverInterpretingSystem::Update(entt::registry& registry, ResourceStore&
 
 			const std::string RESPONSE = "assets/audio/voicelines/receiver/commands/remove_request.wav";
 			Sound response = LoadSoundAlias(resourceStore.GetSound(RESPONSE));
-			RadioSoundSystem::Broadcast(registry, std::move(response), Low);
+			RadioSoundEmitterSystem::Broadcast(registry, std::move(response), Low);
 			continue;
 		}
 		case MorseCode::CANCEL_CODE:
@@ -56,7 +56,7 @@ void ReceiverInterpretingSystem::Update(entt::registry& registry, ResourceStore&
 
 			const std::string RESPONSE = "assets/audio/voicelines/receiver/commands/clear_transmission_request.wav";
 			Sound response = LoadSoundAlias(resourceStore.GetSound(RESPONSE));
-			RadioSoundSystem::Broadcast(registry, std::move(response), Low);
+			RadioSoundEmitterSystem::Broadcast(registry, std::move(response), Low);
 			continue;
 		}
 		default:
@@ -85,7 +85,7 @@ void ReceiverInterpretingSystem::TryInterpretMessage(
 	case AdjustArtillery:
 		return AdjustInterpretingSystem::HandleReceivedMessage(registry, resourceStore, receiver, message);
 	case FiringArtillery:
-		return ArtilleryFireSystem::HandleReceivedMessage(registry, resourceStore, receiver, message);
+		return FireInterpretingSystem::HandleReceivedMessage(registry, resourceStore, receiver, message);
 	case RecalibrateRadar:
 		return RecalibrateInterpretingSystem::HandleReceivedMessage(registry, resourceStore, receiver, message);
 	default:
@@ -103,7 +103,7 @@ TransmissionContext ReceiverInterpretingSystem::TryGetContext(
 		std::unordered_map<std::string, TransmissionContext> map;
 		map[AimInterpretingSystem::COMMAND] = AimingArtillery;
 		map[AdjustInterpretingSystem::COMMAND] = AdjustArtillery;
-		map[ArtilleryFireSystem::COMMAND] = FiringArtillery;
+		map[FireInterpretingSystem::COMMAND] = FiringArtillery;
 		map[RecalibrateInterpretingSystem::COMMAND] = RecalibrateRadar;
 		return map;
 	}();

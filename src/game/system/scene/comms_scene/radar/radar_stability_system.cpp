@@ -1,23 +1,23 @@
-#include "components/objects/comms/radar.hpp"
-#include "components/objects/interactions/toggle_component.hpp"
-#include "components/objects/machine_component.hpp"
-#include "components/objects/outside/blip_component.hpp"
-#include "core/state/anomaly_state.hpp"
-#include "core/state/game_state.hpp"
+#include "game/component/scene/comms_scene/radar_components.hpp"
+#include "game/component/core/interactive/toggle_component.hpp"
+#include "game/component/shared/mechanical/machine_component.hpp"
+#include "game/component/scene/comms_scene/blip_components.hpp"
+#include "game/state/anomaly_state.hpp"
+#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/object/comms/radar/blip_glitch_system.hpp"
-#include "systems/object/comms/radar/radar_stability_system.hpp"
-#include "utility/interpolation.hpp"
-#include "utility/random.hpp"
-#include "utility/vector2.hpp"
+#include "game/system/scene/comms_scene/radar/blip/blip_glitch_system.hpp"
+#include "game/system/scene/comms_scene/radar/radar_stability_system.hpp"
+#include "core/data/interpolation.hpp"
+#include "core/data/random.hpp"
+#include "core/data/vector2.hpp"
 #include <cmath>
 #include <cstdint>
 
 #ifdef  DEBUG_BUILD
-#include "core/game.hpp"
-#include "core/context/debug_context.hpp"
+#include "game/game.hpp"
+#include "game/debug/debug_context.hpp"
 #endif
 
 

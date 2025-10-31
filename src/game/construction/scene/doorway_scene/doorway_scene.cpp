@@ -1,14 +1,14 @@
-#include "assemblers/entities/light_source_entity.hpp"
-#include "assemblers/entities/move_region_entity.hpp"
-#include "assemblers/entities/scene_background_entity.hpp"
-#include "assemblers/scenes/doorway_scene/doorway_scene.hpp"
-#include "core/context/render_context.hpp"
-#include "core/resource_store.hpp"
-#include "core/scene.hpp"
+#include "game/construction/shared/entity/environment/light_source_entity.hpp"
+#include "game/construction/shared/entity/scene/move_region_entity.hpp"
+#include "game/construction/shared/entity/scene/scene_background_entity.hpp"
+#include "game/construction/scene/doorway_scene/doorway_scene.hpp"
+#include "core/runtime/render_context.hpp"
+#include "core/runtime/resource_store.hpp"
+#include "game/state/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "raylib.h"
-#include "utility/color.hpp"
-#include "utility/vector2.hpp" 
+#include "core/data/color.hpp"
+#include "core/data/vector2.hpp" 
 #include <utility>
 
 

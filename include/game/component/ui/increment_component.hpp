@@ -1,5 +1,5 @@
 #pragma once
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 #include <cstdint>
 
 
@@ -12,8 +12,8 @@ namespace Component::UI
         float increment = 0.1f;
         uint8_t decimals = 1u;
 
-        UiIncrement() = default;
-        UiIncrement(
+        Increment() = default;
+        Increment(
             float* value,
             float increment,
             Nc::Vector2f range = Nc::Vector2f(0.0f, 1.0f),

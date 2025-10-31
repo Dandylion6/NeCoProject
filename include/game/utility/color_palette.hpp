@@ -1,5 +1,5 @@
 #pragma once
-#include "utility/color.hpp"
+#include "core/data/color.hpp"
 
 
 namespace Palette

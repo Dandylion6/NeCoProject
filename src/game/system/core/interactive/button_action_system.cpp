@@ -1,13 +1,13 @@
-#include "components/core/button_action_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "core/context/render_context.hpp"
-#include "core/state/game_state.hpp"
+#include "game/component/core/interactive/button_action_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "core/runtime/render_context.hpp"
+#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/core/button_action_system.hpp"
-#include "utility/bounds.hpp"
-#include "utility/vector2.hpp"
+#include "game/system/core/interactive/button_action_system.hpp"
+#include "core/data/bounds.hpp"
+#include "core/data/vector2.hpp"
 
 
 bool ButtonActionSystem::Update(
@@ -55,7 +55,7 @@ bool ButtonActionSystem::UpdateUiButtons(
 )
 {
 	bool isHovering = false;
-	auto view = registry.view<const Component::UiTransform, Component::ButtonAction>();
+	auto view = registry.view<const Component::UI::Transform, Component::ButtonAction>();
 	for (auto [entity, transform, button] : view.each())
 	{
 		button.isActive = transform.isVisible;

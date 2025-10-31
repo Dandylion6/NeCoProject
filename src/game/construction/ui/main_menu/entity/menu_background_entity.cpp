@@ -1,13 +1,13 @@
-#include "assemblers/menus/main_menu/menu_background_entity.hpp"
-#include "components/core/rendering/sprite_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/scene/dont_destroy_on_load_tag.hpp"
-#include "components/ui/main_menu_tag.hpp"
-#include "core/resource_store.hpp"
+#include "game/construction/ui/main_menu/entity/menu_background_entity.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/tag/core/life_cycle/dont_destroy_on_load_tag.hpp"
+#include "game/tag/ui/main_menu_tag.hpp"
+#include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 #include <utility>
 
 
@@ -23,7 +23,7 @@ const entt::entity Construct::MainMenuBackgroundEntity(
 
 	registry.emplace<Tag::DontDestroyOnLoad>(entity);
 	registry.emplace<Tag::MainMenu>(entity);
-	registry.emplace<Component::UiTransform>(entity, center, center, size);
+	registry.emplace<Component::UI::Transform>(entity, center, center, size);
 	registry.emplace<Component::Sprite>(entity, std::move(texture));
 
 	return entity;

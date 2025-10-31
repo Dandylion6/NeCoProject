@@ -1,6 +1,6 @@
 #pragma once
 #include "raylib.h"
-#include "utility/morse_code.hpp"
+#include "game/utility/morse_code.hpp"
 #include <array>
 #include <cstdint>
 
@@ -24,7 +24,11 @@ namespace Component::Morse
 		bool isInputActive = false;
 		uint8_t pulseCount = 0u;
 	};
+}
 
+
+namespace Component::Morse
+{
 	struct MonitorRegion
 	{
 		enum Region: uint8_t
@@ -36,5 +40,4 @@ namespace Component::Morse
 
 		MonitorRegion(Region region) : region(region) { };
 	};
-}
 }

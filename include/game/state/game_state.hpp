@@ -1,10 +1,9 @@
 #pragma once
-#include "core/scene.hpp"
-#include "core/state/anomaly_state.hpp"
-#include "utility/bounds.hpp"
-#include "utility/vector2.hpp"
+#include "game/state/anomaly_state.hpp"
+#include "game/state/scene.hpp"
+#include "core/data/bounds.hpp"
+#include "core/data/vector2.hpp"
 #include <cstdint>
-
 
 using Day = uint8_t;
 
@@ -17,7 +16,7 @@ constexpr Nc::Bounds RADAR_BOUNDS = Nc::Bounds(0.0f, 0.0f, 320.0f, 320.0f);
 
 struct GameState
 {
-	// @brief How many minutes an in-game hour is.
+	// @brief How maPny minutes an in-game hour is.
 	static constexpr float HOUR_MINUTES = 2.2f;
 	static constexpr float WAKE_HOUR = 7.0f;
 	// @brief The clock hours where the 'night' gameplay occurs.

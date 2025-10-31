@@ -1,14 +1,14 @@
-#include "components/core/sound_emitter_component.hpp"
-#include "components/objects/comms/radio_component.hpp"
+#include "game/component/core/audio/sound_emitter_component.hpp"
+#include "game/component/scene/comms_scene/radio_component.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/core/sound_system.hpp"
-#include "systems/object/comms/radio_sound_system.hpp"
+#include "game/system/core/audio/sound_emitter_system.hpp"
+#include "game/system/scene/comms_scene/radio/radio_sound_system.hpp"
 #include <utility>
 
 
-void RadioSoundSystem::Update(entt::registry& registry, float deltaTime)
+void RadioSoundEmitterSystem::Update(entt::registry& registry, float deltaTime)
 {
 	auto view = registry.view<Component::Radio, Component::SoundEmitter>();
 	for (auto [entity, radio, emitter] : view.each())
@@ -22,8 +22,8 @@ void RadioSoundSystem::Update(entt::registry& registry, float deltaTime)
 			}
 
 			radio.isSendingBroadcast = false;
-			if (IsSoundPlaying(emitter.sound)) SoundSystem::StopEmitter(emitter);
-			SoundSystem::PlayEmitter(emitter);
+			if (IsSoundPlaying(emitter.sound)) SoundEmitterSystem::StopEmitter(emitter);
+			SoundEmitterSystem::PlayEmitter(emitter);
 			continue;
 		}
 
@@ -32,7 +32,7 @@ void RadioSoundSystem::Update(entt::registry& registry, float deltaTime)
 }
 
 
-void RadioSoundSystem::Broadcast(
+void RadioSoundEmitterSystem::Broadcast(
 	entt::registry& registry, 
 	Sound&& sound, 
 	BroadcastPriority priority

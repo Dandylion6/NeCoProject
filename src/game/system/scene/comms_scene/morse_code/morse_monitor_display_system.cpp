@@ -1,12 +1,13 @@
-#include "assemblers/scenes/comms_scene/morse_monitor_object.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/objects/comms/morse_monitor.hpp"
-#include "components/objects/comms/morse_transceiver_component.hpp"
-#include "core/data/settings.hpp"
+#include "game/construction/scene/comms_scene/object/morse_monitor_object.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/scene/comms_scene/morse_components.hpp"
+#include "game/component/scene/comms_scene/morse_components.hpp"
+#include "game/state/settings.hpp"
+#include "game/tag/scene/comms_scene/morse_monitor_tag.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/object/comms/morse_monitor_display_system.hpp"
-#include "utility/interpolation.hpp"
+#include "game/system/scene/comms_scene/morse_code/morse_monitor_display_system.hpp"
+#include "core/data/interpolation.hpp"
 #include <cmath>
 
 
@@ -23,13 +24,13 @@ void MorseMonitorDisplaySystem::UpdatePointer(
 	entt::registry& registry, MorseSettings settings, float deltaTime
 )
 {
-	auto view = registry.view<Tag::MorseMonitorPointer, Component::Transform>();
+	auto view = registry.view<Tag::Morse::Monitor, Component::Transform>();
 	for (auto [entity, transform] : view.each())
 	{
-		const Component::MorseTransceiver* result = GetTrasceiver(registry);
+		const Component::Morse::Transceiver* result = GetTrasceiver(registry);
 		if (result == nullptr) continue;
 
-		const Component::MorseTransceiver& transceiver = *result;
+		const Component::Morse::Transceiver& transceiver = *result;
 		if (!transceiver.isInputActive)
 		{
 			transform.position.x = Math::SmoothApproach(
@@ -44,9 +45,9 @@ void MorseMonitorDisplaySystem::UpdatePointer(
 }
 
 
-const Component::MorseTransceiver* MorseMonitorDisplaySystem::GetTrasceiver(entt::registry& registry)
+const Component::Morse::Transceiver* MorseMonitorDisplaySystem::GetTrasceiver(entt::registry& registry)
 {
-	auto view = registry.view<const Component::MorseTransceiver>();
+	auto view = registry.view<const Component::Morse::Transceiver>();
 	for (auto [entity, transceiver] : view.each()) return &transceiver;
 	return nullptr;
 }
@@ -59,16 +60,16 @@ void MorseMonitorDisplaySystem::SetRegions(
 	float monitorScale = MorseMonitor::GAUGE_SIZE.x / settings.exitTime;
 	float marginWidth = settings.errorMargin * monitorScale;
 
-	auto view = registry.view<Component::MorseMonitorRegion, Component::Transform>();
+	auto view = registry.view<Component::Morse::MonitorRegion, Component::Transform>();
 	for (auto [entity, region, transform] : view.each())
 	{
 		float pulseTime = 0.0f;
 		switch (region.region)
 		{
-		case Component::MorseMonitorRegion::Dot:
+		case Component::Morse::MonitorRegion::Dot:
 			pulseTime = settings.dotTime;
 			break;
-		case Component::MorseMonitorRegion::Dash:
+		case Component::Morse::MonitorRegion::Dash:
 			pulseTime = settings.dashTime;
 			break;
 		}

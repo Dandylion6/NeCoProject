@@ -1,10 +1,10 @@
-#include "assemblers/entities/interactive/circuit_breaker_object.hpp"
-#include "assemblers/entities/interactive/lever_entity.hpp"
-#include "components/core/rendering/rectangle_component.hpp"
-#include "core/scene.hpp"
+#include "game/construction/shared/object/mechanical/circuit_breaker_object.hpp"
+#include "game/construction/shared/entity/mechanical/lever_entity.hpp"
+#include "game/component/core/rendering/rectangle_component.hpp"
+#include "game/state/scene.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "utility/bounds.hpp"
+#include "core/data/bounds.hpp"
 
 
 namespace Construct

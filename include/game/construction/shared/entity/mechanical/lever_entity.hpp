@@ -1,6 +1,6 @@
 #pragma once
-#include "components/objects/interactions/lever_component.hpp"
-#include "components/core/transform_component.hpp"
+#include "game/component/shared/mechanical/lever_component.hpp"
+#include "game/component/core/transform_component.hpp"
 #include "entt/entity/entity.hpp"
 #include "entt/entity/fwd.hpp"
 #include "raylib.h"

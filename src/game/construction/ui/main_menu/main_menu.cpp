@@ -1,12 +1,12 @@
-#include "assemblers/menus/main_menu/main_menu.hpp"
-#include "assemblers/menus/main_menu/menu_background_entity.hpp"
-#include "assemblers/menus/main_menu/menu_button_entities.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/ui/main_menu_tag.hpp"
-#include "core/game.hpp"
-#include "core/resource_store.hpp"
-#include "core/scene.hpp"
-#include "core/state/game_state.hpp"
+#include "game/construction/ui/main_menu/main_menu.hpp"
+#include "game/construction/ui/main_menu/entity/menu_background_entity.hpp"
+#include "game/construction/ui/main_menu/object/menu_button_objects.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/tag/ui/main_menu_tag.hpp"
+#include "game/game.hpp"
+#include "core/runtime/resource_store.hpp"
+#include "game/state/scene.hpp"
+#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 
@@ -27,7 +27,7 @@ void MainMenu::Build(
 
 void MainMenu::Open(entt::registry& registry, GameState& gameState)
 {
-	auto view = registry.view<Tag::MainMenu, Component::UiTransform>();
+	auto view = registry.view<Tag::MainMenu, Component::UI::Transform>();
 	for (auto [entity, transform] : view.each())
 	{
 		transform.isVisible = true;
@@ -39,7 +39,7 @@ void MainMenu::Open(entt::registry& registry, GameState& gameState)
 
 void MainMenu::Close(entt::registry& registry, GameState &gameState)
 {
-	auto view = registry.view<Tag::MainMenu, Component::UiTransform>();
+	auto view = registry.view<Tag::MainMenu, Component::UI::Transform>();
 	for (auto [entity, transform] : view.each())
 	{
 		transform.isVisible = false;

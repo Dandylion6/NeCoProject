@@ -1,6 +1,6 @@
 #pragma once
-#include "components/core/transform_component.hpp"
-#include "components/objects/comms/radar.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/scene/comms_scene/radar_components.hpp"
 #include "entt/entity/fwd.hpp"
 struct Tween;
 

@@ -1,7 +1,7 @@
 #pragma once
-#include "components/objects/comms/morse_monitor.hpp"
+#include "game/component/scene/comms_scene/morse_components.hpp"
 #include "entt/entity/fwd.hpp"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 class ResourceStore;
 
 
@@ -21,6 +21,7 @@ namespace Construct
 	const entt::entity MorseMonitorPointerEntity(entt::registry& registry);
 
 	const entt::entity MorseMonitorRegionEntity(
-		entt::registry& registry, Component::MorseMonitorRegion::Region region
+		entt::registry& registry, 
+		Component::Morse::MonitorRegion::Region region
 	);
 }

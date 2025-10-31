@@ -1,14 +1,14 @@
-#include "components/core/lights/light_source_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "core/context/render_context.hpp"
-#include "core/resource_store.hpp"
-#include "core/state/game_state.hpp"
+#include "game/component/core/rendering/lighting/light_source_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "core/runtime/render_context.hpp"
+#include "core/runtime/resource_store.hpp"
+#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/core/lighting_system.hpp"
-#include "utility/interpolation.hpp"
-#include "utility/vector2.hpp"
+#include "game/system/core/rendering/lighting/lighting_system.hpp"
+#include "core/data/interpolation.hpp"
+#include "core/data/vector2.hpp"
 
 
 

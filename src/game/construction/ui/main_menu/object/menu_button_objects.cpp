@@ -1,17 +1,17 @@
-#include "assemblers/menus/main_menu/main_menu.hpp"
-#include "assemblers/menus/main_menu/menu_button_entities.hpp"
-#include "assemblers/scenes/settings_menu/settings_menu.hpp"
-#include "assemblers/ui/label_button_object.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/scene/dont_destroy_on_load_tag.hpp"
-#include "components/ui/main_menu_tag.hpp"
-#include "core/data/save_game.hpp"
-#include "core/game.hpp"
-#include "core/resource_store.hpp"
-#include "core/state/game_state.hpp"
+#include "game/construction/ui/main_menu/main_menu.hpp"
+#include "game/construction/ui/main_menu/object/menu_button_objects.hpp"
+#include "game/construction/ui/settings_menu/settings_menu.hpp"
+#include "game/construction/ui/shared/object/label_button_object.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/tag/core/life_cycle/dont_destroy_on_load_tag.hpp"
+#include "game/tag/ui/main_menu_tag.hpp"
+#include "game/save/save_game.hpp"
+#include "game/game.hpp"
+#include "core/runtime/resource_store.hpp"
+#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 #include <functional>
 #include <utility>
 
@@ -20,7 +20,7 @@ void Construct::PlayButtonObject(
 	Game& game, entt::registry& registry, GameState& gameState, ResourceStore& resourceStore
 )
 {
-	Component::UiTransform transform = Component::UiTransform(
+	Component::UI::Transform transform = Component::UI::Transform(
 		Nc::Vector2f(0.5f, 0.5f), Nc::Vector2f::Scale(0.5f)
 	);
 	
@@ -42,13 +42,13 @@ void Construct::SettingsButtonObject(
 	ResourceStore& resourceStore
 )
 {
-	Component::UiTransform transform = Component::UiTransform(
+	Component::UI::Transform transform = Component::UI::Transform(
 		Nc::Vector2f(0.5f, 0.56f), Nc::Vector2f::Scale(0.5f)
 	);
 	
 	std::function<void()> onClick = [&gameState, &registry]()
 	{
-		auto view = registry.view<Tag::MainMenu, Component::UiTransform>();
+		auto view = registry.view<Tag::MainMenu, Component::UI::Transform>();
 		for (auto [entity, transform] : view.each()) transform.isVisible = false;
 		
 		SettingsMenu::Open(registry, gameState);
@@ -64,7 +64,7 @@ void Construct::ExitButtonObject(
 	entt::registry& registry, GameState& gameState, ResourceStore& resourceStore
 )
 {
-	Component::UiTransform transform = Component::UiTransform(
+	Component::UI::Transform transform = Component::UI::Transform(
 		Nc::Vector2f(0.5f, 0.62f), Nc::Vector2f::Scale(0.5f)
 	);
 	

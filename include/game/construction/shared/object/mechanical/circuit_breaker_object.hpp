@@ -1,6 +1,6 @@
 #pragma once
-#include "components/core/transform_component.hpp"
-#include "components/objects/interactions/circuit_breaker_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/shared/mechanical/circuit_breaker_component.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/entity.hpp"
 

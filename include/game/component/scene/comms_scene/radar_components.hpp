@@ -21,7 +21,11 @@ namespace Component
 		uint8_t glitchCount = 0u;
 		bool isRecalibrating = false;
 	};
+}
 
+
+namespace Component
+{
 	struct RadarErrorWarning
 	{
 		enum Tween 

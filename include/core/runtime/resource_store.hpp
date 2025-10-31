@@ -1,5 +1,5 @@
 #pragma once
-#include "components/core/rendering/text_component.hpp"
+#include "core/data/font_style.hpp"
 #include "raylib.h"
 #include <cstdint>
 #include <string>

@@ -1,5 +1,5 @@
 #pragma once
-#include "core/scene.hpp"
+#include "game/state/scene.hpp"
 #include "entt/entity/fwd.hpp"
 struct GameState;
 struct RenderContext;

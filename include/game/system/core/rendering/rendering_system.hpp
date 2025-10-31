@@ -1,9 +1,9 @@
 #pragma once
-#include "components/core/transform_component.hpp"
-#include "core/scene.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/state/scene.hpp"
 #include "entt/entity/entity.hpp"
 #include "entt/entity/fwd.hpp"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 struct GameState;
 struct RenderContext;
 class ResourceStore;
@@ -46,7 +46,7 @@ private:
 
 	static bool ShouldRender(const Component::Transform& transform, Scene currentScene);
 
-	static bool ShouldRender(const Component::UiTransform& transform);
+	static bool ShouldRender(const Component::UI::Transform& transform);
 
 	static bool SortComparison(Renderable a, Renderable b);
 };

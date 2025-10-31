@@ -1,12 +1,12 @@
-#include "components/core/rendering/rectangle_component.hpp"
-#include "components/objects/interactions/circuit_breaker_component.hpp"
-#include "components/objects/interactions/toggle_component.hpp"
-#include "components/objects/machine_component.hpp"
-#include "core/state/anomaly_state.hpp"
+#include "game/component/core/rendering/rectangle_component.hpp"
+#include "game/component/shared/mechanical/circuit_breaker_component.hpp"
+#include "game/component/core/interactive/toggle_component.hpp"
+#include "game/component/shared/mechanical/machine_component.hpp"
+#include "game/state/anomaly_state.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/object/interactive/circuit_breaker_system.hpp"
-#include "utility/color.hpp"
+#include "game/system/shared/mechanical/circuit_breaker_system.hpp"
+#include "core/data/color.hpp"
 
 
 void CircuitBreakerSystem::Update(

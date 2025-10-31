@@ -1,15 +1,15 @@
-#include "assemblers/scenes/comms_scene/morse_transceiver_entity.hpp"
-#include "components/core/sound_emitter_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/objects/comms/morse_transceiver_component.hpp"
-#include "core/context/render_context.hpp"
-#include "core/resource_store.hpp"
-#include "core/scene.hpp"
+#include "game/construction/scene/comms_scene/entity/morse_transceiver_entity.hpp"
+#include "game/component/core/audio/sound_emitter_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/scene/comms_scene/morse_components.hpp"
+#include "core/runtime/render_context.hpp"
+#include "core/runtime/resource_store.hpp"
+#include "game/state/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/core/sound_system.hpp"
-#include "utility/vector2.hpp"
+#include "game/system/core/audio/sound_emitter_system.hpp"
+#include "core/data/vector2.hpp"
 #include <utility>
 
 
@@ -22,10 +22,10 @@ void Construct::MorseTransceiverEntity(entt::registry& registry, ResourceStore& 
 	position *= 0.5f;
 
 	registry.emplace<Component::Transform>(entity, CommsRoom, position);
-	registry.emplace<Component::MorseTransceiver>(entity);
+	registry.emplace<Component::Morse::Transceiver>(entity);
 
 	Music morseTone = resourceStore.GetMusic("assets/audio/object/morse_tone.wav");
 	Component::LoopedSoundEmitter& emitter = registry.emplace<Component::LoopedSoundEmitter>(entity, std::move(morseTone));
 	emitter.volume = 0.0f;
-	SoundSystem::PlayEmitter(emitter);
+	SoundEmitterSystem::PlayEmitter(emitter);
 }

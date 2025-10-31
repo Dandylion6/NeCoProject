@@ -1,5 +1,5 @@
 #pragma once
-#include "utility/morse_code.hpp"
+#include "game/utility/morse_code.hpp"
 
 
 struct MorseSettings

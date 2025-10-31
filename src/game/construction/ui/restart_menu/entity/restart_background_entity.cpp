@@ -1,15 +1,15 @@
-#include "assemblers/menus/restart_menu/restart_background_entity.hpp"
-#include "components/core/rendering/rectangle_component.hpp"
-#include "components/core/rendering/sprite_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/scene/dont_destroy_on_load_tag.hpp"
-#include "components/ui/restart_menu_tag.hpp"
-#include "core/resource_store.hpp"
+#include "game/construction/ui/restart_menu/entity/restart_background_entity.hpp"
+#include "game/component/core/rendering/rectangle_component.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/tag/core/life_cycle/dont_destroy_on_load_tag.hpp"
+#include "game/tag/ui/restart_menu_tag.hpp"
+#include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "utility/color_palette.hpp"
-#include "utility/vector2.hpp"
+#include "game/utility/color_palette.hpp"
+#include "core/data/vector2.hpp"
 #include <utility>
 
 
@@ -25,7 +25,7 @@ namespace Construct
 
 		registry.emplace<Tag::DontDestroyOnLoad>(entity);
 		registry.emplace<Tag::RestartMenu>(entity);
-		registry.emplace<Component::UiTransform>(entity, center, center, windowSize);
+		registry.emplace<Component::UI::Transform>(entity, center, center, windowSize);
 		registry.emplace<Component::Rectangle>(entity, Palette::BACKGROUND_COLOR);
 
 		return entity;
@@ -47,7 +47,7 @@ const entt::entity Construct::RestartMenuBackgroundEntity(
 
 	registry.emplace<Tag::DontDestroyOnLoad>(entity);
 	registry.emplace<Tag::RestartMenu>(entity);
-	registry.emplace<Component::UiTransform>(entity, center, center, size, Nc::Vector2f::Zero(), 1);
+	registry.emplace<Component::UI::Transform>(entity, center, center, size, Nc::Vector2f::Zero(), 1);
 	registry.emplace<Component::Sprite>(entity, std::move(texture), 0.4f);
 
 	return entity;

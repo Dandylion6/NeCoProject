@@ -1,32 +1,32 @@
-#include "components/anomaly/anomaly_roamer_component.hpp"
-#include "components/anomaly/roamers/strider_component.hpp"
-#include "components/core/rendering/sprite_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "core/state/anomaly_state.hpp"
+#include "game/component/shared/anomaly/roamer/anomaly_roamer_component.hpp"
+#include "game/component/shared/anomaly/roamer/strider_component.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/state/anomaly_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/anomaly/roamer/phantom_behaviour_system.hpp"
-#include "systems/anomaly/roamer/strider_behaviour_system.hpp"
-#include "systems/anomaly/roamer_behaviour_system.hpp"
-#include "utility/random.hpp"
-#include "utility/vector2.hpp"
+#include "game/system/shared/anomaly/roamer/behaviour/phantom_behaviour_system.hpp"
+#include "game/system/shared/anomaly/roamer/behaviour/strider_behaviour_system.hpp"
+#include "game/system/shared/anomaly/roamer/roamer_behaviour_system.hpp"
+#include "core/data/random.hpp"
+#include "core/data/vector2.hpp"
 
 
 void PhantomBehaviourSystem::Spawn(
-	entt::registry& registry, AnomalyState& anomalyState, const entt::entity entity, Component::AnomalyRoamer& roamer
+	entt::registry& registry, AnomalyState& anomalyState, const entt::entity entity, Component::Anomaly::Roamer& roamer
 )
 {
 	// Phantom doesn't spawn unless other roamers exist
 	if (anomalyState.roamerThreatCount > 0u)
 	{
-		roamer.behaviour = Component::AnomalyRoamer::Strider;
+		roamer.behaviour = Component::Anomaly::Roamer::Strider;
 		StriderBehaviourSystem::Spawn(registry, entity, roamer);
 		return;
 	}
 
 	constexpr Nc::Vector2f MOVE_SPEED_RANGE = Nc::Vector2f(0.13f, 0.17f);
 	float moveSpeed = Nc::Random::Range(MOVE_SPEED_RANGE.x, MOVE_SPEED_RANGE.y);
-	registry.emplace<Component::Strider>(entity, moveSpeed);
+	registry.emplace<Component::Anomaly::Strider>(entity, moveSpeed);
 }
 
 
@@ -34,7 +34,7 @@ void PhantomBehaviourSystem::Update(
 	entt::registry& registry,
 	const entt::entity entity,
 	Component::Transform& transform,
-	Component::AnomalyRoamer& roamer,
+	Component::Anomaly::Roamer& roamer,
 	float deltaTime
 )
 {
@@ -43,7 +43,7 @@ void PhantomBehaviourSystem::Update(
 
 	Nc::Vector2f targetPosition = RoamerBehaviourSystem::GetTargetPosition(roamer.target);
 	const Component::Sprite& sprite = registry.get<const Component::Sprite>(entity);
-	const Component::Strider& strider = registry.get<Component::Strider>(entity);
+	const Component::Anomaly::Strider& strider = registry.get<Component::Anomaly::Strider>(entity);
 
 	float speedMultiplier = 1.0f;
 	if (sprite.alpha < 0.2f)

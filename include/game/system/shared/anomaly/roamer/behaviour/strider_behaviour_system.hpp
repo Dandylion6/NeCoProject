@@ -4,17 +4,17 @@
 #include "entt/entity/fwd.hpp"
 
 
-class PhaserBehaviourSystem
+class StriderBehaviourSystem
 {
 public:
 	static void Spawn(
 		entt::registry& registry, const entt::entity entity, Component::Anomaly::Roamer& roamer
 	);
 	static void Update(
-		entt::registry& registry,
-		const entt::entity entity,
-		Component::Transform& transform,
-		Component::Anomaly::Roamer& roamer,
+		entt::registry& registry, 
+		const entt::entity entity, 
+		Component::Transform& transform, 
+		Component::Anomaly::Roamer& roamer, 
 		float deltaTime
 	);
 

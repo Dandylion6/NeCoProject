@@ -1,22 +1,22 @@
 #pragma once
-#include "components/core/button_action_component.hpp"
-#include "components/core/rendering/text_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/core/button_action_component.hpp"
-#include "components/core/rendering/text_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/ui/increment_component.hpp"
-#include "core/resource_store.hpp"
+#include "game/component/core/interactive/button_action_component.hpp"
+#include "game/component/core/rendering/text_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/core/interactive/button_action_component.hpp"
+#include "game/component/core/rendering/text_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/ui/increment_component.hpp"
+#include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "utility/color_palette.hpp"
-#include "core/resource_store.hpp"
+#include "game/utility/color_palette.hpp"
+#include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "utility/color_palette.hpp"
-#include "utility/vector2.hpp"
+#include "game/utility/color_palette.hpp"
+#include "core/data/vector2.hpp"
 #include <functional>
 #include <iomanip>
 #include <ios>
@@ -35,7 +35,7 @@ namespace Construct
     {
         const entt::entity entity = registry.create();
 
-        registry.emplace<Component::UiTransform>(entity, position, Nc::Vector2f::Zero(), Nc::Vector2f::Zero(), Nc::Vector2f::Zero(), 2);
+        registry.emplace<Component::UI::Transform>(entity, position, Nc::Vector2f::Zero(), Nc::Vector2f::Zero(), Nc::Vector2f::Zero(), 2);
         registry.emplace<Component::Text>(entity, std::move(display), Palette::RADAR_COLOR, WDXL, FontSize::Medium, Alignment::Left);
 
         return entity;
@@ -45,15 +45,15 @@ namespace Construct
     inline const entt::entity ValueDisplayEntity(
         Nc::Vector2f position,
         Nc::Vector2f offset,
-        Component::UiIncrement&& increment,
+        Component::UI::Increment&& increment,
         entt::registry& registry
     )
     {
         const entt::entity entity = registry.create();
 
-        registry.emplace<Component::UiTransform>(entity, position, Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Zero(), offset, 2);
+        registry.emplace<Component::UI::Transform>(entity, position, Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Zero(), offset, 2);
         registry.emplace<Component::Text>(entity, "", Palette::RADAR_COLOR, WDXL, FontSize::Medium);
-        registry.emplace<Component::UiIncrement>(entity, increment);
+        registry.emplace<Component::UI::Increment>(entity, increment);
 
         return entity;
     };
@@ -62,14 +62,14 @@ namespace Construct
     inline const entt::entity IncreaseButton(
         Nc::Vector2f position,
         Nc::Vector2f offset,
-        Component::UiIncrement& increment,
+        Component::UI::Increment& increment,
         Component::Text& valueDisplay,
         entt::registry& registry
     )
     {
         const entt::entity entity = registry.create();
 
-        registry.emplace<Component::UiTransform>(entity, position, Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Scale(32.0f), offset + Nc::Vector2f::Up(2.0f), 2);
+        registry.emplace<Component::UI::Transform>(entity, position, Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Scale(32.0f), offset + Nc::Vector2f::Up(2.0f), 2);
         registry.emplace<Component::Text>(entity, "+", RAYWHITE, WDXL, FontSize::Medium);
 
         std::function<void()> onClick = [increment = increment, &valueDisplay]()
@@ -86,14 +86,14 @@ namespace Construct
     inline const entt::entity DecreaseButton(
         Nc::Vector2f position,
         Nc::Vector2f offset,
-        Component::UiIncrement& increment, 
+        Component::UI::Increment& increment, 
         Component::Text& valueDisplay,
         entt::registry& registry
     )
     {
         const entt::entity entity = registry.create();
 
-        registry.emplace<Component::UiTransform>(entity, position, Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Scale(24.0f), offset, 2);
+        registry.emplace<Component::UI::Transform>(entity, position, Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Scale(24.0f), offset, 2);
         registry.emplace<Component::Text>(entity, "-", RAYWHITE, WDXL, FontSize::Large);
 
         std::function<void()> onClick = [increment = increment, &valueDisplay]()
@@ -111,7 +111,7 @@ namespace Construct
     inline void IncrementSettingObject(
         Nc::Vector2f position,
         std::string&& display,
-        Component::UiIncrement&& increment,
+        Component::UI::Increment&& increment,
         entt::registry& registry, 
         ResourceStore& resourceStore
     )

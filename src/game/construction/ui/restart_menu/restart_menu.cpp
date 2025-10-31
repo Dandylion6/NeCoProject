@@ -1,14 +1,14 @@
-#include "assemblers/menus/restart_menu/restart_background_entity.hpp"
-#include "assemblers/menus/restart_menu/restart_buttons.hpp"
-#include "assemblers/menus/restart_menu/restart_menu.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/ui/restart_menu_tag.hpp"
-#include "core/game.hpp"
-#include "core/resource_store.hpp"
-#include "core/state/game_state.hpp"
+#include "game/construction/ui/restart_menu/entity/restart_background_entity.hpp"
+#include "game/construction/ui/restart_menu/object/restart_button_objects.hpp"
+#include "game/construction/ui/restart_menu/restart_menu.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/tag/ui/restart_menu_tag.hpp"
+#include "game/game.hpp"
+#include "core/runtime/resource_store.hpp"
+#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 
 
 void RestartMenu::Build(
@@ -26,7 +26,7 @@ namespace RestartMenu
 {
 	static void Toggle(entt::registry& registry, GameState& gameState, bool active)
 	{
-		auto view = registry.view<const Tag::RestartMenu, Component::UiTransform>();
+		auto view = registry.view<const Tag::RestartMenu, Component::UI::Transform>();
 		for (auto [entity, transform] : view.each())
 		{
 			transform.isVisible = active;

@@ -1,32 +1,33 @@
-#include "assemblers/scenes/comms_scene/radar_object.hpp"
-#include "assemblers/scenes/doorway_scene/radar_breaker_object.hpp"
-#include "components/core/button_action_component.hpp"
-#include "components/core/rendering/rectangle_component.hpp"
-#include "components/core/rendering/sprite_component.hpp"
-#include "components/core/rendering/text_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/core/tween_component.hpp"
-#include "components/objects/comms/radar.hpp"
-#include "components/objects/health_component.hpp"
-#include "components/objects/interactions/toggle_component.hpp"
-#include "components/objects/machine_component.hpp"
-#include "components/objects/outside/blip_component.hpp"
-#include "components/scene/address_component.hpp"
-#include "core/context/render_context.hpp"
-#include "core/resource_store.hpp"
-#include "core/scene.hpp"
-#include "core/state/game_state.hpp"
+#include "game/construction/scene/comms_scene/object/radar_object.hpp"
+#include "game/construction/scene/doorway_scene/object/radar_breaker_object.hpp"
+#include "game/component/core/interactive/button_action_component.hpp"
+#include "game/component/core/rendering/rectangle_component.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
+#include "game/component/core/rendering/text_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/core/tween_component.hpp"
+#include "game/component/scene/comms_scene/radar_components.hpp"
+#include "game/component/shared/stat/health_component.hpp"
+#include "game/component/core/interactive/toggle_component.hpp"
+#include "game/component/shared/mechanical/machine_component.hpp"
+#include "game/component/scene/comms_scene/blip_components.hpp"
+#include "game/component/core/serialization/address_component.hpp"
+#include "game/tag/scene/comms_scene/radar_tags.hpp"
+#include "core/runtime/render_context.hpp"
+#include "core/runtime/resource_store.hpp"
+#include "game/state/scene.hpp"
+#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "utility/color_palette.hpp"
-#include "utility/tween.hpp"
-#include "utility/vector2.hpp"
+#include "game/utility/color_palette.hpp"
+#include "core/data/tween.hpp"
+#include "core/data/vector2.hpp"
 #include <cstdint>
 #include <utility>
 
 #ifdef DEBUG_BUILD
-#include "core/game.hpp"
+#include "game/game.hpp"
 #endif
 
 
@@ -39,7 +40,7 @@ namespace Construct
 		Texture2D texture = resourceStore.GetTexture("assets/environment/objects/radar/radar_path.png");
 		Nc::Vector2i size = Nc::Vector2i(texture.width, texture.height);
 
-		registry.emplace<Tag::RadarPath>(entity);
+		registry.emplace<Tag::Radar::Path>(entity);
 
 		Component::Transform& transform = registry.emplace<Component::Transform>(
 			entity, Radar, Nc::Vector2f::Zero(), size
@@ -68,7 +69,7 @@ namespace Construct
 		Texture2D texture = resourceStore.GetTexture("assets/environment/objects/radar/artillery_target.png");
 		Nc::Vector2i size = Nc::Vector2i(texture.width, texture.height);
 
-		registry.emplace<Tag::RadarArtillery>(entity);
+		registry.emplace<Tag::Radar::Artillery>(entity);
 		registry.emplace<Component::Transform>(entity, Radar, Nc::Vector2f::Zero(), size, size * 0.5f);
 		registry.emplace<Component::Sprite>(entity, std::move(texture));
 
@@ -103,7 +104,7 @@ namespace Construct
 		constexpr Nc::Vector2f POSITION = RADAR_BOUNDS.max * 0.5f;
 
 		const entt::entity entity = registry.create();
-		registry.emplace<Tag::RadarRecalibration>(entity);
+		registry.emplace<Tag::Radar::Recalibration>(entity);
 
 		registry.emplace<Component::Transform>(entity, Radar, POSITION);
 		Component::Text& text = registry.emplace<Component::Text>(entity, "RECALIBRATING", Palette::RADAR_COLOR, WDXL, FontSize::Small, Alignment::Center);
@@ -121,7 +122,7 @@ namespace Construct
 		constexpr Nc::Vector2f SIZE = Nc::Vector2f(20.0f, 20.0f);
 
 		const entt::entity entity = registry.create();
-		registry.emplace<Tag::RadarButton>(entity);
+		registry.emplace<Tag::Radar::Button>(entity);
 
 		registry.emplace<Component::Transform>(entity, CommsRoom, POSITION, SIZE, SIZE * 0.5f);
 		registry.emplace<Component::Rectangle>(entity, RED);

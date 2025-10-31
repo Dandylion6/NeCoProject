@@ -1,7 +1,7 @@
 #pragma once
-#include "components/core/rendering/text_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/objects/outside/blip_component.hpp"
+#include "game/component/core/rendering/text_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/scene/comms_scene/blip_components.hpp"
 #include "entt/entity/fwd.hpp"
 
 
@@ -26,6 +26,6 @@ private:
 	/// <param name="stability">The current stability level of the radar machine, from 0 to 100.</param>
 	/// <returns>A duration in seconds.</returns>
 	static float GenerateGlitchDuration(float stability);
-	static Component::Blip::JumbledCoordindate GenerateRandomJumble(float stability);
+	static Component::BlipState::JumbledCoordindate GenerateRandomJumble(float stability);
 
 };

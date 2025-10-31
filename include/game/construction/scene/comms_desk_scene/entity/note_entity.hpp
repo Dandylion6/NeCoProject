@@ -5,8 +5,5 @@ class ResourceStore;
 
 namespace Construct
 {
-	const entt::entity NoteEntity(
-		entt::registry& registry,
-		ResourceStore& resourceStore
-	);
+	const entt::entity NoteEntity(entt::registry& registry, ResourceStore& resourceStore);
 }

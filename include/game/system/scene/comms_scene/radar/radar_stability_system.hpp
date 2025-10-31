@@ -1,9 +1,13 @@
 #pragma once
-#include "components/objects/comms/radar.hpp"
-#include "components/objects/outside/blip_component.hpp"
 #include "entt/entity/fwd.hpp"
+
 struct AnomalyState;
 struct GameState;
+namespace Component
+{
+	struct Blip;
+	struct Radar;
+}
 
 
 class RadarStabilitySystem

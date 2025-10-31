@@ -1,13 +1,13 @@
-#include "assemblers/entities/interactive/circuit_breaker_object.hpp"
-#include "assemblers/scenes/doorway_scene/radar_breaker_object.hpp"
-#include "components/core/rendering/rectangle_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "core/scene.hpp"
+#include "game/construction/shared/object/mechanical/circuit_breaker_object.hpp"
+#include "game/construction/scene/doorway_scene/object/radar_breaker_object.hpp"
+#include "game/component/core/rendering/rectangle_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/state/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/object/comms/radar/radar_stability_system.hpp"
+#include "game/system/scene/comms_scene/radar/radar_stability_system.hpp"
 #include "raylib.h"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 
 // TODO: Add visuals
 

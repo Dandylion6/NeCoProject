@@ -1,5 +1,5 @@
-#include "core/data/settings.hpp"
-#include "utility/morse_code.hpp"
+#include "game/state/settings.hpp"
+#include "game/utility/morse_code.hpp"
 
 
 static void ApplyMorseSettings(MorseSettings& morseSettings)

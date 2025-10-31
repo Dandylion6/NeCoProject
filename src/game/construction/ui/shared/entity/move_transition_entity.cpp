@@ -1,18 +1,18 @@
-#include "assemblers/entities/move_transition_entity.hpp"
-#include "components/core/button_action_component.hpp"
-#include "components/core/rendering/rectangle_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/core/tween_component.hpp"
-#include "components/scene/move_region_tag.hpp"
-#include "components/ui/move_transition_tag.hpp"
-#include "core/context/render_context.hpp"
-#include "core/scene.hpp"
-#include "core/state/game_state.hpp"
+#include "game/construction/ui/shared/entity/move_transition_entity.hpp"
+#include "game/component/core/interactive/button_action_component.hpp"
+#include "game/component/core/rendering/rectangle_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/core/tween_component.hpp"
+#include "game/tag/shared/move_region_tag.hpp"
+#include "game/tag/ui/move_transition_tag.hpp"
+#include "core/runtime/render_context.hpp"
+#include "game/state/scene.hpp"
+#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "utility/color_palette.hpp"
-#include "utility/tween.hpp"
-#include "utility/vector2.hpp"
+#include "game/utility/color_palette.hpp"
+#include "core/data/tween.hpp"
+#include "core/data/vector2.hpp"
 #include <functional>
 
 
@@ -64,7 +64,7 @@ const entt::entity Construct::MoveTransitionEntity(
 	const entt::entity entity = registry.create();
 
 	registry.emplace<Component::Rectangle>(entity, Palette::BACKGROUND_COLOR);
-	Component::UiTransform& transform = registry.emplace<Component::UiTransform>(
+	Component::UI::Transform& transform = registry.emplace<Component::UI::Transform>(
 		entity,
 		Nc::Vector2f::Zero(),
 		Nc::Vector2f::Up(),

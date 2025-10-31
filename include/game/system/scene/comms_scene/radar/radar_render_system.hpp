@@ -1,10 +1,10 @@
 #pragma once
-#include "components/core/rendering/sprite_component.hpp"
-#include "components/objects/comms/radar.hpp"
-#include "core/scene.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
+#include "game/component/scene/comms_scene/radar_components.hpp"
+#include "game/state/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "raylib.h"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 class ResourceStore;
 
 

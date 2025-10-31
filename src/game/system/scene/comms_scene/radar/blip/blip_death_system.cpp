@@ -1,10 +1,10 @@
-#include "components/core/tween_component.hpp"
-#include "components/objects/health_component.hpp"
-#include "components/objects/outside/blip_component.hpp"
+#include "game/component/core/tween_component.hpp"
+#include "game/component/shared/stat/health_component.hpp"
+#include "game/component/scene/comms_scene/blip_components.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/object/outside/blip_death_system.hpp"
-#include "utility/tween.hpp"
+#include "game/system/scene/comms_scene/radar/blip/blip_death_system.hpp"
+#include "core/data/tween.hpp"
 
 
 void BlipDeathSystem::Update(entt::registry& registry)

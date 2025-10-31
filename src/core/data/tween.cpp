@@ -1,5 +1,5 @@
-#include "utility/interpolation.hpp"
-#include "utility/tween.hpp"
+#include "core/data/interpolation.hpp"
+#include "core/data/tween.hpp"
 
 
 float Tween::GetEasing(Easing easing, float value)

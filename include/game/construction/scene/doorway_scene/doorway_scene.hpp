@@ -1,5 +1,5 @@
 #pragma once
-#include "core/context/render_context.hpp"
+#include "core/runtime/render_context.hpp"
 #include "entt/entity/fwd.hpp"
 struct GameState;
 class ResourceStore;

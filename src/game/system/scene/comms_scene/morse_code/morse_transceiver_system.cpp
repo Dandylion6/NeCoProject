@@ -1,22 +1,22 @@
-#include "components/core/transform_component.hpp"
-#include "components/objects/comms/morse_transceiver_component.hpp"
-#include "components/objects/outside/receiver_component.hpp"
-#include "core/data/settings.hpp"
-#include "core/state/anomaly_state.hpp"
-#include "core/state/game_state.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/scene/comms_scene/morse_components.hpp"
+#include "game/component/scene/outside_scene/receiver_component.hpp"
+#include "game/state/settings.hpp"
+#include "game/state/anomaly_state.hpp"
+#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/object/comms/morse_transceiver_system.hpp"
-#include "utility/morse_code.hpp"
-#include "utility/vector2.hpp"
+#include "game/system/scene/comms_scene/morse_code/morse_transceiver_system.hpp"
+#include "game/utility/morse_code.hpp"
+#include "core/data/vector2.hpp"
 #include <cmath>
 #include <cstdint>
 #include <string>
 
 #ifdef DEBUG_BUILD
-#include "core/context/debug_context.hpp"
-#include "core/game.hpp"
+#include "game/debug/debug_context.hpp"
+#include "game/game.hpp"
 #endif // DEBUG_BUILD
 
 
@@ -24,12 +24,12 @@ void MorseTransceiverSystem::Update(
 	entt::registry& registry, GameState& gameState, MorseSettings settings, float deltaTime
 )
 {
-	auto view = registry.view<Component::Transform, Component::MorseTransceiver>();
+	auto view = registry.view<Component::Transform, Component::Morse::Transceiver>();
 	for (auto [entity, transform, transceiver] : view.each())
 	{
 		if (gameState.currentScene != transform.boundScene) continue;
 
-		bool inputKeyPressed = IsKeyDown(Component::MorseTransceiver::INPUT_KEY);
+		bool inputKeyPressed = IsKeyDown(Component::Morse::Transceiver::INPUT_KEY);
 		bool inputStateChanged = inputKeyPressed != transceiver.isInputActive;
 
 		if (inputStateChanged) InputChanged(transceiver, settings);
@@ -53,10 +53,10 @@ void MorseTransceiverSystem::Update(
 
 
 void MorseTransceiverSystem::InputChanged(
-	Component::MorseTransceiver& transceiver, MorseSettings settings
+	Component::Morse::Transceiver& transceiver, MorseSettings settings
 )
 {
-	bool inputJustStarted = IsKeyPressed(Component::MorseTransceiver::INPUT_KEY);
+	bool inputJustStarted = IsKeyPressed(Component::Morse::Transceiver::INPUT_KEY);
 	if (inputJustStarted)
 	{
 		transceiver.intervalSeconds = 0.0f;
@@ -65,7 +65,7 @@ void MorseTransceiverSystem::InputChanged(
 
 
 void MorseTransceiverSystem::TryEndCharacter(
-	entt::registry& registry, AnomalyState& anomalyState, Component::MorseTransceiver& transceiver, MorseSettings settings
+	entt::registry& registry, AnomalyState& anomalyState, Component::Morse::Transceiver& transceiver, MorseSettings settings
 )
 {
 	float longestTime = settings.dashTime + settings.errorMargin;
@@ -98,10 +98,10 @@ void MorseTransceiverSystem::TransmitCharacter(
 
 
 void MorseTransceiverSystem::RecordPulse(
-	Component::MorseTransceiver& transceiver, MorseSettings settings
+	Component::Morse::Transceiver& transceiver, MorseSettings settings
 )
 {
-	if (transceiver.pulseCount >= Component::MorseTransceiver::MAX_PULSES) return;
+	if (transceiver.pulseCount >= Component::Morse::Transceiver::MAX_PULSES) return;
 	
 	transceiver.pulses[transceiver.pulseCount] = GetPulseType(transceiver.intervalSeconds, settings);
 	++transceiver.pulseCount;
@@ -109,7 +109,7 @@ void MorseTransceiverSystem::RecordPulse(
 }
 
 
-void MorseTransceiverSystem::ClearTransceiver(Component::MorseTransceiver& transceiver)
+void MorseTransceiverSystem::ClearTransceiver(Component::Morse::Transceiver& transceiver)
 {
 	transceiver.intervalSeconds = 0.0f;
 	transceiver.pulses.fill(MorseCode::Invalid);
@@ -137,7 +137,7 @@ MorseCode::Pulse MorseTransceiverSystem::GetPulseType(float intervalSeconds, Mor
 
 
 char MorseTransceiverSystem::PulsesToChar(
-	const Component::MorseTransceiver::PulseArray& pulses, uint8_t pulseCount
+	const Component::Morse::Transceiver::PulseArray& pulses, uint8_t pulseCount
 )
 {
 	std::string codeString { };

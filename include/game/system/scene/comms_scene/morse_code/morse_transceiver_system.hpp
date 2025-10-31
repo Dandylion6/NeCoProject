@@ -1,8 +1,8 @@
 #pragma once
-#include "components/objects/comms/morse_transceiver_component.hpp"
-#include "core/scene.hpp"
+#include "game/component/scene/comms_scene/morse_components.hpp"
+#include "game/state/scene.hpp"
 #include "entt/entity/fwd.hpp"
-#include "utility/morse_code.hpp"
+#include "game/utility/morse_code.hpp"
 #include <cstdint>
 struct AnomalyState;
 struct GameState;
@@ -21,26 +21,26 @@ public:
 
 private:
 	static void InputChanged(
-		Component::MorseTransceiver& transceiver, MorseSettings settings
+		Component::Morse::Transceiver& transceiver, MorseSettings settings
 	);
 
 	static void TryEndCharacter(
-		entt::registry& registry, AnomalyState& anomalyState, Component::MorseTransceiver& transceiver, MorseSettings settings
+		entt::registry& registry, AnomalyState& anomalyState, Component::Morse::Transceiver& transceiver, MorseSettings settings
 	);
 
 	static void TransmitCharacter(entt::registry& registry, AnomalyState& anomalyState, char character);
 
 	static void RecordPulse(
-		Component::MorseTransceiver& transceiver, MorseSettings settings
+		Component::Morse::Transceiver& transceiver, MorseSettings settings
 	);
 
-	static void ClearTransceiver(Component::MorseTransceiver& transceiver);
+	static void ClearTransceiver(Component::Morse::Transceiver& transceiver);
 	static MorseCode::Pulse GetPulseType(
 		float intervalSeconds, MorseSettings settings
 	);
 	
 	static char PulsesToChar(
-		const Component::MorseTransceiver::PulseArray& pulses, uint8_t pulseCount
+		const Component::Morse::Transceiver::PulseArray& pulses, uint8_t pulseCount
 	);
 
 };

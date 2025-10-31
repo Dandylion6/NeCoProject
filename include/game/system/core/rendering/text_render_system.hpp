@@ -1,7 +1,7 @@
 #pragma once
-#include "core/scene.hpp"
+#include "game/state/scene.hpp"
 #include "entt/entity/fwd.hpp"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 class ResourceStore;
 
 

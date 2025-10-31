@@ -1,21 +1,21 @@
-#include "components/anomaly/anomaly_roamer_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "components/objects/health_component.hpp"
-#include "components/objects/outside/artillery_component.hpp"
-#include "core/game.hpp"
-#include "core/state/game_state.hpp"
+#include "game/component/shared/anomaly/roamer/anomaly_roamer_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/shared/stat/health_component.hpp"
+#include "game/component/scene/outside_scene/artillery_component.hpp"
+#include "game/game.hpp"
+#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/anomaly/roamer_behaviour_system.hpp"
-#include "systems/anomaly/roamer_kill_system.hpp"
-#include "utility/vector2.hpp"
+#include "game/system/shared/anomaly/roamer/roamer_behaviour_system.hpp"
+#include "game/system/shared/anomaly/roamer/roamer_kill_system.hpp"
+#include "core/data/vector2.hpp"
 
 
 void RoamerKillSystem::Update(
 	entt::registry& registry, GameState& gameState, float deltaTime
 )
 {
-	auto view = registry.view<const Component::Transform, const Component::AnomalyRoamer, Component::Health>();
+	auto view = registry.view<const Component::Transform, const Component::Anomaly::Roamer, Component::Health>();
 	for (auto [entity, transform, roamer, health] : view.each())
 	{
 		// Kills all roamers
@@ -26,7 +26,7 @@ void RoamerKillSystem::Update(
 		}
 
 		// Phantom roamers don't kill.
-		if (roamer.behaviour == Component::AnomalyRoamer::Behaviour::Phantom)
+		if (roamer.behaviour == Component::Anomaly::Roamer::Behaviour::Phantom)
 		{
 			// Roamer self-destructs if very close to target.
 			Nc::Vector2f targetPosition = RoamerBehaviourSystem::GetTargetPosition(roamer.target);
@@ -36,12 +36,12 @@ void RoamerKillSystem::Update(
 
 		switch (roamer.target)
 		{
-		case Component::AnomalyRoamer::Target::Bunker:
+		case Component::Anomaly::Roamer::Target::Bunker:
 		{
 			UpdateBunkerRoamer(registry, entity, transform, roamer, health, gameState);
 			break;
 		}
-		case Component::AnomalyRoamer::Target::Artillery:
+		case Component::Anomaly::Roamer::Target::Artillery:
 		{
 			UpdateBunkerRoamer(registry, entity, transform, roamer, health, gameState);
 			break;
@@ -57,7 +57,7 @@ void RoamerKillSystem::UpdateBunkerRoamer(
 	entt::registry& registry, 
 	const entt::entity entity, 
 	const Component::Transform& transform, 
-	const Component::AnomalyRoamer& roamer, 
+	const Component::Anomaly::Roamer& roamer, 
 	Component::Health& health, 
 	GameState& gameState
 )
@@ -74,7 +74,7 @@ void RoamerKillSystem::UpdateArtilleryRoamer(
 	entt::registry& registry, 
 	const entt::entity entity, 
 	const Component::Transform& transform, 
-	const Component::AnomalyRoamer& roamer,
+	const Component::Anomaly::Roamer& roamer,
 	Component::Health& health
 )
 {

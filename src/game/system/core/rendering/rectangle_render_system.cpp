@@ -1,10 +1,10 @@
-#include "components/core/rendering/rectangle_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "core/rendering.hpp"
+#include "game/component/core/rendering/rectangle_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/utility/rendering.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "systems/core/rendering/rectangle_render_system.hpp"
-#include "utility/vector2.hpp"
+#include "game/system/core/rendering/rectangle_render_system.hpp"
+#include "core/data/vector2.hpp"
 
 
 void RectangleRenderSystem::DrawScreen(
@@ -29,7 +29,7 @@ void RectangleRenderSystem::DrawUi(
 	const entt::entity entity, entt::registry& registry, Nc::Vector2f windowSize
 )
 {
-	Component::UiTransform transform = registry.get<Component::UiTransform>(entity);
+	Component::UI::Transform transform = registry.get<Component::UI::Transform>(entity);
 	Component::Rectangle rectangle = registry.get<Component::Rectangle>(entity);
 
 	Nc::Vector2f anchorPoint = transform.anchor * windowSize;

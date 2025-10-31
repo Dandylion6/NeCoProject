@@ -1,12 +1,12 @@
-#include "components/core/sound_emitter_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "core/context/render_context.hpp"
+#include "game/component/core/audio/sound_emitter_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "core/runtime/render_context.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "systems/core/sound_system.hpp"
-#include "utility/interpolation.hpp"
-#include "utility/vector2.hpp"
+#include "game/system/core/audio/sound_emitter_system.hpp"
+#include "core/data/interpolation.hpp"
+#include "core/data/vector2.hpp"
 
 
 void SoundEmitterSystem::Update(entt::registry& registry, float deltaTime)

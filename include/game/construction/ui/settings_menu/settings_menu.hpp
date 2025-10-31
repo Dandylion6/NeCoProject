@@ -1,6 +1,6 @@
 #pragma once
 #include "entt/entity/fwd.hpp"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 struct GameState;
 class ResourceStore;
 struct Settings;
@@ -17,11 +17,16 @@ namespace SettingsMenu
 		ResourceStore& resourceStore
 	);
 
-	
 	void Open(entt::registry& registry, GameState& gameState);
 
 	void Close(entt::registry& registry, GameState& gameState);
-	void Close(Settings& settings, Settings& pendingSettings, entt::registry& registry, GameState& gameState);
+	
+	void Close(
+		Settings& settings, 
+		Settings& pendingSettings, 
+		entt::registry& registry, 
+		GameState& gameState
+	);
 
 	void Toggle(entt::registry& registry, GameState& gameState);
 };

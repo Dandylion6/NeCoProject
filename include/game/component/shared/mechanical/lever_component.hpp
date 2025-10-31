@@ -1,6 +1,6 @@
 #pragma once
 #include "entt/entity/entity.hpp"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 #include <utility>
 #include <cstdint>
 #include <string>

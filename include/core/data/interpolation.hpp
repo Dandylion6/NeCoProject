@@ -1,6 +1,6 @@
 #pragma once
 #include "raylib.h"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 #include <cmath>
 
 

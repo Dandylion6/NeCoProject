@@ -1,12 +1,12 @@
-#include "assemblers/entities/scene_background_entity.hpp"
-#include "components/core/rendering/sprite_component.hpp"
-#include "components/core/transform_component.hpp"
-#include "core/context/render_context.hpp"
-#include "core/scene.hpp"
+#include "game/construction/shared/entity/scene/scene_background_entity.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "core/runtime/render_context.hpp"
+#include "game/state/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "utility/vector2.hpp"
+#include "core/data/vector2.hpp"
 #include <utility>
 
 
