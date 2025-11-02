@@ -8,7 +8,7 @@
 #include "game/system/shared/anomaly/roamer/behaviour/phaser_behaviour_system.hpp" 
 #include "game/system/shared/anomaly/roamer/behaviour/phantom_behaviour_system.hpp"
 #include "game/system/shared/anomaly/roamer/roamer_behaviour_system.hpp"
-#include "core/data/interpolation.hpp"
+#include "core/math/interpolation.hpp"
 #include "core/data/vector2.hpp"
 #include <cstdint>
 
@@ -52,7 +52,7 @@ void RoamerBehaviourSystem::Update(
 	}
 	anomalyState.roamerPressureWeight = roamerThreatCount;
 	anomalyState.totalRoamerCount = totalRoamerCount;
-	anomalyState.roamerPressureWeight = Math::SmoothApproach(
+	anomalyState.roamerPressureWeight = Nc::Math::SmoothApproach(
 		anomalyState.roamerPressureWeight, roamerPressureWeight, deltaTime, PRESSURE_WEIGHT_SMOOTHING
 	);
 };

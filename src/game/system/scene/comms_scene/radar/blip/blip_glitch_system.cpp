@@ -5,8 +5,8 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/system/scene/comms_scene/radar/blip/blip_glitch_system.hpp"
-#include "core/data/interpolation.hpp"
-#include "core/data/random.hpp"
+#include "core/math/interpolation.hpp"
+#include "core/math/random.hpp"
 #include "core/data/vector2.hpp"
 #include <cstdint>
 #include <sstream>
@@ -126,13 +126,13 @@ void BlipGlitchSystem::UpdateBlipTextJumble(
 	constexpr Nc::Vector2f STABILITY_RANGE = Nc::Vector2f(Component::Radar::STABLE_LEVEL, Component::Radar::HEALTHY_LEVEL);
 	constexpr Nc::Vector2f DEGREDATION_SCALE_RANGE = Nc::Vector2f(0.0f, 1.0f);
 
-	float degradationScale = Math::Remap(STABILITY_RANGE, DEGREDATION_SCALE_RANGE, std::fmaxf(jumble.stability, Component::Radar::HEALTHY_LEVEL));
-	degradationScale = Math::SineInOut(degradationScale);
+	float degradationScale = Nc::Math::Remap(STABILITY_RANGE, DEGREDATION_SCALE_RANGE, std::fmaxf(jumble.stability, Component::Radar::HEALTHY_LEVEL));
+	degradationScale = Nc::Math::SineInOut(degradationScale);
 	Nc::Vector2f range = Nc::Vector2f::Lerp(INTERVAL_HIGH_STABILITY, INTERVAL_LOW_STABILITY, degradationScale);
 
 	float randomValue = Nc::Random::Range(0.0f, 1.0f);
-	randomValue = Math::QuadIn(randomValue);
-	jumble.nextJumbleSeconds = Math::Lerp(range.x, range.y, randomValue);
+	randomValue = Nc::Math::QuadIn(randomValue);
+	jumble.nextJumbleSeconds = Nc::Math::Lerp(range.x, range.y, randomValue);
 
 }
 
@@ -162,7 +162,7 @@ void BlipGlitchSystem::UpdateBlipTextError(
 
 		float randomValue = Nc::Random::Range(0.0f, 1.0f);
 		Nc::Vector2f range = Component::BlipState::CoordinateErrorData::GLITCH_INTERVAL_RANGE;
-		error.nextGlitchSeconds[i] = Math::Lerp(range.x, range.y, randomValue);
+		error.nextGlitchSeconds[i] = Nc::Math::Lerp(range.x, range.y, randomValue);
 	}
 
 	// Construct the display string.
@@ -216,9 +216,9 @@ float BlipGlitchSystem::GenerateGlitchDuration(float stability)
 	constexpr float STABLE_FACTOR = 1.0f / Component::Radar::STABLE_LEVEL;
 
 	float degradationScale = (Component::Radar::STABLE_LEVEL - stability) * STABLE_FACTOR;
-	degradationScale = Math::SineIn(degradationScale);
-	float glitchTimeMin = Math::Lerp(BASE_GLITCH_TIME_RANGE.x, MAX_GLITCH_TIME_RANGE.x, degradationScale);
-	float glitchTimeMax = Math::Lerp(BASE_GLITCH_TIME_RANGE.y, MAX_GLITCH_TIME_RANGE.y, degradationScale);
+	degradationScale = Nc::Math::SineIn(degradationScale);
+	float glitchTimeMin = Nc::Math::Lerp(BASE_GLITCH_TIME_RANGE.x, MAX_GLITCH_TIME_RANGE.x, degradationScale);
+	float glitchTimeMax = Nc::Math::Lerp(BASE_GLITCH_TIME_RANGE.y, MAX_GLITCH_TIME_RANGE.y, degradationScale);
 
 	return Nc::Random::Range(glitchTimeMin, glitchTimeMax);
 }

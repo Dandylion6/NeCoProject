@@ -14,7 +14,7 @@ const entt::entity Construct::RadioEntity(entt::registry& registry)
 {
 	const entt::entity entity = registry.create();
 
-	Nc::Vector2f position = RenderContext::DISPLAY_SIZE;
+	Nc::Vector2f position = Nc::RENDER_RESOLUTION;
 	position *= 0.5f;
 	registry.emplace<Component::Transform>(entity, CommsRoom, position);
 

@@ -9,8 +9,8 @@
 #include "raylib.h"
 #include "game/system/core/audio/sound_emitter_system.hpp"
 #include "game/system/core/audio/ambient_sound_system.hpp"
-#include "core/data/interpolation.hpp"
-#include "core/data/random.hpp"
+#include "core/math/interpolation.hpp"
+#include "core/math/random.hpp"
 #include <string>
 #include <utility>
 
@@ -33,7 +33,7 @@ void AmbientSoundEmitterSystem::Update(
 		constexpr float VOLUME_FADE_SPEED = 8.0f;
 
 		float targetVolume = gameState.movingToScene != NullScene ? 0.0f : 1.0f;
-		float volume = Math::SmoothApproach(emitter.volume, targetVolume, deltaTime, VOLUME_FADE_SPEED);
+		float volume = Nc::Math::SmoothApproach(emitter.volume, targetVolume, deltaTime, VOLUME_FADE_SPEED);
 		emitter.volume = volume;
 	}
 }

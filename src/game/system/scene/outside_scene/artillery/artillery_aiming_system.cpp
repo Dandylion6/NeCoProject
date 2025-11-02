@@ -2,7 +2,7 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/system/scene/outside_scene/artillery/artillery_aiming_system.hpp"
-#include "core/data/interpolation.hpp"
+#include "core/math/interpolation.hpp"
 #include "core/data/vector2.hpp"
 
 
@@ -21,8 +21,8 @@ void ArtilleryAimingSystem::Update(
 		}
 
 		Nc::Vector2f targetPosition = artillery.targetPosition;
-		artillery.aimPosition.x = Math::SmoothApproach(artillery.aimPosition.x, targetPosition.x, deltaTime, 0.4f);
-		artillery.aimPosition.y = Math::SmoothApproach(artillery.aimPosition.y, targetPosition.y, deltaTime, 0.4f);
+		artillery.aimPosition.x = Nc::Math::SmoothApproach(artillery.aimPosition.x, targetPosition.x, deltaTime, 0.4f);
+		artillery.aimPosition.y = Nc::Math::SmoothApproach(artillery.aimPosition.y, targetPosition.y, deltaTime, 0.4f);
 
 		Nc::Vector2f difference = artillery.aimPosition - artillery.targetPosition;
 		if (difference.GetSqrDistance() > 0.1f) continue;

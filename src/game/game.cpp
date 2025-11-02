@@ -80,7 +80,7 @@ void Game::SetupRenderContext()
 	const Nc::Vector2i monitorSize = Nc::Vector2i(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
 	renderContext.windowSize = monitorSize;
 
-	const Nc::Vector2i displaySize = RenderContext::DISPLAY_SIZE;
+	const Nc::Vector2i displaySize = Nc::RENDER_RESOLUTION;
 	const Nc::Vector2i radarSize = RADAR_BOUNDS.max;
 
 	renderContext.renderTexture = LoadRenderTexture(displaySize.x, displaySize.y);
@@ -344,7 +344,7 @@ void Game::Death(entt::registry& registry, GameState& gameState)
 
 void Game::DrawRenderTexture() const
 {
-	Nc::Vector2f displaySize = RenderContext::DISPLAY_SIZE;
+	Nc::Vector2f displaySize = Nc::RENDER_RESOLUTION;
 	Rectangle source { 0, 0, displaySize.x, -displaySize.y };
 
 	DrawTexturePro(

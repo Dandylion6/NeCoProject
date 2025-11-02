@@ -36,7 +36,7 @@ namespace Construct
         const entt::entity entity = registry.create();
 
         registry.emplace<Component::UI::Transform>(entity, position, Nc::Vector2f::Zero(), Nc::Vector2f::Zero(), Nc::Vector2f::Zero(), 2);
-        registry.emplace<Component::Text>(entity, std::move(display), Palette::RADAR_COLOR, WDXL, FontSize::Medium, Alignment::Left);
+        registry.emplace<Component::Text>(entity, std::move(display), Palette::RADAR_COLOR, Nc::Font::WDXL, Nc::Font::Size::Medium, Alignment::Left);
 
         return entity;
     };
@@ -52,7 +52,7 @@ namespace Construct
         const entt::entity entity = registry.create();
 
         registry.emplace<Component::UI::Transform>(entity, position, Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Zero(), offset, 2);
-        registry.emplace<Component::Text>(entity, "", Palette::RADAR_COLOR, WDXL, FontSize::Medium);
+        registry.emplace<Component::Text>(entity, "", Palette::RADAR_COLOR, Nc::Font::WDXL, Nc::Font::Size::Medium);
         registry.emplace<Component::UI::Increment>(entity, increment);
 
         return entity;
@@ -70,7 +70,7 @@ namespace Construct
         const entt::entity entity = registry.create();
 
         registry.emplace<Component::UI::Transform>(entity, position, Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Scale(32.0f), offset + Nc::Vector2f::Up(2.0f), 2);
-        registry.emplace<Component::Text>(entity, "+", RAYWHITE, WDXL, FontSize::Medium);
+        registry.emplace<Component::Text>(entity, "+", RAYWHITE, Nc::Font::WDXL, Nc::Font::Size::Medium);
 
         std::function<void()> onClick = [increment = increment, &valueDisplay]()
         {
@@ -94,7 +94,7 @@ namespace Construct
         const entt::entity entity = registry.create();
 
         registry.emplace<Component::UI::Transform>(entity, position, Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Scale(24.0f), offset, 2);
-        registry.emplace<Component::Text>(entity, "-", RAYWHITE, WDXL, FontSize::Large);
+        registry.emplace<Component::Text>(entity, "-", RAYWHITE, Nc::Font::WDXL, Nc::Font::Size::Large);
 
         std::function<void()> onClick = [increment = increment, &valueDisplay]()
         {
@@ -117,9 +117,9 @@ namespace Construct
     )
     {
         Nc::Vector2f size = MeasureTextEx(
-            resourceStore.GetFont(WDXL, static_cast<uint8_t>(FontSize::Medium)),
+            resourceStore.GetFont(Nc::Font::WDXL, static_cast<uint8_t>(Nc::Font::Size::Medium)),
             display.c_str(), 
-            static_cast<float>(FontSize::Medium), 
+            static_cast<float>(Nc::Font::Size::Medium), 
             0.0f
         );
         size.y = 0.0f;

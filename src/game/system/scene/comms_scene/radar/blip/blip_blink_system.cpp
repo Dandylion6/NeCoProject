@@ -7,7 +7,7 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/system/scene/comms_scene/radar/blip/blip_blink_system.hpp"
-#include "core/data/interpolation.hpp"
+#include "core/math/interpolation.hpp"
 #include "core/data/tween.hpp"
 #include "core/data/vector2.hpp"
 #include <cmath>
@@ -55,7 +55,7 @@ bool BlipBlinkSystem::BlipShouldAppear(
 	constexpr float DIFFERENCE_THRESHOLD = 0.8f;
 
 	float pathHeight = path.position.y + path.offset.y;
-	float blipHeight = Math::Remap(WORLD_Y_RANGE, RADAR_Y_RANGE, blip.position.y);
+	float blipHeight = Nc::Math::Remap(WORLD_Y_RANGE, RADAR_Y_RANGE, blip.position.y);
 	float distance = std::fabsf(pathHeight - blipHeight);
 	
 	float threshold = DIFFERENCE_THRESHOLD;

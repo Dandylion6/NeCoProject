@@ -18,7 +18,7 @@ const entt::entity Construct::ProjectileEntity(
 {
 	const entt::entity entity = registry.create();
 
-	Nc::Vector2f position = RenderContext::DISPLAY_SIZE * 0.4f;
+	Nc::Vector2f position = Nc::RENDER_RESOLUTION * 0.4f;
 	Nc::Vector2f offset = hitPosition - Nc::Vector2f(240.0f, 160.0f);
 	position += offset * 0.6f;
 	registry.emplace<Component::Transform>(entity, Outside, position);

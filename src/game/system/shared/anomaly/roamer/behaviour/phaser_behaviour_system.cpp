@@ -6,7 +6,7 @@
 #include "game/system/shared/anomaly/roamer/behaviour/phaser_behaviour_system.hpp"
 #include "game/system/shared/anomaly/roamer/roamer_behaviour_system.hpp"
 #include "game/system/shared/anomaly/roamer/roamer_spawning_system.hpp"
-#include "core/data/random.hpp"
+#include "core/math/random.hpp"
 #include "core/data/vector2.hpp"
 #include <cstdint>
 #include "game/system/shared/anomaly/roamer/behaviour/strider_behaviour_system.hpp"

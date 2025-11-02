@@ -15,7 +15,7 @@ const entt::entity Construct::AmbientSoundEntity(
 {
 	const entt::entity entity = registry.create();
 
-	Nc::Vector2f position = RenderContext::DISPLAY_SIZE * 0.5f;
+	Nc::Vector2f position = Nc::RENDER_RESOLUTION * 0.5f;
 	registry.emplace<Component::Transform>(entity, NullScene, position);
 
 	registry.emplace<Tag::AmbientSound>(entity);

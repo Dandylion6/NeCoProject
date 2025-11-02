@@ -85,7 +85,7 @@ namespace Construct
 
 		Component::RadarErrorWarning& errorWarning = registry.emplace<Component::RadarErrorWarning>(entity);
 		registry.emplace<Component::Transform>(entity, Radar, POSITION);
-		Component::Text& text = registry.emplace<Component::Text>(entity, "( , )", Palette::RADAR_COLOR, WDXL, FontSize::Tiny, Alignment::BottomLeft);
+		Component::Text& text = registry.emplace<Component::Text>(entity, "( , )", Palette::RADAR_COLOR, Nc::Font::WDXL, Nc::Font::Size::Tiny, Alignment::BottomLeft);
 
 		// Basic blink tweening
 		Component::TweenCollection& collection = registry.emplace<Component::TweenCollection>(entity);
@@ -107,7 +107,7 @@ namespace Construct
 		registry.emplace<Tag::Radar::Recalibration>(entity);
 
 		registry.emplace<Component::Transform>(entity, Radar, POSITION);
-		Component::Text& text = registry.emplace<Component::Text>(entity, "RECALIBRATING", Palette::RADAR_COLOR, WDXL, FontSize::Small, Alignment::Center);
+		Component::Text& text = registry.emplace<Component::Text>(entity, "RECALIBRATING", Palette::RADAR_COLOR, Nc::Font::WDXL, Nc::Font::Size::Small, Alignment::Center);
 
 		return entity;
 	}
@@ -187,7 +187,7 @@ const entt::entity Construct::RadarBlipEntity(
 	registry.emplace<Component::Blip>(entity);
 	registry.emplace<Component::Health>(entity, health);
 	registry.emplace<Component::Transform>(entity, Radar, position, size, size * 0.5f);
-	registry.emplace<Component::Text>(entity, "( , )", Palette::RADAR_COLOR, WDXL, FontSize::Tiny);
+	registry.emplace<Component::Text>(entity, "( , )", Palette::RADAR_COLOR, Nc::Font::WDXL, Nc::Font::Size::Tiny);
 
 	Component::Sprite& sprite = registry.emplace<Component::Sprite>(entity, std::move(texture));
 	Component::TweenCollection& tweens = registry.emplace<Component::TweenCollection>(entity);

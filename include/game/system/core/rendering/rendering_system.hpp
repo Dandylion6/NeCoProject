@@ -5,7 +5,7 @@
 #include "entt/entity/fwd.hpp"
 #include "core/data/vector2.hpp"
 struct GameState;
-struct RenderContext;
+namespace Nc { struct RenderContext; };
 class ResourceStore;
 
 

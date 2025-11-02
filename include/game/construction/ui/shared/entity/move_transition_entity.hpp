@@ -2,7 +2,7 @@
 #include "game/state/scene.hpp"
 #include "entt/entity/fwd.hpp"
 struct GameState;
-struct RenderContext;
+namespace Nc { struct RenderContext; };
 
 
 namespace Construct

@@ -7,7 +7,7 @@
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
 #include "game/system/core/rendering/lighting/lighting_system.hpp"
-#include "core/data/interpolation.hpp"
+#include "core/math/interpolation.hpp"
 #include "core/data/vector2.hpp"
 
 
@@ -56,7 +56,7 @@ void LightingSystem::Update(
 
         Vector4 color = source.color.ToFloat();
         float strength = source.strength + (source.strength * GetRandomValue(-8, 8) * 0.1f);
-        source.currentStrength = Math::SmoothApproach(source.currentStrength, strength, deltaTime, 1.6f);
+        source.currentStrength = Nc::Math::SmoothApproach(source.currentStrength, strength, deltaTime, 1.6f);
         
         SetShaderValue(lightShader, context.lightColorLocation + index, &color, SHADER_UNIFORM_VEC4);
         SetShaderValue(lightShader, context.lightStrengthLocation + index, &source.currentStrength, SHADER_UNIFORM_FLOAT);

@@ -1,6 +1,6 @@
 #pragma once
-#include "raylib.h"
 #include "core/data/vector2.hpp"
+#include "raylib.h"
 
 namespace Component { struct Transform; }
 namespace Component::UI { struct Transform; }
@@ -8,21 +8,93 @@ namespace Component::UI { struct Transform; }
 
 namespace Nc
 {
-	struct Bounds
+/**
+ * @brief Axis-aligned bounding box.
+ * 
+ * Represents a rectangular region defined by minimum and maximum 2D coordinates.
+ * Can be constructed from world- or UI-space transforms and converted to a Raylib Rectangle.
+ */
+struct Bounds final
+{
+	// ────── Members ──────
+
+	Nc::Vector2f min = Nc::Vector2f::Zero();
+	Nc::Vector2f max = Nc::Vector2f::Zero();
+
+
+	// ────── Constructors ──────
+
+	constexpr Bounds() = default;
+	Bounds(const Component::Transform& transform) noexcept;
+	Bounds(
+		const Component::UI::Transform& transform, 
+		Nc::Vector2i screenSize
+	) noexcept;
+
+	constexpr Bounds(
+		float minX, 
+		float minY, 
+		float maxX, 
+		float maxY
+	) noexcept : 
+		min(Nc::Vector2f(minX, minY)), 
+		max(Nc::Vector2f(maxX, maxY)) 
+	{ };
+
+	constexpr Bounds(Nc::Vector2f min, Nc::Vector2f max) noexcept : 
+		min(min), max(max) 
+	{ };
+
+
+	// ────── Conversion ──────
+
+	constexpr operator Rectangle() const noexcept
 	{
-		Nc::Vector2f min = Nc::Vector2f::Zero();
-		Nc::Vector2f max = Nc::Vector2f::Zero();
+		Nc::Vector2f size = Bounds::SizeOf(*this);
+		return {
+			min.x,
+			min.y,
+			size.x,
+			size.y
+		};
+	}
 
-		constexpr Bounds() = default;
-		constexpr Bounds(float minX, float minY, float maxX, float maxY): min(Nc::Vector2f(minX, minY)), max(Nc::Vector2f(maxX, maxY)) { };
-		constexpr Bounds(Nc::Vector2f min, Nc::Vector2f max): min(min), max(max) { };
-		Bounds(const Component::Transform& transform);
-		Bounds(const Component::UI::Transform& transform, Nc::Vector2i screenSize);
 
-		operator Rectangle() const;
+	// ────── Utility ──────
 
-		static bool PointInBounds(const Bounds& bounds, const Nc::Vector2f point);
-		static Vector2f SizeOf(const Bounds& bounds);
-		static Nc::Vector2f CenterOf(const Bounds& bounds);
-	};
+	/**
+	 * @brief Get the size (width and height) of the bounds.
+	 * 
+	 * @param bounds is the bounds to measure.
+	 * @return Vector2f representing (width, height).
+	 */
+	constexpr static Vector2f SizeOf(const Bounds bounds) noexcept
+	{
+		return bounds.max - bounds.min;
+	}
+
+	/**
+	 * @brief Get the geometric center of the bounds.
+	 * 
+	 * @param bounds is the bounds to measure.
+	 * @return Vector2f representing the midpoint between min and max.
+	 */
+	constexpr static Nc::Vector2f CenterOf(const Bounds bounds) noexcept
+	{
+		return (bounds.min + bounds.max) * 0.5f;
+	}
+
+	/**
+	 * @brief Test if a point lies within the bounds.
+	 * 
+	 * @param bounds is the bounds to test against.
+	 * @param point is the vector2f point to test.
+	 * @return True if point is inside or on the boundary, false otherwise.
+	 */
+	static bool PointInBounds(
+		const Bounds bounds,
+		const Nc::Vector2f point
+	) noexcept;
+};
+
 }

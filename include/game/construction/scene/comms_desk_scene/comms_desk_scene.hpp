@@ -1,7 +1,7 @@
 #pragma once
 #include "entt/entity/fwd.hpp"
 struct GameState;
-struct RenderContext;
+namespace Nc { struct RenderContext; };
 class ResourceStore;
 
 

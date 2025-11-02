@@ -1,9 +1,10 @@
 #pragma once
+#include "core/math/interpolation.hpp"
 #include <cstdint>
 #include <functional>
 
 
-enum Easing: uint16_t
+enum Easing : uint16_t
 {
 	Linear,
 	SineInOut,
@@ -16,9 +17,11 @@ enum Easing: uint16_t
 };
 
 
-struct Tween
+struct Tween final
 {
+	// ────── Members ──────
 
+	// TODO: Use entt delegates instead.
 	std::function<void()> onComplete { };
 	float* value = nullptr;
 	float start = 0.0f;
@@ -29,6 +32,9 @@ struct Tween
 	Easing easing = Linear;
 	bool isPlaying = false;
 
+
+	// ────── Constructors ──────
+
 	Tween() = default;
 	Tween(
 		float* value, 
@@ -37,21 +43,39 @@ struct Tween
 		float duration, 
 		Easing easing, 
 		float delayComplete = 0.0f
-	)
+	) noexcept :
+		value(value),
+		start(start),
+		end(end),
+		duration(duration),
+		easing(easing),
+		delayComplete(delayComplete)
+	{ };
+
+
+	// ────── Utility ──────
+
+	static constexpr float GetEasing(Easing easing, float value) noexcept
 	{
-		Build(value, start, end, duration, easing, delayComplete);
-	};
+		switch (easing)
+		{
+		case Linear: return value;
+		case SineInOut: return Nc::Math::SineInOut(value);
+		case QuadIn: return Nc::Math::QuadIn(value);
+		case QuadOut: return Nc::Math::QuadOut(value);
+		case CubicOut: return Nc::Math::CubicOut(value);
+		case ExpoIn: return Nc::Math::ExpoIn(value);
+		case ExpoOut: return Nc::Math::ExpoOut(value);
+		case BackOut: return Nc::Math::BackOut(value);
+		default: return value;
+		}
+	}
 
-	static float GetEasing(Easing easing, float value);
-	static void Play(Tween& tween);
-	static void Replay(Tween& tween);
-
-	void Build(
-		float* value,
-		float start = 0.0f,
-		float end = 1.0f,
-		float duration = 1.0f,
-		Easing easing = Linear,
-		float delayComplete = 0.0f
-	);
+	static constexpr void Play(Tween& tween) noexcept { tween.isPlaying = true; };
+	static constexpr void Stop(Tween& tween) noexcept { tween.isPlaying = false; };
+	static constexpr void Replay(Tween& tween) noexcept
+	{
+		tween.elapsed = 0.0f;
+		Tween::Play(tween);
+	}
 };

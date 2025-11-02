@@ -34,7 +34,7 @@ namespace Construct
 			entity, transform.anchor, transform.origin, transform.size, transform.offset, transform.index + 1, transform.rotation
 		);
 
-		registry.emplace<Component::Text>(entity, std::move(label), Palette::RADAR_COLOR, WDXL, FontSize::Large, Alignment::Center, 4u);
+		registry.emplace<Component::Text>(entity, std::move(label), Palette::RADAR_COLOR, Nc::Font::WDXL, Nc::Font::Size::Large, Alignment::Center, 4u);
 
 		return entity;
 	};

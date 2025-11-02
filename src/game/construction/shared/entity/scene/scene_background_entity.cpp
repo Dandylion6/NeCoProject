@@ -17,7 +17,7 @@ const entt::entity Construct::SceneBackgroundEntity(
 	const entt::entity entity = registry.create();
 
 	Nc::Vector2i size = Nc::Vector2i(texture.width, texture.height);
-	Nc::Vector2f position = RenderContext::DISPLAY_SIZE * 0.5f;
+	Nc::Vector2f position = Nc::RENDER_RESOLUTION * 0.5f;
 
 	registry.emplace<Component::Transform>(entity, scene, position, size, size * 0.5f);
 	registry.emplace<Component::Sprite>(entity, std::move(texture));

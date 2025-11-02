@@ -1,9 +1,8 @@
-#include "core/data/font_style.hpp"
+#include "core/data/font.hpp"
 #include "core/runtime/resource_store.hpp"
 #include "raylib.h"
 #include <string>
 #include <utility>
-
 
 #if defined(PLATFORM_DESKTOP)
 constexpr auto GLSL_VERSION = 330;
@@ -12,7 +11,10 @@ constexpr auto GLSL_VERSION = 330;
 #endif
 
 
-Texture2D& ResourceStore::GetTexture(const std::string& filePath)
+namespace Nc
+{
+
+const Texture2D& ResourceStore::GetTexture(const std::string& filePath)
 {
 	if (textureStore.find(filePath) == textureStore.end())
 	{
@@ -23,7 +25,7 @@ Texture2D& ResourceStore::GetTexture(const std::string& filePath)
 }
 
 
-Shader& ResourceStore::GetShader(const std::string& filePath)
+const Shader& ResourceStore::GetShader(const std::string& filePath)
 {
     if (shaderStore.find(filePath) == shaderStore.end())
 	{
@@ -34,7 +36,7 @@ Shader& ResourceStore::GetShader(const std::string& filePath)
 }
 
 
-Font& ResourceStore::GetFont(FontStyle style, uint8_t fontSize)
+const ::Font& ResourceStore::GetFont(Nc::Font::Style style, Nc::Font::Size fontSize)
 {
     FontKey key = FontKey(style, fontSize);
     if (fontStore.find(key) == fontStore.end())
@@ -42,22 +44,21 @@ Font& ResourceStore::GetFont(FontStyle style, uint8_t fontSize)
         std::string filePath { };
         switch (style)
         {
-        case WDXL: 
-            filePath = "assets/fonts/WDXLLubrifontSC-Regular.ttf";
+        case Nc::Font::WDXL: 
+            filePath = "assets/fonts/Nc::Font::WDXLLubrifontSC-Regular.ttf";
             break;
         default: 
             break;
         }
 
-        fontStore.emplace(
-            key, LoadFontEx(filePath.c_str(), fontSize, nullptr, 0)
-        );
+        int32_t fontSize = static_cast<int32_t>(fontSize);
+        fontStore.emplace(key, LoadFontEx(filePath.c_str(), fontSize, nullptr, 0));
     }
     return fontStore.at(key);
 }
 
 
-Sound& ResourceStore::GetSound(const std::string& filePath)
+const Sound& ResourceStore::GetSound(const std::string& filePath)
 {
 	if (soundStore.find(filePath) == soundStore.end())
 	{
@@ -68,7 +69,7 @@ Sound& ResourceStore::GetSound(const std::string& filePath)
 }
 
 
-Music& ResourceStore::GetMusic(const std::string& filePath)
+const Music& ResourceStore::GetMusic(const std::string& filePath)
 {
     if (musicStore.find(filePath) == musicStore.end())
     {
@@ -76,4 +77,6 @@ Music& ResourceStore::GetMusic(const std::string& filePath)
         musicStore.emplace(filePath, std::move(music));
     }
     return musicStore.at(filePath);
+}
+
 }

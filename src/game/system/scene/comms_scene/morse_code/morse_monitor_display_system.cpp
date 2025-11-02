@@ -7,7 +7,7 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/system/scene/comms_scene/morse_code/morse_monitor_display_system.hpp"
-#include "core/data/interpolation.hpp"
+#include "core/math/interpolation.hpp"
 #include <cmath>
 
 
@@ -33,7 +33,7 @@ void MorseMonitorDisplaySystem::UpdatePointer(
 		const Component::Morse::Transceiver& transceiver = *result;
 		if (!transceiver.isInputActive)
 		{
-			transform.position.x = Math::SmoothApproach(
+			transform.position.x = Nc::Math::SmoothApproach(
 				transform.position.x, MorseMonitor::POSITION.x, deltaTime, 32.0f
 			);
 			continue;

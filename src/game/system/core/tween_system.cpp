@@ -4,7 +4,7 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/system/core/tween_system.hpp"
-#include "core/data/interpolation.hpp"
+#include "core/math/interpolation.hpp"
 #include "core/data/tween.hpp"
 #include <algorithm>
 
@@ -37,7 +37,7 @@ void TweenSystem::UpdateTweenCollection(Component::TweenCollection& collection, 
 		float normalizedTime = cappedTime / tween.duration;
 		float easeTime = Tween::GetEasing(tween.easing, normalizedTime);
 
-		*tween.value = Math::Lerp(tween.start, tween.end, easeTime);
+		*tween.value = Nc::Math::Lerp(tween.start, tween.end, easeTime);
 	}
 }
 

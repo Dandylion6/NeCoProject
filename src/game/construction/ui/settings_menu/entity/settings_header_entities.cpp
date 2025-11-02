@@ -15,7 +15,7 @@ const entt::entity Construct::SettingsHeaderEntity(entt::registry& registry)
     registry.emplace<Tag::DontDestroyOnLoad>(entity);
     registry.emplace<Tag::Settings>(entity);
     registry.emplace<Component::UI::Transform>(entity, Nc::Vector2f(0.5f, 0.1f), Nc::Vector2f::Zero(), Nc::Vector2f::Zero(), Nc::Vector2f::Zero(), 2);
-    registry.emplace<Component::Text>(entity, "SETTINGS", Palette::RADAR_COLOR, WDXL, FontSize::Huge, Alignment::Center);
+    registry.emplace<Component::Text>(entity, "SETTINGS", Palette::RADAR_COLOR, Nc::Font::WDXL, Nc::Font::Size::Huge, Alignment::Center);
 
     return entity;
 }
@@ -28,7 +28,7 @@ const entt::entity Construct::GameplaySettingsHeaderEntity(entt::registry& regis
     registry.emplace<Tag::DontDestroyOnLoad>(entity);
     registry.emplace<Tag::Settings>(entity);
     registry.emplace<Component::UI::Transform>(entity, Nc::Vector2f(0.3f, 0.25f), Nc::Vector2f::Zero(), Nc::Vector2f::Zero(), Nc::Vector2f::Zero(), 2);
-    registry.emplace<Component::Text>(entity, "GAMEPLAY", Palette::RADAR_COLOR, WDXL, FontSize::Large, Alignment::Left);
+    registry.emplace<Component::Text>(entity, "GAMEPLAY", Palette::RADAR_COLOR, Nc::Font::WDXL, Nc::Font::Size::Large, Alignment::Left);
 
     return entity;
 }

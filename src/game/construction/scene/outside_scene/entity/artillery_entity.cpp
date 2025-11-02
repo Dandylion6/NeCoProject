@@ -17,7 +17,7 @@ void Construct::ArtilleryEntity(entt::registry& registry)
 {
 	const entt::entity entity = registry.create();
 
-	Nc::Vector2f position = RenderContext::DISPLAY_SIZE * 0.5f;
+	Nc::Vector2f position = Nc::RENDER_RESOLUTION * 0.5f;
 	registry.emplace<Component::Transform>(entity, Outside, position);
 
 	registry.emplace<Component::Receiver>(entity);

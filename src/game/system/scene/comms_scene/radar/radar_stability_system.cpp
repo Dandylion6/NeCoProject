@@ -9,8 +9,8 @@
 #include "raylib.h"
 #include "game/system/scene/comms_scene/radar/blip/blip_glitch_system.hpp"
 #include "game/system/scene/comms_scene/radar/radar_stability_system.hpp"
-#include "core/data/interpolation.hpp"
-#include "core/data/random.hpp"
+#include "core/math/interpolation.hpp"
+#include "core/math/random.hpp"
 #include "core/data/vector2.hpp"
 #include <cmath>
 #include <cstdint>
@@ -49,9 +49,9 @@ void RadarStabilitySystem::Update(entt::registry& registry, GameState& gameState
 			// Check for breakdown
 			radar.breakdownCheckTimer = 0.0f;
 			float deterministcValue = Nc::Random::Range(0.0f, 100.0f);
-			float stabilityCurve = Math::SineInOut(radar.stability * 0.01f) * 100.0f;
+			float stabilityCurve = Nc::Math::SineInOut(radar.stability * 0.01f) * 100.0f;
 
-			float breakdownMapped = Math::ClampedRemap(BREAKDOWN_STABILITY_RANGE, BREAKDOWN_CHANCE_PER_MINUTE_RANGE, stabilityCurve);
+			float breakdownMapped = Nc::Math::ClampedRemap(BREAKDOWN_STABILITY_RANGE, BREAKDOWN_CHANCE_PER_MINUTE_RANGE, stabilityCurve);
 			float breakdownChance = breakdownMapped * MINUTE_TO_SECOND;
 
 			if (deterministcValue <= breakdownChance) 
@@ -166,8 +166,8 @@ float RadarStabilitySystem::GetDegradationValue(float attractionPercentage)
 	constexpr float MIN_DECAY_RATE = 100.0f / MIN_DECAY_DURATION_MINUTES;
 	constexpr float MINUTE_TO_SECONDS = 1.0f / 60.0f;
 
-	float curveFactor = Math::SineOut(attractionPercentage * 0.01f);
-	float decayMinutes = Math::Lerp(MAX_DECAY_RATE, MIN_DECAY_RATE, curveFactor);
+	float curveFactor = Nc::Math::SineOut(attractionPercentage * 0.01f);
+	float decayMinutes = Nc::Math::Lerp(MAX_DECAY_RATE, MIN_DECAY_RATE, curveFactor);
 	return decayMinutes * MINUTE_TO_SECONDS;
 }
 

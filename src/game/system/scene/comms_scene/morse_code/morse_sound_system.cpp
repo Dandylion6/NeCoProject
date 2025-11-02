@@ -4,7 +4,7 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/system/scene/comms_scene/morse_code/morse_sound_system.hpp"
-#include "core/data/interpolation.hpp"
+#include "core/math/interpolation.hpp"
 
 
 void MorseSoundEmitterSystem::Update(
@@ -18,6 +18,6 @@ void MorseSoundEmitterSystem::Update(
 		constexpr float TONE_VOLUME = 1.25f;
 
 		float targetVolume = transceiver.isInputActive ? TONE_VOLUME : 0.0f;
-		emitter.volume = Math::SmoothApproach(emitter.volume, targetVolume, deltaTime, FADE_SPEED);
+		emitter.volume = Nc::Math::SmoothApproach(emitter.volume, targetVolume, deltaTime, FADE_SPEED);
 	}
 };

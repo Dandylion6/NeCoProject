@@ -5,7 +5,7 @@
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
 #include "game/system/core/audio/sound_emitter_system.hpp"
-#include "core/data/interpolation.hpp"
+#include "core/math/interpolation.hpp"
 #include "core/data/vector2.hpp"
 
 
@@ -90,9 +90,9 @@ void SoundEmitterSystem::UpdateLoopedEmitter(
 
 float SoundEmitterSystem::GetPan(Nc::Vector2f position)
 {
-	constexpr float WIDTH = static_cast<float>(RenderContext::DISPLAY_SIZE.x);
+	constexpr float WIDTH = static_cast<float>(Nc::RENDER_RESOLUTION.x);
 
 	float normalizedX = position.x / WIDTH;
-	float stereoPan = Math::Lerp(1.0f, 0.0f, normalizedX);
+	float stereoPan = Nc::Math::Lerp(1.0f, 0.0f, normalizedX);
 	return stereoPan;
 }

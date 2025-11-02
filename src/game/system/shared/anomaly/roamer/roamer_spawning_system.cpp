@@ -10,8 +10,8 @@
 #include "game/system/shared/anomaly/roamer/behaviour/phaser_behaviour_system.hpp"
 #include "game/system/shared/anomaly/roamer/behaviour/phantom_behaviour_system.hpp"
 #include "game/system/shared/anomaly/roamer/roamer_spawning_system.hpp"
-#include "core/data/interpolation.hpp"
-#include "core/data/random.hpp"
+#include "core/math/interpolation.hpp"
+#include "core/math/random.hpp"
 #include "core/data/vector2.hpp"
 #include <cstdint>
 
@@ -107,8 +107,8 @@ Nc::Vector2f RoamerSpawningSystem::GenerateRandomSpawnPoint()
 		float distanceToArtillery = (position - ARTILLERY_POSITION).GetSqrDistance();
 		float distanceToBunker = (position - BUNKER_POSITION).GetSqrDistance();
 
-		weight = Math::Remap(SPAWN_WEIGHT_RANGE_SQR, Nc::Vector2f(0.0f, 1.0f), distanceToArtillery);
-		weight *= Math::Remap(SPAWN_WEIGHT_RANGE_SQR, Nc::Vector2f(0.0f, 1.0f), distanceToBunker);
+		weight = Nc::Math::Remap(SPAWN_WEIGHT_RANGE_SQR, Nc::Vector2f(0.0f, 1.0f), distanceToArtillery);
+		weight *= Nc::Math::Remap(SPAWN_WEIGHT_RANGE_SQR, Nc::Vector2f(0.0f, 1.0f), distanceToBunker);
 
 		if (weight > bestWeight)
 		{

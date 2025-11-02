@@ -1,58 +1,40 @@
-#include "game/component/core/transform_component.hpp"
-#include "raylib.h"
 #include "core/data/bounds.hpp"
 #include "core/data/vector2.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "raylib.h"
 
 
-namespace Nc
+// ────── Constructors ──────
+
+Nc::Bounds::Bounds(const Component::Transform& transform) noexcept
 {
-	Bounds::Bounds(const Component::Transform& transform)
-	{
-		min = transform.position - transform.offset;
-		max = min + transform.size;
-	}
+	min = transform.position - transform.offset;
+	max = min + transform.size;
+}
 
 
-	Bounds::Bounds(const Component::UI::Transform& transform, Nc::Vector2i screenSize)
-	{
-		Nc::Vector2f anchorPoint = transform.anchor * screenSize;
-		Nc::Vector2f position = anchorPoint + transform.offset;
-		Nc::Vector2f origin = transform.origin * transform.size;
+Nc::Bounds::Bounds(
+	const Component::UI::Transform& transform, 
+	Nc::Vector2i screenSize
+) noexcept
+{
+	Nc::Vector2f anchorPoint = transform.anchor * screenSize;
+	Nc::Vector2f position = anchorPoint + transform.offset;
+	Nc::Vector2f origin = transform.origin * transform.size;
 
-		min = position - origin;
-		max = min + transform.size;
-	}
-
-
-	Bounds::operator Rectangle() const
-	{
-		Nc::Vector2f size = Bounds::SizeOf(*this);
-		Rectangle rectangle {
-			min.x,
-			max.y,
-			size.x,
-			size.y
-		};
-		return rectangle;
-	}
+	min = position - origin;
+	max = min + transform.size;
+}
 
 
-	bool Bounds::PointInBounds(const Bounds& bounds, const Nc::Vector2f point)
-	{
-		if (point.x < bounds.min.x || point.y < bounds.min.y) return false;
-		if (point.x > bounds.max.x || point.y > bounds.max.y) return false;
-		return true;
-	}
+// ────── Utility ──────
 
-
-	Vector2f Bounds::SizeOf(const Bounds& bounds)
-	{
-		return bounds.max - bounds.min;
-	}
-
-
-	Nc::Vector2f Bounds::CenterOf(const Bounds& bounds)
-	{
-		return (bounds.min + bounds.max) * 0.5f;
-	}
+bool Nc::Bounds::PointInBounds(
+	const Bounds bounds, 
+	const Nc::Vector2f point
+) noexcept
+{
+	if (point.x < bounds.min.x || point.y < bounds.min.y) return false;
+	if (point.x > bounds.max.x || point.y > bounds.max.y) return false;
+	return true;
 }

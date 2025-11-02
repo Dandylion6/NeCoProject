@@ -1,7 +1,7 @@
 #include "game/state/anomaly_state.hpp"
 #include "game/state/game_state.hpp"
 #include "game/system/shared/anomaly/anomaly_attraction_system.hpp"
-#include "core/data/interpolation.hpp"
+#include "core/math/interpolation.hpp"
 #include "core/data/vector2.hpp"
 #include <cmath>
 
@@ -19,7 +19,7 @@ void AnomalyAttractionSystem::Update(GameState& gameState, float deltaTime)
 	// @brief The percentage range over which the decay interpolates.
 	constexpr Nc::Vector2f DECAY_CHANGE_RANGE = Nc::Vector2f(20.0f, 80.0f);
 
-	float decay = Math::ClampedRemap(DECAY_CHANGE_RANGE, ATTRACTION_DECAY_RANGE, gameState.anomalyState.attractionPercentage);
+	float decay = Nc::Math::ClampedRemap(DECAY_CHANGE_RANGE, ATTRACTION_DECAY_RANGE, gameState.anomalyState.attractionPercentage);
 	gameState.anomalyState.attractionPercentage -= decay * deltaTime;
 
 	// Ensure attraction does not go below base level.

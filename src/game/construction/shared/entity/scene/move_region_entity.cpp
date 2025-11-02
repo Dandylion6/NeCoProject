@@ -49,7 +49,7 @@ entt::entity Construct::MoveRegionEntity(
 )
 {
 	Component::Transform transform = Component::Transform(currentScene);
-	Nc::Vector2f displaySize = RenderContext::DISPLAY_SIZE;
+	Nc::Vector2f displaySize = Nc::RENDER_RESOLUTION;
 	constexpr float WIDTH_MULTIPLIER = 0.1f, HEIGHT_MULTIPLIER = 0.2f;
 
 	switch (region)
