@@ -18,7 +18,7 @@
 
 void RenderingSystem::DrawScreen(
     entt::registry& registry, 
-    RenderContext& renderContext, 
+    Nc::RenderContext& renderContext, 
     GameState& gameState, 
     Nc::Vector2f cameraPosition
 )
@@ -57,8 +57,8 @@ void RenderingSystem::DrawScreen(
 
 void RenderingSystem::DrawUi(
     entt::registry& registry, 
-    ResourceStore& resourceStore,
-    RenderContext& renderContext, 
+    Nc::ResourceStore& resourceStore,
+    Nc::RenderContext& renderContext, 
     GameState& gameState
 )
 {
@@ -80,13 +80,13 @@ void RenderingSystem::DrawUi(
         switch (renderable.type) 
         {
         case RenderType::Sprite:
-            SpriteRenderSystem::DrawUi(renderable.entity, registry, renderContext.windowSize);
+            SpriteRenderSystem::DrawUi(renderable.entity, registry, Nc::Vector2f(renderContext.windowSize));
             break;
         case RenderType::Rectangle:
-            RectangleRenderSystem::DrawUi(renderable.entity, registry, renderContext.windowSize);
+            RectangleRenderSystem::DrawUi(renderable.entity, registry, Nc::Vector2f(renderContext.windowSize));
             break;
         case RenderType::Text:
-            TextRenderSystem::DrawUi(renderable.entity, registry, resourceStore, renderContext.windowSize);
+            TextRenderSystem::DrawUi(renderable.entity, registry, resourceStore, Nc::Vector2f(renderContext.windowSize));
             break;
         default:
             break;

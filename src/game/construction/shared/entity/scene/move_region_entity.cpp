@@ -1,22 +1,22 @@
-#include "game/construction/shared/entity/scene/move_region_entity.hpp"
-#include "game/construction/ui/shared/entity/move_transition_entity.hpp"
-#include "game/component/core/interactive/button_action_component.hpp"
-#include "game/component/core/transform_component.hpp"
-#include "game/tag/shared/move_region_tag.hpp"
+#include "core/data/vector2.hpp"
 #include "core/runtime/render_context.hpp"
 #include "core/runtime/resource_store.hpp"
-#include "game/state/scene.hpp"
-#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
+#include "game/component/core/interactive/button_action_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/construction/shared/entity/scene/move_region_entity.hpp"
+#include "game/construction/ui/shared/entity/move_transition_entity.hpp"
+#include "game/state/game_state.hpp"
+#include "game/state/scene.hpp"
+#include "game/tag/shared/move_region_tag.hpp"
 #include "raylib.h"
-#include "core/data/vector2.hpp"
 #include <functional>
 #include <utility>
 
 
 entt::entity Construct::MoveRegionEntity(
-	entt::registry& registry, GameState& gameState, ResourceStore& resourceStore,
+	entt::registry& registry, GameState& gameState, Nc::ResourceStore& resourceStore,
 	const Component::Transform&& transform,
 	Scene currentScene, Scene nextScene, float moveTime
 )
@@ -33,7 +33,7 @@ entt::entity Construct::MoveRegionEntity(
 
 			MoveTransition::StartMoveScene(registry, gameState, nextScene, moveTime);
 
-			Sound& transitionSound = resourceStore.GetSound("assets/audio/effects/scene_transition.wav");
+			const Sound& transitionSound = resourceStore.GetSound("assets/audio/effects/scene_transition.wav");
 			PlaySound(transitionSound);
 
 		};
@@ -44,13 +44,14 @@ entt::entity Construct::MoveRegionEntity(
 
 
 entt::entity Construct::MoveRegionEntity(
-	entt::registry& registry, GameState& gameState, ResourceStore& resourceStore,
+	entt::registry& registry, GameState& gameState, Nc::ResourceStore& resourceStore,
 	Direction region, Scene currentScene, Scene nextScene, float moveTime
 )
 {
-	Component::Transform transform = Component::Transform(currentScene);
-	Nc::Vector2f displaySize = Nc::RENDER_RESOLUTION;
+	constexpr Nc::Vector2f displaySize = Nc::Vector2f(Nc::RENDER_RESOLUTION);
 	constexpr float WIDTH_MULTIPLIER = 0.1f, HEIGHT_MULTIPLIER = 0.2f;
+
+	Component::Transform transform = Component::Transform(currentScene);
 
 	switch (region)
 	{

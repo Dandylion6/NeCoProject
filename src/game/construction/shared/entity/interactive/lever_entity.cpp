@@ -1,11 +1,16 @@
-#include "game/construction/shared/entity/mechanical/lever_entity.hpp"
-#include "game/component/core/interactive/drag_action_component.hpp"
-#include "game/component/core/rendering/sprite_component.hpp"
-#include "game/component/shared/mechanical/lever_component.hpp"
-#include "game/component/core/interactive/toggle_component.hpp"
-#include "entt/entity/registry.hpp"
 #include "core/data/bounds.hpp"
 #include "core/data/vector2.hpp"
+#include "entt/entity/fwd.hpp"
+#include "entt/entity/registry.hpp"
+#include "game/component/core/interactive/drag_action_component.hpp"
+#include "game/component/core/interactive/toggle_component.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/shared/mechanical/lever_component.hpp"
+#include "game/construction/shared/entity/mechanical/lever_entity.hpp"
+#include "raylib.h"
+#include <cassert>
+#include <string>
 #include <utility>
 
 
@@ -15,7 +20,7 @@ Assembled::LeverData Construct::LeverEntity(
     Nc::Vector2f heightRange, 
     std::string&& movingAudioFile, 
     std::string&& switchedAudioFile
-)
+) noexcept
 {
     assert(registry.any_of<Component::Transform>(entity) && "LeverEntity requires Transform!");
 
@@ -34,7 +39,7 @@ Assembled::LeverData Construct::LeverEntity(
     Texture2D&& handleTexture, 
     std::string&& movingAudioFile, 
     std::string&& switchedAudioFile
-)
+) noexcept
 {
     registry.emplace<Component::Sprite>(entity, std::move(handleTexture));
     return Construct::LeverEntity(registry, entity, heightRange, std::move(movingAudioFile), std::move(switchedAudioFile));
@@ -48,7 +53,7 @@ Assembled::LeverData Construct::LeverEntity(
     Texture2D&& handleTexture, 
     std::string&& movingAudioFile, 
     std::string&& switchedAudioFile
-)
+) noexcept
 {
     const entt::entity entity = registry.create();
 
@@ -67,7 +72,7 @@ Assembled::LeverData Construct::LeverEntity(
     float moveRange, 
     std::string&& movingAudioFile, 
     std::string&& switchedAudioFile
-)
+) noexcept
 {
     const entt::entity entity = registry.create();
 

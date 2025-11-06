@@ -17,7 +17,7 @@
 
 
 void Construct::PlayButtonObject(
-	Game& game, entt::registry& registry, GameState& gameState, ResourceStore& resourceStore
+	Game& game, entt::registry& registry, GameState& gameState, Nc::ResourceStore& resourceStore
 )
 {
 	Component::UI::Transform transform = Component::UI::Transform(
@@ -39,7 +39,7 @@ void Construct::PlayButtonObject(
 void Construct::SettingsButtonObject(
 	entt::registry& registry,
 	GameState& gameState,
-	ResourceStore& resourceStore
+	Nc::ResourceStore& resourceStore
 )
 {
 	Component::UI::Transform transform = Component::UI::Transform(
@@ -61,7 +61,7 @@ void Construct::SettingsButtonObject(
 
 
 void Construct::ExitButtonObject(
-	entt::registry& registry, GameState& gameState, ResourceStore& resourceStore
+	entt::registry& registry, GameState& gameState, Nc::ResourceStore& resourceStore
 )
 {
 	Component::UI::Transform transform = Component::UI::Transform(

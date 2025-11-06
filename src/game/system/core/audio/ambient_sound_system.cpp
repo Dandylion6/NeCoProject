@@ -16,7 +16,7 @@
 
 
 void AmbientSoundEmitterSystem::Update(
-	entt::registry& registry, GameState& gameState, ResourceStore& resourceStore, float deltaTime
+	entt::registry& registry, GameState& gameState, Nc::ResourceStore& resourceStore, float deltaTime
 )
 {
 	auto view = registry.view<Tag::AmbientSound, Component::Transform, Component::LoopedSoundEmitter>();
@@ -40,7 +40,7 @@ void AmbientSoundEmitterSystem::Update(
 
 
 void AmbientSoundEmitterSystem::TryPlayAmbience(
-	Component::Transform& transform, Component::LoopedSoundEmitter& emitter, Scene scene, ResourceStore& resourceStore
+	Component::Transform& transform, Component::LoopedSoundEmitter& emitter, Scene scene, Nc::ResourceStore& resourceStore
 )
 {
 	if (scene == transform.boundScene) return;
@@ -68,7 +68,7 @@ void AmbientSoundEmitterSystem::TryPlayAmbience(
 
 
 void AmbientSoundEmitterSystem::TransitionAmbientAudio(
-	Component::LoopedSoundEmitter& emitter, const std::string& filePath, ResourceStore& resourceStore
+	Component::LoopedSoundEmitter& emitter, const std::string& filePath, Nc::ResourceStore& resourceStore
 )
 {
 	SoundEmitterSystem::StopEmitter(emitter);

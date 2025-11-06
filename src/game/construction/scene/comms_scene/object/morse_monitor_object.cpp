@@ -12,7 +12,7 @@
 
 
 void Construct::MorseMonitorObject(
-	entt::registry& registry, ResourceStore& resourceStore
+	entt::registry& registry, Nc::ResourceStore& resourceStore
 )
 {
 	Construct::MorseMonitorPointerEntity(registry);

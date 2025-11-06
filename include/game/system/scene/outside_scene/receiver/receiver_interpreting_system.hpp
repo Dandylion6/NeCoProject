@@ -2,21 +2,21 @@
 #include "game/component/scene/outside_scene/receiver_component.hpp"
 #include "entt/entity/fwd.hpp"
 #include <string>
-class ResourceStore;
+namespace Nc { class ResourceStore; };
 
 
 class ReceiverInterpretingSystem
 {
 public:
 	static void Update(
-		entt::registry& registry, ResourceStore& resourceStore
+		entt::registry& registry, Nc::ResourceStore& resourceStore
 	);
 
 private:
 
 	static void TryInterpretMessage(
 		entt::registry& registry,
-		ResourceStore& resourceStore,
+		Nc::ResourceStore& resourceStore,
 		Component::Receiver& receiver, 
 		const std::string& message
 	);

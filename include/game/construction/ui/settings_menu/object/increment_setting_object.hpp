@@ -113,11 +113,11 @@ namespace Construct
         std::string&& display,
         Component::UI::Increment&& increment,
         entt::registry& registry, 
-        ResourceStore& resourceStore
+        Nc::ResourceStore& resourceStore
     )
     {
         Nc::Vector2f size = MeasureTextEx(
-            resourceStore.GetFont(Nc::Font::WDXL, static_cast<uint8_t>(Nc::Font::Size::Medium)),
+            resourceStore.GetFont(Nc::Font::WDXL, Nc::Font::Size::Medium),
             display.c_str(), 
             static_cast<float>(Nc::Font::Size::Medium), 
             0.0f

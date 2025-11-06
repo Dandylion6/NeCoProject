@@ -1,20 +1,21 @@
-#include "game/component/core/rendering/lighting/light_source_component.hpp"
-#include "game/component/core/transform_component.hpp"
-#include "core/runtime/render_context.hpp"
+#include "core/data/color.hpp"
+#include "core/data/vector2.hpp"
+#include "core/math/interpolation.hpp"
+#include "core/runtime/lighting_context.hpp"
 #include "core/runtime/resource_store.hpp"
-#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "raylib.h"
+#include "game/component/core/rendering/lighting/light_source_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/state/game_state.hpp"
 #include "game/system/core/rendering/lighting/lighting_system.hpp"
-#include "core/math/interpolation.hpp"
-#include "core/data/vector2.hpp"
+#include "raylib.h"
 
 
 
-void LightingSystem::Initialize(LightingContext& context, ResourceStore& resourceStore)
+void LightingSystem::Initialize(Nc::LightingContext& context, Nc::ResourceStore& resourceStore)
 {
-    Shader& shader = resourceStore.GetShader("assets/lighting.fs");
+    const Shader& shader = resourceStore.GetShader("assets/lighting.fs");
 
     context.textureLocation = GetShaderLocation(shader, "texture0");
     context.lightSourceCount = GetShaderLocation(shader, "lightSourceCount");
@@ -27,8 +28,8 @@ void LightingSystem::Initialize(LightingContext& context, ResourceStore& resourc
 
 void LightingSystem::Update(
     entt::registry& registry, 
-    LightingContext& context, 
-    Shader& lightShader, 
+    Nc::LightingContext& context, 
+    const Shader& lightShader, 
     GameState& gameState, 
     Nc::Vector2f cameraPosition, 
     float deltaTime
@@ -54,7 +55,7 @@ void LightingSystem::Update(
         SetShaderValue(lightShader, context.lightPositionLocation + index, &position, SHADER_UNIFORM_VEC3);
         SetShaderValue(lightShader, context.lightRangeLocation + index, &source.range, SHADER_UNIFORM_FLOAT);
 
-        Vector4 color = source.color.ToFloat();
+        Vector4 color = Nc::RGBa::FloatFrom(source.color);
         float strength = source.strength + (source.strength * GetRandomValue(-8, 8) * 0.1f);
         source.currentStrength = Nc::Math::SmoothApproach(source.currentStrength, strength, deltaTime, 1.6f);
         

@@ -15,7 +15,7 @@
 
 
 LabelButton Construct::SettingsToMainButton(
-    Settings& settings, Settings& pendingSettings, GameState& gameState, entt::registry& registry, ResourceStore& resourceStore
+    Settings& settings, Settings& pendingSettings, GameState& gameState, entt::registry& registry, Nc::ResourceStore& resourceStore
 )
 {
     Component::UI::Transform transform = Component::UI::Transform(
@@ -34,7 +34,7 @@ LabelButton Construct::SettingsToMainButton(
 
 
 LabelButton Construct::ApplySettingsButton(
-    Settings& settings, Settings& pendingSettings, entt::registry& registry, ResourceStore& resourceStore
+    Settings& settings, Settings& pendingSettings, entt::registry& registry, Nc::ResourceStore& resourceStore
 )
 {
     Component::UI::Transform transform = Component::UI::Transform(

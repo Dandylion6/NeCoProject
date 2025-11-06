@@ -3,14 +3,14 @@
 #include "entt/entity/fwd.hpp"
 class Game;
 struct GameState;
-class ResourceStore;
+namespace Nc { class ResourceStore; };
 
 
 namespace Construct
 {
     LabelButton RestartButton(
-        Game& game, entt::registry& registry, ResourceStore& resourceStore, GameState& gameState
+        Game& game, entt::registry& registry, Nc::ResourceStore& resourceStore, GameState& gameState
     );
 
-    LabelButton RestartToMainButton(entt::registry& regsitry, ResourceStore& resourseStore, GameState& gameState);
+    LabelButton RestartToMainButton(entt::registry& regsitry, Nc::ResourceStore& resourseStore, GameState& gameState);
 }

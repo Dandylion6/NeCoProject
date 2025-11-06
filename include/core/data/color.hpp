@@ -101,7 +101,7 @@ struct RGBa final
 	 * @param rgba  Reference to the color to modify.
 	 * @param alpha Normalized alpha in [0.0, 1.0], where 0.0 is transparent and 1.0 is fully opaque.
 	 */
-	void SetAlphaFor(RGBa& rgba, const float alpha) noexcept
+	static void SetAlphaFor(RGBa& rgba, const float alpha) noexcept
 	{
 		rgba.alpha = static_cast<uint8_t>(std::roundf(alpha * 255.0f));
 	}

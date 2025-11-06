@@ -1,28 +1,28 @@
-#include "game/construction/scene/comms_scene/object/radar_object.hpp"
-#include "game/construction/scene/doorway_scene/object/radar_breaker_object.hpp"
+#include "core/data/tween.hpp"
+#include "core/data/vector2.hpp"
+#include "core/runtime/render_context.hpp"
+#include "core/runtime/resource_store.hpp"
+#include "entt/entity/fwd.hpp"
+#include "entt/entity/registry.hpp"
 #include "game/component/core/interactive/button_action_component.hpp"
+#include "game/component/core/interactive/toggle_component.hpp"
 #include "game/component/core/rendering/rectangle_component.hpp"
 #include "game/component/core/rendering/sprite_component.hpp"
 #include "game/component/core/rendering/text_component.hpp"
+#include "game/component/core/serialization/address_component.hpp"
 #include "game/component/core/transform_component.hpp"
 #include "game/component/core/tween_component.hpp"
-#include "game/component/scene/comms_scene/radar_components.hpp"
-#include "game/component/shared/stat/health_component.hpp"
-#include "game/component/core/interactive/toggle_component.hpp"
-#include "game/component/shared/mechanical/machine_component.hpp"
 #include "game/component/scene/comms_scene/blip_components.hpp"
-#include "game/component/core/serialization/address_component.hpp"
-#include "game/tag/scene/comms_scene/radar_tags.hpp"
-#include "core/runtime/render_context.hpp"
-#include "core/runtime/resource_store.hpp"
-#include "game/state/scene.hpp"
+#include "game/component/scene/comms_scene/radar_components.hpp"
+#include "game/component/shared/mechanical/machine_component.hpp"
+#include "game/component/shared/stat/health_component.hpp"
+#include "game/construction/scene/comms_scene/object/radar_object.hpp"
+#include "game/construction/scene/doorway_scene/object/radar_breaker_object.hpp"
 #include "game/state/game_state.hpp"
-#include "entt/entity/fwd.hpp"
-#include "entt/entity/registry.hpp"
-#include "raylib.h"
+#include "game/state/scene.hpp"
+#include "game/tag/scene/comms_scene/radar_tags.hpp"
 #include "game/utility/color_palette.hpp"
-#include "core/data/tween.hpp"
-#include "core/data/vector2.hpp"
+#include "raylib.h"
 #include <cstdint>
 #include <utility>
 
@@ -33,12 +33,12 @@
 
 namespace Construct
 {
-	static const entt::entity RadarPathEntity(entt::registry& registry, ResourceStore& resourceStore)
+	static const entt::entity RadarPathEntity(entt::registry& registry, Nc::ResourceStore& resourceStore)
 	{
 		const entt::entity entity = registry.create();
 
 		Texture2D texture = resourceStore.GetTexture("assets/environment/objects/radar/radar_path.png");
-		Nc::Vector2i size = Nc::Vector2i(texture.width, texture.height);
+		Nc::Vector2f size = Nc::Vector2f(texture.width, texture.height);
 
 		registry.emplace<Tag::Radar::Path>(entity);
 
@@ -54,7 +54,10 @@ namespace Construct
 		constexpr float RADAR_TRAVEL_TIME = 10.0f;
 
 		Tween& tween = tweens.tweens.at(RADAR_MOVE);
-		tween.Build(&transform.position.y, TRAVEL_RANGE.x, TRAVEL_RANGE.y, RADAR_TRAVEL_TIME);
+		tween.value = &transform.position.y;
+		tween.start = TRAVEL_RANGE.x;
+		tween.end = TRAVEL_RANGE.y;
+		tween.duration = RADAR_TRAVEL_TIME;
 		tween.onComplete = [&tween]() { Tween::Replay(tween); };
 		Tween::Play(tween);
 
@@ -62,12 +65,12 @@ namespace Construct
 	}
 
 
-	static const entt::entity RadarArtilleryEntity(entt::registry& registry, ResourceStore& resourceStore)
+	static const entt::entity RadarArtilleryEntity(entt::registry& registry, Nc::ResourceStore& resourceStore)
 	{
 		const entt::entity entity = registry.create();
 
 		Texture2D texture = resourceStore.GetTexture("assets/environment/objects/radar/artillery_target.png");
-		Nc::Vector2i size = Nc::Vector2i(texture.width, texture.height);
+		Nc::Vector2f size = Nc::Vector2f(texture.width, texture.height);
 
 		registry.emplace<Tag::Radar::Artillery>(entity);
 		registry.emplace<Component::Transform>(entity, Radar, Nc::Vector2f::Zero(), size, size * 0.5f);
@@ -91,7 +94,12 @@ namespace Construct
 		Component::TweenCollection& collection = registry.emplace<Component::TweenCollection>(entity);
 		Tween& blinkFade = collection.tweens.at(Component::RadarErrorWarning::BlinkFade);
 
-		blinkFade.Build(&errorWarning.alpha, 1.0f, 0.0f, 0.4f, QuadIn, 0.16f);
+		blinkFade.value = &errorWarning.alpha;
+		blinkFade.start = 1.0f;
+		blinkFade.end = 0.0f;
+		blinkFade.duration = 0.4f;
+		blinkFade.easing = QuadIn;
+		blinkFade.delayComplete = 0.16f;
 		blinkFade.onComplete = [&blinkFade]() { Tween::Replay(blinkFade); };
 		Tween::Play(blinkFade);
 
@@ -142,7 +150,7 @@ namespace Construct
 }
 
 
-void Construct::RadarObject(entt::registry& registry, ResourceStore& resourceStore)
+void Construct::RadarObject(entt::registry& registry, Nc::ResourceStore& resourceStore)
 {
 	constexpr float ATTRACTION_REDUCTION_PER_SECOND = 0.09f;
 	constexpr uint16_t POWER_USAGE = 500u;
@@ -176,13 +184,13 @@ void Construct::RadarObject(entt::registry& registry, ResourceStore& resourceSto
 
 
 const entt::entity Construct::RadarBlipEntity(
-	entt::registry& registry, ResourceStore& resourceStore, Nc::Vector2f position, int16_t health
+	entt::registry& registry, Nc::ResourceStore& resourceStore, Nc::Vector2f position, int16_t health
 )
 {
 	const entt::entity entity = registry.create();
 
 	Texture2D texture = resourceStore.GetTexture("assets/environment/objects/radar/radar_blip.png");
-	Nc::Vector2i size = Nc::Vector2i(texture.width, texture.height);
+	Nc::Vector2f size = Nc::Vector2f(texture.width, texture.height);
 
 	registry.emplace<Component::Blip>(entity);
 	registry.emplace<Component::Health>(entity, health);
@@ -199,9 +207,19 @@ const entt::entity Construct::RadarBlipEntity(
 	Tween& fadeInTween = tweens.tweens.at(Component::Blip::BlipFadeIn);
 	Tween& fadeOutTween = tweens.tweens.at(Component::Blip::BlipFadeOut);
 
-	fadeInTween.Build(&sprite.alpha, sprite.alpha, 1.0f, FADE_IN_TIME, CubicOut, FADE_OUT_DELAY);
+	fadeInTween.value = &sprite.alpha;
+	fadeInTween.start = sprite.alpha;
+	fadeInTween.end = 1.0f;
+	fadeInTween.duration = FADE_IN_TIME;
+	fadeInTween.easing = CubicOut;
+	fadeInTween.delayComplete = FADE_OUT_DELAY;
 	fadeInTween.onComplete = [&fadeOutTween]() { Tween::Replay(fadeOutTween); };
-	fadeOutTween.Build(&sprite.alpha, 1.0f, 0.0f, FADE_OUT_TIME, QuadOut);
+	
+	fadeOutTween.value = &sprite.alpha;
+	fadeOutTween.start = 1.0f;
+	fadeOutTween.end = 0.0f;
+	fadeOutTween.duration = FADE_OUT_TIME;
+	fadeOutTween.easing = QuadOut;
 
 	return entity;
 }

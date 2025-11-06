@@ -1,14 +1,15 @@
-#include "game/component/shared/anomaly/roamer/anomaly_roamer_component.hpp"
-#include "game/component/core/transform_component.hpp"
-#include "game/component/shared/stat/health_component.hpp"
-#include "game/component/scene/outside_scene/artillery_component.hpp"
-#include "game/game.hpp"
-#include "game/state/game_state.hpp"
+#include "core/data/vector2.hpp"
+#include "core/math/vector_math.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/scene/outside_scene/artillery_component.hpp"
+#include "game/component/shared/anomaly/roamer/anomaly_roamer_component.hpp"
+#include "game/component/shared/stat/health_component.hpp"
+#include "game/game.hpp"
+#include "game/state/game_state.hpp"
 #include "game/system/shared/anomaly/roamer/roamer_behaviour_system.hpp"
 #include "game/system/shared/anomaly/roamer/roamer_kill_system.hpp"
-#include "core/data/vector2.hpp"
 
 
 void RoamerKillSystem::Update(
@@ -91,8 +92,8 @@ bool RoamerKillSystem::CanKill(
 )
 {
 	float killDistanceSqr = killDistance * killDistance;
-	float distanceSqr = (targetPosition - roamerPosition).GetSqrDistance();
-	return distanceSqr <= killDistance;
+	float sqrDistance = Nc::Vector::SqrDistanceOf(targetPosition, roamerPosition);
+	return sqrDistance <= killDistance;
 }
 
 

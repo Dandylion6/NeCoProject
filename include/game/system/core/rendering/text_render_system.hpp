@@ -2,7 +2,7 @@
 #include "game/state/scene.hpp"
 #include "entt/entity/fwd.hpp"
 #include "core/data/vector2.hpp"
-class ResourceStore;
+namespace Nc { class ResourceStore; };
 
 
 class TextRenderSystem
@@ -17,7 +17,7 @@ public:
 	static void DrawUi(
 		const entt::entity entity, 
 		entt::registry& registry, 
-		ResourceStore& resourceStore, 
+		Nc::ResourceStore& resourceStore, 
 		Nc::Vector2f windowSize
 	);
 

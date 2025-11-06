@@ -1,28 +1,30 @@
+#include "core/data/color.hpp"
+#include "core/data/vector2.hpp"
+#include "core/math/vector_math.hpp"
+#include "core/runtime/resource_store.hpp"
+#include "entt/entity/fwd.hpp"
+#include "entt/entity/registry.hpp"
+#include "game/component/core/interactive/toggle_component.hpp"
 #include "game/component/core/rendering/sprite_component.hpp"
 #include "game/component/core/rendering/text_component.hpp"
 #include "game/component/core/transform_component.hpp"
-#include "game/component/scene/comms_scene/radar_components.hpp"
-#include "game/component/core/interactive/toggle_component.hpp"
 #include "game/component/scene/comms_scene/blip_components.hpp"
-#include "game/utility/rendering.hpp"
-#include "core/runtime/resource_store.hpp"
-#include "game/state/scene.hpp"
+#include "game/component/scene/comms_scene/radar_components.hpp"
 #include "game/state/game_state.hpp"
-#include "entt/entity/fwd.hpp"
-#include "entt/entity/registry.hpp"
-#include "raylib.h"
+#include "game/state/scene.hpp"
 #include "game/system/scene/comms_scene/radar/radar_render_system.hpp"
 #include "game/tag/scene/comms_scene/radar_tags.hpp"
-#include "core/data/vector2.hpp"
-#include <sstream>
-#include <string>
+#include "game/utility/rendering.hpp"
+#include "raylib.h"
 #include <array>
 #include <cmath>
 #include <cstdint>
+#include <sstream>
+#include <string>
 
 
 void RadarRenderSystem::DrawRenderTexture(
-	entt::registry& registry, const RenderTexture2D& radarRenderTexture, Scene currentScene, ResourceStore& resourceStore
+	entt::registry& registry, const RenderTexture2D& radarRenderTexture, Scene currentScene, Nc::ResourceStore& resourceStore
 )
 {
 	if (currentScene != CommsRoom) return;
@@ -83,7 +85,7 @@ void RadarRenderSystem::DrawRadar(
 
 
 void RadarRenderSystem::DrawActiveScreen(
-	entt::registry& registry, ResourceStore& resourceStore, Component::Radar& radar, Component::Sprite& sprite
+	entt::registry& registry, Nc::ResourceStore& resourceStore, Component::Radar& radar, Component::Sprite& sprite
 )
 {
 	const std::string BACKGROUND_FILE = "assets/environment/objects/radar/radar_screen.png";
@@ -118,14 +120,20 @@ void RadarRenderSystem::DrawRadarArtillery(entt::registry& registry)
 	auto view = registry.view<Tag::Radar::Artillery, const Component::Transform, const Component::Sprite>();
 	for (auto [entity, transform, sprite] : view.each())
 	{
-		Nc::Vector2f position = Nc::Vector2f::Remap(WORLD_BOUNDS, RADAR_BOUNDS, transform.position);
+		Nc::Vector2f position = Nc::Vector::Remap(
+			WORLD_BOUNDS.min,
+			WORLD_BOUNDS.max,
+			RADAR_BOUNDS.min,
+			RADAR_BOUNDS.max,
+			transform.position
+		);
 		Renderer::DrawSprite(sprite, position, transform.offset, transform.rotation);
 	}
 }
 
 
 void RadarRenderSystem::DrawBlips(
-	entt::registry& registry, ResourceStore& resourceStore
+	entt::registry& registry, Nc::ResourceStore& resourceStore
 )
 {
 	constexpr Nc::Vector2f TEXT_OFFSET = Nc::Vector2f::Down(12.0f);
@@ -140,21 +148,27 @@ void RadarRenderSystem::DrawBlips(
 			glitchOffset = failure.glitchedOffset;
 		}
 		
-		Nc::Vector2f position = Nc::Vector2f::Remap(WORLD_BOUNDS, RADAR_BOUNDS, transform.position);
+		Nc::Vector2f position = Nc::Vector::Remap(
+			WORLD_BOUNDS.min,
+			WORLD_BOUNDS.max,
+			RADAR_BOUNDS.min,
+			RADAR_BOUNDS.max,
+			transform.position
+		);
 		position += glitchOffset;
 		Renderer::DrawSprite(sprite, position, transform.offset, transform.rotation);
 		
 		Nc::Vector2f textPosition = position + TEXT_OFFSET;
 		Nc::Vector2f offset = Renderer::GetTextOffset(text, resourceStore);
 		
-		text.color.SetAlpha(sprite.alpha);
+		Nc::RGBa::SetAlphaFor(text.color, sprite.alpha);
 		Renderer::DrawText(text, textPosition, offset, resourceStore);
 	}
 }
 
 
 void RadarRenderSystem::DrawErrorWarning(
-	entt::registry &registry, ResourceStore &resourceStore, Component::Radar& machine
+	entt::registry &registry, Nc::ResourceStore& resourceStore, Component::Radar& machine
 )
 {
 	auto view = registry.view<const Component::RadarErrorWarning, const Component::Transform, Component::Text>();
@@ -163,7 +177,7 @@ void RadarRenderSystem::DrawErrorWarning(
 		std::ostringstream stringStream;
 		stringStream << "ERRORS ( " << std::to_string(machine.glitchCount) << " )";
 		text.text = stringStream.str();
-		text.color.SetAlpha(errorWarning.alpha);
+		Nc::RGBa::SetAlphaFor(text.color, errorWarning.alpha);
 
 		Nc::Vector2f offset = transform.offset + Renderer::GetTextOffset(text, resourceStore);
 		Renderer::DrawText(text, transform.position, offset, resourceStore);
@@ -172,7 +186,7 @@ void RadarRenderSystem::DrawErrorWarning(
 
 
 void RadarRenderSystem::DrawRecalibratingScreen(
-	entt::registry& registry, ResourceStore& resourceStore, Component::Radar& radar, Component::Sprite& sprite
+	entt::registry& registry, Nc::ResourceStore& resourceStore, Component::Radar& radar, Component::Sprite& sprite
 )
 {
 	constexpr float ANIMATION_SPEED = 6.0f;
@@ -191,7 +205,8 @@ void RadarRenderSystem::DrawRecalibratingScreen(
 		uint8_t index = static_cast<uint8_t>(time * ANIMATION_SPEED) % loadingStrings.size();
 		const std::string& loadingCharacter = loadingStrings.at(index);
 
-		text.color.SetAlpha(0.7f + std::cosf(time * PI * 2.0f / BLINK_TIME) * 0.3f);
+		float blink = 0.7f + std::cosf(time * PI * 2.0f / BLINK_TIME) * 0.3f;
+		Nc::RGBa::SetAlphaFor(text.color, blink);
 
 		std::ostringstream stringStream;
 		stringStream << "RECALIBRATING " << loadingCharacter;

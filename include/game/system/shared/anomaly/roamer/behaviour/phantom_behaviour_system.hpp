@@ -3,7 +3,7 @@
 #include "game/component/core/transform_component.hpp"
 #include "entt/entity/fwd.hpp"
 struct AnomalyState;
-class ResourceStore;
+namespace Nc { class ResourceStore; };
 
 
 class PhantomBehaviourSystem

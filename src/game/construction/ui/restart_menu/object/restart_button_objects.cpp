@@ -16,7 +16,7 @@
 
 
 LabelButton Construct::RestartButton(
-    Game& game, entt::registry& registry, ResourceStore& resourceStore, GameState& gameState
+    Game& game, entt::registry& registry, Nc::ResourceStore& resourceStore, GameState& gameState
 )
 {
     Component::UI::Transform transform = Component::UI::Transform(
@@ -32,7 +32,7 @@ LabelButton Construct::RestartButton(
 }
 
 
-LabelButton Construct::RestartToMainButton(entt::registry& registry, ResourceStore& resourceStore, GameState& gameState)
+LabelButton Construct::RestartToMainButton(entt::registry& registry, Nc::ResourceStore& resourceStore, GameState& gameState)
 {
     Component::UI::Transform transform = Component::UI::Transform(
         Nc::Vector2f(0.5f, 0.56f), Nc::Vector2f::Scale(0.5f), Nc::Vector2f::Zero(), Nc::Vector2f::Zero(), 2

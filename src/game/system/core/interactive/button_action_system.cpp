@@ -1,17 +1,19 @@
-#include "game/component/core/interactive/button_action_component.hpp"
-#include "game/component/core/transform_component.hpp"
-#include "core/runtime/render_context.hpp"
-#include "game/state/game_state.hpp"
-#include "entt/entity/fwd.hpp"
-#include "entt/entity/registry.hpp"
-#include "raylib.h"
-#include "game/system/core/interactive/button_action_system.hpp"
 #include "core/data/bounds.hpp"
 #include "core/data/vector2.hpp"
+#include "core/runtime/render_context.hpp"
+#include "entt/entity/fwd.hpp"
+#include "entt/entity/registry.hpp"
+#include "game/component/core/interactive/button_action_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/state/game_state.hpp"
+#include "game/system/core/interactive/button_action_system.hpp"
+#include "raylib.h"
 
 
 bool ButtonActionSystem::Update(
-	entt::registry& registry, GameState& gameState, RenderContext& renderContext
+	entt::registry& registry, 
+	GameState& gameState, 
+	Nc::RenderContext& renderContext
 )
 {
 	bool isHovering = UpdateUiButtons(registry, gameState, renderContext.windowSize);
@@ -21,7 +23,9 @@ bool ButtonActionSystem::Update(
 
 
 bool ButtonActionSystem::UpdateSceneButtons(
-	entt::registry& registry, GameState& gameState, RenderContext& renderContext
+	entt::registry& registry, 
+	GameState& gameState, 
+	Nc::RenderContext& renderContext
 )
 {
 	if (gameState.isPaused) return false;
@@ -51,7 +55,9 @@ bool ButtonActionSystem::UpdateSceneButtons(
 
 
 bool ButtonActionSystem::UpdateUiButtons(
-	entt::registry& registry, GameState& gameState, Nc::Vector2i windowSize
+	entt::registry& registry, 
+	GameState& gameState, 
+	Nc::Vector2i windowSize
 )
 {
 	bool isHovering = false;

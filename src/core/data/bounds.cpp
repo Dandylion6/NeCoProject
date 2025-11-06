@@ -18,7 +18,7 @@ Nc::Bounds::Bounds(
 	Nc::Vector2i screenSize
 ) noexcept
 {
-	Nc::Vector2f anchorPoint = transform.anchor * screenSize;
+	Nc::Vector2f anchorPoint = transform.anchor * Nc::Vector2f(screenSize);
 	Nc::Vector2f position = anchorPoint + transform.offset;
 	Nc::Vector2f origin = transform.origin * transform.size;
 

@@ -12,7 +12,7 @@
 // TODO: Add visuals
 
 
-static const entt::entity RadarLeverBaseEntity(entt::registry& registry, ResourceStore& resourceStore)
+static const entt::entity RadarLeverBaseEntity(entt::registry& registry, Nc::ResourceStore& resourceStore)
 {
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(200.0f, 100.0f);
 	constexpr Nc::Vector2f SIZE = Nc::Vector2f(60.0f, 90.0f);
@@ -26,7 +26,7 @@ static const entt::entity RadarLeverBaseEntity(entt::registry& registry, Resourc
 }
 
 
-static const entt::entity RadarLeverHandleEntity(entt::registry& registry, ResourceStore& resourceStore, const entt::entity radar)
+static const entt::entity RadarLeverHandleEntity(entt::registry& registry, Nc::ResourceStore& resourceStore, const entt::entity radar)
 {
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(200.0f, 100.0f);
 	constexpr Nc::Vector2f SIZE = Nc::Vector2f(55.0f, 20.0f);
@@ -42,7 +42,7 @@ static const entt::entity RadarLeverHandleEntity(entt::registry& registry, Resou
 }
 
 
-void Construct::RadarBreakerObject(entt::registry& registry, ResourceStore& resourceStore, const entt::entity radar)
+void Construct::RadarBreakerObject(entt::registry& registry, Nc::ResourceStore& resourceStore, const entt::entity radar)
 {
 	RadarLeverHandleEntity(registry, resourceStore, radar);
 	RadarLeverBaseEntity(registry, resourceStore);

@@ -1,9 +1,9 @@
 #pragma once
 #include "entt/entity/fwd.hpp"
-class ResourceStore;
+namespace Nc { class ResourceStore; };
 
 
 namespace Construct
 {
-	void MorseTransceiverEntity(entt::registry& registry, ResourceStore& resourceStore);
+	void MorseTransceiverEntity(entt::registry& registry, Nc::ResourceStore& resourceStore);
 }

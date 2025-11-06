@@ -1,9 +1,14 @@
 #pragma once
-#include "game/component/shared/mechanical/lever_component.hpp"
-#include "game/component/core/transform_component.hpp"
+#include "core/data/vector2.hpp"
 #include "entt/entity/entity.hpp"
 #include "entt/entity/fwd.hpp"
 #include "raylib.h"
+#include <string>
+namespace Component
+{
+    struct Transform;
+    struct Lever;
+}
 
 
 namespace Assembled

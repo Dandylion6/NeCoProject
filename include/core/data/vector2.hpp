@@ -34,7 +34,6 @@ struct Vector2i
 	// ────── Conversion ──────
 
 	constexpr operator Vector2() const noexcept { return { static_cast<float>(x), static_cast<float>(y) }; };
-	constexpr operator Vector2f() const noexcept { return Vector2f(static_cast<float>(x), static_cast<float>(y)); };
 
 
 	// ────── Utility ──────
@@ -70,6 +69,10 @@ struct Vector2f
 
 	constexpr Vector2f() = default;
 	constexpr Vector2f(float x, float y) noexcept : x(x), y(y) { };
+	constexpr Vector2f(int x, int y) noexcept : 
+		x(static_cast<float>(x)), y(static_cast<float>(y)) 
+	{ };
+	
 	constexpr Vector2f(Vector2 vector) noexcept :
 		x(vector.x), y(vector.y)
 	{ };
@@ -78,7 +81,7 @@ struct Vector2f
 	// ────── Conversion ──────
 	
 	constexpr operator Vector2() const noexcept { return { x, y }; }
-	constexpr operator Vector2i() const noexcept { Vector2i(static_cast<int>(x), static_cast<int>(y)); };
+	constexpr operator Vector2i() const noexcept { return Vector2i(static_cast<int>(x), static_cast<int>(y)); };
 
 
 	// ────── Utility ──────

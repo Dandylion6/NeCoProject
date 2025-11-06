@@ -18,7 +18,7 @@ void TextRenderSystem::DrawScreen(
 
 
 void TextRenderSystem::DrawUi(
-	const entt::entity entity, entt::registry& registry, ResourceStore& resourceStore, Nc::Vector2f windowSize
+	const entt::entity entity, entt::registry& registry, Nc::ResourceStore& resourceStore, Nc::Vector2f windowSize
 )
 {
 	Component::UI::Transform& transform = registry.get<Component::UI::Transform>(entity);

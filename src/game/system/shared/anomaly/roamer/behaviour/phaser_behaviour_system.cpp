@@ -1,15 +1,16 @@
-#include "game/component/shared/anomaly/roamer/anomaly_roamer_component.hpp"
-#include "game/component/shared/anomaly/roamer/phaser_component.hpp"
-#include "game/component/core/transform_component.hpp"
+#include "core/data/vector2.hpp"
+#include "core/math/random.hpp"
+#include "core/math/vector_math.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/shared/anomaly/roamer/anomaly_roamer_component.hpp"
+#include "game/component/shared/anomaly/roamer/phaser_component.hpp"
 #include "game/system/shared/anomaly/roamer/behaviour/phaser_behaviour_system.hpp"
+#include "game/system/shared/anomaly/roamer/behaviour/strider_behaviour_system.hpp"
 #include "game/system/shared/anomaly/roamer/roamer_behaviour_system.hpp"
 #include "game/system/shared/anomaly/roamer/roamer_spawning_system.hpp"
-#include "core/math/random.hpp"
-#include "core/data/vector2.hpp"
 #include <cstdint>
-#include "game/system/shared/anomaly/roamer/behaviour/strider_behaviour_system.hpp"
 
 
 void PhaserBehaviourSystem::Spawn(
@@ -49,9 +50,11 @@ void PhaserBehaviourSystem::Update(
 	
 	Nc::Vector2f& nextPoint = phaser.points.at(phaser.currentPointIndex);
 	Nc::Vector2f targetPosition = RoamerBehaviourSystem::GetTargetPosition(roamer.target);
-	Nc::Vector2f difference = targetPosition - nextPoint;
 
-	bool switchToStriding = difference.GetSqrDistance() <= STRIDING_DISTANCE_SQR;
+	Nc::Vector2f difference = targetPosition - nextPoint;
+	float sqrDistance = Nc::Vector::SqrMagnitudeOf(difference);
+
+	bool switchToStriding = sqrDistance <= STRIDING_DISTANCE_SQR;
 	if (switchToStriding)
 	{
 		roamer.behaviour = Component::Anomaly::Roamer::Behaviour::Strider;
@@ -61,7 +64,7 @@ void PhaserBehaviourSystem::Update(
 	}
 
 	// Moves the next point closer to the target.
-	Nc::Vector2f direction = difference.Normalized();
+	Nc::Vector2f direction = Nc::Vector::Normalized(difference);
 	nextPoint += direction * MOVE_DISTANCE;
 	transform.position = nextPoint;
 };

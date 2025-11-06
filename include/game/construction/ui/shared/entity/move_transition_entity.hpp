@@ -9,7 +9,7 @@ namespace Construct
 {
 	const entt::entity MoveTransitionEntity(
 		entt::registry& registry, 
-		RenderContext& renderContext,
+		Nc::RenderContext& renderContext,
 		GameState& gameState
 	);
 }

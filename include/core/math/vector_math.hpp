@@ -84,15 +84,6 @@ static float MaxOf(const Nc::Vector2f vector) noexcept { return std::fmaxf(vecto
 
 
 /**
- * @brief Returns the magnitude (length) of the vector.
- * 
- * @param vector Input vector.
- * @return Magnitude of the vector.
- */
-static float MagnitudeOf(const Nc::Vector2f vector) noexcept { return std::sqrtf(SqrMagnitudeOf(vector)); };
-
-
-/**
  * @brief Returns the squared magnitude of the vector (faster than MagnitudeOf).
  * 
  * @param vector Input vector.
@@ -102,6 +93,15 @@ static constexpr float SqrMagnitudeOf(const Nc::Vector2f vector) noexcept
 {
 	return vector.x * vector.x + vector.y * vector.y; 
 };
+
+
+/**
+ * @brief Returns the magnitude (length) of the vector.
+ * 
+ * @param vector Input vector.
+ * @return Magnitude of the vector.
+ */
+static float MagnitudeOf(const Nc::Vector2f vector) noexcept { return std::sqrtf(SqrMagnitudeOf(vector)); };
 
 
 /**

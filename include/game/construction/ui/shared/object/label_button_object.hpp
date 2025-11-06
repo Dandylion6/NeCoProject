@@ -59,7 +59,7 @@ namespace Construct
         std::string &&display,
         std::function<void()>&& onClick,
         entt::registry &registry, 
-        ResourceStore& resourceStore
+        Nc::ResourceStore& resourceStore
     )
     {
         transform.size = Nc::Vector2f(420.0f, 68.0f);
@@ -81,7 +81,7 @@ namespace Construct
         std::string &&display,
         std::function<void()>&& onClick,
         entt::registry &registry, 
-        ResourceStore& resourceStore
+        Nc::ResourceStore& resourceStore
     )
     {
         if (transform.size == Nc::Vector2f::Zero()) transform.size = Nc::Vector2f(420.0f, 68.0f);

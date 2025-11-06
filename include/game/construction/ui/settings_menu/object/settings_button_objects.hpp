@@ -3,7 +3,7 @@
 #include "entt/entity/fwd.hpp"
 struct GameState;
 struct Settings;
-class ResourceStore;
+namespace Nc { class ResourceStore; };
 
 
 namespace Construct
@@ -13,7 +13,7 @@ namespace Construct
         Settings& pendingSettings, 
         GameState& gameState, 
         entt::registry& registry, 
-        ResourceStore& resourceStore
+        Nc::ResourceStore& resourceStore
     );
 
 
@@ -21,6 +21,6 @@ namespace Construct
         Settings& settings, 
         Settings& pendingSettings, 
         entt::registry& registry, 
-        ResourceStore& resourceStore
+        Nc::ResourceStore& resourceStore
     );
 }

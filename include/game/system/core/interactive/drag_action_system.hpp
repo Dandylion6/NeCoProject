@@ -9,7 +9,7 @@ namespace Nc { struct RenderContext; };
 struct DragActionSystem
 {
 public:
-	static bool Update(entt::registry& registry, GameState& gameState, RenderContext& renderContext);
+	static bool Update(entt::registry& registry, GameState& gameState, Nc::RenderContext& renderContext);
 
 private:
 	enum DragResult
@@ -22,7 +22,7 @@ private:
 	static DragResult UpdateSceneDrag(
 		entt::registry& registry,
 		GameState& gameState,
-		RenderContext& renderContext, 
+		Nc::RenderContext& renderContext, 
 		const entt::entity entity, 
 		Component::DragAction& drag
 	);

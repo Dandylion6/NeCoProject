@@ -2,7 +2,7 @@
 #include "entt/entity/fwd.hpp"
 #include "core/data/vector2.hpp"
 struct GameState;
-class ResourceStore;
+namespace Nc { class ResourceStore; };
 struct Settings;
 
 
@@ -14,7 +14,7 @@ namespace SettingsMenu
 		GameState& gameState,
 		Nc::Vector2f windowSize,
 		entt::registry& registry,
-		ResourceStore& resourceStore
+		Nc::ResourceStore& resourceStore
 	);
 
 	void Open(entt::registry& registry, GameState& gameState);

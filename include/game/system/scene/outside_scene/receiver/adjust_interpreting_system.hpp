@@ -3,7 +3,7 @@
 #include "entt/entity/fwd.hpp"
 #include "game/system/scene/outside_scene/receiver/coordinate_interpreting_system.hpp"
 #include <string>
-class ResourceStore;
+namespace Nc { class ResourceStore; };
 
 
 class AdjustInterpretingSystem
@@ -13,7 +13,7 @@ public:
 
 	static void HandleReceivedMessage(
 		entt::registry& registry,
-		ResourceStore& resourceStore,
+		Nc::ResourceStore& resourceStore,
 		Component::Receiver& receiver,
 		const std::string& message
 	);
@@ -21,7 +21,7 @@ public:
 private:
     static void ConfirmAdjustCommand(
 		entt::registry& registry,
-		ResourceStore& resourceStore,
+		Nc::ResourceStore& resourceStore,
 		Component::Receiver& receiver
 	);
 

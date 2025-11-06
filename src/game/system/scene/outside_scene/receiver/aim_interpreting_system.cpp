@@ -17,7 +17,7 @@ const std::string AimInterpretingSystem::COMMAND = "AIM";
 
 void AimInterpretingSystem::HandleReceivedMessage(
 	entt::registry& registry,
-	ResourceStore& resourceStore,
+	Nc::ResourceStore& resourceStore,
 	Component::Receiver& receiver,
 	const std::string& message
 )
@@ -39,7 +39,7 @@ void AimInterpretingSystem::HandleReceivedMessage(
 
 void AimInterpretingSystem::ConfirmAimCommand(
 	entt::registry& registry, 
-	ResourceStore& resourceStore, 
+	Nc::ResourceStore& resourceStore, 
 	Component::Receiver& receiver
 )
 {

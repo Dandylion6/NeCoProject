@@ -1,12 +1,11 @@
-#include "game/component/core/rendering/sprite_component.hpp"
-#include "game/component/core/rendering/text_component.hpp"
-#include "game/utility/rendering.hpp"
-#include "core/runtime/resource_store.hpp"
-#include "game/state/scene.hpp"
-#include "raylib.h"
 #include "core/data/color.hpp"
 #include "core/data/vector2.hpp"
-#include <cstdint>
+#include "core/runtime/resource_store.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
+#include "game/component/core/rendering/text_component.hpp"
+#include "game/state/scene.hpp"
+#include "game/utility/rendering.hpp"
+#include "raylib.h"
 
 
 bool Renderer::IsRenderableToScreen(Scene boundScene, Scene currentScene)
@@ -29,7 +28,7 @@ void Renderer::DrawSprite(
 	if (isTransparent) return;
 
 	Nc::RGBa tintColor = WHITE;
-	tintColor.SetAlpha(sprite.alpha);
+	Nc::RGBa::SetAlphaFor(tintColor, sprite.alpha);
 	
 	float width = static_cast<float>(sprite.texture.width);
 	float height = static_cast<float>(sprite.texture.height);
@@ -69,13 +68,13 @@ void Renderer::DrawText(
 	const Component::Text& text, 
 	Nc::Vector2f position, 
 	Nc::Vector2f offset,
-	ResourceStore& resourceStore
+	Nc::ResourceStore& resourceStore
 )
 {
 	bool isTransparent = text.color.alpha == 0u;
 	if (isTransparent) return;
 
-	Font& font = resourceStore.GetFont(text.style, static_cast<uint8_t>(text.fontSize));
+	const Font& font = resourceStore.GetFont(text.style, text.fontSize);
 	float fontSize = static_cast<float>(text.fontSize);
 	float spacing = static_cast<float>(text.spacing);
 
@@ -92,9 +91,9 @@ void Renderer::DrawText(
 }
 
 
-Nc::Vector2f Renderer::GetTextOffset(const Component::Text& text,  ResourceStore& resourceStore)
+Nc::Vector2f Renderer::GetTextOffset(const Component::Text& text,  Nc::ResourceStore& resourceStore)
 {
-	Font& font = resourceStore.GetFont(text.style, static_cast<uint8_t>(text.fontSize));
+	const Font& font = resourceStore.GetFont(text.style, text.fontSize);
 	float fontSize = static_cast<float>(text.fontSize);
 	float spacing = static_cast<float>(text.spacing);
 

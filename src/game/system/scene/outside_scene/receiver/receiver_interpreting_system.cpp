@@ -18,7 +18,7 @@
 #include <utility>
 
 
-void ReceiverInterpretingSystem::Update(entt::registry& registry, ResourceStore& resourceStore)
+void ReceiverInterpretingSystem::Update(entt::registry& registry, Nc::ResourceStore& resourceStore)
 {
 	auto view = registry.view<Component::Receiver>();
 	for (auto [entity, receiver] : view.each())
@@ -70,7 +70,7 @@ void ReceiverInterpretingSystem::Update(entt::registry& registry, ResourceStore&
 
 
 void ReceiverInterpretingSystem::TryInterpretMessage(
-	entt::registry& registry, ResourceStore& resourceStore, Component::Receiver& receiver, const std::string& message
+	entt::registry& registry, Nc::ResourceStore& resourceStore, Component::Receiver& receiver, const std::string& message
 )
 {
 	TransmissionContext newContext = TryGetContext(receiver, message);

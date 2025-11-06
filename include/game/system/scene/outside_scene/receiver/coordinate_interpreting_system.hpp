@@ -2,7 +2,7 @@
 #include "game/component/scene/outside_scene/receiver_component.hpp"
 #include "entt/entity/fwd.hpp"
 #include <string>
-class ResourceStore;
+namespace Nc { class ResourceStore; };
 
 
 struct CoordResult
@@ -22,14 +22,14 @@ public:
 
 	static CoordResult InterpretMessageAsCoord(
 		entt::registry& registry,
-		ResourceStore& resourceStore,
+		Nc::ResourceStore& resourceStore,
 		Component::Receiver& receiver,
 		const std::string& message
 	);
 
     static void ConfirmCoordinateCommand(
 		entt::registry& registry,
-		ResourceStore& resourceStore,
+		Nc::ResourceStore& resourceStore,
 		Component::Receiver& receiver
 	);
 

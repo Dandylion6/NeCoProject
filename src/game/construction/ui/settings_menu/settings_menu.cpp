@@ -22,7 +22,7 @@ void SettingsMenu::Build(
     GameState& gameState, 
     Nc::Vector2f windowSize, 
     entt::registry& registry, 
-    ResourceStore& resourceStore
+    Nc::ResourceStore& resourceStore
 ) 
 {
     Construct::SettingsHeaderEntity(registry);

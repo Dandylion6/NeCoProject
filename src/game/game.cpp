@@ -1,52 +1,52 @@
-#include "game/construction/shared/entity/environment/ambient_sound_entity.hpp"
-#include "game/construction/ui/shared/entity/move_transition_entity.hpp"
-#include "game/construction/ui/main_menu/main_menu.hpp"
-#include "game/construction/ui/restart_menu/restart_menu.hpp"
-#include "game/construction/scene/comms_scene/comms_scene.hpp"
+#include "core/data/vector2.hpp"
+#include "core/runtime/render_context.hpp"
+#include "entt/entity/fwd.hpp"
 #include "game/construction/scene/comms_desk_scene/comms_desk_scene.hpp"
+#include "game/construction/scene/comms_scene/comms_scene.hpp"
 #include "game/construction/scene/doorway_scene/doorway_scene.hpp"
 #include "game/construction/scene/outside_scene/outside_scene.hpp"
+#include "game/construction/shared/entity/environment/ambient_sound_entity.hpp"
+#include "game/construction/ui/main_menu/main_menu.hpp"
+#include "game/construction/ui/restart_menu/restart_menu.hpp"
 #include "game/construction/ui/settings_menu/settings_menu.hpp"
-#include "core/runtime/render_context.hpp"
-#include "game/save/save_settings.hpp"
+#include "game/construction/ui/shared/entity/move_transition_entity.hpp"
 #include "game/game.hpp"
+#include "game/save/save_settings.hpp"
 #include "game/state/game_state.hpp"
-#include "entt/entity/fwd.hpp"
-#include "raylib.h"
-#include "game/system/shared/anomaly/anomaly_attraction_system.hpp"
-#include "game/system/shared/anomaly/roamer/roamer_behaviour_system.hpp"
-#include "game/system/shared/anomaly/roamer/roamer_kill_system.hpp"
-#include "game/system/shared/anomaly/roamer/roamer_spawning_system.hpp"
+#include "game/system/core/audio/ambient_sound_system.hpp"
+#include "game/system/core/audio/sound_emitter_system.hpp"
 #include "game/system/core/interactive/button_action_system.hpp"
 #include "game/system/core/interactive/drag_action_system.hpp"
 #include "game/system/core/interactive/input_action_system.hpp"
 #include "game/system/core/rendering/lighting/lighting_system.hpp"
 #include "game/system/core/rendering/rendering_system.hpp"
-#include "game/system/core/audio/sound_emitter_system.hpp"
 #include "game/system/core/tween_system.hpp"
 #include "game/system/scene/comms_scene/morse_code/morse_monitor_display_system.hpp"
 #include "game/system/scene/comms_scene/morse_code/morse_sound_system.hpp"
 #include "game/system/scene/comms_scene/morse_code/morse_transceiver_system.hpp"
 #include "game/system/scene/comms_scene/radar/blip/blip_blink_system.hpp"
+#include "game/system/scene/comms_scene/radar/blip/blip_death_system.hpp"
 #include "game/system/scene/comms_scene/radar/blip/blip_glitch_system.hpp"
 #include "game/system/scene/comms_scene/radar/radar_artillery_system.hpp"
 #include "game/system/scene/comms_scene/radar/radar_render_system.hpp"
 #include "game/system/scene/comms_scene/radar/radar_stability_system.hpp"
 #include "game/system/scene/comms_scene/radio/radio_sound_system.hpp"
-#include "game/system/shared/mechanical/circuit_breaker_system.hpp"
-#include "game/system/shared/mechanical/lever_system.hpp"
-#include "game/system/shared/mechanical/machine_system.hpp"
-#include "game/system/scene/comms_scene/radar/blip/blip_death_system.hpp"
-#include "game/system/scene/outside_scene/artillery/projectile_hit_system.hpp"
 #include "game/system/scene/outside_scene/artillery/artillery_aiming_system.hpp"
+#include "game/system/scene/outside_scene/artillery/projectile_hit_system.hpp"
 #include "game/system/scene/outside_scene/receiver/fire_interpreting_system.hpp"
 #include "game/system/scene/outside_scene/receiver/recalibrate_interpreting_system.hpp"
 #include "game/system/scene/outside_scene/receiver/receiver_code_response_system.hpp"
 #include "game/system/scene/outside_scene/receiver/receiver_interpreting_system.hpp"
-#include "game/system/core/audio/ambient_sound_system.hpp"
+#include "game/system/shared/anomaly/anomaly_attraction_system.hpp"
+#include "game/system/shared/anomaly/roamer/roamer_behaviour_system.hpp"
+#include "game/system/shared/anomaly/roamer/roamer_kill_system.hpp"
+#include "game/system/shared/anomaly/roamer/roamer_spawning_system.hpp"
+#include "game/system/shared/mechanical/circuit_breaker_system.hpp"
+#include "game/system/shared/mechanical/lever_system.hpp"
+#include "game/system/shared/mechanical/machine_system.hpp"
 #include "game/system/ui/interactive/increment_number_system.hpp"
 #include "game/utility/color_palette.hpp"
-#include "core/data/vector2.hpp"
+#include "raylib.h"
 #include <cmath>
 
 #ifdef DEBUG_BUILD
@@ -143,8 +143,8 @@ void Game::SetupDebug(int args, char* argv[])
 void Game::BuildMenuUI()
 {
 	MainMenu::Build(*this, registry, gameState, resourceStore);
-	SettingsMenu::Build(settings, pendingSettings, gameState, renderContext.windowSize, registry, resourceStore);
-	RestartMenu::Build(*this, registry, gameState, resourceStore, renderContext.windowSize);
+	SettingsMenu::Build(settings, pendingSettings, gameState, Nc::Vector2f(renderContext.windowSize), registry, resourceStore);
+	RestartMenu::Build(*this, registry, gameState, resourceStore, Nc::Vector2f(renderContext.windowSize));
 
 #ifdef DEBUG_BUILD
  	if (!Game::debugContext.ignoreMainMenu) MainMenu::Open(registry, gameState);
@@ -310,7 +310,7 @@ void Game::DrawGame(float deltaTime)
 	BeginTextureMode(renderContext.renderTexture);
 	ClearBackground(BLANK);
 
-	Shader& shader = resourceStore.GetShader("assets/lighting.fs");
+	const Shader& shader = resourceStore.GetShader("assets/lighting.fs");
 	LightingSystem::Update(registry, renderContext.lightingContext, shader, gameState, cameraPosition, deltaTime);
 	RenderingSystem::DrawScreen(registry, renderContext, gameState, cameraPosition);
 	RadarRenderSystem::DrawRadar(
@@ -344,7 +344,7 @@ void Game::Death(entt::registry& registry, GameState& gameState)
 
 void Game::DrawRenderTexture() const
 {
-	Nc::Vector2f displaySize = Nc::RENDER_RESOLUTION;
+	Nc::Vector2f displaySize = Nc::Vector2f(Nc::RENDER_RESOLUTION);
 	Rectangle source { 0, 0, displaySize.x, -displaySize.y };
 
 	DrawTexturePro(

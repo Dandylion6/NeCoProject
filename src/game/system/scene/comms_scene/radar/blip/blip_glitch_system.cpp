@@ -1,16 +1,17 @@
-﻿#include "game/component/core/rendering/text_component.hpp"
-#include "game/component/core/transform_component.hpp"
-#include "game/component/scene/comms_scene/radar_components.hpp"
-#include "game/component/scene/comms_scene/blip_components.hpp"
-#include "entt/entity/fwd.hpp"
-#include "entt/entity/registry.hpp"
-#include "game/system/scene/comms_scene/radar/blip/blip_glitch_system.hpp"
+﻿#include "core/data/vector2.hpp"
 #include "core/math/interpolation.hpp"
 #include "core/math/random.hpp"
-#include "core/data/vector2.hpp"
+#include "core/math/vector_math.hpp"
+#include "entt/entity/fwd.hpp"
+#include "entt/entity/registry.hpp"
+#include "game/component/core/rendering/text_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/scene/comms_scene/blip_components.hpp"
+#include "game/component/scene/comms_scene/radar_components.hpp"
+#include "game/system/scene/comms_scene/radar/blip/blip_glitch_system.hpp"
+#include <cmath>
 #include <cstdint>
 #include <sstream>
-#include <cmath>
 
 
 void BlipGlitchSystem::Update(entt::registry& registry, float time, float deltaTime)
@@ -76,7 +77,7 @@ void BlipGlitchSystem::UpdateBlipTextStable(
 	const Component::Transform& transform, const Component::Blip& blip, Component::Text& text
 )
 {
-	Nc::Vector2i pixelPosition = transform.position.ToInt();
+	Nc::Vector2i pixelPosition = transform.position;
 	std::ostringstream stringStream;
 	stringStream << "(" << pixelPosition.x << " , " << pixelPosition.y << ")";
 	text.text = stringStream.str();
@@ -100,7 +101,7 @@ void BlipGlitchSystem::UpdateBlipTextJumble(
 	Component::Text& text = registry.get<Component::Text>(entity);
 	Component::BlipState::JumbledCoordindate& jumble = registry.get<Component::BlipState::JumbledCoordindate>(entity);
 
-	Nc::Vector2i pixelPosition = transform.position.ToInt();
+	Nc::Vector2i pixelPosition = transform.position;
 	Nc::Vector2i displayedPosition = pixelPosition;
 
 	if (jumble.flippedAxis)
@@ -128,7 +129,7 @@ void BlipGlitchSystem::UpdateBlipTextJumble(
 
 	float degradationScale = Nc::Math::Remap(STABILITY_RANGE, DEGREDATION_SCALE_RANGE, std::fmaxf(jumble.stability, Component::Radar::HEALTHY_LEVEL));
 	degradationScale = Nc::Math::SineInOut(degradationScale);
-	Nc::Vector2f range = Nc::Vector2f::Lerp(INTERVAL_HIGH_STABILITY, INTERVAL_LOW_STABILITY, degradationScale);
+	Nc::Vector2f range = Nc::Vector::Lerp(INTERVAL_HIGH_STABILITY, INTERVAL_LOW_STABILITY, degradationScale);
 
 	float randomValue = Nc::Random::Range(0.0f, 1.0f);
 	randomValue = Nc::Math::QuadIn(randomValue);

@@ -11,7 +11,7 @@
 
 
 bool DragActionSystem::Update(
-	entt::registry& registry, GameState& gameState, RenderContext& renderContext
+	entt::registry& registry, GameState& gameState, Nc::RenderContext& renderContext
 )
 {
 	bool clickReleased = IsMouseButtonReleased(MOUSE_BUTTON_LEFT);
@@ -49,7 +49,7 @@ bool DragActionSystem::Update(
 DragActionSystem::DragResult DragActionSystem::UpdateSceneDrag(
 	entt::registry& registry, 
 	GameState& gameState,
-	RenderContext& renderContext, 
+	Nc::RenderContext& renderContext, 
 	const entt::entity entity, 
 	Component::DragAction& drag
 )

@@ -1,12 +1,13 @@
-#include "game/component/shared/anomaly/roamer/anomaly_roamer_component.hpp"
-#include "game/component/shared/anomaly/roamer/strider_component.hpp"
-#include "game/component/core/transform_component.hpp"
+#include "core/data/vector2.hpp"
+#include "core/math/random.hpp"
+#include "core/math/vector_math.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/shared/anomaly/roamer/anomaly_roamer_component.hpp"
+#include "game/component/shared/anomaly/roamer/strider_component.hpp"
 #include "game/system/shared/anomaly/roamer/behaviour/strider_behaviour_system.hpp"
 #include "game/system/shared/anomaly/roamer/roamer_behaviour_system.hpp"
-#include "core/math/random.hpp"
-#include "core/data/vector2.hpp"
 
 
 void StriderBehaviourSystem::Spawn(
@@ -31,6 +32,6 @@ void StriderBehaviourSystem::Update(
 	const Component::Anomaly::Strider& strider = registry.get<Component::Anomaly::Strider>(entity);
 
 	Nc::Vector2f difference = targetPosition - transform.position;
-	Nc::Vector2f direction = difference.Normalized();
+	Nc::Vector2f direction = Nc::Vector::Normalized(difference);
 	transform.position += direction * strider.moveSpeed * deltaTime;
 }

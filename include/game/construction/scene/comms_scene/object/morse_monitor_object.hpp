@@ -2,7 +2,7 @@
 #include "game/component/scene/comms_scene/morse_components.hpp"
 #include "entt/entity/fwd.hpp"
 #include "core/data/vector2.hpp"
-class ResourceStore;
+namespace Nc { class ResourceStore; };
 
 
 namespace MorseMonitor
@@ -15,7 +15,7 @@ namespace MorseMonitor
 namespace Construct
 {
 	void MorseMonitorObject(
-		entt::registry& registry, ResourceStore& resourceStore
+		entt::registry& registry, Nc::ResourceStore& resourceStore
 	);
 
 	const entt::entity MorseMonitorPointerEntity(entt::registry& registry);

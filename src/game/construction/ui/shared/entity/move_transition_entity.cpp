@@ -57,19 +57,21 @@ void MoveTransition::InstantTransition(
 
 const entt::entity Construct::MoveTransitionEntity(
 	entt::registry& registry, 
-	RenderContext& renderContext,
+	Nc::RenderContext& renderContext,
 	GameState& gameState
 )
 {
+
 	const entt::entity entity = registry.create();
 
-	registry.emplace<Component::Rectangle>(entity, Palette::BACKGROUND_COLOR);
+	Nc::Vector2f size = Nc::Vector2f(renderContext.windowSize);
 	Component::UI::Transform& transform = registry.emplace<Component::UI::Transform>(
 		entity,
 		Nc::Vector2f::Zero(),
 		Nc::Vector2f::Up(),
-		renderContext.windowSize
+		size
 	);
+	registry.emplace<Component::Rectangle>(entity, Palette::BACKGROUND_COLOR);
 
 	//Construct transition tweening
 	registry.emplace<Tag::MoveTransition>(entity);

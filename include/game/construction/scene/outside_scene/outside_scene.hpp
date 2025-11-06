@@ -1,7 +1,7 @@
 #pragma once
 #include "entt/entity/fwd.hpp"
 struct GameState;
-class ResourceStore;
+namespace Nc { class ResourceStore; };
 
 
 namespace OutsideScene
@@ -9,6 +9,6 @@ namespace OutsideScene
 	void Build(
 		entt::registry& registry,
 		GameState& gameState,
-		ResourceStore& resourceStore
+		Nc::ResourceStore& resourceStore
 	);
 }

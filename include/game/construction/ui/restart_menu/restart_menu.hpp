@@ -1,16 +1,20 @@
 #pragma once
-#include "entt/entity/fwd.hpp"
 #include "core/data/vector2.hpp"
+#include "entt/entity/fwd.hpp"
 class Game;
 struct GameState;
-class ResourceStore;
+namespace Nc { class ResourceStore; };
 struct SaveContext;
 
 
 namespace RestartMenu
 {
 	void Build(
-		Game& game, entt::registry& registry, GameState& gameState, ResourceStore& resourceStore, Nc::Vector2f windowSize
+		Game& game, 
+		entt::registry& registry, 
+		GameState& gameState, 
+		Nc::ResourceStore& resourceStore, 
+		Nc::Vector2f windowSize
 	);
 
 	void Open(entt::registry& registry, GameState& gameState);

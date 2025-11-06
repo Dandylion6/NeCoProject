@@ -1,18 +1,23 @@
+#include "core/data/vector2.hpp"
+#include "core/runtime/resource_store.hpp"
+#include "core/runtime/resource_store.hpp"
+#include "entt/entity/fwd.hpp"
+#include "entt/entity/registry.hpp"
+#include "game/component/core/transform_component.hpp"
 #include "game/construction/ui/restart_menu/entity/restart_background_entity.hpp"
 #include "game/construction/ui/restart_menu/object/restart_button_objects.hpp"
 #include "game/construction/ui/restart_menu/restart_menu.hpp"
-#include "game/component/core/transform_component.hpp"
-#include "game/tag/ui/restart_menu_tag.hpp"
 #include "game/game.hpp"
-#include "core/runtime/resource_store.hpp"
 #include "game/state/game_state.hpp"
-#include "entt/entity/fwd.hpp"
-#include "entt/entity/registry.hpp"
-#include "core/data/vector2.hpp"
+#include "game/tag/ui/restart_menu_tag.hpp"
 
 
 void RestartMenu::Build(
-	Game& game, entt::registry& registry, GameState& gameState, ResourceStore& resourceStore, Nc::Vector2f windowSize
+	Game& game, 
+	entt::registry& registry, 
+	GameState& gameState, 
+	Nc::ResourceStore& resourceStore, 
+	Nc::Vector2f windowSize
 )
 {
 	Construct::RestartMenuBackgroundEntity(registry, resourceStore, windowSize);

@@ -20,7 +20,7 @@ const std::string FireInterpretingSystem::COMMAND = "FIRE";
 
 void FireInterpretingSystem::HandleReceivedMessage(
 	entt::registry& registry,
-	ResourceStore& resourceStore,
+	Nc::ResourceStore& resourceStore,
 	Component::Receiver& receiver,
 	const std::string& message
 )
@@ -47,7 +47,7 @@ void FireInterpretingSystem::HandleReceivedMessage(
 
 void FireInterpretingSystem::Update(
 	entt::registry& registry,
-	ResourceStore& resourceStore,
+	Nc::ResourceStore& resourceStore,
 	float deltaTime
 )
 {

@@ -46,7 +46,7 @@ const entt::entity Construct::SettingsBackgroundEntity(
     const entt::entity entity = registry.create();
 
     Texture2D texture = LoadTexture("assets/environment/backgrounds/main_menu.png");
-	Nc::Vector2i size = Nc::Vector2i(texture.width, texture.height);
+	Nc::Vector2f size = Nc::Vector2f(texture.width, texture.height);
 	Nc::Vector2f center = Nc::Vector2f::Scale(0.5f);
 
 	registry.emplace<Tag::DontDestroyOnLoad>(entity);

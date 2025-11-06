@@ -1,10 +1,10 @@
 #pragma once
+#include "core/data/color.hpp"
+#include "core/data/vector2.hpp"
 #include "game/component/core/rendering/sprite_component.hpp"
 #include "game/component/core/rendering/text_component.hpp"
 #include "game/state/scene.hpp"
-#include "core/data/color.hpp"
-#include "core/data/vector2.hpp"
-class ResourceStore;
+namespace Nc { class ResourceStore; };
 
 
 namespace Renderer
@@ -31,8 +31,8 @@ namespace Renderer
 		const Component::Text& text,
 		Nc::Vector2f position,
 		Nc::Vector2f offset,
-		ResourceStore& resourceStore
+		Nc::ResourceStore& resourceStore
 	);
 
-	Nc::Vector2f GetTextOffset(const Component::Text& text, ResourceStore& resourceStore);
+	Nc::Vector2f GetTextOffset(const Component::Text& text, Nc::ResourceStore& resourceStore);
 }

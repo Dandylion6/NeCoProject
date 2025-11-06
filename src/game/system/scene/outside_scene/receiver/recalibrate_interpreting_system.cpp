@@ -17,7 +17,7 @@ const std::string RecalibrateInterpretingSystem::COMMAND = "OPTSIG";
 
 
 void RecalibrateInterpretingSystem::HandleReceivedMessage(
-	entt::registry& registry, ResourceStore& resourceStore, Component::Receiver& receiver, const std::string& message
+	entt::registry& registry, Nc::ResourceStore& resourceStore, Component::Receiver& receiver, const std::string& message
 )
 {
 	auto view = registry.view<Component::Radar, Component::Toggle>();
@@ -64,7 +64,7 @@ void RecalibrateInterpretingSystem::Update(entt::registry& registry, float delta
 
 
 void RecalibrateInterpretingSystem::ConfirmRecalibrationCommand(
-	entt::registry& registry, ResourceStore& resourceStore, Component::Receiver& receiver
+	entt::registry& registry, Nc::ResourceStore& resourceStore, Component::Receiver& receiver
 )
 {
 	// TODO: Add response

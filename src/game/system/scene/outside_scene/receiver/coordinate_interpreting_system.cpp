@@ -13,7 +13,7 @@
 
 CoordResult CoordinateInterpretingSystem::InterpretMessageAsCoord(
     entt::registry& registry, 
-    ResourceStore& resourceStore, 
+    Nc::ResourceStore& resourceStore, 
     Component::Receiver& receiver,
     const std::string& message
 )
@@ -64,7 +64,7 @@ CoordResult CoordinateInterpretingSystem::InterpretMessageAsCoord(
 
 void CoordinateInterpretingSystem::ConfirmCoordinateCommand(
 	entt::registry& registry,
-	ResourceStore& resourceStore,
+	Nc::ResourceStore& resourceStore,
 	Component::Receiver& receiver
 )
 {

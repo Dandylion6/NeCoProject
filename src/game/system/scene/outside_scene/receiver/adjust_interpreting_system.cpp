@@ -11,7 +11,7 @@ const std::string AdjustInterpretingSystem::COMMAND = "ADJ";
 
 void AdjustInterpretingSystem::HandleReceivedMessage(
 	entt::registry& registry,
-	ResourceStore& resourceStore,
+	Nc::ResourceStore& resourceStore,
 	Component::Receiver& receiver,
 	const std::string& message
 )
@@ -33,7 +33,7 @@ void AdjustInterpretingSystem::HandleReceivedMessage(
 
 void AdjustInterpretingSystem::ConfirmAdjustCommand(
 	entt::registry& registry, 
-	ResourceStore& resourceStore, 
+	Nc::ResourceStore& resourceStore, 
 	Component::Receiver& receiver
 )
 {

@@ -1,9 +1,10 @@
-#include "game/component/scene/outside_scene/artillery_component.hpp"
+#include "core/data/vector2.hpp"
+#include "core/math/interpolation.hpp"
+#include "core/math/vector_math.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
+#include "game/component/scene/outside_scene/artillery_component.hpp"
 #include "game/system/scene/outside_scene/artillery/artillery_aiming_system.hpp"
-#include "core/math/interpolation.hpp"
-#include "core/data/vector2.hpp"
 
 
 void ArtilleryAimingSystem::Update(
@@ -25,7 +26,8 @@ void ArtilleryAimingSystem::Update(
 		artillery.aimPosition.y = Nc::Math::SmoothApproach(artillery.aimPosition.y, targetPosition.y, deltaTime, 0.4f);
 
 		Nc::Vector2f difference = artillery.aimPosition - artillery.targetPosition;
-		if (difference.GetSqrDistance() > 0.1f) continue;
+		float sqrDistance = Nc::Vector::SqrDistanceOf(artillery.aimPosition, artillery.targetPosition);
+		if (sqrDistance > 0.1f) continue;
 
 		artillery.aimPosition = artillery.targetPosition;
 		artillery.isReadyToFire = true;

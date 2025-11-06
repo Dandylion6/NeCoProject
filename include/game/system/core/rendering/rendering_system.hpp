@@ -6,7 +6,7 @@
 #include "core/data/vector2.hpp"
 struct GameState;
 namespace Nc { struct RenderContext; };
-class ResourceStore;
+namespace Nc { class ResourceStore; };
 
 
 class RenderingSystem
@@ -14,15 +14,15 @@ class RenderingSystem
 public:
 	static void DrawScreen(
 		entt::registry& registry,
-		RenderContext& renderContext,
+		Nc::RenderContext& renderContext,
 		GameState& gameState,
 		Nc::Vector2f cameraPosition
 	);
 
 	static void DrawUi(
 		entt::registry& registry,
-		ResourceStore& resourceStore,
-		RenderContext& renderContext,
+		Nc::ResourceStore& resourceStore,
+		Nc::RenderContext& renderContext,
 		GameState& gameState
 	);
 

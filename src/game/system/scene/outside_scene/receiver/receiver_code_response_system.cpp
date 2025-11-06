@@ -14,7 +14,7 @@
 
 
 void ReceiverCodeResponseSystem::Update(
-	entt::registry& registry, ResourceStore& resourceStore
+	entt::registry& registry, Nc::ResourceStore& resourceStore
 )
 {
 	auto view = registry.view<Component::Receiver>();
@@ -39,7 +39,7 @@ void ReceiverCodeResponseSystem::Update(
 void ReceiverCodeResponseSystem::RespondToCharacterCode(
 	entt::registry& registry,
 	Component::Receiver& receiver, 
-	ResourceStore& resourceStore
+	Nc::ResourceStore& resourceStore
 )
 {
 	constexpr std::string_view FORMAT = "assets/audio/voicelines/receiver/{}_received.wav";

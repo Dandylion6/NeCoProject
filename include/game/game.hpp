@@ -1,10 +1,10 @@
  #pragma once
 #include "core/runtime/render_context.hpp"
-#include "game/state/settings.hpp"
 #include "core/runtime/resource_store.hpp"
-#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp" 
+#include "game/state/game_state.hpp"
+#include "game/state/settings.hpp"
 
 #ifdef DEBUG_BUILD
 #include "game/debug/debug_context.hpp"
@@ -43,8 +43,8 @@ public:
 
 private:
 	entt::registry registry { };
-	ResourceStore resourceStore { };
-	RenderContext renderContext { };
+	Nc::ResourceStore resourceStore { };
+	Nc::RenderContext renderContext { };
 	GameState gameState { };
 	Settings settings { };
 	Settings pendingSettings { };
