@@ -11,6 +11,7 @@
 #include "entt/entity/registry.hpp"
 #include "nlohmann/json.hpp"
 #include "nlohmann/json_fwd.hpp"
+#include "systems/object/interactive/lever_system.hpp"
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
@@ -102,6 +103,13 @@ namespace Save
                 Component::Radar& radar = registry.get<Component::Radar>(entity);
                 radar.stability = entityData["radar_stability"];
                 radar.recalibrationTimeLeft = entityData["radar_recalibration_time"];
+            }
+
+            // Changes lever to reflect it's toggle state
+            if (registry.any_of<Component::Lever>(entity))
+            {
+                Component::Lever& lever = registry.get<Component::Lever>(entity);
+                lever.currentHeight = LeverSystem::GetHeightTarget(toggle.state, lever);
             }
         }
         return LoadResult::Success;

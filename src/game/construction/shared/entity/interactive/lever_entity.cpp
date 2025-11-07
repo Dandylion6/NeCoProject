@@ -28,6 +28,7 @@ Assembled::LeverData Construct::LeverEntity(
     registry.emplace<Component::Action::Toggle>(entity, Disabled);
 
     Component::Lever& lever = registry.emplace<Component::Lever>(entity, heightRange, std::move(movingAudioFile), std::move(switchedAudioFile));
+    lever.currentHeight = heightRange.x;
     return { lever, entity };
 }
 
@@ -60,6 +61,8 @@ Assembled::LeverData Construct::LeverEntity(
     Nc::Vector2f center = Nc::Bounds::CenterOf(Nc::Bounds(transform));
     Nc::Vector2f heightRange = Nc::Vector2f(center.y - moveRange, center.y + moveRange);
     
+    // The lever defaults to being on.
+    transform.position.y = heightRange.x;
     registry.emplace<Component::Transform>(entity, std::move(transform));
     
     return Construct::LeverEntity(registry, entity, heightRange, std::move(handleTexture), std::move(movingAudioFile), std::move(switchedAudioFile));
@@ -79,7 +82,9 @@ Assembled::LeverData Construct::LeverEntity(
     Nc::Vector2f center = Nc::Bounds::CenterOf(Nc::Bounds(transform));
     Nc::Vector2f heightRange = Nc::Vector2f(center.y - moveRange, center.y + moveRange);
 
-    registry.emplace<Component::Transform>(entity, std::move(transform));
+    // The lever defaults to being on.
+    transform.position.y = heightRange.x;
 
+    registry.emplace<Component::Transform>(entity, std::move(transform));
     return Construct::LeverEntity(registry, entity, heightRange, std::move(movingAudioFile), std::move(switchedAudioFile));
 }

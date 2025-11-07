@@ -32,6 +32,17 @@ void LeverSystem::Update(entt::registry &registry, float deltaTime) noexcept
 }
 
 
+float LeverSystem::GetHeightTarget(const Component::Toggle& toggle, const Component::Lever& lever) noexcept
+{
+    switch (toggle.state)
+    {
+    case On: return lever.heightRange.x;
+    default: return lever.heightRange.y;
+    }
+    return lever.heightRange.y;
+}
+
+
 ToggleState LeverSystem::GetToggleState(
     const Component::Action::Toggle& toggle, 
     const Component::Lever& lever, 

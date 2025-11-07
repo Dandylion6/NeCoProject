@@ -171,9 +171,9 @@ bool RadarStabilitySystem::ShouldBlipGlitch(
 
 float RadarStabilitySystem::GetDegradationValue(float attractionPercentage) noexcept
 {
-	// @brief The maximum duration going from 100% to 0% stability in minutes.
+	/// @brief The maximum duration going from 100% to 0% stability in minutes.
 	constexpr float MAX_DECAY_DURATION_MINUTES = 29.0f;
-	// @brief The minimum duration going from 100% to 0% stability in minutes.
+	/// @brief The minimum duration going from 100% to 0% stability in minutes.
 	constexpr float MIN_DECAY_DURATION_MINUTES = 5.6f;
 
 	constexpr float MAX_DECAY_RATE = 100.0f / MAX_DECAY_DURATION_MINUTES;
@@ -215,9 +215,9 @@ void RadarStabilitySystem::GlitchBlip(
 
 void RadarStabilitySystem::SetRandomGlitchSpawnInterval(Component::Radar& machine) noexcept
 {
-	// @brief The base interval range for new glitches to appear. Measured in minutes.
+	/// @brief The base interval range for new glitches to appear. Measured in minutes.
 	constexpr Nc::Vector2f BASE_GLITCH_SPAWN_RANGE = Nc::Vector2f(0.8f, 1.6f);
-	// @brief How much the degradation affects the spawn interval.
+	/// @brief How much the degradation affects the spawn interval.
 	constexpr float DEGRADATION_AFFECT_SCALE = 0.7f;
 
 	float minutesToNextGlitch = Nc::Random::Range(BASE_GLITCH_SPAWN_RANGE.x, BASE_GLITCH_SPAWN_RANGE.y);
