@@ -4,7 +4,7 @@
 #include "raylib.h"
 
 
-// ────── Constructors ──────
+// ------ Constructors ------
 
 Nc::Bounds::Bounds(const Component::Transform& transform) noexcept
 {
@@ -27,7 +27,7 @@ Nc::Bounds::Bounds(
 }
 
 
-// ────── Utility ──────
+// ------ Utility ------
 
 bool Nc::Bounds::PointInBounds(
 	const Bounds bounds, 

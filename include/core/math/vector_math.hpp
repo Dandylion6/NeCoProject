@@ -1,21 +1,25 @@
 #pragma once
-#include "core/math/interpolation.hpp"
 #include "core/data/vector2.hpp"
+#include "core/math/interpolation.hpp"
 #include <cmath>
 
 
 namespace Nc::Vector
 {
-
 /**
  * @brief Rounds both components of a vector to the nearest integer.
  * 
  * @param vector Input vector.
  * @return Rounded vector.
  */
-static Nc::Vector2f Round(const Nc::Vector2f vector) noexcept
+static Nc::Vector2f Round(
+	const Nc::Vector2f vector
+) noexcept
 {
-	return Nc::Vector2f(std::roundf(vector.x), std::roundf(vector.y));
+	return Nc::Vector2f(
+		std::roundf(vector.x), 
+		std::roundf(vector.y)
+	);
 }
 
 
@@ -89,7 +93,9 @@ static float MaxOf(const Nc::Vector2f vector) noexcept { return std::fmaxf(vecto
  * @param vector Input vector.
  * @return Squared magnitude of the vector.
  */
-static constexpr float SqrMagnitudeOf(const Nc::Vector2f vector) noexcept 
+static constexpr float SqrMagnitudeOf(
+	const Nc::Vector2f vector
+) noexcept 
 {
 	return vector.x * vector.x + vector.y * vector.y; 
 };
@@ -111,7 +117,10 @@ static float MagnitudeOf(const Nc::Vector2f vector) noexcept { return std::sqrtf
  * @param vector2 Second vector.
  * @return Distance between the two.
  */
-static float DistanceOf(const Nc::Vector2f vector1, const Nc::Vector2f vector2) noexcept
+static float DistanceOf(
+	const Nc::Vector2f vector1, 
+	const Nc::Vector2f vector2
+) noexcept
 {
 	return MagnitudeOf(vector1 - vector2);
 }
@@ -124,7 +133,10 @@ static float DistanceOf(const Nc::Vector2f vector1, const Nc::Vector2f vector2) 
  * @param vector2 Second vector.
  * @return Squared distance between the two.
  */
-static constexpr float SqrDistanceOf(const Nc::Vector2f vector1, const Nc::Vector2f vector2) noexcept
+static constexpr float SqrDistanceOf(
+	const Nc::Vector2f vector1, 
+	const Nc::Vector2f vector2
+) noexcept
 {
 	return SqrMagnitudeOf(vector1 - vector2);
 }

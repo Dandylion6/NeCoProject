@@ -20,7 +20,7 @@ void RecalibrateInterpretingSystem::HandleReceivedMessage(
 	entt::registry& registry, Nc::ResourceStore& resourceStore, Component::Receiver& receiver, const std::string& message
 )
 {
-	auto view = registry.view<Component::Radar, Component::Toggle>();
+	auto view = registry.view<Component::Radar, Component::Action::Toggle>();
 	for (auto [entity, radar, toggle] : view.each())
 	{
 		if (toggle.state == Disabled)
@@ -49,7 +49,7 @@ void RecalibrateInterpretingSystem::HandleReceivedMessage(
 
 void RecalibrateInterpretingSystem::Update(entt::registry& registry, float deltaTime)
 {
-	auto view = registry.view<Component::Radar, Component::Toggle>();
+	auto view = registry.view<Component::Radar, Component::Action::Toggle>();
 	for (auto [entity, radar, toggle] : view.each())
 	{
 		if (!radar.isRecalibrating) continue;
@@ -77,7 +77,7 @@ void RecalibrateInterpretingSystem::ConfirmRecalibrationCommand(
 }
 
 
-void RecalibrateInterpretingSystem::RecalibrationCompleted(Component::Radar& radar, Component::Toggle& toggle)
+void RecalibrateInterpretingSystem::RecalibrationCompleted(Component::Radar& radar, Component::Action::Toggle& toggle)
 {
 	// The amount of stability the radar machine regains after a successful recalibration.
 	constexpr float STABILITY_INCREASE = 18.0f;

@@ -1,7 +1,7 @@
 #pragma once
 #include "raylib.h"
-#include <cstdint>
 #include <cmath>
+#include <cstdint>
 
 
 namespace Nc
@@ -17,7 +17,7 @@ namespace Nc
  */
 struct RGBa final
 {
-	// ────── Members ──────
+	// ------ Members ------
 
 	uint8_t red = 0xff;
 	uint8_t green = 0xff;
@@ -25,7 +25,7 @@ struct RGBa final
 	uint8_t alpha = 0xff;
 
 	
-	// ────── Constructors ──────
+	// ------ Constructors ------
 
 	constexpr RGBa() = default;
 	constexpr RGBa(
@@ -56,7 +56,7 @@ struct RGBa final
 	}
 
 
-	// ────── Conversion ──────
+	// ------ Conversion ------
 
 	constexpr operator Color() const noexcept
 	{
@@ -70,7 +70,7 @@ struct RGBa final
 	}
 
 
-	// ────── Utility ──────
+	// ------ Utility ------
 	
 	/**
 	 * @brief Converts 8-bit RGBA values to a normalized float Vector4.
@@ -82,7 +82,9 @@ struct RGBa final
 	 * @param rgba is the source RGBa color (8-bit per channel).
 	 * @return Vector4 containing normalized RGBA values.
 	 */
-	static constexpr Vector4 FloatFrom(const RGBa rgba) noexcept
+	static constexpr Vector4 FloatFrom(
+		const RGBa rgba
+	) noexcept
 	{
 		return {
 			rgba.red / 255.0f, 
@@ -120,12 +122,12 @@ namespace Nc
  */
 struct Hex final
 {
-	// ────── Members ──────
+	// ------ Members ------
 
 	uint32_t hex = 0xffffffff;
 
 
-	// ────── Constructors ──────
+	// ------ Constructors ------
 
 	constexpr Hex() noexcept = default;
 	constexpr Hex(int hex) noexcept : hex(static_cast<uint32_t>(hex)) { };
@@ -149,7 +151,7 @@ struct Hex final
 	}
 
 
-	// ────── Conversion ──────
+	// ------ Conversion ------
 
 	constexpr operator Color() const noexcept { return RGBa(hex); }
 	constexpr operator RGBa() const noexcept { return RGBa(hex); }

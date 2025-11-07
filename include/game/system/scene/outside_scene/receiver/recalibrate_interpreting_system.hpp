@@ -19,6 +19,6 @@ public:
 
 private:
 	static void ConfirmRecalibrationCommand(entt::registry& registry, Nc::ResourceStore& resourceStore, Component::Receiver& receiver);
-	static void RecalibrationCompleted(Component::Radar& radar, Component::Toggle& toggle);
+	static void RecalibrationCompleted(Component::Radar& radar, Component::Action::Toggle& toggle);
 
 };

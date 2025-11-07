@@ -1,7 +1,6 @@
 #pragma once
 #include "core/data/font.hpp"
 #include "raylib.h"
-#include <cstdint>
 #include <string>
 #include <unordered_map>
 
@@ -52,7 +51,9 @@ public:
 	 * @param filePath Path to the music file.
 	 * @return Const reference to the cached Music instance.
 	 */
-	const ::Font& GetFont(Nc::Font::Style style, Nc::Font::Size fontSize);
+	const ::Font& GetFont(
+		Nc::Font::Style style, Nc::Font::Size fontSize
+	);
 
 	/**
 	 * @brief Retrieves or loads a sound effect by file path.

@@ -52,9 +52,9 @@ namespace SettingsMenu
         auto view = registry.view<const Tag::Settings, Component::UI::Transform>();
         for (auto [entity, transform] : view.each())
         {
-            if (registry.any_of<Component::Toggle>(entity))
+            if (registry.any_of<Component::Action::Toggle>(entity))
             {
-                Component::Toggle& toggle = registry.get<Component::Toggle>(entity);
+                Component::Action::Toggle& toggle = registry.get<Component::Action::Toggle>(entity);
                 toggle.state = state;
             }
             transform.isVisible = state == On;
@@ -87,10 +87,10 @@ void SettingsMenu::Close(Settings& settings, Settings& pendingSettings, entt::re
 
 void SettingsMenu::Toggle(entt::registry& registry, GameState& gameState)
 {
-    auto view = registry.view<const Tag::Settings, Component::Toggle>();
+    auto view = registry.view<const Tag::Settings, Component::Action::Toggle>();
 	for (auto [settingsEntity, toggle] : view.each())
 	{
         if (gameState.currentScene != NullScene)
-		    SettingsMenu::Toggle(registry, gameState, ToggleLogic::Next(toggle.state));
+		    SettingsMenu::Toggle(registry, gameState, Component::Action::Toggle::Next(toggle.state));
 	}
 }

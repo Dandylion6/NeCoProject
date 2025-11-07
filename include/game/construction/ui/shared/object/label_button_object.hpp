@@ -1,5 +1,5 @@
 #pragma once
-#include "game/component/core/interactive/button_action_component.hpp"
+#include "game/component/core/interactive/click_action_component.hpp"
 #include "game/component/core/rendering/rectangle_component.hpp"
 #include "game/component/core/rendering/text_component.hpp"
 #include "game/component/core/transform_component.hpp"
@@ -48,7 +48,7 @@ namespace Construct
 
         registry.emplace<Component::UI::Transform>(entity, std::move(transform));
         registry.emplace<Component::Rectangle>(entity, Palette::BACKGROUND_COLOR);
-        registry.emplace<Component::ButtonAction>(entity, std::move(onClick));
+        registry.emplace<Component::Action::Click>(entity, std::move(onClick));
 
         return entity;
     };

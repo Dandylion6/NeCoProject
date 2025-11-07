@@ -17,7 +17,7 @@ public:
 private:
     static void UpdateDischarge(
         Component::CircuitBreaker& breaker,
-        Component::Toggle& breakerToggle,
+        Component::Action::Toggle& breakerToggle,
         float deltaTime,
         bool isReadyToRestart
     ) noexcept;
@@ -26,8 +26,8 @@ private:
         entt::registry& registry,
         AnomalyState& anomalyState,
         Component::CircuitBreaker& breaker,
-        Component::Toggle& breakerToggle,
-        Component::Toggle& systemToggle,
+        Component::Action::Toggle& breakerToggle,
+        Component::Action::Toggle& systemToggle,
         bool isReadyToRestart,
         float deltaTime
     ) noexcept;
@@ -40,8 +40,8 @@ private:
 
     static void UpdateNormalOperations(
         Component::CircuitBreaker& breaker,
-        const Component::Toggle& breakerToggle,
-        Component::Toggle& systemToggle
+        const Component::Action::Toggle& breakerToggle,
+        Component::Action::Toggle& systemToggle
     ) noexcept;
 
     static void UpdateIndicator(

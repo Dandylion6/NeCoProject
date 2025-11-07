@@ -19,7 +19,7 @@ enum Easing : uint16_t
 
 struct Tween final
 {
-	// ────── Members ──────
+	// ------ Members ------
 
 	// TODO: Use entt delegates instead.
 	std::function<void()> onComplete { };
@@ -33,7 +33,7 @@ struct Tween final
 	bool isPlaying = false;
 
 
-	// ────── Constructors ──────
+	// ------ Constructors ------
 
 	Tween() = default;
 	Tween(
@@ -53,9 +53,11 @@ struct Tween final
 	{ };
 
 
-	// ────── Utility ──────
+	// ------ Utility ------
 
-	static constexpr float GetEasing(Easing easing, float value) noexcept
+	static constexpr float GetEasing(
+		Easing easing, float value
+	) noexcept
 	{
 		switch (easing)
 		{

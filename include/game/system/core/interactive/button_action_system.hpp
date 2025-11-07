@@ -5,7 +5,7 @@ struct GameState;
 namespace Nc { struct RenderContext; };
 
 
-class ButtonActionSystem
+class ClickSystem
 {
 public:
 	static bool Update(entt::registry& registry, GameState& gameState, Nc::RenderContext& renderContext);

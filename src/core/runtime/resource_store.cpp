@@ -1,6 +1,7 @@
 #include "core/data/font.hpp"
 #include "core/runtime/resource_store.hpp"
 #include "raylib.h"
+#include <cstdint>
 #include <string>
 #include <utility>
 
@@ -50,9 +51,7 @@ const ::Font& ResourceStore::GetFont(Nc::Font::Style style, Nc::Font::Size fontS
         default: 
             break;
         }
-
-        int32_t fontSize = static_cast<int32_t>(fontSize);
-        fontStore.emplace(key, LoadFontEx(filePath.c_str(), fontSize, nullptr, 0));
+        fontStore.emplace(key, LoadFontEx(filePath.c_str(), static_cast<int32_t>(fontSize), nullptr, 0));
     }
     return fontStore.at(key);
 }

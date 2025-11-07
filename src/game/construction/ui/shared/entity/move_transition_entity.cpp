@@ -1,5 +1,5 @@
 #include "game/construction/ui/shared/entity/move_transition_entity.hpp"
-#include "game/component/core/interactive/button_action_component.hpp"
+#include "game/component/core/interactive/click_action_component.hpp"
 #include "game/component/core/rendering/rectangle_component.hpp"
 #include "game/component/core/transform_component.hpp"
 #include "game/component/core/tween_component.hpp"
@@ -24,7 +24,7 @@ void MoveTransition::StartMoveScene(
 	Component::TweenCollection& collection = registry.get<Component::TweenCollection>(entity);
 	collection.tweens.at(MoveTransition::Tweens::TransitionDown).delayComplete = moveTime;
 	
-	auto view = registry.view<Tag::MoveRegion, Component::ButtonAction>();
+	auto view = registry.view<Tag::MoveRegion, Component::Action::Click>();
 	for (auto [entity, button] : view.each()) button.isActive = false;
 
 	std::function<void()> switchScene = [&collection, &gameState, nextScene]()
@@ -95,7 +95,7 @@ const entt::entity Construct::MoveTransitionEntity(
 	tweenUp.easing = CubicOut;
 	tweenUp.onComplete = [&registry]()
 	{
-		auto view = registry.view<Tag::MoveRegion, Component::ButtonAction>();
+		auto view = registry.view<Tag::MoveRegion, Component::Action::Click>();
 		for (auto [entity, button] : view.each()) button.isActive = true;
 	};
 

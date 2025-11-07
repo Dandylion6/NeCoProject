@@ -13,12 +13,12 @@ public:
 
 private:
     static ToggleState GetToggleState(
-        const Component::Toggle& toggle, 
+        const Component::Action::Toggle& toggle, 
         const Component::Lever& lever, 
         bool isHeld
     ) noexcept;
 
     static float GetHeightTarget(
-        const Component::Toggle& toggle, const Component::Lever& lever
+        const Component::Action::Toggle& toggle, const Component::Lever& lever
     ) noexcept;
 };

@@ -1,7 +1,6 @@
 #pragma once
 #include "core/data/vector2.hpp"
 #include "raylib.h"
-
 namespace Component { struct Transform; }
 namespace Component::UI { struct Transform; }
 
@@ -16,13 +15,13 @@ namespace Nc
  */
 struct Bounds final
 {
-	// ────── Members ──────
+	// ------ Members ------
 
 	Nc::Vector2f min = Nc::Vector2f::Zero();
 	Nc::Vector2f max = Nc::Vector2f::Zero();
 
 
-	// ────── Constructors ──────
+	// ------ Constructors ------
 
 	constexpr Bounds() = default;
 	Bounds(const Component::Transform& transform) noexcept;
@@ -41,12 +40,16 @@ struct Bounds final
 		max(Nc::Vector2f(maxX, maxY)) 
 	{ };
 
-	constexpr Bounds(Nc::Vector2f min, Nc::Vector2f max) noexcept : 
-		min(min), max(max) 
+	constexpr Bounds(
+		Nc::Vector2f min, 
+		Nc::Vector2f max
+	) noexcept : 
+		min(min), 
+		max(max) 
 	{ };
 
 
-	// ────── Conversion ──────
+	// ------ Conversion ------
 
 	constexpr operator Rectangle() const noexcept
 	{
@@ -60,7 +63,7 @@ struct Bounds final
 	}
 
 
-	// ────── Utility ──────
+	// ------ Utility ------
 
 	/**
 	 * @brief Get the size (width and height) of the bounds.

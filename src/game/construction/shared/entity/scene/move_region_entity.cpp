@@ -3,7 +3,7 @@
 #include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "game/component/core/interactive/button_action_component.hpp"
+#include "game/component/core/interactive/click_action_component.hpp"
 #include "game/component/core/transform_component.hpp"
 #include "game/construction/shared/entity/scene/move_region_entity.hpp"
 #include "game/construction/ui/shared/entity/move_transition_entity.hpp"
@@ -38,7 +38,7 @@ entt::entity Construct::MoveRegionEntity(
 
 		};
 
-	registry.emplace<Component::ButtonAction>(entity, std::move(onClick));
+	registry.emplace<Component::Action::Click>(entity, std::move(onClick));
 	return entity;
 }
 

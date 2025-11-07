@@ -17,7 +17,7 @@ bool DragActionSystem::Update(
 	bool clickReleased = IsMouseButtonReleased(MOUSE_BUTTON_LEFT);
 
 	bool isHovering = false;
-	auto view = registry.view<Component::DragAction>();
+	auto view = registry.view<Component::Action::Drag>();
 	for (auto [entity, drag] : view.each())
 	{
 		if (drag.isTarget)
@@ -51,7 +51,7 @@ DragActionSystem::DragResult DragActionSystem::UpdateSceneDrag(
 	GameState& gameState,
 	Nc::RenderContext& renderContext, 
 	const entt::entity entity, 
-	Component::DragAction& drag
+	Component::Action::Drag& drag
 )
 {
 	const Component::Transform& transform = registry.get<const Component::Transform>(entity);

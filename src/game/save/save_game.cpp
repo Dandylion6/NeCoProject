@@ -61,7 +61,7 @@ namespace Save
 
     static SaveResult SaveToggleComponents(entt::registry& registry, nlohmann::json& data)
     {
-        auto view = registry.view<const Component::Address, const Component::Toggle>();
+        auto view = registry.view<const Component::Address, const Component::Action::Toggle>();
         for (auto [entity, address, toggle] : view.each())
         {
             if (address.address.empty()) return SaveResult::Failure;
@@ -85,7 +85,7 @@ namespace Save
     static LoadResult LoadToggleComponents(entt::registry& registry, nlohmann::json& data)
     {
         nlohmann::json& entitiesData = data["entities"];
-        auto view = registry.view<Component::Address, Component::Toggle>();
+        auto view = registry.view<Component::Address, Component::Action::Toggle>();
         for (auto [entity, address, toggle] : view.each())
         {
             if (!entitiesData.contains(address.address)) return LoadResult::Failure;

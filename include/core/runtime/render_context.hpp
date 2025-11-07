@@ -21,14 +21,19 @@ constexpr Nc::Vector2i RENDER_RESOLUTION = Nc::Vector2i(980, 740);
 * Stores active render targets, viewport data, and lighting context for the frame.
 * Stateless by design — values are set externally each frame by the runtime or system.
 */
-struct RenderContext
+struct RenderContext final
 {
+	// ------ Members ------
+
 	RenderTexture2D renderTexture { };
 	RenderTexture2D radarRenderTexture { };
 	LightingContext lightingContext { };
 	Rectangle renderRectangle { };
 	float renderScale = 1.0f;
 	Nc::Vector2i windowSize = Nc::Vector2i::Zero();
+
+
+	// ------ Constructors ------
 
 	constexpr RenderContext() noexcept = default;
 };

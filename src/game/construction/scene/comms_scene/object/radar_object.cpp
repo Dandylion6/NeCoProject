@@ -4,7 +4,7 @@
 #include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "game/component/core/interactive/button_action_component.hpp"
+#include "game/component/core/interactive/click_action_component.hpp"
 #include "game/component/core/interactive/toggle_component.hpp"
 #include "game/component/core/rendering/rectangle_component.hpp"
 #include "game/component/core/rendering/sprite_component.hpp"
@@ -122,7 +122,7 @@ namespace Construct
 
 
 	static const entt::entity RadarPowerButtonEntity(
-		entt::registry& registry, Component::Radar& radar, Component::Toggle& toggle
+		entt::registry& registry, Component::Radar& radar, Component::Action::Toggle& toggle
 	)
 	{
 		// TODO: Replace with proper button graphics and size.
@@ -136,12 +136,12 @@ namespace Construct
 		registry.emplace<Component::Rectangle>(entity, RED);
 
 		// Toggles radar machine
-		Component::ButtonAction& action = registry.emplace<Component::ButtonAction>(entity);
+		Component::Action::Click& action = registry.emplace<Component::Action::Click>(entity);
 		action.onClick = [&action, &radar, &toggle]()
 			{
 				// TODO: Add active/inactive visual state change and prevent spamming.
 				if (!radar.isRecalibrating)
-				toggle.state = ToggleLogic::Next(toggle.state);
+				toggle.state = Component::Action::Toggle::Next(toggle.state);
 				action.isActive = true;
 			};
 
@@ -170,9 +170,9 @@ void Construct::RadarObject(entt::registry& registry, Nc::ResourceStore& resourc
 	
 #ifdef DEBUG_BUILD
 	ToggleState radarState = Game::debugContext.isRadarActiveOnStart ? On : Off;
-	Component::Toggle& toggle = registry.emplace<Component::Toggle>(entity, radarState);
+	Component::Action::Toggle& toggle = registry.emplace<Component::Action::Toggle>(entity, radarState);
 #else
-	Component::Toggle& toggle = registry.emplace<Component::Toggle>(entity, Off);
+	Component::Action::Toggle& toggle = registry.emplace<Component::Action::Toggle>(entity, Off);
 #endif
 
 	Construct::RadarPathEntity(registry, resourceStore);

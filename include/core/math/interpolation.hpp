@@ -18,7 +18,9 @@ namespace Nc::Math
  * @param time Normalized interpolation factor in [0.0, 1.0].
  * @return Interpolated value between start and end.
  */
-static constexpr float Lerp(float start, float end, float time) noexcept
+static constexpr float Lerp(
+	float start, float end, float time
+) noexcept
 {
 	return start + (end - start) * time;
 }
@@ -37,7 +39,9 @@ static constexpr float Lerp(float start, float end, float time) noexcept
  * @param value The input value.
  * @return Normalized factor representing value's position between start and end.
  */
-static float InverseLerp(float start, float end, float value) noexcept
+static float InverseLerp(
+	float start, float end, float value
+) noexcept
 {
 	bool hasNoLength = start == end;
 	if (hasNoLength) 
@@ -84,9 +88,15 @@ static float Remap(
  * @param value Input value within the source range.
  * @return Remapped value in the target range.
  */
-static float Remap(Nc::Vector2f from, Nc::Vector2f to, float value) noexcept
+static float Remap(
+	Nc::Vector2f from, 
+	Nc::Vector2f to, 
+	float value
+) noexcept
 {
-	return Remap(from.x, from.y, to.x, to.y, value);
+	return Remap(
+		from.x, from.y, to.x, to.y, value
+	);
 }
 
 /**
@@ -100,7 +110,11 @@ static float Remap(Nc::Vector2f from, Nc::Vector2f to, float value) noexcept
  * @param value Input value to remap.
  * @return Remapped and clamped value.
  */
-static float ClampedRemap(Nc::Vector2f from, Nc::Vector2f to, float value) noexcept
+static float ClampedRemap(
+	Nc::Vector2f from, 
+	Nc::Vector2f to, 
+	float value
+) noexcept
 {
 	float fromMin = std::fminf(from.x, from.y);
 	float fromMax = std::fmaxf(from.x, from.y);

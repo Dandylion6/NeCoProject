@@ -53,7 +53,7 @@
 #include "game/debug/debug_context.hpp"
 #include "game/save/save_game.hpp"
 #include "game/state/scene.hpp"
-#include "game/component/core/interactive/button_action_component.hpp"
+#include "game/component/core/interactive/click_action_component.hpp"
 #include "game/component/core/rendering/text_component.hpp"
 #include "game/component/core/transform_component.hpp"
 #include "game/utility/morse_code.hpp"
@@ -161,7 +161,7 @@ void Game::BuildMenuUI()
 	registry.emplace<Component::Text>(entity, "SAVE STATE", Palette::RADAR_COLOR);
 	
 	std::function<void()> onClick = [&registry = registry, &gameState = gameState]() { Save::SaveGame(registry, gameState); };
-	registry.emplace<Component::ButtonAction>(entity, std::move(onClick));
+	registry.emplace<Component::Action::Click>(entity, std::move(onClick));
 
 #else
 	MainMenu::Open(registry, gameState);
@@ -260,7 +260,7 @@ void Game::Update(float deltaTime)
 void Game::UpdateRegistries(float deltaTime)
 {
 	InputActionSystem::Update(registry, gameState);
-	bool buttonHovering = ButtonActionSystem::Update(registry, gameState, renderContext);
+	bool buttonHovering = ClickSystem::Update(registry, gameState, renderContext);
 	bool dragHovering = DragActionSystem::Update(registry, gameState, renderContext);
 	IncrementNumberSystem::Update(registry);
 	AmbientSoundEmitterSystem::Update(registry, gameState, resourceStore, deltaTime);

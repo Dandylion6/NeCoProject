@@ -8,7 +8,7 @@ namespace Nc
 * @brief Shader uniform locations and configuration for lighting.
 * Holds all shader uniform references related to lighting.
 */
-struct LightingContext
+struct LightingContext final
 {
 	int textureLocation = -1;
 	int lightSourceCount = 0;

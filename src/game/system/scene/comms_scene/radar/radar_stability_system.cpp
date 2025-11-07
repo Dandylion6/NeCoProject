@@ -33,7 +33,7 @@ void RadarStabilitySystem::Update(
 	constexpr Nc::Vector2f BREAKDOWN_STABILITY_RANGE = Nc::Vector2f(Component::Radar::STABLE_LEVEL, Component::Radar::UNSTABLE_LEVEL);
 	constexpr float MINUTE_TO_SECOND = 1.0f / 60.0f;
 
-	auto view = registry.view<Component::Radar, Component::Toggle>();
+	auto view = registry.view<Component::Radar, Component::Action::Toggle>();
 	for (auto [entity, radar, toggle] : view.each())
 	{
 #ifdef DEBUG_BUILD

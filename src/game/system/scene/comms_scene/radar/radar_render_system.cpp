@@ -29,7 +29,7 @@ void RadarRenderSystem::DrawRenderTexture(
 {
 	if (currentScene != CommsRoom) return;
 
-	auto view = registry.view<Component::Toggle, Component::Radar, Component::Sprite>();
+	auto view = registry.view<Component::Action::Toggle, Component::Radar, Component::Sprite>();
 
 	BeginTextureMode(radarRenderTexture);
 	BeginBlendMode(BLEND_ADDITIVE);

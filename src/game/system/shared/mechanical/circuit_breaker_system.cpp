@@ -13,13 +13,13 @@ void CircuitBreakerSystem::Update(
     entt::registry& registry, AnomalyState& anomalyState, float deltaTime
 ) noexcept
 {
-    auto view = registry.view<Component::Toggle, Component::CircuitBreaker>();
+    auto view = registry.view<Component::Action::Toggle, Component::CircuitBreaker>();
     for (auto [entity, breakerToggle, breaker] : view.each())
     {
-        bool systemHasToggle = registry.any_of<Component::Toggle>(breaker.system);
+        bool systemHasToggle = registry.any_of<Component::Action::Toggle>(breaker.system);
         if (!systemHasToggle) continue;
         
-        Component::Toggle& systemToggle = registry.get<Component::Toggle>(breaker.system);
+        Component::Action::Toggle& systemToggle = registry.get<Component::Action::Toggle>(breaker.system);
         
         bool systemIsBroken = systemToggle.state == Disabled;
         if (systemIsBroken)
@@ -42,7 +42,7 @@ void CircuitBreakerSystem::Update(
 
 void CircuitBreakerSystem::UpdateDischarge(
     Component::CircuitBreaker& breaker, 
-    Component::Toggle& breakerToggle,
+    Component::Action::Toggle& breakerToggle,
     float deltaTime,
     bool isReadyToRestart
 ) noexcept
@@ -62,8 +62,8 @@ void CircuitBreakerSystem::UpdateBreakerOff(
     entt::registry& registry,
     AnomalyState& anomalyState, 
     Component::CircuitBreaker& breaker, 
-    Component::Toggle& breakerToggle, 
-    Component::Toggle& systemToggle,
+    Component::Action::Toggle& breakerToggle, 
+    Component::Action::Toggle& systemToggle,
     bool isReadyToRestart,
     float deltaTime
 ) noexcept
@@ -121,8 +121,8 @@ void CircuitBreakerSystem::DesyncRestart(
 
 void CircuitBreakerSystem::UpdateNormalOperations(
     Component::CircuitBreaker& breaker, 
-    const Component::Toggle& breakerToggle, 
-    Component::Toggle& systemToggle
+    const Component::Action::Toggle& breakerToggle, 
+    Component::Action::Toggle& systemToggle
 ) noexcept
 {
     bool powerIsCut = breakerToggle.state == Off;

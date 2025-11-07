@@ -8,7 +8,7 @@
 
 void LeverSystem::Update(entt::registry &registry, float deltaTime) noexcept
 {
-    auto view = registry.view<const Component::DragAction, Component::Lever, Component::Toggle, Component::Transform>();
+    auto view = registry.view<const Component::Action::Drag, Component::Lever, Component::Action::Toggle, Component::Transform>();
     for (auto [entity, drag, lever, toggle, transform] : view.each())
     {
         float targetHeight = GetHeightTarget(toggle, lever);
@@ -33,7 +33,7 @@ void LeverSystem::Update(entt::registry &registry, float deltaTime) noexcept
 
 
 ToggleState LeverSystem::GetToggleState(
-    const Component::Toggle& toggle, 
+    const Component::Action::Toggle& toggle, 
     const Component::Lever& lever, 
     bool isHeld
 ) noexcept
@@ -53,7 +53,7 @@ ToggleState LeverSystem::GetToggleState(
 }
 
 
-float LeverSystem::GetHeightTarget(const Component::Toggle& toggle, const Component::Lever& lever) noexcept
+float LeverSystem::GetHeightTarget(const Component::Action::Toggle& toggle, const Component::Lever& lever) noexcept
 {
     switch (toggle.state)
     {

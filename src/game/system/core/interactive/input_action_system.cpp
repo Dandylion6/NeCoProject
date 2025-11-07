@@ -10,7 +10,7 @@
 
 void InputActionSystem::Update(entt::registry& registry, GameState& gameState)
 {
-    auto view = registry.view<Component::Input>();
+    auto view = registry.view<Component::Action::Input>();
     
     for (auto [entity, input] : view.each()) 
     {

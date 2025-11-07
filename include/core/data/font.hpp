@@ -23,33 +23,37 @@ namespace Nc::Font
 }
 
 
-struct FontKey
+struct FontKey final
 {
-    // ────── Members ──────
+    // ------ Members ------
 
 	Nc::Font::Style style = Nc::Font::WDXL;
 	Nc::Font::Size fontSize = Nc::Font::Size::Tiny;
 
 
-    // ────── Constructors ──────
+    // ------ Constructors ------
 
-	constexpr FontKey(Nc::Font::Style style, Nc::Font::Size fontSize) noexcept : 
-        style(style), fontSize(fontSize) 
+	constexpr FontKey(
+        Nc::Font::Style style, 
+        Nc::Font::Size fontSize
+    ) noexcept : 
+        style(style), 
+        fontSize(fontSize) 
     { };
 
 
-    // ────── Operations ──────
+    // ------ Operations ------
 
-	bool operator==(const FontKey& other) const 
+	bool operator==(const FontKey& other) const
 	{
         return style == other.style && fontSize == other.fontSize;
     }
 };
 
 
-struct FontKeyHash 
+struct FontKeyHash final
 {
-    // ────── Operations ──────
+    // ------ Operations ------
 
     size_t operator()(const FontKey& key) const 
 	{

@@ -24,8 +24,8 @@ Assembled::LeverData Construct::LeverEntity(
 {
     assert(registry.any_of<Component::Transform>(entity) && "LeverEntity requires Transform!");
 
-    registry.emplace<Component::DragAction>(entity);
-    registry.emplace<Component::Toggle>(entity, Disabled);
+    registry.emplace<Component::Action::Drag>(entity);
+    registry.emplace<Component::Action::Toggle>(entity, Disabled);
 
     Component::Lever& lever = registry.emplace<Component::Lever>(entity, heightRange, std::move(movingAudioFile), std::move(switchedAudioFile));
     return { lever, entity };

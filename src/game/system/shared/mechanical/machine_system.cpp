@@ -11,9 +11,9 @@ void MachineSystem::Update(entt::registry& registry, AnomalyState& anomalyState,
 	auto view = registry.view<Component::Machine>();
 	for (auto [entity, machine] : view.each())
 	{
-		if (registry.any_of<Component::Toggle>(entity))
+		if (registry.any_of<Component::Action::Toggle>(entity))
 		{
-			Component::Toggle toggle = registry.get<Component::Toggle>(entity);
+			Component::Action::Toggle toggle = registry.get<Component::Action::Toggle>(entity);
 			if (toggle.state != On)
 			{
 				anomalyState.attractionPercentage -= machine.attractionReduction * deltaTime;

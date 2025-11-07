@@ -10,24 +10,47 @@ enum ToggleState : int8_t
 };
 
 
-namespace Component
+namespace Component::Action
 {
-    struct Toggle
-    {
-        ToggleState state = On;
-
-        Toggle() = default;
-        Toggle(ToggleState state) : state(state) { };
-    };
-}
-
-
-namespace ToggleLogic
+/**
+ * @brief Action component that defines an entities toggle state.
+ * 
+ * The component's `state` can either be `Disabled`, `Off` or `On`. 
+ * This is used by systems to create toggleable behaviour.
+ * 
+ * Usage example:
+ * 
+ * ```cpp
+ * registry.emplace<Component::Action::Toggle>(entity, On);
+ * registry.emplace<Component::Machine>(entity, ...);
+ * ```
+ */
+struct Toggle
 {
-    /// @brief Toggles based on state given.
-    /// @param state Is the state to change based on toggle behaviour.
-    /// @return The next logical state.
-    static ToggleState Next(ToggleState state)
+    // ------ Members ------
+
+    ToggleState state = On;
+
+
+    // ------ Constructors ------
+
+    constexpr Toggle() noexcept = default;
+    constexpr Toggle(ToggleState state) noexcept : 
+        state(state) 
+    { };
+
+
+    // ------ Utility ------
+
+    /**
+    * @brief Toggles based on state given.
+    * 
+    * @param state Is the state to change based on toggle behaviour.
+    * @return The next logical state.
+    */
+    static constexpr ToggleState Next(
+        ToggleState state
+    ) noexcept
     {
         switch (state)
         {
@@ -37,4 +60,6 @@ namespace ToggleLogic
         }
         return state;
     }
+};
+
 }

@@ -3,14 +3,14 @@
 #include "core/runtime/render_context.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "game/component/core/interactive/button_action_component.hpp"
+#include "game/component/core/interactive/click_action_component.hpp"
 #include "game/component/core/transform_component.hpp"
 #include "game/state/game_state.hpp"
 #include "game/system/core/interactive/button_action_system.hpp"
 #include "raylib.h"
 
 
-bool ButtonActionSystem::Update(
+bool ClickSystem::Update(
 	entt::registry& registry, 
 	GameState& gameState, 
 	Nc::RenderContext& renderContext
@@ -22,7 +22,7 @@ bool ButtonActionSystem::Update(
 }
 
 
-bool ButtonActionSystem::UpdateSceneButtons(
+bool ClickSystem::UpdateSceneButtons(
 	entt::registry& registry, 
 	GameState& gameState, 
 	Nc::RenderContext& renderContext
@@ -31,7 +31,7 @@ bool ButtonActionSystem::UpdateSceneButtons(
 	if (gameState.isPaused) return false;
 
 	bool isHovering = false;
-	auto view = registry.view<const Component::Transform, Component::ButtonAction>();
+	auto view = registry.view<const Component::Transform, Component::Action::Click>();
 	for (auto [entity, transform, button] : view.each())
 	{
 		if (!button.isActive) continue;
@@ -54,14 +54,14 @@ bool ButtonActionSystem::UpdateSceneButtons(
 }
 
 
-bool ButtonActionSystem::UpdateUiButtons(
+bool ClickSystem::UpdateUiButtons(
 	entt::registry& registry, 
 	GameState& gameState, 
 	Nc::Vector2i windowSize
 )
 {
 	bool isHovering = false;
-	auto view = registry.view<const Component::UI::Transform, Component::ButtonAction>();
+	auto view = registry.view<const Component::UI::Transform, Component::Action::Click>();
 	for (auto [entity, transform, button] : view.each())
 	{
 		button.isActive = transform.isVisible;

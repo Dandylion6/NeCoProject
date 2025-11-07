@@ -1,8 +1,8 @@
 #pragma once
-#include "game/component/core/interactive/button_action_component.hpp"
+#include "game/component/core/interactive/click_action_component.hpp"
 #include "game/component/core/rendering/text_component.hpp"
 #include "game/component/core/transform_component.hpp"
-#include "game/component/core/interactive/button_action_component.hpp"
+#include "game/component/core/interactive/click_action_component.hpp"
 #include "game/component/core/rendering/text_component.hpp"
 #include "game/component/core/transform_component.hpp"
 #include "game/component/ui/increment_component.hpp"
@@ -78,7 +78,7 @@ namespace Construct
             *increment.value = (*increment.value) + increment.increment;
         };
 
-        registry.emplace<Component::ButtonAction>(entity, std::move(onClick));
+        registry.emplace<Component::Action::Click>(entity, std::move(onClick));
         return entity;
     };
 
@@ -102,7 +102,7 @@ namespace Construct
             *increment.value = (*increment.value) - increment.increment;
         };
 
-        registry.emplace<Component::ButtonAction>(entity, std::move(onClick));
+        registry.emplace<Component::Action::Click>(entity, std::move(onClick));
         return entity;
     };
 

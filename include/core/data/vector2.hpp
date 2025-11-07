@@ -1,5 +1,4 @@
 #pragma once
-#include "core/data/vector2.hpp"
 #include "raylib.h"
 
 
@@ -15,34 +14,37 @@ enum Direction
 namespace Nc
 {
 
-struct Vector2i
+struct Vector2i final
 {
-	// ────── Members ──────
+	// ------ Members ------
 
 	int x = 0, y = 0;
 
 
-	// ────── Constructors ──────
+	// ------ Constructors ------
 
 	constexpr Vector2i() = default;
 	constexpr Vector2i(int x, int y) : x(x), y(y) { };
-	constexpr Vector2i(Vector2 vector) :
-		x(static_cast<int>(vector.x)), y(static_cast<int>(vector.y))
+	constexpr Vector2i(
+		Vector2 vector
+	) noexcept :
+		x(static_cast<int>(vector.x)), 
+		y(static_cast<int>(vector.y))
 	{ };
 
 
-	// ────── Conversion ──────
+	// ------ Conversion ------
 
 	constexpr operator Vector2() const noexcept { return { static_cast<float>(x), static_cast<float>(y) }; };
 
 
-	// ────── Utility ──────
+	// ------ Utility ------
 
 	/// @brief Returns a zero vector (0, 0).
 	constexpr static Vector2i Zero() noexcept { return Vector2i(0, 0); };
 
 
-	// ────── Operations ──────
+	// ------ Operations ------
 
 	constexpr Vector2i operator-(const Vector2i other) const { return Vector2i(x - other.x, y - other.y); };
 	constexpr Vector2i operator*(const int factor) const { return Vector2i(x * factor, y * factor); };
@@ -58,14 +60,14 @@ struct Vector2i
 namespace Nc
 {
 
-struct Vector2f
+struct Vector2f final
 {
-	// ────── Members ──────
+	// ------ Members ------
 
 	float x = 0.0f, y = 0.0f;
 
 
-	// ────── Constructors ──────
+	// ------ Constructors ------
 
 	constexpr Vector2f() = default;
 	constexpr Vector2f(float x, float y) noexcept : x(x), y(y) { };
@@ -73,18 +75,20 @@ struct Vector2f
 		x(static_cast<float>(x)), y(static_cast<float>(y)) 
 	{ };
 	
-	constexpr Vector2f(Vector2 vector) noexcept :
+	constexpr Vector2f(
+		Vector2 vector
+	) noexcept :
 		x(vector.x), y(vector.y)
 	{ };
 
 
-	// ────── Conversion ──────
+	// ------ Conversion ------
 	
 	constexpr operator Vector2() const noexcept { return { x, y }; }
 	constexpr operator Vector2i() const noexcept { return Vector2i(static_cast<int>(x), static_cast<int>(y)); };
 
 
-	// ────── Utility ──────
+	// ------ Utility ------
 
 	/// @brief Returns a zero vector (0.0f, 0.0f).
 	constexpr static Vector2f Zero() noexcept { return Vector2f(0.0f, 0.0f); };
@@ -126,7 +130,7 @@ struct Vector2f
 	constexpr static Vector2f Scale(const float scale) noexcept { return Vector2f(scale, scale); };
 
 
-	// ────── Operations ──────
+	// ------ Operations ------
 
 	constexpr Vector2f operator-() const { return Vector2f(-x, -y); };
 	constexpr Vector2f operator+(const Vector2f other) const { return Vector2f(x + other.x, y + other.y); };

@@ -51,7 +51,7 @@ const entt::entity Construct::SettingsBackgroundEntity(
 
 	registry.emplace<Tag::DontDestroyOnLoad>(entity);
 	registry.emplace<Tag::Settings>(entity);
-	registry.emplace<Component::Toggle>(entity);
+	registry.emplace<Component::Action::Toggle>(entity);
 	registry.emplace<Component::UI::Transform>(entity, center, center, size, Nc::Vector2f::Zero(), 1);
 	registry.emplace<Component::Sprite>(entity, std::move(texture), 0.4f);
 
@@ -60,6 +60,6 @@ const entt::entity Construct::SettingsBackgroundEntity(
 		SettingsMenu::Toggle(registry, gameState);
 	};
 
-	registry.emplace<Component::Input>(entity, KEY_ESCAPE, std::move(toggleSettings));
+	registry.emplace<Component::Action::Input>(entity, std::move(toggleSettings), KEY_ESCAPE);
     return entity;
 };
