@@ -1,12 +1,15 @@
-#include "game/component/core/transform_component.hpp"
-#include "game/component/core/interactive/drag_action_component.hpp"
-#include "game/component/shared/mechanical/lever_component.hpp"
-#include "game/component/core/interactive/toggle_component.hpp"
+#include "algorithm"
+#include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
+#include "game/component/core/interactive/drag_action_component.hpp"
+#include "game/component/core/interactive/toggle_component.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/shared/mechanical/lever_component.hpp"
 #include "game/system/shared/mechanical/lever_system.hpp"
+#include <cmath>
 
 
-void LeverSystem::Update(entt::registry &registry, float deltaTime) noexcept
+void LeverSystem::Update(entt::registry& registry, float deltaTime) noexcept
 {
     auto view = registry.view<const Component::Action::Drag, Component::Lever, Component::Action::Toggle, Component::Transform>();
     for (auto [entity, drag, lever, toggle, transform] : view.each())
@@ -32,7 +35,10 @@ void LeverSystem::Update(entt::registry &registry, float deltaTime) noexcept
 }
 
 
-float LeverSystem::GetHeightTarget(const Component::Toggle& toggle, const Component::Lever& lever) noexcept
+float LeverSystem::GetHeightTarget(
+    const Component::Action::Toggle& toggle, 
+    const Component::Lever& lever
+) noexcept
 {
     switch (toggle.state)
     {
@@ -61,15 +67,4 @@ ToggleState LeverSystem::GetToggleState(
     float distanceToOn = std::fabsf(lever.currentHeight - lever.heightRange.x);
     float distanceToOff = std::fabsf(lever.currentHeight - lever.heightRange.y);
     return distanceToOn <= distanceToOff ? On : Off;
-}
-
-
-float LeverSystem::GetHeightTarget(const Component::Action::Toggle& toggle, const Component::Lever& lever) noexcept
-{
-    switch (toggle.state)
-    {
-    case On: return lever.heightRange.x;
-    default: return lever.heightRange.y;
-    }
-    return lever.heightRange.y;
 }

@@ -1,15 +1,17 @@
 #pragma once
-#include "game/component/core/transform_component.hpp"
-#include "game/component/core/interactive/drag_action_component.hpp"
-#include "game/component/shared/mechanical/lever_component.hpp"
-#include "game/component/core/interactive/toggle_component.hpp"
 #include "entt/entity/fwd.hpp"
+#include "game/component/core/interactive/toggle_component.hpp"
+#include "game/component/shared/mechanical/lever_component.hpp"
 
 
 struct LeverSystem
 {
 public:
     static void Update(entt::registry& registry, float deltaTime) noexcept;
+
+    static float GetHeightTarget(
+        const Component::Action::Toggle& toggle, const Component::Lever& lever
+    ) noexcept;
 
 private:
     static ToggleState GetToggleState(
@@ -18,7 +20,4 @@ private:
         bool isHeld
     ) noexcept;
 
-    static float GetHeightTarget(
-        const Component::Action::Toggle& toggle, const Component::Lever& lever
-    ) noexcept;
 };

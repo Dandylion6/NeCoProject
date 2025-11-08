@@ -1,17 +1,18 @@
-#include "game/component/scene/comms_scene/radar_components.hpp"
-#include "game/component/core/interactive/toggle_component.hpp"
-#include "game/component/core/serialization/address_component.hpp"
-#include "game/tag/core/life_cycle/dont_destroy_on_load_tag.hpp"
-#include "game/save/save_game.hpp"
-#include "game/game.hpp"
-#include "game/state/scene.hpp"
-#include "game/state/anomaly_state.hpp"
-#include "game/state/game_state.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
+#include "game/component/core/interactive/toggle_component.hpp"
+#include "game/component/core/serialization/address_component.hpp"
+#include "game/component/scene/comms_scene/radar_components.hpp"
+#include "game/component/shared/mechanical/lever_component.hpp"
+#include "game/game.hpp"
+#include "game/save/save_game.hpp"
+#include "game/state/anomaly_state.hpp"
+#include "game/state/game_state.hpp"
+#include "game/state/scene.hpp"
+#include "game/system/shared/mechanical/lever_system.hpp"
+#include "game/tag/core/life_cycle/dont_destroy_on_load_tag.hpp"
 #include "nlohmann/json.hpp"
 #include "nlohmann/json_fwd.hpp"
-#include "systems/object/interactive/lever_system.hpp"
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
@@ -22,7 +23,7 @@
 #include "base64.hpp"
 #endif // RELEASE_BUILD
 
-// @todo: Error handling for file I/O and JSON parsing.
+// TODO: Error handling for file I/O and JSON parsing.
 
 
 namespace Save
