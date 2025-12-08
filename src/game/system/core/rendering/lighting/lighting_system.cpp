@@ -18,7 +18,7 @@ void LightingSystem::Initialize(Nc::LightingContext& context, Nc::ResourceStore&
     const Shader& shader = resourceStore.GetShader("assets/lighting.fs");
 
     context.textureLocation = GetShaderLocation(shader, "texture0");
-    context.lightSourceCount = GetShaderLocation(shader, "lightSourceCount");
+    context.lightPointCount = GetShaderLocation(shader, "lightPointCount");
     context.lightPositionLocation = GetShaderLocation(shader, "lightPosition[0]");
     context.lightColorLocation = GetShaderLocation(shader, "lightColor[0]");
     context.lightRangeLocation = GetShaderLocation(shader, "lightRange[0]");
@@ -35,16 +35,16 @@ void LightingSystem::Update(
     float deltaTime
 )
 {
-    int lightSourceCount = 0;
-    auto view = registry.view<Component::Transform, Component::LightSource>();
+    int lightPointCount = 0;
+    auto view = registry.view<Component::Transform, Component::Light::Point>();
     
     for (auto [entity, transform, source] : view.each())
     {
         if (transform.boundScene != gameState.currentScene) continue;
-        ++lightSourceCount;
+        ++lightPointCount;
     }
 
-    SetShaderValue(lightShader, context.lightSourceCount, &lightSourceCount, SHADER_UNIFORM_INT);
+    SetShaderValue(lightShader, context.lightPointCount, &lightPointCount, SHADER_UNIFORM_INT);
 
     int index = 0;
     for (auto [entity, transform, source] : view.each())

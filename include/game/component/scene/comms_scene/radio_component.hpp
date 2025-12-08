@@ -2,7 +2,13 @@
 #include <cstdint>
 
 
-enum BroadcastPriority: uint8_t
+/**
+ * @brief An enum that indicates the importance of a broadcast.
+ * 
+ * Can be used to determine what boradcast should or shouldn't override
+ * the current one.
+ */
+enum BroadcastPriority : uint8_t
 {
 	Idle = 0,
 	Low = 1,
@@ -13,12 +19,24 @@ enum BroadcastPriority: uint8_t
 
 namespace Component
 {
-	struct Radio
-	{
-		float broadcastDelay = 0.0f;
-		bool isSendingBroadcast = false;
-		BroadcastPriority priority = Idle;
+/**
+ * @brief Represents the radio entity.
+ * 
+ * Holds broadcast variables used to determine how
+ * the audio is played.
+ */
+struct Radio final
+{
+	// ------ Members ------
 
-		Radio() = default;
-	};
+	float broadcastDelay = 0.0f;
+	BroadcastPriority priority = Idle;
+	bool isSendingBroadcast = false;
+
+
+	// ------ Constructors
+
+	constexpr Radio() noexcept = default;
+};
+
 }

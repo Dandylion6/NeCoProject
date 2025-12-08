@@ -42,6 +42,6 @@ void CommsScene::Build(
 	Nc::Vector2f windowSize = Nc::Vector2f(renderContext.windowSize);
 	Nc::Vector2f lightPosition = windowSize * Nc::Vector2f(0.5f, 1.3f);
 	float lightRadius = 940.0f * renderContext.renderScale;
-	Construct::LightSourceEntity(registry, lightPosition, CommsRoom, LIGHT_COLOR, 1.6f, lightRadius);
+	Construct::LightPointEntity(registry, lightPosition, CommsRoom, LIGHT_COLOR, 1.6f, lightRadius);
 
 }

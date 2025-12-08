@@ -5,38 +5,64 @@
 #include <cstdint>
 
 
-namespace Component
+namespace Component::Logic
 {
-    struct CircuitBreaker
+/**
+ * @brief Represents a circuit breaker entity.
+ * 
+ * Holds variables relating to restarting a system and
+ * its status. Relies on `Component::Logic::Lever`
+ * 
+ * Usage example:
+ * 
+ * ```cpp
+ * const entt::entity systemEntity = registry.create();
+ * ...
+ * const entt::entity indicatorEntity = registry.create();
+ * ...
+ * registry.emplace<Component::Logic::Lever>(entity, ...);
+ * registry.emplace<Component::Logic::CircuitBreaker>(entity, systemEntity, indicatorEntity);
+ * ```
+ */
+struct CircuitBreaker
+{
+    using OnRestart = entt::delegate<void(entt::registry&, const entt::entity)>;
+    static constexpr float BREAKER_DISCHARGE_SECONDS = 6.0f;
+
+    enum Status : uint8_t
     {
-        using OnRestart = entt::delegate<void(entt::registry&, const entt::entity)>;
-        static constexpr float BREAKER_DISCHARGE_SECONDS = 6.0f;
-
-        enum Status : uint8_t
-        {
-            /// @brief The system is running as intended.
-            Operational,
-            /// @brief The system has been manually set to offline.
-            Offline,
-            /// @brief The system brokedown and requires attention.
-            Faulted,
-            /// @brief Breaker has been set off and is waiting for restart.
-            Discharging,
-            /// @brief The breaker is ready to restart.
-            ReadyToRestart,
-            /// @brief Restart was miss-timed.
-            DesyncedRestart
-        };
-
-        entt::entity system = entt::null;
-        entt::entity indicator = entt::null;
-        float cycleTimerSeconds = 0.0f;
-        float desyncWarningSecondsLeft = 0.0f;
-        Status status = Operational;
-        OnRestart onRestart { };
+        // @brief The system is running as intended.
+        Operational,
+        // @brief The system has been manually set to offline.
+        Offline,
+        // @brief The system brokedown and requires attention.
+        Faulted,
+        // @brief Breaker has been set off and is waiting for restart.
+        Discharging,
+        // @brief The breaker is ready to restart.
+        ReadyToRestart,
+        // @brief Restart was miss-timed.
+        DesyncedRestart
+    };
 
 
-        CircuitBreaker(entt::entity system, entt::entity indicator) :
-            system(system), indicator(indicator) { };
-    };   
+    // ------ Members ------
+
+    OnRestart onRestart { };
+    entt::entity system = entt::null;
+    entt::entity indicator = entt::null;
+    float cycleTimerSeconds = 0.0f;
+    float desyncWarningSecondsLeft = 0.0f;
+    Status status = Operational;
+
+
+    // ------ Constructors ------
+
+    constexpr CircuitBreaker(
+        entt::entity system, entt::entity indicator
+    ) noexcept :
+        system(system), indicator(indicator) 
+    { };
+};   
+
 }

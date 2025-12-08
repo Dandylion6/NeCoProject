@@ -58,23 +58,23 @@ const entt::entity RoamerSpawningSystem::SpawnRoamer(
 {
 	constexpr int16_t BASE_HEALTH = 10;
 
-	uint8_t randomBehaviour = Nc::Random::RangeU8(0u, static_cast<uint8_t>(Component::Anomaly::Roamer::BEHAVIOUR_COUNT) - 1u);
-	uint8_t randomTarget = Nc::Random::RangeU8(0u, static_cast<uint8_t>(Component::Anomaly::Roamer::Target::TARGET_COUNT) - 1u);
-	Component::Anomaly::Roamer::Behaviour behaviour = static_cast<Component::Anomaly::Roamer::Behaviour>(randomBehaviour);
-	Component::Anomaly::Roamer::Target target = static_cast<Component::Anomaly::Roamer::Target>(randomTarget);
+	uint8_t randomBehaviour = Nc::Random::RangeU8(0u, static_cast<uint8_t>(RoamerBehaviour::BEHAVIOUR_COUNT) - 1u);
+	uint8_t randomTarget = Nc::Random::RangeU8(0u, static_cast<uint8_t>(RoamerTarget::TARGET_COUNT) - 1u);
+	RoamerBehaviour behaviour = static_cast<RoamerBehaviour>(randomBehaviour);
+	RoamerTarget target = static_cast<RoamerTarget>(randomTarget);
 
 	const entt::entity entity = Construct::RadarBlipEntity(registry, resourceStore, spawnPoint, BASE_HEALTH);
 	Component::Anomaly::Roamer& roamer = registry.emplace<Component::Anomaly::Roamer>(entity, behaviour, target);
 
 	switch (behaviour)
 	{
-	case Component::Anomaly::Roamer::Strider:
+	case RoamerBehaviour::Strider:
 		StriderBehaviourSystem::Spawn(registry, entity, roamer);
 		break;
-	case Component::Anomaly::Roamer::Phaser:
+	case RoamerBehaviour::Phaser:
 		PhaserBehaviourSystem::Spawn(registry, entity, roamer);
 		break;
-	case Component::Anomaly::Roamer::Phantom:
+	case RoamerBehaviour::Phantom:
 		PhantomBehaviourSystem::Spawn(registry, anomalyState, entity, roamer);
 		break;
 	default:

@@ -8,14 +8,14 @@
 #include "core/data/vector2.hpp"
 
 
-const entt::entity Construct::LightSourceEntity(
+const entt::entity Construct::LightPointEntity(
     entt::registry& registry, Nc::Vector2f position, Scene boundScene, Nc::RGBa color, float strength, float range
 )
 {
     const entt::entity entity = registry.create();
 
     registry.emplace<Component::Transform>(entity, boundScene, position);
-    registry.emplace<Component::LightSource>(entity, color, range, strength);
+    registry.emplace<Component::Light::Point>(entity, color, range, strength);
 
     return entity;
 }

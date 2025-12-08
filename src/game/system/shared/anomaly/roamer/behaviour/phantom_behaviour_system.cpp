@@ -20,7 +20,7 @@ void PhantomBehaviourSystem::Spawn(
 	// Phantom doesn't spawn unless other roamers exist
 	if (anomalyState.roamerThreatCount > 0u)
 	{
-		roamer.behaviour = Component::Anomaly::Roamer::Strider;
+		roamer.behaviour = RoamerBehaviour::Strider;
 		StriderBehaviourSystem::Spawn(registry, entity, roamer);
 		return;
 	}

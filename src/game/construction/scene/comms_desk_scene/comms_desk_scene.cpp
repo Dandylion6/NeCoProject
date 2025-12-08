@@ -31,5 +31,5 @@ void DeskScene::Build(
 	Nc::Vector2f windowSize = Nc::Vector2f(renderContext.windowSize);
 	Nc::Vector2f lightPosition = windowSize * Nc::Vector2f(0.5f, 0.34f);
 	float lightRadius = 620.0f * renderContext.renderScale;
-	Construct::LightSourceEntity(registry, lightPosition, CommsDesk, LIGHT_COLOR, 0.9f, lightRadius);
+	Construct::LightPointEntity(registry, lightPosition, CommsDesk, LIGHT_COLOR, 0.9f, lightRadius);
 }

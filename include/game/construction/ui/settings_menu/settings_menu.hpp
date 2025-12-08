@@ -1,6 +1,6 @@
 #pragma once
-#include "entt/entity/fwd.hpp"
 #include "core/data/vector2.hpp"
+#include "entt/entity/fwd.hpp"
 struct GameState;
 namespace Nc { class ResourceStore; };
 struct Settings;

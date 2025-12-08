@@ -4,8 +4,12 @@
 
 namespace Component
 {
-	struct Note
-	{
-		uint8_t page = 0;
-	};
+
+struct Note final
+{
+	// ------ Members ------
+
+	uint8_t page = 0;
+};
+
 }

@@ -1,15 +1,36 @@
 #pragma once
-#include "raylib.h"
 #include "core/data/color.hpp"
+#include "raylib.h"
 
 
 namespace Component
 {
-	struct Rectangle
-	{
-		Nc::RGBa fillColor = Nc::RGBa(WHITE);
+/**
+ * @brief Represents a simple colored rectangle.
+ * 
+ * Renders based on the provided Transform component
+ * and 'fillColor'. 
+ * 
+ * Usage example:
+ * 
+ * ```cpp
+ * registry.emplace<Component::Transform>(entity, ...);
+ * registry.emplace<Component::Rectangle>(entity, WHITE);
+ * ```
+ */
+struct Rectangle final
+{
+	// ------ Members ------
 
-		Rectangle() = default;
-		Rectangle(Nc::RGBa fillColor): fillColor(fillColor) { };
-	};
+	Nc::RGBa fillColor = Nc::RGBa(WHITE);
+
+
+	// ------ Constructors ------
+
+	constexpr Rectangle() noexcept = default;
+	constexpr Rectangle(Nc::RGBa fillColor) noexcept : 
+		fillColor(fillColor) 
+	{ };
+};
+
 }

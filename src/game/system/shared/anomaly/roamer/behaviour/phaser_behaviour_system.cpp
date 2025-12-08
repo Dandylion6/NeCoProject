@@ -57,7 +57,7 @@ void PhaserBehaviourSystem::Update(
 	bool switchToStriding = sqrDistance <= STRIDING_DISTANCE_SQR;
 	if (switchToStriding)
 	{
-		roamer.behaviour = Component::Anomaly::Roamer::Behaviour::Strider;
+		roamer.behaviour = RoamerBehaviour::Strider;
 		registry.remove<Component::Anomaly::Phaser>(entity);
 		StriderBehaviourSystem::Spawn(registry, entity, roamer);
 		return;

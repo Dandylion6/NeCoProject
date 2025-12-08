@@ -69,7 +69,7 @@ void BlipGlitchSystem::TriggerBlipFailure(
 {
 	blip.state = Component::Blip::CompleteFailure;
 	blip.remainingGlitchSeconds = GenerateGlitchDuration(stability);
-	registry.emplace<Component::BlipState::CompleteFailureData>(entity);
+	registry.emplace<Component::BlipState::CompleteFailure>(entity);
 }
 
 
@@ -180,17 +180,17 @@ void BlipGlitchSystem::UpdateBlipFailure(
 	entt::registry& registry, entt::entity entity, float time
 )
 {
-	constexpr float RANDOM_OFFSET = Component::BlipState::CompleteFailureData::OFFSET_RANGE;
+	constexpr float RANDOM_OFFSET = Component::BlipState::CompleteFailure::OFFSET_RANGE;
 
 	Component::Text& text = registry.get<Component::Text>(entity);
-	Component::BlipState::CompleteFailureData& failure = registry.get<Component::BlipState::CompleteFailureData>(entity);
+	Component::BlipState::CompleteFailure& failure = registry.get<Component::BlipState::CompleteFailure>(entity);
 	const Component::Transform& transfrom = registry.get<const Component::Transform>(entity);
 	Component::Blip& blip = registry.get<Component::Blip>(entity);
 	
 	if (blip.remainingGlitchSeconds <= 0.0f)
 	{
 		blip.state = Component::Blip::Stable;
-		registry.remove<Component::BlipState::CompleteFailureData>(entity);
+		registry.remove<Component::BlipState::CompleteFailure>(entity);
 		return;
 	}
 
@@ -198,7 +198,7 @@ void BlipGlitchSystem::UpdateBlipFailure(
 	if (time - failure.lastGlitchTime < failure.nextGlitchSeconds) return;
 
 	failure.lastGlitchTime = time;
-	Nc::Vector2f range = Component::BlipState::CompleteFailureData::GLITCH_INTERVAL_RANGE;
+	Nc::Vector2f range = Component::BlipState::CompleteFailure::GLITCH_INTERVAL_RANGE;
 	failure.nextGlitchSeconds = Nc::Random::Range(range.x, range.y);
 	
 	Nc::Vector2f newGlitchOffset = Nc::Vector2f::Zero();

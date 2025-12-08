@@ -11,7 +11,7 @@ uniform sampler2D texture0;
 
 
 #define MAX_LIGHT_SOURCES 8
-uniform int lightSourceCount;
+uniform int lightPointCount;
 uniform vec3 lightPosition[MAX_LIGHT_SOURCES];
 uniform vec4 lightColor[MAX_LIGHT_SOURCES];
 uniform float lightRange[MAX_LIGHT_SOURCES];
@@ -27,7 +27,7 @@ void main()
     vec3 finalColor = vec3(0.2, 0.2, 0.2);
     vec2 pixelPosition = gl_FragCoord.xy;
 
-    for (int i = 0; i < lightSourceCount; i++)
+    for (int i = 0; i < lightPointCount; i++)
     {
         float distanceToSource = distance(pixelPosition, lightPosition[i].xy);
         float falloff = distanceToSource / lightRange[i];

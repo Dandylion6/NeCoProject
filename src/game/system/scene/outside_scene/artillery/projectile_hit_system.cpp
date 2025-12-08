@@ -27,9 +27,9 @@ void ProjectileHitSystem::Update(entt::registry& registry, float deltaTime)
 			continue;
 		}
 
-		if (projectile.travelTimeLeft > 0.0f)
+		if (projectile.travelSecondsLeft > 0.0f)
 		{
-			projectile.travelTimeLeft -= deltaTime;
+			projectile.travelSecondsLeft -= deltaTime;
 			continue;
 		}
 

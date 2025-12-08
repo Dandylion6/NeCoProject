@@ -30,7 +30,7 @@ public:
 private:
     enum LightType: int
     {
-        Pointlight,
+        LightPoint,
         Spotlight
     };
 

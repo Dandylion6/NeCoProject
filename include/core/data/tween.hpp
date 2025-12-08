@@ -35,7 +35,7 @@ struct Tween final
 
 	// ------ Constructors ------
 
-	Tween() = default;
+	constexpr Tween() noexcept = default;
 	Tween(
 		float* value, 
 		float start, 
@@ -51,6 +51,24 @@ struct Tween final
 		easing(easing),
 		delayComplete(delayComplete)
 	{ };
+
+	static constexpr void Build(
+		Tween& tween,
+		float* value,
+		float start,
+		float end,
+		float duration,
+		Easing easing,
+		float delayComplete = 0.0f
+	) noexcept
+	{
+		tween.value = value;
+		tween.start = start;
+		tween.end = end;
+		tween.duration = duration;
+		tween.easing = easing;
+		tween.delayComplete = delayComplete;
+	}
 
 
 	// ------ Utility ------

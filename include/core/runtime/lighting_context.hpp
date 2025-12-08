@@ -11,7 +11,7 @@ namespace Nc
 struct LightingContext final
 {
 	int textureLocation = -1;
-	int lightSourceCount = 0;
+	int lightPointCount = 0;
 	int lightPositionLocation = -1;
 	int lightColorLocation = -1;
 	int lightRangeLocation = -1;

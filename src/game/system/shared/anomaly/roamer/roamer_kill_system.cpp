@@ -27,7 +27,7 @@ void RoamerKillSystem::Update(
 		}
 
 		// Phantom roamers don't kill.
-		if (roamer.behaviour == Component::Anomaly::Roamer::Behaviour::Phantom)
+		if (roamer.behaviour == RoamerBehaviour::Phantom)
 		{
 			// Roamer self-destructs if very close to target.
 			Nc::Vector2f targetPosition = RoamerBehaviourSystem::GetTargetPosition(roamer.target);
@@ -37,12 +37,12 @@ void RoamerKillSystem::Update(
 
 		switch (roamer.target)
 		{
-		case Component::Anomaly::Roamer::Target::Bunker:
+		case RoamerTarget::Bunker:
 		{
 			UpdateBunkerRoamer(registry, entity, transform, roamer, health, gameState);
 			break;
 		}
-		case Component::Anomaly::Roamer::Target::Artillery:
+		case RoamerTarget::Artillery:
 		{
 			UpdateBunkerRoamer(registry, entity, transform, roamer, health, gameState);
 			break;

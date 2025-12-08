@@ -1,43 +1,66 @@
 #pragma once
-#include "raylib.h"
 #include "game/utility/morse_code.hpp"
+#include "raylib.h"
 #include <array>
 #include <cstdint>
 
 
 namespace Component::Morse
 {
-	struct Transceiver
-	{
-		static constexpr KeyboardKey INPUT_KEY = KeyboardKey::KEY_SPACE;
-		static constexpr uint8_t MAX_PULSES = 8u;
-		using PulseArray = std::array<MorseCode::Pulse, MAX_PULSES>;
-
-		enum Tweens
-		{
-			ToneFadeIn,
-			ToneFadeOut
-		};
-
-		PulseArray pulses { };
-		float intervalSeconds = 0.0f;
-		bool isInputActive = false;
-		uint8_t pulseCount = 0u;
-	};
-}
-
-
-namespace Component::Morse
+/**
+ * @brief Represents a morse transceiver entity.
+ * 
+ * Handles the timing and internal morse code values as `pulses`.
+ */
+struct Transceiver
 {
-	struct MonitorRegion
-	{
-		enum Region: uint8_t
-		{
-			Dot,
-			Dash
-		};
-		Region region = Dot;
+	// TODO: Use input component instead of hard coding.
+	static constexpr KeyboardKey INPUT_KEY = KeyboardKey::KEY_SPACE;
+	static constexpr uint8_t MAX_PULSES = 8u;
 
-		MonitorRegion(Region region) : region(region) { };
+	using PulseArray = std::array<MorseCode::Pulse, MAX_PULSES>;
+
+	enum Tweens
+	{
+		ToneFadeIn,
+		ToneFadeOut
 	};
+
+
+	// ------ Members ------
+
+	PulseArray pulses { };
+	float intervalSeconds = 0.0f;
+	bool isInputActive = false;
+	uint8_t pulseCount = 0u;
+
+
+	// ------ Constructors ------
+
+	constexpr Transceiver() noexcept = default;
+};
+
+
+struct MonitorRegion
+{
+	enum Region : uint8_t
+	{
+		Dot,
+		Dash
+	};
+
+
+	// ------ Members ------
+
+	Region region = Dot;
+
+
+	// ------ Constructors ------
+
+	constexpr MonitorRegion() noexcept = default;
+	constexpr MonitorRegion(Region region) noexcept : 
+		region(region) 
+	{ };
+};
+
 }
