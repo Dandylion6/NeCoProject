@@ -12,10 +12,10 @@
 
 
 void Structure::MainMenu::Build(
-	Game& game, 
 	entt::registry& registry, 
-	GameState& gameState, 
-	Nc::ResourceStore& resourceStore
+	Nc::ResourceStore& resourceStore,
+	Game& game, 
+	GameState& gameState
 ) noexcept
 {
 	Object::PlayButton::Create(game, registry, gameState, resourceStore);

@@ -1,3 +1,4 @@
+#include "game/construction/shared/entity/scene/move_region_entity.hpp"
 #include "core/data/vector2.hpp"
 #include "core/runtime/render_context.hpp"
 #include "core/runtime/resource_store.hpp"
@@ -5,7 +6,6 @@
 #include "entt/entity/registry.hpp"
 #include "game/component/core/interactive/click_action_component.hpp"
 #include "game/component/core/transform_component.hpp"
-#include "game/construction/shared/entity/scene/move_region_entity.hpp"
 #include "game/construction/ui/shared/entity/move_transition_entity.hpp"
 #include "game/state/game_state.hpp"
 #include "game/state/scene.hpp"
@@ -17,8 +17,8 @@
 
 const entt::entity Entity::MoveRegion::Create(
 	entt::registry& registry, 
-	GameState& gameState, 
 	Nc::ResourceStore& resourceStore,
+	GameState& gameState, 
 	const Component::Transform&& transform,
 	Scene currentScene, 
 	Scene nextScene, 
@@ -31,16 +31,16 @@ const entt::entity Entity::MoveRegion::Create(
 	registry.emplace<Component::Transform>(entity, transform);
 
 	std::function<void()> onClick = [&registry, &gameState, &resourceStore, nextScene, moveTime]()
-		{
-			if (gameState.movingToScene != NullScene) return;
-			gameState.movingToScene = nextScene;
+	{
+		if (gameState.movingToScene != NullScene) return;
+		gameState.movingToScene = nextScene;
 
-			MoveTransition::StartMoveScene(registry, gameState, nextScene, moveTime);
+		MoveTransition::StartMoveScene(registry, gameState, nextScene, moveTime);
 
-			const Sound& transitionSound = resourceStore.GetSound("assets/audio/effects/scene_transition.wav");
-			PlaySound(transitionSound);
+		const Sound& transitionSound = resourceStore.GetSound("assets/audio/effects/scene_transition.wav");
+		PlaySound(transitionSound);
 
-		};
+	};
 
 	registry.emplace<Component::Action::Click>(entity, std::move(onClick));
 	return entity;
@@ -49,8 +49,8 @@ const entt::entity Entity::MoveRegion::Create(
 
 const entt::entity Entity::MoveRegion::Create(
 	entt::registry& registry, 
-	GameState& gameState, 
 	Nc::ResourceStore& resourceStore,
+	GameState& gameState, 
 	Direction region, 
 	Scene currentScene, 
 	Scene nextScene, 
@@ -105,8 +105,8 @@ const entt::entity Entity::MoveRegion::Create(
 
 	return Create(
 		registry, 
-		gameState, 
 		resourceStore, 
+		gameState, 
 		std::move(transform), 
 		currentScene, 
 		nextScene, 

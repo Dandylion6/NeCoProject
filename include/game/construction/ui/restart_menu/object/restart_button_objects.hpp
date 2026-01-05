@@ -12,9 +12,9 @@ class RestartButton final
 {
 public:
     static void Create(
-        Game& game,
         entt::registry& registry,
         Nc::ResourceStore& resourceStore,
+        Game& game,
         GameState& gameState
     ) noexcept;
 
@@ -24,11 +24,7 @@ public:
 class RestartToMainButton final
 {
 public:
-    static void Create(
-        entt::registry& regsitry,
-        Nc::ResourceStore& resourseStore,
-        GameState& gameState
-    ) noexcept;
+    static void Create(entt::registry& regsitry, Nc::ResourceStore& resourseStore, GameState& gameState) noexcept;
 
 };
 

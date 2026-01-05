@@ -16,9 +16,9 @@ class DeskScene final
 public:
 	static void Build(
 		entt::registry& registry,
-		GameState& gameState,
+		Nc::ResourceStore& resourceStore,
 		Nc::RenderContext& renderContext,
-		Nc::ResourceStore& resourceStore
+		GameState& gameState
 	) noexcept;
 
 };

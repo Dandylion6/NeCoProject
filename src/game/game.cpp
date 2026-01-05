@@ -1,3 +1,4 @@
+#include "game/game.hpp"
 #include "core/data/vector2.hpp"
 #include "core/runtime/render_context.hpp"
 #include "entt/entity/fwd.hpp"
@@ -10,7 +11,6 @@
 #include "game/construction/ui/restart_menu/restart_menu.hpp"
 #include "game/construction/ui/settings_menu/settings_menu.hpp"
 #include "game/construction/ui/shared/entity/move_transition_entity.hpp"
-#include "game/game.hpp"
 #include "game/save/save_settings.hpp"
 #include "game/state/game_state.hpp"
 #include "game/system/core/audio/ambient_sound_system.hpp"
@@ -50,19 +50,19 @@
 #include <cmath>
 
 #ifdef DEBUG_BUILD
-#include "game/debug/debug_context.hpp"
-#include "game/save/save_game.hpp"
-#include "game/state/scene.hpp"
 #include "game/component/core/interactive/click_action_component.hpp"
 #include "game/component/core/rendering/text_component.hpp"
 #include "game/component/core/transform_component.hpp"
+#include "game/debug/debug_context.hpp"
+#include "game/save/save_game.hpp"
+#include "game/state/scene.hpp"
 #include "game/utility/morse_code.hpp"
 #include <cstdint>
 #include <cstring>
 #include <functional>
 #include <string>
 #include <utility>
-DebugContext Game::debugContext { };
+DebugContext Game::debugContext{};
 #endif // DEBUG_BUILD
 
 
@@ -142,12 +142,15 @@ void Game::SetupDebug(int args, char* argv[])
 
 void Game::BuildMenuUI()
 {
-	MainMenu::Build(*this, registry, gameState, resourceStore);
-	SettingsMenu::Build(settings, pendingSettings, gameState, Nc::Vector2f(renderContext.windowSize), registry, resourceStore);
-	RestartMenu::Build(*this, registry, gameState, resourceStore, Nc::Vector2f(renderContext.windowSize));
+	Nc::Vector2f windowSize = Nc::Vector2f(renderContext.windowSize);
+
+	Structure::MainMenu::Build(registry, resourceStore, *this, gameState);
+	Structure::SettingsMenu::Build(registry, resourceStore, settings, pendingSettings, gameState, windowSize);
+	Structure::RestartMenu::Build(registry, resourceStore, *this, gameState, windowSize);
 
 #ifdef DEBUG_BUILD
- 	if (!Game::debugContext.ignoreMainMenu) MainMenu::Open(registry, gameState);
+ 	if (!Game::debugContext.ignoreMainMenu) 
+		Structure::MainMenu::Open(registry, gameState);
 	else
 	{
 		// Load a mock game state for testing.
@@ -171,13 +174,13 @@ void Game::BuildMenuUI()
 
 void Game::BuildRuntimeScenes()
 {
-	Construct::MoveTransitionEntity(registry, renderContext, gameState);
-	Construct::AmbientSoundEntity(registry);
+	Entity::MoveTransition::Create(registry, renderContext, gameState);
+	Entity::AmbientSound::Create(registry);
 
-	CommsScene::Build(registry, renderContext, gameState, resourceStore);
-	DeskScene::Build(registry, renderContext, gameState, resourceStore);
-	DoorwayScene::Build(registry, gameState, resourceStore, renderContext);
-	OutsideScene::Build(registry, gameState, resourceStore);
+	Structure::CommsScene::Build(registry, resourceStore, renderContext, gameState);
+	Structure::DeskScene::Build(registry, resourceStore, renderContext, gameState);
+	Structure::DoorwayScene::Build(registry, resourceStore, renderContext, gameState);
+	Structure::OutsideScene::Build(registry, resourceStore, gameState);
 }
 
 
@@ -338,7 +341,7 @@ void Game::DrawGame(float deltaTime)
 
 void Game::Death(entt::registry& registry, GameState& gameState)
 {
-	RestartMenu::Open(registry, gameState);
+	Structure::RestartMenu::Open(registry, gameState);
 }
 
 

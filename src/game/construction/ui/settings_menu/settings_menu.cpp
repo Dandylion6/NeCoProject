@@ -1,3 +1,4 @@
+#include "game/construction/ui/settings_menu/settings_menu.hpp"
 #include "core/data/vector2.hpp"
 #include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
@@ -8,7 +9,6 @@
 #include "game/construction/ui/settings_menu/object/increment_setting_object.hpp"
 #include "game/construction/ui/settings_menu/object/settings_background_object.hpp"
 #include "game/construction/ui/settings_menu/object/settings_button_objects.hpp"
-#include "game/construction/ui/settings_menu/settings_menu.hpp"
 #include "game/state/game_state.hpp"
 #include "game/state/scene.hpp"
 #include "game/state/settings.hpp"
@@ -16,67 +16,76 @@
 #include "game/tag/ui/settings_tag.hpp"
 
 
-void SettingsMenu::Build(
+void Structure::SettingsMenu::Build(
+    entt::registry& registry, 
+    Nc::ResourceStore& resourceStore,
     Settings& settings, 
     Settings& pendingSettings, 
     GameState& gameState, 
-    Nc::Vector2f windowSize, 
-    entt::registry& registry, 
-    Nc::ResourceStore& resourceStore
-) 
+    Nc::Vector2f windowSize
+) noexcept
 {
-    Construct::SettingsHeaderEntity(registry);
-    Construct::GameplaySettingsHeaderEntity(registry);
+    constexpr Nc::Vector2f POSITION = Nc::Vector2f(0.3f, 0.3f);
+    constexpr Nc::Vector2f MORSE_RANGE = Nc::Vector2f(0.1f, 0.4f);
+    
+    Entity::SettingsHeader::Create(registry);
+    Entity::GameplaySettingsHeader::Create(registry);
 
-    Construct::SettingsToMainButton(settings, pendingSettings, gameState, registry, resourceStore);
-    Construct::ApplySettingsButton(settings, pendingSettings, registry, resourceStore);
+    Object::SettingsToMainButton::Create(registry, resourceStore, settings, pendingSettings, gameState);
+    Object::ApplySettingsButton::Create(registry, resourceStore, settings, pendingSettings);
 
-    Construct::IncrementSettingObject<Tag::Settings, Tag::DontDestroyOnLoad>(
-        Nc::Vector2f(0.3f, 0.3f),
-        "Morse code DOT duration",
-        Component::UI::Increment(&pendingSettings.morseSettings.dotTime, 0.02f, Nc::Vector2f(0.1f, 0.4f), 2u), 
+    float* dotTimeValue = &pendingSettings.morseSettings.dotTime;
+    Component::UI::Increment increment = Component::UI::Increment(dotTimeValue, 0.02f, MORSE_RANGE, 2u);
+
+    const Object::IncrementSetting::Data data = Object::IncrementSetting::Create(
         registry, 
-        resourceStore
+        resourceStore, 
+        "Morse code DOT duration", 
+        std::move(increment), 
+        POSITION
     );
 
-    Construct::SettingsBackgroundEntity(registry, gameState, windowSize);
+    for (entt::entity entity : data.All())
+    {
+        registry.emplace<Tag::Settings>(entity);
+        registry.emplace<Tag::DontDestroyOnLoad>(entity);
+    }
+
+    Object::SettingsBackground::Create(registry, gameState, windowSize);
 
     SettingsMenu::Close(registry, gameState);
 }
 
 
-namespace SettingsMenu 
+void Structure::SettingsMenu::Toggle(entt::registry& registry, GameState& gameState) noexcept
 {
-    static void Toggle(entt::registry& registry, GameState& gameState, ToggleState state)
-    {
-        auto view = registry.view<const Tag::Settings, Component::UI::Transform>();
-        for (auto [entity, transform] : view.each())
-        {
-            if (registry.any_of<Component::Action::Toggle>(entity))
-            {
-                Component::Action::Toggle& toggle = registry.get<Component::Action::Toggle>(entity);
-                toggle.state = state;
-            }
-            transform.isVisible = state == On;
-        }
-        gameState.isPaused = state == On;
-    }
+    auto view = registry.view<const Tag::Settings, Component::Action::Toggle>();
+	for (auto [settingsEntity, toggle] : view.each())
+	{
+        if (gameState.currentScene != NullScene)
+		    SettingsMenu::Toggle(registry, gameState, Component::Action::Toggle::Next(toggle.state));
+	}
 }
 
 
-void SettingsMenu::Open(entt::registry& registry, GameState& gameState)
+void Structure::SettingsMenu::Open(entt::registry& registry, GameState& gameState) noexcept
 {
     SettingsMenu::Toggle(registry, gameState, On);
 }
 
 
-void SettingsMenu::Close(entt::registry& registry, GameState& gameState)
+void Structure::SettingsMenu::Close(entt::registry& registry, GameState& gameState) noexcept
 {
     SettingsMenu::Toggle(registry, gameState, Off);
 }
 
 
-void SettingsMenu::Close(Settings& settings, Settings& pendingSettings, entt::registry& registry, GameState& gameState)
+void Structure::SettingsMenu::Close(
+    entt::registry& registry, 
+    GameState& gameState, 
+    Settings& settings, 
+    Settings& pendingSettings
+) noexcept
 {
     if (settings == pendingSettings) return SettingsMenu::Close(registry, gameState); 
     // TODO: Add warning for unsaved changes.
@@ -85,12 +94,17 @@ void SettingsMenu::Close(Settings& settings, Settings& pendingSettings, entt::re
 }
 
 
-void SettingsMenu::Toggle(entt::registry& registry, GameState& gameState)
+void Structure::SettingsMenu::Toggle(entt::registry& registry, GameState& gameState, ToggleState state) noexcept
 {
-    auto view = registry.view<const Tag::Settings, Component::Action::Toggle>();
-	for (auto [settingsEntity, toggle] : view.each())
-	{
-        if (gameState.currentScene != NullScene)
-		    SettingsMenu::Toggle(registry, gameState, Component::Action::Toggle::Next(toggle.state));
-	}
+    auto view = registry.view<const Tag::Settings, Component::UI::Transform>();
+    for (auto [entity, transform] : view.each())
+    {
+        if (registry.any_of<Component::Action::Toggle>(entity))
+        {
+            Component::Action::Toggle& toggle = registry.get<Component::Action::Toggle>(entity);
+            toggle.state = state;
+        }
+        transform.isVisible = state == On;
+    }
+    gameState.isPaused = state == On;
 }

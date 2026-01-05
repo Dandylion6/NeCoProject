@@ -10,11 +10,7 @@ namespace Structure
 class OutsideScene final
 {
 public:
-	static void Build(
-		entt::registry& registry,
-		GameState& gameState,
-		Nc::ResourceStore& resourceStore
-	) noexcept;
+	static void Build(entt::registry& registry, Nc::ResourceStore& resourceStore, GameState& gameState) noexcept;
 
 };
 

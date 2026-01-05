@@ -9,10 +9,7 @@ namespace Entity
 class Note final
 {
 public:
-	static const entt::entity Create(
-		entt::registry& registry,
-		Nc::ResourceStore& resourceStore
-	) noexcept;
+	static const entt::entity Create(entt::registry& registry, Nc::ResourceStore& resourceStore) noexcept;
 
 };
 

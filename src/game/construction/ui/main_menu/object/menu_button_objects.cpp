@@ -26,17 +26,26 @@ void Object::PlayButton::Create(
 	constexpr Nc::Vector2f ANCHOR_POINT = Nc::Vector2f(0.5f, 0.5f);
 	constexpr Nc::Vector2f ORIGIN = Nc::Vector2f::Scale(0.5f);
 
-	Component::UI::Transform transform = Component::UI::Transform(ANCHOR_POINT, ORIGIN);
-
 	std::function<void()> onClick = [&game, &gameState, &registry]()
 	{
 		Save::LoadGame(game, registry, gameState);
-		MainMenu::Close(registry, gameState);
+		Structure::MainMenu::Close(registry, gameState);
 	};
-
-	LabelButton button = Construct::LabelButtonObject<Tag::MainMenu, Tag::DontDestroyOnLoad>(
-		std::move(transform), "PLAY", std::move(onClick), registry, resourceStore
+	
+	Component::UI::Transform transform = Component::UI::Transform(ANCHOR_POINT, ORIGIN);
+	Object::LabelButton::Data data = Object::LabelButton::Create(
+		registry,
+		resourceStore,
+		std::move(transform),
+		"PLAY",
+		std::move(onClick)
 	);
+
+	for (entt::entity entity : data.All())
+	{
+		registry.emplace<Tag::MainMenu>(entity);
+		registry.emplace<Tag::DontDestroyOnLoad>(entity);
+	}
 }
 
 
@@ -49,19 +58,28 @@ void Object::SettingsButton::Create(
 	constexpr Nc::Vector2f ANCHOR_POINT = Nc::Vector2f(0.5f, 0.56f);
 	constexpr Nc::Vector2f ORIGIN = Nc::Vector2f::Scale(0.5f);
 
-	Component::UI::Transform transform = Component::UI::Transform(ANCHOR_POINT, ORIGIN);
-
 	std::function<void()> onClick = [&gameState, &registry]()
-		{
-			auto view = registry.view<Tag::MainMenu, Component::UI::Transform>();
-			for (auto [entity, transform] : view.each()) transform.isVisible = false;
-
-			SettingsMenu::Open(registry, gameState);
-		};
-
-	LabelButton button = Construct::LabelButtonObject<Tag::MainMenu, Tag::DontDestroyOnLoad>(
-		std::move(transform), "SETTINGS", std::move(onClick), registry, resourceStore
+	{
+		auto view = registry.view<Tag::MainMenu, Component::UI::Transform>();
+		for (auto [entity, transform] : view.each()) transform.isVisible = false;
+		
+		Structure::SettingsMenu::Open(registry, gameState);
+	};
+	
+	Component::UI::Transform transform = Component::UI::Transform(ANCHOR_POINT, ORIGIN);
+	Object::LabelButton::Data data = Object::LabelButton::Create(
+		registry,
+		resourceStore,
+		std::move(transform),
+		"SETTINGS",
+		std::move(onClick)
 	);
+
+	for (entt::entity entity : data.All())
+	{
+		registry.emplace<Tag::MainMenu>(entity);
+		registry.emplace<Tag::DontDestroyOnLoad>(entity);
+	}
 }
 
 
@@ -81,7 +99,17 @@ void Object::ExitButton::Create(
 			gameState.shouldExit = true;
 		};
 
-	LabelButton button = Construct::LabelButtonObject<Tag::MainMenu, Tag::DontDestroyOnLoad>(
-		std::move(transform), "EXIT", std::move(onClick), registry, resourceStore
+	Object::LabelButton::Data data = Object::LabelButton::Create(
+		registry,
+		resourceStore,
+		std::move(transform),
+		"EXIT",
+		std::move(onClick)
 	);
+
+	for (entt::entity entity : data.All())
+	{
+		registry.emplace<Tag::MainMenu>(entity);
+		registry.emplace<Tag::DontDestroyOnLoad>(entity);
+	}
 }

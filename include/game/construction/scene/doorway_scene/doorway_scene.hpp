@@ -16,9 +16,9 @@ class DoorwayScene final
 public:
 	static void Build(
 		entt::registry& registry, 
-		GameState& gameState, 
 		Nc::ResourceStore& resourceStore, 
-		Nc::RenderContext& renderContext
+		Nc::RenderContext& renderContext,
+		GameState& gameState
 	) noexcept;
 
 };

@@ -16,53 +16,13 @@
 #include <functional>
 
 
-void MoveTransition::StartMoveScene(
-	entt::registry& registry, GameState& gameState, Scene nextScene, float moveTime
-)
-{
-	entt::entity entity = registry.view<Tag::MoveTransition>().front();
-	Component::TweenCollection& collection = registry.get<Component::TweenCollection>(entity);
-	collection.tweens.at(MoveTransition::Tweens::TransitionDown).delayComplete = moveTime;
-	
-	auto view = registry.view<Tag::MoveRegion, Component::Action::Click>();
-	for (auto [entity, button] : view.each()) button.isActive = false;
-
-	std::function<void()> switchScene = [&collection, &gameState, nextScene]()
-	{
-		gameState.currentScene = nextScene;
-		gameState.movingToScene = NullScene;
-
-		Tween::Play(collection.tweens.at(MoveTransition::Tweens::TransitionUp));
-	};
-
-	Tween& tweenDown = collection.tweens.at(MoveTransition::Tweens::TransitionDown);
-	tweenDown.onComplete = switchScene;
-	Tween::Play(tweenDown);
-}
-
-
-void MoveTransition::InstantTransition(
-	entt::registry& registry, GameState& gameState, Scene nextScene
-)
-{
-	entt::entity entity = registry.view<Tag::MoveTransition>().front();
-	Component::TweenCollection& collection = registry.get<Component::TweenCollection>(entity);
-
-	gameState.currentScene = nextScene;
-	gameState.movingToScene = NullScene;
-
-	Tween::Play(collection.tweens.at(MoveTransition::Tweens::TransitionUp));
-}
-
-
-const entt::entity Construct::MoveTransitionEntity(
+const entt::entity Entity::MoveTransition::Create(
 	entt::registry& registry, 
-	Nc::RenderContext& renderContext,
+	Nc::RenderContext& renderContext, 
 	GameState& gameState
-)
+) noexcept
 {
-
-	const entt::entity entity = registry.create();
+    const entt::entity entity = registry.create();
 
 	Nc::Vector2f size = Nc::Vector2f(renderContext.windowSize);
 	Component::UI::Transform& transform = registry.emplace<Component::UI::Transform>(
@@ -100,4 +60,50 @@ const entt::entity Construct::MoveTransitionEntity(
 	};
 
 	return entity;
+}
+
+
+void Entity::MoveTransition::StartMoveScene(
+	entt::registry& registry, 
+	GameState& gameState, 
+	Scene nextScene, 
+	float moveTime
+) noexcept
+{
+	auto view = registry.view<const Tag::MoveTransition, Component::TweenCollection>();
+	for (auto [entity, collection] : view.each())
+	{
+		collection.tweens.at(MoveTransition::Tweens::TransitionDown).delayComplete = moveTime;
+	
+		std::function<void()> switchScene = [&collection, &gameState, nextScene]()
+		{
+			gameState.currentScene = nextScene;
+			gameState.movingToScene = NullScene;
+
+			Tween& tweenUp = collection.tweens.at(MoveTransition::Tweens::TransitionUp);
+			Tween::Play(tweenUp);
+		};
+
+		Tween& tweenDown = collection.tweens.at(MoveTransition::Tweens::TransitionDown);
+		tweenDown.onComplete = switchScene;
+		Tween::Play(tweenDown);
+	}
+}
+
+
+void Entity::MoveTransition::InstantTransition(
+	entt::registry& registry, 
+	GameState& gameState, 
+	Scene nextScene
+) noexcept
+{
+	auto view = registry.view<const Tag::MoveTransition, Component::TweenCollection>();
+	for (auto [entity, collection] : view.each())
+	{
+		gameState.currentScene = nextScene;
+		gameState.movingToScene = NullScene;
+
+		Tween& tween = collection.tweens.at(MoveTransition::Tweens::TransitionUp);
+		Tween::Play(tween);
+	}
 }

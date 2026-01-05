@@ -16,9 +16,9 @@ class CommsScene final
 public:
 	static void Build(
 		entt::registry& registry,
+		Nc::ResourceStore& resourceStore,
 		Nc::RenderContext& renderContext,
-		GameState& gameState,
-		Nc::ResourceStore& resourceStore
+		GameState& gameState
 	) noexcept;
 
 };

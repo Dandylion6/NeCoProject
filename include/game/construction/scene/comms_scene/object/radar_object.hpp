@@ -14,19 +14,13 @@ namespace Object
 class Radar final
 {
 public:
-	static void Create(
-		entt::registry& registry, 
-		Nc::ResourceStore& resourceStore
-	) noexcept;
+	static void Create(entt::registry& registry, Nc::ResourceStore& resourceStore) noexcept;
 
 private:
 	class Path final
 	{
 	public:
-		static const entt::entity Create(
-			entt::registry& registry,
-			Nc::ResourceStore& resourceStore
-		) noexcept;
+		static const entt::entity Create(entt::registry& registry, Nc::ResourceStore& resourceStore) noexcept;
 		
 	};
 
@@ -34,10 +28,7 @@ private:
 	class Artillery final
 	{
 	public:
-		static const entt::entity Create(
-			entt::registry& registry,
-			Nc::ResourceStore& resourceStore
-		) noexcept;
+		static const entt::entity Create(entt::registry& registry, Nc::ResourceStore& resourceStore) noexcept;
 
 	};
 
@@ -45,9 +36,7 @@ private:
 	class ErrorWarning final
 	{
 	public:
-		static const entt::entity Create(
-			entt::registry& registry
-		) noexcept;
+		static const entt::entity Create(entt::registry& registry) noexcept;
 
 	};
 
@@ -55,9 +44,7 @@ private:
 	class RecalibrationText final
 	{
 	public:
-		static const entt::entity Create(
-			entt::registry& registry
-		) noexcept;
+		static const entt::entity Create(entt::registry& registry) noexcept;
 
 	};
 

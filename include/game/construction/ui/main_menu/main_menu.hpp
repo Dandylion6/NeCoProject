@@ -12,10 +12,10 @@ class MainMenu final
 {
 public:
 	static void Build(
-		Game& game, 
 		entt::registry& registry, 
-		GameState& gameState, 
-		Nc::ResourceStore& resourceStore
+		Nc::ResourceStore& resourceStore,
+		Game& game, 
+		GameState& gameState
 	) noexcept;
 
 

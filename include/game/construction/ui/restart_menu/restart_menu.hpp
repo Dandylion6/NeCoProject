@@ -14,9 +14,9 @@ class RestartMenu final
 {
 public:
 	static void Build(
-		Game& game,
 		entt::registry& registry,
 		Nc::ResourceStore& resourceStore,
+		Game& game,
 		GameState& gameState,
 		Nc::Vector2f windowSize
 	) noexcept;
@@ -26,11 +26,7 @@ public:
 	static void Close(entt::registry& registry, GameState& gameState) noexcept;
 
 private:
-	static void Toggle(
-		entt::registry& registry, 
-		GameState& gameState, 
-		bool active
-	) noexcept;
+	static void Toggle(entt::registry& registry, GameState& gameState, bool active) noexcept;
 
 };
 

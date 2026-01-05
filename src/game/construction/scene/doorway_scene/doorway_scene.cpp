@@ -14,19 +14,20 @@
 
 void Structure::DoorwayScene::Build(
 	entt::registry& registry, 
-	GameState& gameState, 
 	Nc::ResourceStore& resourceStore, 
-	Nc::RenderContext& renderContext
+	Nc::RenderContext& renderContext,
+	GameState& gameState
 ) noexcept
 {
 	constexpr Nc::Hex LIGHT_COLOR = 0xfee8c8ff;
 	
 	Texture2D backgroundText = resourceStore.GetTexture("assets/environment/backgrounds/doorway.png");
 	Entity::SceneBackground::Create(std::move(backgroundText), registry, Doorway);
-	Entity::MoveRegion::Create(registry, gameState, resourceStore, Left, Doorway, CommsRoom, 0.4f);
+	Entity::MoveRegion::Create(registry, resourceStore, gameState, Left, Doorway, CommsRoom, 0.4f);
 
 	Nc::Vector2f windowSize = Nc::Vector2f(renderContext.windowSize);
 	Nc::Vector2f lightPosition = windowSize * Nc::Vector2f(0.5f, 1.3f);
 	float lightRadius = 940.0f * renderContext.renderScale;
-	Construct::LightPointEntity(registry, lightPosition, Doorway, LIGHT_COLOR, 1.6f, lightRadius);
+	
+	Entity::LightPoint::Create(registry, Doorway, lightPosition, LIGHT_COLOR, 1.6f, lightRadius);
 }

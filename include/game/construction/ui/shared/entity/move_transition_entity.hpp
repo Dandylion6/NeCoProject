@@ -1,38 +1,44 @@
 #pragma once
-#include "game/state/scene.hpp"
 #include "entt/entity/fwd.hpp"
+#include "game/state/scene.hpp"
 struct GameState;
 namespace Nc { struct RenderContext; };
 
 
-namespace Construct
+namespace Entity
 {
-	const entt::entity MoveTransitionEntity(
+
+class MoveTransition final
+{
+public:
+	static const entt::entity Create(
 		entt::registry& registry, 
 		Nc::RenderContext& renderContext,
 		GameState& gameState
-	);
-}
+	) noexcept;
 
 
-namespace MoveTransition
-{
+	static void StartMoveScene(
+		entt::registry& registry, 
+		GameState& gameState, 
+		Scene nextScene, 
+		float moveTime
+	) noexcept;
+
+
+	static void InstantTransition(
+		entt::registry& registry,
+		GameState& gameState,
+		Scene nextScene
+	) noexcept;
+
+private:
 	enum Tweens
 	{
 		TransitionDown = 0u,
 		TransitionUp = 1u,
 	};
 
-	void StartMoveScene(
-		entt::registry& registry, 
-		GameState& gameState, 
-		Scene nextScene, 
-		float moveTime
-	);
+};
 
-	void InstantTransition(
-		entt::registry& registry,
-		GameState& gameState,
-		Scene nextScene
-	);
 }

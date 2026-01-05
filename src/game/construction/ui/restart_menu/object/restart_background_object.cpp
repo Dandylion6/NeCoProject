@@ -1,3 +1,4 @@
+#include "game/construction/ui/restart_menu/object/restart_background_object.hpp"
 #include "core/data/vector2.hpp"
 #include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
@@ -5,7 +6,6 @@
 #include "game/component/core/rendering/rectangle_component.hpp"
 #include "game/component/core/rendering/sprite_component.hpp"
 #include "game/component/core/transform_component.hpp"
-#include "game/construction/ui/restart_menu/object/restart_background_object.hpp"
 #include "game/tag/core/life_cycle/dont_destroy_on_load_tag.hpp"
 #include "game/tag/ui/restart_menu_tag.hpp"
 #include "game/utility/color_palette.hpp"
@@ -45,7 +45,8 @@ const entt::entity Object::RestartMenuBackground::FrontTexture::Create(
 
 
 const entt::entity Object::RestartMenuBackground::Backdrop::Create(
-	entt::registry& registry, Nc::Vector2f windowSize
+	entt::registry& registry, 
+	Nc::Vector2f windowSize
 ) noexcept
 {
 	constexpr Nc::Vector2f CENTER = Nc::Vector2f::Scale(0.5f);

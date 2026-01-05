@@ -47,7 +47,7 @@ const entt::entity Object::SettingsBackground::FrontTexture::Create(
 
 	std::function<void()> toggleSettings = [&registry, &gameState]()
 	{
-		SettingsMenu::Toggle(registry, gameState);
+		Structure::SettingsMenu::Toggle(registry, gameState);
 	};
 	registry.emplace<Component::Action::Input>(entity, std::move(toggleSettings), KEY_ESCAPE);
 	registry.emplace<Component::Action::Toggle>(entity);

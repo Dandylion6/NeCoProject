@@ -10,9 +10,7 @@
 #include "game/tag/scene/comms_scene/morse_monitor_tag.hpp"
 
 
-void Object::MorseMonitor::Create(
-	entt::registry& registry, Nc::ResourceStore& resourceStore
-) noexcept
+void Object::MorseMonitor::Create(entt::registry& registry, Nc::ResourceStore& resourceStore) noexcept
 {
 	MorseMonitor::Pointer::Create(registry);
 
@@ -23,9 +21,7 @@ void Object::MorseMonitor::Create(
 }
 
 
-const entt::entity Object::MorseMonitor::Gauge::Create(
-	entt::registry& registry
-) noexcept
+const entt::entity Object::MorseMonitor::Gauge::Create(entt::registry& registry) noexcept
 {
 	constexpr Nc::Hex COLOR = 0xbbc4bbff;
 	constexpr Nc::Vector2f OFFSET = Nc::Vector2f::Up(MorseMonitor::GAUGE_SIZE.y * 0.5f);
@@ -33,17 +29,20 @@ const entt::entity Object::MorseMonitor::Gauge::Create(
 	const entt::entity entity = registry.create();
 
 	registry.emplace<Component::Transform>(
-		entity, CommsRoom, MorseMonitor::POSITION, MorseMonitor::GAUGE_SIZE, OFFSET
+		entity, 
+		CommsRoom, 
+		MorseMonitor::POSITION, 
+		MorseMonitor::GAUGE_SIZE, 
+		OFFSET
 	);
+
 	registry.emplace<Component::Rectangle>(entity, COLOR);
 
 	return entity;
 }
 
 
-const entt::entity Object::MorseMonitor::Pointer::Create(
-	entt::registry& registry
-) noexcept
+const entt::entity Object::MorseMonitor::Pointer::Create(entt::registry& registry) noexcept
 {
 	constexpr Nc::Vector2f POINTER_SIZE = Nc::Vector2f(4.0f, 8.0f);
 	constexpr Nc::Vector2f OFFSET = Nc::Vector2f::Up(4.0f) + POINTER_SIZE * 0.5f;
@@ -52,9 +51,14 @@ const entt::entity Object::MorseMonitor::Pointer::Create(
 	const entt::entity entity = registry.create();
 
 	registry.emplace<Tag::Morse::Monitor>(entity);
+
 	registry.emplace<Component::Rectangle>(entity, COLOR);
 	registry.emplace<Component::Transform>(
-		entity, CommsRoom, MorseMonitor::POSITION, POINTER_SIZE, OFFSET
+		entity, 
+		CommsRoom, 
+		MorseMonitor::POSITION, 
+		POINTER_SIZE, 
+		OFFSET
 	);
 
 	return entity;
@@ -62,7 +66,8 @@ const entt::entity Object::MorseMonitor::Pointer::Create(
 
 
 const entt::entity Object::MorseMonitor::Region::Create(
-	entt::registry& registry, Component::Morse::MonitorRegion::Region region
+	entt::registry& registry, 
+	Component::Morse::MonitorRegion::Region region
 ) noexcept
 {
 	constexpr Nc::Vector2f REGION_SIZE = Nc::Vector2f::Up(MorseMonitor::GAUGE_SIZE.y - 2.0f);
@@ -71,8 +76,13 @@ const entt::entity Object::MorseMonitor::Region::Create(
 	const entt::entity entity = registry.create();
 
 	registry.emplace<Component::Transform>(
-		entity, CommsRoom, MorseMonitor::POSITION, REGION_SIZE, REGION_SIZE * 0.5f
+		entity, 
+		CommsRoom, 
+		MorseMonitor::POSITION, 
+		REGION_SIZE, 
+		REGION_SIZE * 0.5f
 	);
+	
 	registry.emplace<Component::Rectangle>(entity, COLOR);
 	registry.emplace<Component::Morse::MonitorRegion>(entity, region);
 

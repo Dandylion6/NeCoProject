@@ -4,13 +4,12 @@
 
 namespace Entity
 {
-	class AmbientSound
-	{
-	public:
-		static const entt::entity Create(
-			entt::registry& registry
-		) noexcept;
 
-	};
+class AmbientSound final
+{
+public:
+	static const entt::entity Create(entt::registry& registry) noexcept;
+
+};
 
 }

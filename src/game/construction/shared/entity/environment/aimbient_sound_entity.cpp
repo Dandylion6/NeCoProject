@@ -9,7 +9,7 @@
 #include "game/tag/core/ambient_sound_tag.hpp"
 
 
-const entt::entity Entity::AmbientSound::Create(entt::registry& registry)
+const entt::entity Entity::AmbientSound::Create(entt::registry& registry) noexcept
 {
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(Nc::RENDER_RESOLUTION) * 0.5f;
 

@@ -25,7 +25,9 @@ Object::CircuitBreaker::Data Object::CircuitBreaker::Create(
     const entt::entity indicator = Indicator::Create(registry, scene, centerPosition);
 
     Component::Logic::CircuitBreaker& breaker = registry.emplace<Component::Logic::CircuitBreaker>(
-        leverData.entity, system, indicator
+        leverData.entity, 
+        system, 
+        indicator
     );
 
     return { breaker, leverData.entity, indicator };

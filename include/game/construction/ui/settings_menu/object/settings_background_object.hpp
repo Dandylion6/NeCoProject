@@ -4,33 +4,19 @@
 struct GameState;
 
 
-namespace Construct 
-{
-    const entt::entity SettingsBackgroundEntity(
-        entt::registry& registry, GameState& gameState, Nc::Vector2f windowSize
-    );
-}
-
-
 namespace Object
 {
 
 class SettingsBackground final
 {
 public:
-    static void Create(
-        entt::registry& registry,
-        GameState& gameState,
-        Nc::Vector2f windowSize
-    ) noexcept;
+    static void Create(entt::registry& registry, GameState& gameState, Nc::Vector2f windowSize) noexcept;
 
 private:
     class FrontTexture final
     {
     public:
-        static const entt::entity Create(
-            entt::registry& registry, GameState& gameState
-        ) noexcept;
+        static const entt::entity Create(entt::registry& registry, GameState& gameState) noexcept;
 
     };
 
@@ -38,9 +24,7 @@ private:
     class Backdrop final
     {
     public:
-        static const entt::entity Create(
-            entt::registry& registry, Nc::Vector2f windowSize
-        ) noexcept;
+        static const entt::entity Create(entt::registry& registry, Nc::Vector2f windowSize) noexcept;
 
     };
 

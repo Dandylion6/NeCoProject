@@ -24,11 +24,7 @@ public:
 class SettingsButton final
 {
 public:
-	static void Create(
-		entt::registry& registry, 
-		GameState& gameState, 
-		Nc::ResourceStore& resourceStore
-	) noexcept;
+	static void Create(entt::registry& registry, GameState& gameState, Nc::ResourceStore& resourceStore) noexcept;
 
 };
 
@@ -36,11 +32,7 @@ public:
 class ExitButton final
 {
 public:
-	static void Create(
-		entt::registry& registry, 
-		GameState& gameState, 
-		Nc::ResourceStore& resourceStore
-	) noexcept;
+	static void Create(entt::registry& registry, GameState& gameState, Nc::ResourceStore& resourceStore) noexcept;
 
 };
 

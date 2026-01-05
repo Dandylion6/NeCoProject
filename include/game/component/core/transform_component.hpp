@@ -15,12 +15,12 @@ namespace Component
  * specific in-game scene. It provides positional, rotational, and
  * dimensional information used to render or simulate entities in the world.
  *
- * - **position**: The entity’s position in world-space coordinates.
- * - **size**: The raw pixel or unit dimensions of the entity’s visual or physical representation.
+ * - **position**: The entityï¿½s position in world-space coordinates.
+ * - **size**: The raw pixel or unit dimensions of the entityï¿½s visual or physical representation.
  * - **offset**: Local positional offset applied before rendering (useful for aligning sprites).
- * - **rotation**: Rotation in radians around the entity’s origin.
+ * - **rotation**: Rotation in radians around the entityï¿½s origin.
  * - **boundScene**: The scene this transform belongs to; only rendered if active.
- * - **index**: The entity’s draw order or layer index.
+ * - **index**: The entityï¿½s draw order or layer index.
  *
  * Usage example:
  * 
@@ -84,11 +84,11 @@ namespace Component::UI
  *
  * This component contains all layout and rendering-related positional data
  * used by the UI rendering system. It specifies *where* and *how* an entity
- * is drawn on the screen — including anchoring behavior, pixel dimensions,
+ * is drawn on the screen ï¿½ including anchoring behavior, pixel dimensions,
  * screen offset, rotation, and rendering order.
  *
- * - **anchor**: normalized (0–1) position relative to the screen or parent container.
- * - **origin**: normalized (0–1) pivot point within the UI element itself.
+ * - **anchor**: normalized (0ï¿½1) position relative to the screen or parent container.
+ * - **origin**: normalized (0ï¿½1) pivot point within the UI element itself.
  * - **size**: the raw pixel dimensions of the element (unscaled).
  * - **offset**: an absolute offset in pixels, applied after anchoring.
  * - **rotation**: clockwise rotation in radians.
@@ -101,8 +101,9 @@ namespace Component::UI
  * constexpr Nc::Vector2f ANCHOR = Nc::Vector2f(0.5f, 0.5f);  // Center of the screen
  * constexpr Nc::Vector2f ORIGIN = Nc::Vector2f(0.0f, 0.5f);  // Left-center pivot
  * constexpr Nc::Vector2f SIZE = Nc::Vector2f(200.0f, 100.0f); // 200x100px box
+ * constexpr Nc::Vector2f OFFSET = Nc::Vector2f(25.0f, 0.0f); // Offset of 25px
  *
- * registry.emplace<Component::UI::Transform>(entity, ANCHOR, ORIGIN, SIZE);
+ * registry.emplace<Component::UI::Transform>(entity, ANCHOR, ORIGIN, SIZE, OFFSET, 1);
  * registry.emplace<Component::Sprite>(entity, texture);
  * ```
  */
@@ -122,6 +123,11 @@ struct Transform
 	// ------ Constructors ------
 
 	constexpr Transform() noexcept = default;
+	constexpr Transform(Nc::Vector2f anchor, Nc::Vector2f origin, SortIndex index) noexcept 
+		: anchor(anchor), origin(origin), index(index)
+	{ }; 
+
+
 	constexpr Transform(
 		Nc::Vector2f anchor,
 		Nc::Vector2f origin = Nc::Vector2f::Zero(),
@@ -138,4 +144,5 @@ struct Transform
 		rotation(rotation)
 	{ };
 };
+
 }
