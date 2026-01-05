@@ -1,12 +1,21 @@
 #pragma once
-#include "game/state/scene.hpp"
 #include "entt/entity/fwd.hpp"
+#include "game/state/scene.hpp"
 #include "raylib.h"
 
 
-namespace Construct
+namespace Entity
 {
-	const entt::entity SceneBackgroundEntity(
-		Texture2D&& texture, entt::registry& registry, Scene scene
-	);
+
+class SceneBackground final
+{
+public:
+	static const entt::entity Create(
+		Texture2D&& texture, 
+		entt::registry& registry, 
+		Scene scene
+	) noexcept;
+
+};
+
 }

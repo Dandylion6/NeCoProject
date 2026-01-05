@@ -14,19 +14,24 @@
 #include <utility>
 
 
-void Construct::ArtilleryEntity(entt::registry& registry)
+const entt::entity Entity::Artillery::Create(
+	entt::registry& registry
+) noexcept
 {
-	constexpr Nc::Vector2f position = Nc::Vector2f(Nc::RENDER_RESOLUTION) * 0.5f;
+	// @brief Amount of people at the artillery base is considered its health.
 	constexpr uint16_t SQUAD_COUNT = 3u;
+	constexpr Nc::Vector2f POSITION = Nc::Vector2f(Nc::RENDER_RESOLUTION) * 0.5f;
 
 	const entt::entity entity = registry.create();
 
-	registry.emplace<Component::Receiver>(entity);
 	registry.emplace<Component::Artillery>(entity);
-	registry.emplace<Component::Transform>(entity, Outside, position);
-	// Artillery has 3 people, this might be useful in the future
+	registry.emplace<Component::Receiver>(entity);
+
+	registry.emplace<Component::Transform>(entity, Outside, POSITION);
 	registry.emplace<Component::Health>(entity, SQUAD_COUNT);
 
 	Sound sound = LoadSound("assets/audio/object/artillery_fire.wav");
 	registry.emplace<Component::SoundEmitter>(entity, std::move(sound));
+
+	return entity;
 }

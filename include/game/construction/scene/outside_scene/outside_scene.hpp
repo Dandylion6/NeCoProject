@@ -4,11 +4,18 @@ struct GameState;
 namespace Nc { class ResourceStore; };
 
 
-namespace OutsideScene
+namespace Structure
 {
-	void Build(
+
+class OutsideScene final
+{
+public:
+	static void Build(
 		entt::registry& registry,
 		GameState& gameState,
 		Nc::ResourceStore& resourceStore
-	);
+	) noexcept;
+
+};
+
 }

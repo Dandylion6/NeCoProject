@@ -18,8 +18,8 @@ void ProjectileHitSystem::Update(entt::registry& registry, float deltaTime)
 {
 	std::vector<Nc::Vector2f> hitPositions { };
 
-	auto view = registry.view<Component::Projectile, Component::SoundEmitter>();
-	for (auto [entity, projectile, emitter] : view.each())
+	auto view = registry.view<const Component::Transform, Component::Projectile, Component::SoundEmitter>();
+	for (auto [entity, transform, projectile, emitter] : view.each())
 	{
 		if (!projectile.isActive)
 		{
@@ -34,7 +34,7 @@ void ProjectileHitSystem::Update(entt::registry& registry, float deltaTime)
 		}
 
 		projectile.isActive = false;
-		hitPositions.push_back(projectile.hitPosition);
+		hitPositions.push_back(transform.position);
 		SoundEmitterSystem::PlayEmitter(emitter);
 	}
 

@@ -5,17 +5,43 @@ struct GameState;
 namespace Nc { class ResourceStore; };
 
 
-namespace Construct
+namespace Object
 {
-	void PlayButtonObject(
-		Game& game, entt::registry& registry, GameState& gameState, Nc::ResourceStore& resourceStore
-	);
 
-	void SettingsButtonObject(
-		entt::registry& registry, GameState& gameState, Nc::ResourceStore& resourceStore
-	);
+class PlayButton final
+{
+public:
+	static void Create(
+		Game& game, 
+		entt::registry& registry, 
+		GameState& gameState, 
+		Nc::ResourceStore& resourceStore
+	) noexcept;
 
-	void ExitButtonObject(
-		entt::registry& registry, GameState& gameState, Nc::ResourceStore& resourceStore
-	);
+};
+
+
+class SettingsButton final
+{
+public:
+	static void Create(
+		entt::registry& registry, 
+		GameState& gameState, 
+		Nc::ResourceStore& resourceStore
+	) noexcept;
+
+};
+
+
+class ExitButton final
+{
+public:
+	static void Create(
+		entt::registry& registry, 
+		GameState& gameState, 
+		Nc::ResourceStore& resourceStore
+	) noexcept;
+
+};
+
 }

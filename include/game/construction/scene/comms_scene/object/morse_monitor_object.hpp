@@ -1,27 +1,56 @@
 #pragma once
-#include "game/component/scene/comms_scene/morse_components.hpp"
-#include "entt/entity/fwd.hpp"
 #include "core/data/vector2.hpp"
+#include "entt/entity/fwd.hpp"
+#include "game/component/scene/comms_scene/morse_components.hpp"
 namespace Nc { class ResourceStore; };
 
 
-namespace MorseMonitor
+namespace Object
 {
-	constexpr Nc::Vector2f GAUGE_SIZE = Nc::Vector2f(98.0f, 8.0f);
-	constexpr Nc::Vector2f POSITION = Nc::Vector2f(280.0f, 440.0f);
-}
 
-
-namespace Construct
+class MorseMonitor final
 {
-	void MorseMonitorObject(
-		entt::registry& registry, Nc::ResourceStore& resourceStore
-	);
+public:
+	static constexpr Nc::Vector2f GAUGE_SIZE = Nc::Vector2f(98.0f, 8.0f);
+	static constexpr Nc::Vector2f POSITION = Nc::Vector2f(280.0f, 440.0f);
 
-	const entt::entity MorseMonitorPointerEntity(entt::registry& registry);
-
-	const entt::entity MorseMonitorRegionEntity(
+	
+	static void Create(
 		entt::registry& registry, 
-		Component::Morse::MonitorRegion::Region region
-	);
+		Nc::ResourceStore& resourceStore
+	) noexcept;
+
+private:
+	class Gauge final
+	{
+	public:
+		static const entt::entity Create(
+			entt::registry& registry
+		) noexcept;
+
+	};
+
+
+	class Pointer final
+	{
+	public:
+		static const entt::entity Create(
+			entt::registry& registry
+		) noexcept;
+
+	};
+
+
+	class Region final
+	{
+	public:
+		static const entt::entity Create(
+			entt::registry& registry, 
+			Component::Morse::MonitorRegion::Region region
+		) noexcept;
+
+	};
+
+};
+
 }

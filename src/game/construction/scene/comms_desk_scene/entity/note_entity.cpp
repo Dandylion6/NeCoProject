@@ -12,7 +12,9 @@
 #include <utility>
 
 
-const entt::entity Construct::NoteEntity(entt::registry& registry, Nc::ResourceStore& resourceStore)
+const entt::entity Entity::Note::Create(
+	entt::registry& registry, Nc::ResourceStore& resourceStore
+) noexcept
 {
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(Nc::RENDER_RESOLUTION) * 0.5f;
 

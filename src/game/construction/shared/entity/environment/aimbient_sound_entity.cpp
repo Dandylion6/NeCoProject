@@ -9,13 +9,14 @@
 #include "game/tag/core/ambient_sound_tag.hpp"
 
 
-const entt::entity Construct::AmbientSoundEntity(entt::registry& registry)
+const entt::entity Entity::AmbientSound::Create(entt::registry& registry)
 {
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(Nc::RENDER_RESOLUTION) * 0.5f;
 
 	const entt::entity entity = registry.create();
 
 	registry.emplace<Tag::AmbientSound>(entity);
+
 	registry.emplace<Component::Transform>(entity, NullScene, POSITION);
 	registry.emplace<Component::LoopedSoundEmitter>(entity);
 

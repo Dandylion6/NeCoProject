@@ -11,20 +11,21 @@
 #include <utility>
 
 
-const entt::entity Construct::MainMenuBackgroundEntity(
-	entt::registry& registry,
-	Nc::ResourceStore& resourceStore
-)
+const entt::entity Entity::MainMenuBackground::Create(
+	entt::registry& registry, Nc::ResourceStore& resourceStore
+) noexcept
 {
+	constexpr Nc::Vector2f CENTER = Nc::Vector2f::Scale(0.5f);
+	
 	const entt::entity entity = registry.create();
-
-	Texture2D texture = resourceStore.GetTexture("assets/environment/backgrounds/main_menu.png");
-	Nc::Vector2f size = Nc::Vector2f(texture.width, texture.height);
-	Nc::Vector2f center = Nc::Vector2f::Scale(0.5f);
 
 	registry.emplace<Tag::DontDestroyOnLoad>(entity);
 	registry.emplace<Tag::MainMenu>(entity);
-	registry.emplace<Component::UI::Transform>(entity, center, center, size);
+
+	Texture2D texture = resourceStore.GetTexture("assets/environment/backgrounds/main_menu.png");
+	Nc::Vector2f size = Nc::Vector2f(texture.width, texture.height);
+
+	registry.emplace<Component::UI::Transform>(entity, CENTER, CENTER, size);
 	registry.emplace<Component::Sprite>(entity, std::move(texture));
 
 	return entity;

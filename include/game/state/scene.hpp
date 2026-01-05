@@ -6,7 +6,7 @@ enum Scene: uint8_t
 {
 	NullScene,
 	CommsRoom,
-	Radar,
+	RadarScene,
 	CommsDesk,
 	Doorway,
 	Outside,

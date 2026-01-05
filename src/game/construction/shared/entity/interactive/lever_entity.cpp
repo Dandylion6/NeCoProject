@@ -14,7 +14,7 @@
 #include <utility>
 
 
-Assembled::LeverData Construct::LeverEntity(
+Entity::Lever::Data Entity::Lever::Create(
     entt::registry& registry, 
     const entt::entity entity, 
     Nc::Vector2f heightRange, 
@@ -27,13 +27,15 @@ Assembled::LeverData Construct::LeverEntity(
     registry.emplace<Component::Action::Drag>(entity);
     registry.emplace<Component::Action::Toggle>(entity, Disabled);
 
-    Component::Lever& lever = registry.emplace<Component::Lever>(entity, heightRange, std::move(movingAudioFile), std::move(switchedAudioFile));
+    Component::Logic::Lever& lever = registry.emplace<Component::Logic::Lever>(
+        entity, heightRange, std::move(movingAudioFile), std::move(switchedAudioFile)
+    );
     lever.currentHeight = heightRange.x;
     return { lever, entity };
 }
 
 
-Assembled::LeverData Construct::LeverEntity(
+Entity::Lever::Data Entity::Lever::Create(
     entt::registry& registry, 
     const entt::entity entity, 
     Nc::Vector2f heightRange, 
@@ -43,11 +45,17 @@ Assembled::LeverData Construct::LeverEntity(
 ) noexcept
 {
     registry.emplace<Component::Sprite>(entity, std::move(handleTexture));
-    return Construct::LeverEntity(registry, entity, heightRange, std::move(movingAudioFile), std::move(switchedAudioFile));
+    return Entity::Lever::Create(
+        registry, 
+        entity, 
+        heightRange, 
+        std::move(movingAudioFile), 
+        std::move(switchedAudioFile)
+    );
 }
 
 
-Assembled::LeverData Construct::LeverEntity(
+Entity::Lever::Data Entity::Lever::Create(
     entt::registry& registry, 
     Component::Transform&& transform,
     float moveRange, 
@@ -65,11 +73,18 @@ Assembled::LeverData Construct::LeverEntity(
     transform.position.y = heightRange.x;
     registry.emplace<Component::Transform>(entity, std::move(transform));
     
-    return Construct::LeverEntity(registry, entity, heightRange, std::move(handleTexture), std::move(movingAudioFile), std::move(switchedAudioFile));
+    return Entity::Lever::Create(
+        registry, 
+        entity, 
+        heightRange, 
+        std::move(handleTexture), 
+        std::move(movingAudioFile), 
+        std::move(switchedAudioFile)
+    );
 }
 
 
-Assembled::LeverData Construct::LeverEntity(
+Entity::Lever::Data Entity::Lever::Create(
     entt::registry& registry, 
     Component::Transform&& transform,
     float moveRange, 
@@ -84,7 +99,13 @@ Assembled::LeverData Construct::LeverEntity(
 
     // The lever defaults to being on.
     transform.position.y = heightRange.x;
-
     registry.emplace<Component::Transform>(entity, std::move(transform));
-    return Construct::LeverEntity(registry, entity, heightRange, std::move(movingAudioFile), std::move(switchedAudioFile));
+
+    return Entity::Lever::Create(
+        registry, 
+        entity, 
+        heightRange, 
+        std::move(movingAudioFile), 
+        std::move(switchedAudioFile)
+    );
 }

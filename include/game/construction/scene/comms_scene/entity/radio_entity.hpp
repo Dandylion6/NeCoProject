@@ -2,7 +2,16 @@
 #include "entt/entity/fwd.hpp"
 
 
-namespace Construct
+namespace Entity
 {
-	const entt::entity RadioEntity(entt::registry& registry);
+
+class Radio final
+{
+public:
+	static const entt::entity Create(
+		entt::registry& registry
+	) noexcept;
+
+};
+
 }

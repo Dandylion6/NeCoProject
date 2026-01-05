@@ -13,35 +13,35 @@
 #include "game/construction/shared/entity/scene/scene_background_entity.hpp"
 #include "game/state/scene.hpp"
 #include "raylib.h"
+#include <utility>
 
 
-void CommsScene::Build(
+void Structure::CommsScene::Build(
 	entt::registry& registry,
 	Nc::RenderContext& renderContext,
 	GameState& gameState,
 	Nc::ResourceStore& resourceStore
-)
+) noexcept
 {
-	Construct::RadarObject(registry, resourceStore);
-	Construct::MorseMonitorObject(registry, resourceStore);
-	Construct::MorseTransceiverEntity(registry, resourceStore);
-	Construct::RadioEntity(registry);
+	constexpr Nc::Hex LIGHT_COLOR = 0xfee8c8ff;
 
-	Construct::SceneBackgroundEntity(
-		LoadTexture("assets/environment/backgrounds/comms_room.png"), registry, CommsRoom
-	);
-	Construct::MoveRegionEntity(
+	Construct::RadarObject(registry, resourceStore);
+	Object::MorseMonitor::Create(registry, resourceStore);
+	Entity::MorseTransceiver::Create(registry, resourceStore);
+	Entity::Radio::Create(registry);
+
+	Texture2D sceneTexture = LoadTexture("assets/environment/backgrounds/comms_room.png");
+	Entity::SceneBackground::Create(std::move(sceneTexture), registry, CommsRoom);
+
+	Entity::MoveRegion::Create(
 		registry, gameState, resourceStore, Down, CommsRoom, CommsDesk, 0.15f
 	);
-	Construct::MoveRegionEntity(
+	Entity::MoveRegion::Create(
 		registry, gameState, resourceStore, Right, CommsRoom, Doorway, 0.35f
 	);
-
-	constexpr Nc::Hex LIGHT_COLOR = 0xfee8c8ff;
 
 	Nc::Vector2f windowSize = Nc::Vector2f(renderContext.windowSize);
 	Nc::Vector2f lightPosition = windowSize * Nc::Vector2f(0.5f, 1.3f);
 	float lightRadius = 940.0f * renderContext.renderScale;
 	Construct::LightPointEntity(registry, lightPosition, CommsRoom, LIGHT_COLOR, 1.6f, lightRadius);
-
 }

@@ -3,10 +3,17 @@
 namespace Nc { class ResourceStore; };
 
 
-namespace Construct
+namespace Entity
 {
-	const entt::entity NoteEntity(
+
+class Note final
+{
+public:
+	static const entt::entity Create(
 		entt::registry& registry,
 		Nc::ResourceStore& resourceStore
-	);
+	) noexcept;
+
+};
+
 }

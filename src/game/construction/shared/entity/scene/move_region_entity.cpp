@@ -15,11 +15,15 @@
 #include <utility>
 
 
-entt::entity Construct::MoveRegionEntity(
-	entt::registry& registry, GameState& gameState, Nc::ResourceStore& resourceStore,
+const entt::entity Entity::MoveRegion::Create(
+	entt::registry& registry, 
+	GameState& gameState, 
+	Nc::ResourceStore& resourceStore,
 	const Component::Transform&& transform,
-	Scene currentScene, Scene nextScene, float moveTime
-)
+	Scene currentScene, 
+	Scene nextScene, 
+	float moveTime
+) noexcept
 {
 	const entt::entity entity = registry.create();
 
@@ -43,10 +47,15 @@ entt::entity Construct::MoveRegionEntity(
 }
 
 
-entt::entity Construct::MoveRegionEntity(
-	entt::registry& registry, GameState& gameState, Nc::ResourceStore& resourceStore,
-	Direction region, Scene currentScene, Scene nextScene, float moveTime
-)
+const entt::entity Entity::MoveRegion::Create(
+	entt::registry& registry, 
+	GameState& gameState, 
+	Nc::ResourceStore& resourceStore,
+	Direction region, 
+	Scene currentScene, 
+	Scene nextScene, 
+	float moveTime
+) noexcept
 {
 	constexpr Nc::Vector2f displaySize = Nc::Vector2f(Nc::RENDER_RESOLUTION);
 	constexpr float WIDTH_MULTIPLIER = 0.1f, HEIGHT_MULTIPLIER = 0.2f;
@@ -93,8 +102,14 @@ entt::entity Construct::MoveRegionEntity(
 		break;
 	}
 	}
-	return MoveRegionEntity(
-		registry, gameState, resourceStore, std::move(transform), 
-		currentScene, nextScene, moveTime
+
+	return Create(
+		registry, 
+		gameState, 
+		resourceStore, 
+		std::move(transform), 
+		currentScene, 
+		nextScene, 
+		moveTime
 	);
 }

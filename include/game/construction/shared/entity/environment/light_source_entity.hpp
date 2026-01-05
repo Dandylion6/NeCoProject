@@ -5,14 +5,20 @@
 #include "game/state/scene.hpp"
 
 
-namespace Construct
+namespace Entity
 {
-    const entt::entity LightPointEntity(
-        entt::registry& registry, 
-        Nc::Vector2f position, 
-        Scene boundScene, 
-        Nc::RGBa color, 
-        float strength, 
-        float range
-    );
+
+    class LightPoint final
+    {
+    public:
+        static const entt::entity Create(
+            entt::registry& registry,
+            Scene boundScene,
+            Nc::Vector2f position,
+            Nc::RGBa color,
+            float strength,
+            float range
+        ) noexcept;
+    };
+
 }

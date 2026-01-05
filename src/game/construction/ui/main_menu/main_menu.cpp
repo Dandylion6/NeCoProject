@@ -11,24 +11,26 @@
 #include "game/tag/ui/main_menu_tag.hpp"
 
 
-void MainMenu::Build(
+void Structure::MainMenu::Build(
 	Game& game, 
 	entt::registry& registry, 
 	GameState& gameState, 
 	Nc::ResourceStore& resourceStore
-)
+) noexcept
 {
-	Construct::PlayButtonObject(game, registry, gameState, resourceStore);
-	Construct::SettingsButtonObject(registry, gameState, resourceStore);
-	Construct::ExitButtonObject(registry, gameState, resourceStore);
+	Object::PlayButton::Create(game, registry, gameState, resourceStore);
+	Object::SettingsButton::Create(registry, gameState, resourceStore);
+	Object::ExitButton::Create(registry, gameState, resourceStore);
 
-	Construct::MainMenuBackgroundEntity(registry, resourceStore);
+	Entity::MainMenuBackground::Create(registry, resourceStore);
 
 	Close(registry, gameState);
 }
 
 
-void MainMenu::Open(entt::registry& registry, GameState& gameState)
+void Structure::MainMenu::Open(
+	entt::registry& registry, GameState& gameState
+) noexcept
 {
 	auto view = registry.view<Tag::MainMenu, Component::UI::Transform>();
 	for (auto [entity, transform] : view.each())
@@ -40,7 +42,9 @@ void MainMenu::Open(entt::registry& registry, GameState& gameState)
 }
 
 
-void MainMenu::Close(entt::registry& registry, GameState &gameState)
+void Structure::MainMenu::Close(
+	entt::registry& registry, GameState &gameState
+) noexcept
 {
 	auto view = registry.view<Tag::MainMenu, Component::UI::Transform>();
 	for (auto [entity, transform] : view.each())

@@ -1,7 +1,16 @@
 #pragma once
 #include "entt/entity/fwd.hpp"
 
-namespace Construct
+namespace Entity
 {
-    void ArtilleryEntity(entt::registry &registry);
+
+class Artillery
+{
+public:
+    static const entt::entity Create(
+        entt::registry& registry
+    ) noexcept;
+
+};
+
 };

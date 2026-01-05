@@ -8,12 +8,19 @@ namespace Nc
 };
 
 
-namespace CommsScene
+namespace Structure
 {
-	void Build(
-		entt::registry& registry, 
+
+class CommsScene final
+{
+public:
+	static void Build(
+		entt::registry& registry,
 		Nc::RenderContext& renderContext,
-		GameState& gameState, 
+		GameState& gameState,
 		Nc::ResourceStore& resourceStore
-	);
+	) noexcept;
+
+};
+
 }

@@ -4,10 +4,11 @@
 #include "game/construction/scene/outside_scene/outside_scene.hpp"
 
 
-void OutsideScene::Build(
+void Structure::OutsideScene::Build(
 	entt::registry& registry,
 	GameState& gameState,
-	Nc::ResourceStore& resourceStore)
+	Nc::ResourceStore& resourceStore
+) noexcept
 {
-	Construct::ArtilleryEntity(registry);
+	Entity::Artillery::Create(registry);
 }

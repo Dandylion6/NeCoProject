@@ -25,7 +25,7 @@ namespace Component
 	{
 		// ------ Members ------
 
-		Sound sound{};
+		Sound sound { };
 		float volume = 1.0f;
 
 		// ------ Constructors ------
@@ -57,14 +57,22 @@ namespace Component
 	{
 		// ------ Members ------
 
-		Music sound{};
+		Music sound { };
 		float volume = 1.0f;
+
 
 		// ------ Constructors ------
 
 		constexpr LoopedSoundEmitter() noexcept = default;
 		constexpr LoopedSoundEmitter(Music &&sound) noexcept : 
 			sound(std::move(sound)) 
+		{ };
+
+		constexpr LoopedSoundEmitter(
+			Music &&sound, float volume
+		) noexcept : 
+			sound(std::move(sound)), 
+			volume(volume) 
 		{ };
 	};
 

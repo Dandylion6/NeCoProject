@@ -10,18 +10,17 @@
 #include <utility>
 
 
-const entt::entity Construct::SceneBackgroundEntity(
+const entt::entity Entity::SceneBackground::Create(
 	Texture2D&& texture, 
 	entt::registry& registry, 
 	Scene scene
-)
+) noexcept
 {
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(Nc::RENDER_RESOLUTION) * 0.5f;
 	
 	const entt::entity entity = registry.create();
 
-	float width = static_cast<float>(texture.width), height = static_cast<float>(texture.height);
-	Nc::Vector2f size = Nc::Vector2f(width, height);
+	Nc::Vector2f size = Nc::Vector2f(texture.width, texture.height);
 	registry.emplace<Component::Transform>(entity, scene, POSITION, size, size * 0.5f);
 	registry.emplace<Component::Sprite>(entity, std::move(texture));
 

@@ -2,7 +2,15 @@
 #include "entt/entity/fwd.hpp"
 
 
-namespace Construct
+namespace Entity
 {
-	const entt::entity AmbientSoundEntity(entt::registry& registry);
+	class AmbientSound
+	{
+	public:
+		static const entt::entity Create(
+			entt::registry& registry
+		) noexcept;
+
+	};
+
 }

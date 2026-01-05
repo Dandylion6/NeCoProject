@@ -7,41 +7,44 @@
 namespace Component
 {
     struct Transform;
-    struct Lever;
+    namespace Logic { struct Lever; };
 }
 
 
-namespace Assembled
+namespace Entity
 {
-    struct LeverData
+
+class Lever
+{
+public:
+    struct Data
     {
-        Component::Lever& lever;
+        Component::Logic::Lever& lever;
         entt::entity entity = entt::null;
     };
-}
 
 
-namespace Construct
-{
-    Assembled::LeverData LeverEntity(
-        entt::registry& registry, 
+    static Data Create(
+        entt::registry& registry,
         const entt::entity entity,
         Nc::Vector2f heightRange,
         std::string&& movingAudioFile,
         std::string&& switchedAudioFile
     ) noexcept;
 
-    Assembled::LeverData LeverEntity(
-        entt::registry& registry, 
+
+    static Data Create(
+        entt::registry& registry,
         const entt::entity entity,
-        Nc::Vector2f heightRange, 
+        Nc::Vector2f heightRange,
         Texture2D&& handleTexture,
         std::string&& movingAudioFile,
         std::string&& switchedAudioFile
     ) noexcept;
 
-    Assembled::LeverData LeverEntity(
-        entt::registry& registry, 
+
+    static Data Create(
+        entt::registry& registry,
         Component::Transform&& transform,
         float moveRange,
         Texture2D&& handleTexture,
@@ -49,11 +52,15 @@ namespace Construct
         std::string&& switchedAudioFile
     ) noexcept;
 
-    Assembled::LeverData LeverEntity(
-        entt::registry& registry, 
+
+    static Data Create(
+        entt::registry& registry,
         Component::Transform&& transform,
         float moveRange,
         std::string&& movingAudioFile,
         std::string&& switchedAudioFile
     ) noexcept;
+
+};
+
 }

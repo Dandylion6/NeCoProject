@@ -8,12 +8,19 @@ namespace Nc
 };
 
 
-namespace DeskScene
+namespace Structure
 {
-	void Build(
+
+class DeskScene final
+{
+public:
+	static void Build(
 		entt::registry& registry,
-		Nc::RenderContext& renderContext,
 		GameState& gameState,
+		Nc::RenderContext& renderContext,
 		Nc::ResourceStore& resourceStore
-	);
+	) noexcept;
+
+};
+
 }

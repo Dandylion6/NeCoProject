@@ -8,12 +8,19 @@ namespace Nc
 }
 
 
-namespace DoorwayScene
+namespace Structure
 {
-	void Build(
+
+class DoorwayScene final
+{
+public:
+	static void Build(
 		entt::registry& registry, 
 		GameState& gameState, 
 		Nc::ResourceStore& resourceStore, 
 		Nc::RenderContext& renderContext
-	);
+	) noexcept;
+
+};
+
 }

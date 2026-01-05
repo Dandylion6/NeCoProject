@@ -10,7 +10,9 @@
 #include "raylib.h"
 
 
-const entt::entity Construct::RadioEntity(entt::registry& registry)
+const entt::entity Entity::Radio::Create(
+	entt::registry& registry
+) noexcept
 {
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(Nc::RENDER_RESOLUTION) * 0.5f;
 
@@ -20,5 +22,5 @@ const entt::entity Construct::RadioEntity(entt::registry& registry)
 	registry.emplace<Component::SoundEmitter>(entity, Sound { });
 	registry.emplace<Component::Radio>(entity);
 
-    return entity;
+	return entity;
 }

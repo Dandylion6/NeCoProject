@@ -13,8 +13,9 @@
 #include <utility>
 
 
-
-void Construct::MorseTransceiverEntity(entt::registry& registry, Nc::ResourceStore& resourceStore)
+const entt::entity Entity::MorseTransceiver::Create(
+	entt::registry& registry, Nc::ResourceStore& resourceStore
+)
 {
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(Nc::RENDER_RESOLUTION) * 0.5f;
 	
@@ -24,7 +25,6 @@ void Construct::MorseTransceiverEntity(entt::registry& registry, Nc::ResourceSto
 	registry.emplace<Component::Morse::Transceiver>(entity);
 
 	Music morseTone = resourceStore.GetMusic("assets/audio/object/morse_tone.wav");
-	Component::LoopedSoundEmitter& emitter = registry.emplace<Component::LoopedSoundEmitter>(entity, std::move(morseTone));
-	emitter.volume = 0.0f;
+	Component::LoopedSoundEmitter& emitter = registry.emplace<Component::LoopedSoundEmitter>(entity, std::move(morseTone), 0.0f);
 	SoundEmitterSystem::PlayEmitter(emitter);
 }

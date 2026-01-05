@@ -3,7 +3,17 @@
 namespace Nc { class ResourceStore; };
 
 
-namespace Construct
+namespace Entity
 {
-	void MorseTransceiverEntity(entt::registry& registry, Nc::ResourceStore& resourceStore);
+
+class MorseTransceiver final
+{
+public:
+	static const entt::entity Create(
+		entt::registry& registry, 
+		Nc::ResourceStore& resourceStore
+	) noexcept;
+
+};
+
 }

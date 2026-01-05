@@ -13,20 +13,20 @@
 #include <utility>
 
 
-void DeskScene::Build(
+void Structure::DeskScene::Build(
 	entt::registry& registry, 
-	Nc::RenderContext& renderContext, 
 	GameState& gameState, 
+	Nc::RenderContext& renderContext, 
 	Nc::ResourceStore& resourceStore
-)
+) noexcept
 {
-	Construct::NoteEntity(registry, resourceStore);
+	constexpr Nc::Hex LIGHT_COLOR = 0xfee8c8ff;
+
+	Entity::Note::Create(registry, resourceStore);
 
 	Texture2D texture = resourceStore.GetTexture("assets/environment/backgrounds/comms_desk.png");
-	Construct::SceneBackgroundEntity(std::move(texture), registry, CommsDesk);
-	Construct::MoveRegionEntity(registry, gameState, resourceStore, Up, CommsDesk, CommsRoom, 0.15f);
-
-	constexpr Nc::Hex LIGHT_COLOR = 0xfee8c8ff;
+	Entity::SceneBackground::Create(std::move(texture), registry, CommsDesk);
+	Entity::MoveRegion::Create(registry, gameState, resourceStore, Up, CommsDesk, CommsRoom, 0.15f);
 
 	Nc::Vector2f windowSize = Nc::Vector2f(renderContext.windowSize);
 	Nc::Vector2f lightPosition = windowSize * Nc::Vector2f(0.5f, 0.34f);

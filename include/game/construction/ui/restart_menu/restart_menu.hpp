@@ -7,17 +7,31 @@ namespace Nc { class ResourceStore; };
 struct SaveContext;
 
 
-namespace RestartMenu
+namespace Structure
 {
-	void Build(
-		Game& game, 
+
+class RestartMenu final
+{
+public:
+	static void Build(
+		Game& game,
+		entt::registry& registry,
+		Nc::ResourceStore& resourceStore,
+		GameState& gameState,
+		Nc::Vector2f windowSize
+	) noexcept;
+
+
+	static void Open(entt::registry& registry, GameState& gameState) noexcept;
+	static void Close(entt::registry& registry, GameState& gameState) noexcept;
+
+private:
+	static void Toggle(
 		entt::registry& registry, 
 		GameState& gameState, 
-		Nc::ResourceStore& resourceStore, 
-		Nc::Vector2f windowSize
-	);
+		bool active
+	) noexcept;
 
-	void Open(entt::registry& registry, GameState& gameState);
+};
 
-	void Close(entt::registry& registry, GameState& gameState);
 }

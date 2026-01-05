@@ -7,17 +7,32 @@ struct GameState;
 namespace Nc { class ResourceStore; };
 
 
-namespace Construct
+namespace Entity
 {
-	entt::entity MoveRegionEntity(
-		entt::registry& registry, GameState& gameState, Nc::ResourceStore& resourceStore,
+
+class MoveRegion final
+{
+public:
+	static const entt::entity Create(
+		entt::registry& registry, 
+		GameState& gameState, 
+		Nc::ResourceStore& resourceStore,
 		const Component::Transform&& transform,
-		Scene currentScene, Scene nextScene, float moveTime = 0.2f
-	);
+		Scene currentScene, 
+		Scene nextScene, 
+		float moveTime = 0.2f
+	) noexcept;
 
+	static const entt::entity Create(
+		entt::registry& registry, 
+		GameState& gameState, 
+		Nc::ResourceStore& resourceStore,
+		Direction region, 
+		Scene currentScene, 
+		Scene nextScene, 
+		float moveTime = 0.2f
+	) noexcept;
 
-	entt::entity MoveRegionEntity(
-		entt::registry& registry, GameState& gameState, Nc::ResourceStore& resourceStore,
-		Direction region, Scene currentScene, Scene nextScene, float moveTime = 0.2f
-	);
+};
+
 }
