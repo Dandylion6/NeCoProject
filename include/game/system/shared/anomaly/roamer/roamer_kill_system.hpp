@@ -17,7 +17,7 @@ public:
 private:
 	static void UpdateBunkerRoamer(
 		entt::registry& registry,
-		const entt::entity entity,
+		entt::entity entity,
 		const Component::Transform& transform,
 		const Component::Anomaly::Roamer& roamer,
 		Component::Health& health,
@@ -25,7 +25,7 @@ private:
 	);
 	static void UpdateArtilleryRoamer(
 		entt::registry& registry,
-		const entt::entity entity,
+		entt::entity entity,
 		const Component::Transform& transform,
 		const Component::Anomaly::Roamer& roamer,
 		Component::Health& health

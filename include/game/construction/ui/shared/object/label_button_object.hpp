@@ -17,8 +17,8 @@ class LabelButton final
 public:
     struct Data final
     {
-        const entt::entity label;
-        const entt::entity button;
+        entt::entity label;
+        entt::entity button;
 
 
         std::array<entt::entity, 2u> All() const
@@ -40,7 +40,7 @@ private:
     class Label final
     {
     public:
-        static const entt::entity Create(
+        static entt::entity Create(
             entt::registry& registry, 
             std::string&& label, 
             const Component::UI::Transform& transform
@@ -52,7 +52,7 @@ private:
     class Button final
     {
     public:
-        static const entt::entity Create(
+        static entt::entity Create(
             entt::registry& registry, 
             Component::UI::Transform&& transform, 
             std::function<void()>&& onClick

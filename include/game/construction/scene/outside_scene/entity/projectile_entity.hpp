@@ -7,10 +7,10 @@ namespace Nc { class ResourceStore; };
 namespace Entity
 {
 
-class Projectile
+class Projectile final
 {
 public:
-	static const entt::entity Create(
+	static entt::entity Create(
 		entt::registry& registry,
 		Nc::ResourceStore& resourceStore,
 		Nc::Vector2f hitPosition

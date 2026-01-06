@@ -20,7 +20,7 @@ public:
 		float deltaTime
 	) noexcept;
 
-	static void Restart(entt::registry& registry, const entt::entity entity) noexcept;
+	static void Restart(entt::registry& registry, entt::entity entity) noexcept;
 
 private:
 	static void UpdateBlipStability(
@@ -43,7 +43,7 @@ private:
 		entt::registry& registry, 
 		Component::Radar& radar, 
 		Component::Blip& blip, 
-		const entt::entity entity, 
+		entt::entity entity, 
 		float time
 	) noexcept;
 

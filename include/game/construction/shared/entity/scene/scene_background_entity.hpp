@@ -10,7 +10,7 @@ namespace Entity
 class SceneBackground final
 {
 public:
-	static const entt::entity Create(
+	static entt::entity Create(
 		Texture2D&& texture, 
 		entt::registry& registry, 
 		Scene scene

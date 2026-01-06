@@ -8,7 +8,7 @@ namespace Entity
 class SettingsHeader final
 {
 public:
-    static const entt::entity Create(entt::registry& registry) noexcept;
+    static entt::entity Create(entt::registry& registry) noexcept;
 
 };
 
@@ -16,7 +16,7 @@ public:
 class GameplaySettingsHeader final
 {
 public:
-    static const entt::entity Create(entt::registry& registry) noexcept;
+    static entt::entity Create(entt::registry& registry) noexcept;
 
 };
 

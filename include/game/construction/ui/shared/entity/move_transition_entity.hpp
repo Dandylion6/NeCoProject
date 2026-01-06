@@ -11,7 +11,7 @@ namespace Entity
 class MoveTransition final
 {
 public:
-	static const entt::entity Create(
+	static entt::entity Create(
 		entt::registry& registry, 
 		Nc::RenderContext& renderContext,
 		GameState& gameState

@@ -21,12 +21,12 @@ void Object::MorseMonitor::Create(entt::registry& registry, Nc::ResourceStore& r
 }
 
 
-const entt::entity Object::MorseMonitor::Gauge::Create(entt::registry& registry) noexcept
+entt::entity Object::MorseMonitor::Gauge::Create(entt::registry& registry) noexcept
 {
 	constexpr Nc::Hex COLOR = 0xbbc4bbff;
 	constexpr Nc::Vector2f OFFSET = Nc::Vector2f::Up(MorseMonitor::GAUGE_SIZE.y * 0.5f);
 
-	const entt::entity entity = registry.create();
+	entt::entity entity = registry.create();
 
 	registry.emplace<Component::Transform>(
 		entity, 
@@ -42,13 +42,13 @@ const entt::entity Object::MorseMonitor::Gauge::Create(entt::registry& registry)
 }
 
 
-const entt::entity Object::MorseMonitor::Pointer::Create(entt::registry& registry) noexcept
+entt::entity Object::MorseMonitor::Pointer::Create(entt::registry& registry) noexcept
 {
 	constexpr Nc::Vector2f POINTER_SIZE = Nc::Vector2f(4.0f, 8.0f);
 	constexpr Nc::Vector2f OFFSET = Nc::Vector2f::Up(4.0f) + POINTER_SIZE * 0.5f;
 	constexpr Nc::Hex COLOR = 0xeb4f44ff;
 
-	const entt::entity entity = registry.create();
+	entt::entity entity = registry.create();
 
 	registry.emplace<Tag::Morse::Monitor>(entity);
 
@@ -65,7 +65,7 @@ const entt::entity Object::MorseMonitor::Pointer::Create(entt::registry& registr
 }
 
 
-const entt::entity Object::MorseMonitor::Region::Create(
+entt::entity Object::MorseMonitor::Region::Create(
 	entt::registry& registry, 
 	Component::Morse::MonitorRegion::Region region
 ) noexcept
@@ -73,7 +73,7 @@ const entt::entity Object::MorseMonitor::Region::Create(
 	constexpr Nc::Vector2f REGION_SIZE = Nc::Vector2f::Up(MorseMonitor::GAUGE_SIZE.y - 2.0f);
 	constexpr Nc::Hex COLOR = 0x18232eff;
 
-	const entt::entity entity = registry.create();
+	entt::entity entity = registry.create();
 
 	registry.emplace<Component::Transform>(
 		entity, 

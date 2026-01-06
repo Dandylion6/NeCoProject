@@ -16,7 +16,7 @@ private:
     class FrontTexture final
     {
     public:
-        static const entt::entity Create(entt::registry& registry, GameState& gameState) noexcept;
+        static entt::entity Create(entt::registry& registry, GameState& gameState) noexcept;
 
     };
 
@@ -24,7 +24,7 @@ private:
     class Backdrop final
     {
     public:
-        static const entt::entity Create(entt::registry& registry, Nc::Vector2f windowSize) noexcept;
+        static entt::entity Create(entt::registry& registry, Nc::Vector2f windowSize) noexcept;
 
     };
 

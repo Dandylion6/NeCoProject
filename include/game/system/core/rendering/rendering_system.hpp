@@ -42,7 +42,7 @@ private:
         SortIndex index = 0;
     };
 
-	static RenderType GetRenderType(entt::registry& registry, const entt::entity entity);
+	static RenderType GetRenderType(entt::registry& registry, entt::entity entity);
 
 	static bool ShouldRender(const Component::Transform& transform, Scene currentScene);
 

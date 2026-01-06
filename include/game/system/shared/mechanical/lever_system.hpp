@@ -10,13 +10,13 @@ public:
     static void Update(entt::registry& registry, float deltaTime) noexcept;
 
     static float GetHeightTarget(
-        const Component::Action::Toggle& toggle, const Component::Lever& lever
+        const Component::Action::Toggle& toggle, const Component::Logic::Lever& lever
     ) noexcept;
 
 private:
     static ToggleState GetToggleState(
         const Component::Action::Toggle& toggle, 
-        const Component::Lever& lever, 
+        const Component::Logic::Lever& lever, 
         bool isHeld
     ) noexcept;
 

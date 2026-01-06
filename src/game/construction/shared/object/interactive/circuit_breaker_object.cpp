@@ -15,14 +15,14 @@
 Object::CircuitBreaker::Data Object::CircuitBreaker::Create(
     entt::registry& registry, 
     Component::Transform&& transform, 
-    const entt::entity system
+    entt::entity system
 ) noexcept
 {
     Scene scene = transform.boundScene;
     Entity::Lever::Data leverData = Entity::Lever::Create(registry, std::move(transform), 30.0f, "", "");
 
     Nc::Vector2f centerPosition = Nc::Bounds::CenterOf(Nc::Bounds(transform));
-    const entt::entity indicator = Indicator::Create(registry, scene, centerPosition);
+    entt::entity indicator = Indicator::Create(registry, scene, centerPosition);
 
     Component::Logic::CircuitBreaker& breaker = registry.emplace<Component::Logic::CircuitBreaker>(
         leverData.entity, 
@@ -34,7 +34,7 @@ Object::CircuitBreaker::Data Object::CircuitBreaker::Create(
 }
 
 
-const entt::entity Object::CircuitBreaker::Indicator::Create(
+entt::entity Object::CircuitBreaker::Indicator::Create(
     entt::registry& registry, 
     Scene scene, 
     Nc::Vector2f breakerCenterPosition
@@ -42,7 +42,7 @@ const entt::entity Object::CircuitBreaker::Indicator::Create(
 {
     constexpr Nc::Vector2f SIZE = Nc::Vector2f::Scale(20.0f);
 
-    const entt::entity entity = registry.create();
+    entt::entity entity = registry.create();
 
 	Nc::Vector2f position = breakerCenterPosition + Nc::Vector2f::Right(80.0f);
     registry.emplace<Component::Transform>(entity, scene, position, SIZE, SIZE * 0.5f);

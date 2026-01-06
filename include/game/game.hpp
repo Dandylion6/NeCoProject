@@ -6,18 +6,10 @@
 #include "game/state/game_state.hpp"
 #include "game/state/settings.hpp"
 
-#ifdef DEBUG_BUILD
-#include "game/debug/debug_context.hpp"
-#endif // DEBUG_BUILD
-
 
 class Game
 {
 public:
-#ifdef DEBUG_BUILD
-	static DebugContext debugContext;
-#endif // DEBUG_BUILD
-
 	Game();
 
 	bool ShouldRun() const;
@@ -30,6 +22,9 @@ public:
 #ifdef DEBUG_BUILD
 	void SetupDebug(int args, char* argv[]);
 #endif // DEBUG_BUILD
+
+	void Save();
+	void Load();
 
 	void Shutdown();
 
@@ -52,7 +47,7 @@ private:
 	void DrawRenderTexture() const;
 
 #ifdef DEBUG_BUILD
-	void DrawDebugUi() const;
+	void DrawDebugUi();
 #endif // DEBUG_BUILD
 
 };

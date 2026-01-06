@@ -60,7 +60,7 @@ void SoundEmitterSystem::StopEmitter(
 
 
 void SoundEmitterSystem::UpdateEmitter(
-	const entt::entity entity, 
+	entt::entity entity, 
 	Component::Transform& transform, 
 	Component::SoundEmitter& emitter, 
 	float deltaTime
@@ -74,7 +74,7 @@ void SoundEmitterSystem::UpdateEmitter(
 
 
 void SoundEmitterSystem::UpdateLoopedEmitter(
-	const entt::entity entity, 
+	entt::entity entity, 
 	Component::Transform& transform, 
 	Component::LoopedSoundEmitter& emitter,
 	float deltaTime

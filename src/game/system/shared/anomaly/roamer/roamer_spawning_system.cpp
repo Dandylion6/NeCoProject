@@ -52,7 +52,7 @@ void RoamerSpawningSystem::Update(
 }
 
 
-const entt::entity RoamerSpawningSystem::SpawnRoamer(
+entt::entity RoamerSpawningSystem::SpawnRoamer(
 	entt::registry& registry, Nc::ResourceStore& resourceStore, Nc::Vector2f spawnPoint, AnomalyState& anomalyState
 )
 {
@@ -63,7 +63,7 @@ const entt::entity RoamerSpawningSystem::SpawnRoamer(
 	RoamerBehaviour behaviour = static_cast<RoamerBehaviour>(randomBehaviour);
 	RoamerTarget target = static_cast<RoamerTarget>(randomTarget);
 
-	const entt::entity entity = Construct::RadarBlipEntity(registry, resourceStore, spawnPoint, BASE_HEALTH);
+	entt::entity entity = Construct::RadarBlipEntity(registry, resourceStore, spawnPoint, BASE_HEALTH);
 	Component::Anomaly::Roamer& roamer = registry.emplace<Component::Anomaly::Roamer>(entity, behaviour, target);
 
 	switch (behaviour)

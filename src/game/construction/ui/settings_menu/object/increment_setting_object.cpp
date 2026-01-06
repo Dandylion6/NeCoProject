@@ -33,30 +33,30 @@ const Object::IncrementSetting::Data Object::IncrementSetting::Create(
     );
     size.y = 0.0f;
     
-    const entt::entity label = Label::Create(registry, std::move(display), position);
+    entt::entity label = Label::Create(registry, std::move(display), position);
 
     Nc::Vector2f displayOffset = size + Nc::Vector2f::Right(28.0f);
-    const entt::entity valueDisplay = ValueDisplay::Create(registry, std::move(increment), position, displayOffset);
+    entt::entity valueDisplay = ValueDisplay::Create(registry, std::move(increment), position, displayOffset);
     Component::Text& valueText = registry.get<Component::Text>(valueDisplay); 
 
     Nc::Vector2f increaseOffset = size + Nc::Vector2f::Right(72.0f);
-    const entt::entity decreaseButton = DecreaseButton::Create(registry, increment, valueText, position, increaseOffset);
+    entt::entity decreaseButton = DecreaseButton::Create(registry, increment, valueText, position, increaseOffset);
 
     Nc::Vector2f decreaseOffset = size + Nc::Vector2f::Right(98.0f);
-    const entt::entity increaseButton = IncreaseButton::Create(registry, increment, valueText, position, decreaseOffset);
+    entt::entity increaseButton = IncreaseButton::Create(registry, increment, valueText, position, decreaseOffset);
 
     return { label, valueDisplay, decreaseButton, increaseButton };
 
 }
 
 
-const entt::entity Object::IncrementSetting::Label::Create(
+entt::entity Object::IncrementSetting::Label::Create(
     entt::registry& registry, 
     std::string&& display, 
     Nc::Vector2f position
 ) noexcept
 {
-    const entt::entity entity = registry.create();
+    entt::entity entity = registry.create();
 
     registry.emplace<Component::UI::Transform>(entity, position, Nc::Vector2f::Zero(), 2);
     registry.emplace<Component::Text>(
@@ -72,7 +72,7 @@ const entt::entity Object::IncrementSetting::Label::Create(
 }
 
 
-const entt::entity Object::IncrementSetting::ValueDisplay::Create(
+entt::entity Object::IncrementSetting::ValueDisplay::Create(
     entt::registry& registry, 
     Component::UI::Increment&& increment, 
     Nc::Vector2f position, 
@@ -81,7 +81,7 @@ const entt::entity Object::IncrementSetting::ValueDisplay::Create(
 {
     constexpr Nc::Vector2f ORIGIN = Nc::Vector2f::Scale(0.5f);
 
-    const entt::entity entity = registry.create();
+    entt::entity entity = registry.create();
 
     registry.emplace<Component::UI::Transform>(entity, position, ORIGIN, Nc::Vector2f::Zero(), offset, 2);
     registry.emplace<Component::Text>(entity, "", Palette::RADAR_COLOR, Nc::Font::WDXL, Nc::Font::Size::Medium);
@@ -91,7 +91,7 @@ const entt::entity Object::IncrementSetting::ValueDisplay::Create(
 }
 
 
-const entt::entity Object::IncrementSetting::IncreaseButton::Create(
+entt::entity Object::IncrementSetting::IncreaseButton::Create(
     entt::registry& registry, 
     Component::UI::Increment& increment, 
     Component::Text& valueDisplay, 
@@ -102,7 +102,7 @@ const entt::entity Object::IncrementSetting::IncreaseButton::Create(
     constexpr Nc::Vector2f ORIGIN = Nc::Vector2f::Scale(0.5f);
     constexpr Nc::Vector2f SIZE = Nc::Vector2f::Scale(32.0f);
     
-    const entt::entity entity = registry.create();
+    entt::entity entity = registry.create();
 
     offset += Nc::Vector2f::Up(2.0f);
     registry.emplace<Component::UI::Transform>(entity, position, ORIGIN, SIZE, offset, 2);
@@ -119,7 +119,7 @@ const entt::entity Object::IncrementSetting::IncreaseButton::Create(
 }
 
 
-const entt::entity Object::IncrementSetting::DecreaseButton::Create(
+entt::entity Object::IncrementSetting::DecreaseButton::Create(
     entt::registry& registry,
     Component::UI::Increment& increment, 
     Component::Text& valueDisplay, 
@@ -130,7 +130,7 @@ const entt::entity Object::IncrementSetting::DecreaseButton::Create(
     constexpr Nc::Vector2f ORIGIN = Nc::Vector2f::Scale(0.5f);
     constexpr Nc::Vector2f SIZE = Nc::Vector2f::Scale(24.0f);
 
-    const entt::entity entity = registry.create();
+    entt::entity entity = registry.create();
 
     registry.emplace<Component::UI::Transform>(entity, position, ORIGIN, SIZE, offset, 2);
     registry.emplace<Component::Text>(entity, "-", RAYWHITE, Nc::Font::WDXL, Nc::Font::Size::Large);

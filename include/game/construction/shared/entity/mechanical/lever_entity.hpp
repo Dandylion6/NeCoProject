@@ -26,7 +26,7 @@ public:
 
     static Data Create(
         entt::registry& registry,
-        const entt::entity entity,
+        entt::entity entity,
         Nc::Vector2f heightRange,
         std::string&& movingAudioFile,
         std::string&& switchedAudioFile
@@ -35,7 +35,7 @@ public:
 
     static Data Create(
         entt::registry& registry,
-        const entt::entity entity,
+        entt::entity entity,
         Nc::Vector2f heightRange,
         Texture2D&& handleTexture,
         std::string&& movingAudioFile,

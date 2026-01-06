@@ -20,7 +20,7 @@ private:
 	class Path final
 	{
 	public:
-		static const entt::entity Create(entt::registry& registry, Nc::ResourceStore& resourceStore) noexcept;
+		static entt::entity Create(entt::registry& registry, Nc::ResourceStore& resourceStore) noexcept;
 		
 	};
 
@@ -28,7 +28,7 @@ private:
 	class Artillery final
 	{
 	public:
-		static const entt::entity Create(entt::registry& registry, Nc::ResourceStore& resourceStore) noexcept;
+		static entt::entity Create(entt::registry& registry, Nc::ResourceStore& resourceStore) noexcept;
 
 	};
 
@@ -36,7 +36,7 @@ private:
 	class ErrorWarning final
 	{
 	public:
-		static const entt::entity Create(entt::registry& registry) noexcept;
+		static entt::entity Create(entt::registry& registry) noexcept;
 
 	};
 
@@ -44,7 +44,7 @@ private:
 	class RecalibrationText final
 	{
 	public:
-		static const entt::entity Create(entt::registry& registry) noexcept;
+		static entt::entity Create(entt::registry& registry) noexcept;
 
 	};
 
@@ -52,7 +52,7 @@ private:
 	class PowerButton final
 	{
 	public:
-		static const entt::entity Create(
+		static entt::entity Create(
 			entt::registry& registry,
 			Component::Radar& radar,
 			Component::Action::Toggle& toggle

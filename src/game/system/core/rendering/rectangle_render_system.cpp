@@ -8,7 +8,7 @@
 
 
 void RectangleRenderSystem::DrawScreen(
-	const entt::entity entity, entt::registry& registry, Nc::Vector2f cameraPosition
+	entt::entity entity, entt::registry& registry, Nc::Vector2f cameraPosition
 )
 {
 	Component::Transform transform = registry.get<Component::Transform>(entity);
@@ -26,7 +26,7 @@ void RectangleRenderSystem::DrawScreen(
 
 
 void RectangleRenderSystem::DrawUi(
-	const entt::entity entity, entt::registry& registry, Nc::Vector2f windowSize
+	entt::entity entity, entt::registry& registry, Nc::Vector2f windowSize
 )
 {
 	Component::UI::Transform transform = registry.get<Component::UI::Transform>(entity);

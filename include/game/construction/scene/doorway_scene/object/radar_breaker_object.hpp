@@ -12,14 +12,14 @@ public:
 	static void Create(
 		entt::registry& registry, 
 		Nc::ResourceStore& resourceStore, 
-		const entt::entity radar
+		entt::entity radar
 	) noexcept;
 
 private:
 	class LeverBase final
 	{
 	public:
-		static const entt::entity Create(
+		static entt::entity Create(
 			entt::registry& registry,
 			Nc::ResourceStore& resourceStore
 		) noexcept;
@@ -30,10 +30,10 @@ private:
 	class LeverHandle final
 	{
 	public:
-		static const entt::entity Create(
+		static entt::entity Create(
 			entt::registry& registry,
 			Nc::ResourceStore& resourceStore,
-			const entt::entity radar
+			entt::entity radar
 		) noexcept;
 
 	};

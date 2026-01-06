@@ -25,22 +25,22 @@ const Object::LabelButton::Data Object::LabelButton::Create(
 
     if (transform.size == Nc::Vector2f::Zero()) transform.size = DEFAULT_SIZE;
     
-    const entt::entity button = Button::Create(registry, std::move(transform), std::move(onClick));
+    entt::entity button = Button::Create(registry, std::move(transform), std::move(onClick));
     const Component::UI::Transform& entityTransform = registry.get<Component::UI::Transform>(button);
     
-    const entt::entity label = Label::Create(registry, std::move(display), entityTransform);
+    entt::entity label = Label::Create(registry, std::move(display), entityTransform);
 
     return { label, button };
 }
 
 
-const entt::entity Object::LabelButton::Label::Create(
+entt::entity Object::LabelButton::Label::Create(
     entt::registry& registry, 
     std::string&& label, 
     const Component::UI::Transform& transform
 ) noexcept
 {
-    const entt::entity entity = registry.create();
+    entt::entity entity = registry.create();
 
 	registry.emplace<Component::UI::Transform>(
 		entity, 
@@ -66,13 +66,13 @@ const entt::entity Object::LabelButton::Label::Create(
 }
 
 
-const entt::entity Object::LabelButton::Button::Create(
+entt::entity Object::LabelButton::Button::Create(
     entt::registry& registry, 
     Component::UI::Transform&& transform, 
     std::function<void()>&& onClick
 ) noexcept
 {
-    const entt::entity entity = registry.create();
+    entt::entity entity = registry.create();
 
     registry.emplace<Component::UI::Transform>(entity, std::move(transform));
     registry.emplace<Component::Rectangle>(entity, Palette::BACKGROUND_COLOR);

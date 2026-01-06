@@ -24,7 +24,7 @@ private:
 	class Gauge final
 	{
 	public:
-		static const entt::entity Create(
+		static entt::entity Create(
 			entt::registry& registry
 		) noexcept;
 
@@ -34,7 +34,7 @@ private:
 	class Pointer final
 	{
 	public:
-		static const entt::entity Create(
+		static entt::entity Create(
 			entt::registry& registry
 		) noexcept;
 
@@ -44,7 +44,7 @@ private:
 	class Region final
 	{
 	public:
-		static const entt::entity Create(
+		static entt::entity Create(
 			entt::registry& registry, 
 			Component::Morse::MonitorRegion::Region region
 		) noexcept;

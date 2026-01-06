@@ -11,13 +11,13 @@
 #include <utility>
 
 
-const entt::entity Entity::MainMenuBackground::Create(
+entt::entity Entity::MainMenuBackground::Create(
 	entt::registry& registry, Nc::ResourceStore& resourceStore
 ) noexcept
 {
 	constexpr Nc::Vector2f CENTER = Nc::Vector2f::Scale(0.5f);
 	
-	const entt::entity entity = registry.create();
+	entt::entity entity = registry.create();
 
 	registry.emplace<Tag::DontDestroyOnLoad>(entity);
 	registry.emplace<Tag::MainMenu>(entity);

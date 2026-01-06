@@ -16,7 +16,7 @@
 
 Entity::Lever::Data Entity::Lever::Create(
     entt::registry& registry, 
-    const entt::entity entity, 
+    entt::entity entity, 
     Nc::Vector2f heightRange, 
     std::string&& movingAudioFile, 
     std::string&& switchedAudioFile
@@ -37,7 +37,7 @@ Entity::Lever::Data Entity::Lever::Create(
 
 Entity::Lever::Data Entity::Lever::Create(
     entt::registry& registry, 
-    const entt::entity entity, 
+    entt::entity entity, 
     Nc::Vector2f heightRange, 
     Texture2D&& handleTexture, 
     std::string&& movingAudioFile, 
@@ -64,7 +64,7 @@ Entity::Lever::Data Entity::Lever::Create(
     std::string&& switchedAudioFile
 ) noexcept
 {
-    const entt::entity entity = registry.create();
+    entt::entity entity = registry.create();
 
     Nc::Vector2f center = Nc::Bounds::CenterOf(Nc::Bounds(transform));
     Nc::Vector2f heightRange = Nc::Vector2f(center.y - moveRange, center.y + moveRange);
@@ -92,7 +92,7 @@ Entity::Lever::Data Entity::Lever::Create(
     std::string&& switchedAudioFile
 ) noexcept
 {
-    const entt::entity entity = registry.create();
+    entt::entity entity = registry.create();
 
     Nc::Vector2f center = Nc::Bounds::CenterOf(Nc::Bounds(transform));
     Nc::Vector2f heightRange = Nc::Vector2f(center.y - moveRange, center.y + moveRange);

@@ -9,7 +9,7 @@ namespace Entity
 class MorseTransceiver final
 {
 public:
-	static const entt::entity Create(
+	static entt::entity Create(
 		entt::registry& registry, 
 		Nc::ResourceStore& resourceStore
 	) noexcept;

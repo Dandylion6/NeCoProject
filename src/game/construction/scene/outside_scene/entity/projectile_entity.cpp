@@ -11,7 +11,7 @@
 #include <utility>
 
 
-const entt::entity Entity::Projectile::Create(
+entt::entity Entity::Projectile::Create(
 	entt::registry& registry, 
 	Nc::ResourceStore& resourceStore, 
 	Nc::Vector2f hitPosition
@@ -19,7 +19,7 @@ const entt::entity Entity::Projectile::Create(
 {
 	constexpr float TRAVEL_TIME = 4.5f;
 
-	const entt::entity entity = registry.create();
+	entt::entity entity = registry.create();
 
 	registry.emplace<Component::Transform>(entity, Outside, hitPosition);
 	registry.emplace<Component::Projectile>(entity, TRAVEL_TIME);

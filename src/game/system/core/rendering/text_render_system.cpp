@@ -10,7 +10,7 @@
 
 
 void TextRenderSystem::DrawScreen(
-	const entt::entity entity, entt::registry& registry, Nc::Vector2f cameraPosition
+	entt::entity entity, entt::registry& registry, Nc::Vector2f cameraPosition
 )
 {
 	
@@ -18,7 +18,7 @@ void TextRenderSystem::DrawScreen(
 
 
 void TextRenderSystem::DrawUi(
-	const entt::entity entity, entt::registry& registry, Nc::ResourceStore& resourceStore, Nc::Vector2f windowSize
+	entt::entity entity, entt::registry& registry, Nc::ResourceStore& resourceStore, Nc::Vector2f windowSize
 )
 {
 	Component::UI::Transform& transform = registry.get<Component::UI::Transform>(entity);

@@ -16,9 +16,9 @@ namespace Component::Logic
  * Usage example:
  * 
  * ```cpp
- * const entt::entity systemEntity = registry.create();
+ * entt::entity systemEntity = registry.create();
  * ...
- * const entt::entity indicatorEntity = registry.create();
+ * entt::entity indicatorEntity = registry.create();
  * ...
  * registry.emplace<Component::Logic::Lever>(entity, ...);
  * registry.emplace<Component::Logic::CircuitBreaker>(entity, systemEntity, indicatorEntity);
@@ -26,7 +26,7 @@ namespace Component::Logic
  */
 struct CircuitBreaker
 {
-    using OnRestart = entt::delegate<void(entt::registry&, const entt::entity)>;
+    using OnRestart = entt::delegate<void(entt::registry&, entt::entity)>;
     static constexpr float BREAKER_DISCHARGE_SECONDS = 6.0f;
 
     enum Status : uint8_t

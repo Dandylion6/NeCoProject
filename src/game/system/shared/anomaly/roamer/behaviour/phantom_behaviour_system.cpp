@@ -14,7 +14,7 @@
 
 
 void PhantomBehaviourSystem::Spawn(
-	entt::registry& registry, AnomalyState& anomalyState, const entt::entity entity, Component::Anomaly::Roamer& roamer
+	entt::registry& registry, AnomalyState& anomalyState, entt::entity entity, Component::Anomaly::Roamer& roamer
 )
 {
 	// Phantom doesn't spawn unless other roamers exist
@@ -33,7 +33,7 @@ void PhantomBehaviourSystem::Spawn(
 
 void PhantomBehaviourSystem::Update(
 	entt::registry& registry,
-	const entt::entity entity,
+	entt::entity entity,
 	Component::Transform& transform,
 	Component::Anomaly::Roamer& roamer,
 	float deltaTime

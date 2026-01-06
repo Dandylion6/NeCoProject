@@ -11,7 +11,7 @@
 
 
 void StriderBehaviourSystem::Spawn(
-	entt::registry& registry, const entt::entity entity, Component::Anomaly::Roamer& roamer
+	entt::registry& registry, entt::entity entity, Component::Anomaly::Roamer& roamer
 )
 {
 	constexpr Nc::Vector2f MOVE_SPEED_RANGE = Nc::Vector2f(0.16f, 0.21f);
@@ -22,7 +22,7 @@ void StriderBehaviourSystem::Spawn(
 
 void StriderBehaviourSystem::Update(
 	entt::registry& registry, 
-	const entt::entity entity, 
+	entt::entity entity, 
 	Component::Transform& transform, 
 	Component::Anomaly::Roamer& roamer, 
 	float deltaTime

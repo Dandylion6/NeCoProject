@@ -18,14 +18,14 @@
 #include <utility>
 
 
-const entt::entity Entity::Blip::Create(
+entt::entity Entity::Blip::Create(
 	entt::registry& registry, 
 	Nc::ResourceStore& resourceStore, 
 	Nc::Vector2f position, 
 	int16_t health
 ) noexcept
 {
-	const entt::entity entity = registry.create();
+	entt::entity entity = registry.create();
 
 	registry.emplace<Component::Blip>(entity);
 	registry.emplace<Component::Health>(entity, health);

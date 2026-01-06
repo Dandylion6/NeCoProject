@@ -14,7 +14,7 @@
 
 
 void PhaserBehaviourSystem::Spawn(
-	entt::registry& registry, const entt::entity entity, Component::Anomaly::Roamer& roamer
+	entt::registry& registry, entt::entity entity, Component::Anomaly::Roamer& roamer
 )
 {
 	Component::Anomaly::Phaser& phaser = registry.emplace<Component::Anomaly::Phaser>(entity);
@@ -29,7 +29,7 @@ void PhaserBehaviourSystem::Spawn(
 
 void PhaserBehaviourSystem::Update(
 	entt::registry& registry, 
-	const entt::entity entity, 
+	entt::entity entity, 
 	Component::Transform& transform, 
 	Component::Anomaly::Roamer& roamer, 
 	float deltaTime

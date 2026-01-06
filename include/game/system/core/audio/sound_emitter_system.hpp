@@ -16,14 +16,14 @@ public:
 
 private:
 	static void UpdateEmitter(
-		const entt::entity entity, 
+		entt::entity entity, 
 		Component::Transform& transform, 
 		Component::SoundEmitter& emitter, 
 		float deltaTime
 	);
 
 	static void UpdateLoopedEmitter(
-		const entt::entity entity,
+		entt::entity entity,
 		Component::Transform& transform,
 		Component::LoopedSoundEmitter& emitter,
 		float deltaTime

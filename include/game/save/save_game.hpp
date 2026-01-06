@@ -1,5 +1,6 @@
 #pragma once
 #include "entt/entity/fwd.hpp"
+#include "game/save/save_result.hpp"
 #include <array>
 #include <cstdint>
 class Game;
@@ -8,21 +9,15 @@ struct GameState;
 
 namespace Save
 {
-	enum class SaveResult : uint8_t
-	{
-		Success,
-		Failure
-	};
+
+Result GameToDisk(entt::registry& registry, const GameState& gameState);
+
+}
 
 
-	enum class LoadResult : uint8_t
-	{
-		Success,
-		Failure
-	};
+namespace Load
+{
 
+Result GameFromDisk(entt::registry& registry, GameState& gameState);
 
-	SaveResult SaveGame(entt::registry& registry, GameState& gameState);
-
-	LoadResult LoadGame(Game& game, entt::registry& registry, GameState& gameState);
 }

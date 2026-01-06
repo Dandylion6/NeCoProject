@@ -10,11 +10,11 @@ class PhantomBehaviourSystem
 {
 public:
 	static void Spawn(
-		entt::registry& registry, AnomalyState& anomalyState, const entt::entity entity, Component::Anomaly::Roamer& roamer
+		entt::registry& registry, AnomalyState& anomalyState, entt::entity entity, Component::Anomaly::Roamer& roamer
 	);
 	static void Update(
 		entt::registry& registry,
-		const entt::entity entity,
+		entt::entity entity,
 		Component::Transform& transform,
 		Component::Anomaly::Roamer& roamer,
 		float deltaTime

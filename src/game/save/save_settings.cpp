@@ -9,7 +9,7 @@
 #include <string>
 
 
-void Save::SaveSettings(Settings& settings)
+Save::Result Save::SettingsToDisk(const Settings& settings)
 {
     std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
     if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
@@ -21,17 +21,17 @@ void Save::SaveSettings(Settings& settings)
 
     stream << data.dump(4) << std::endl;
     stream.close();
-};
+    return Result::Success;
+}
 
-
-bool Save::LoadSettings(Settings& settings)
+Load::Result Load::SettingsFromDisk(Settings& settings)
 {
     std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
     if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
     std::ifstream stream(dataDirectoryPath / "settings.json");
 
-    if (!std::filesystem::exists(dataDirectoryPath / "settings.json")) return true;
-    if (stream.peek() == EOF) return true;
+    if (!std::filesystem::exists(dataDirectoryPath / "settings.json")) return Result::MissingFile;
+    if (stream.peek() == EOF) return Result::EmptyFile;
 
     nlohmann::json data = nlohmann::json::parse(stream);
 
@@ -40,5 +40,5 @@ bool Save::LoadSettings(Settings& settings)
     Settings::Apply(settings);
 
     stream.close();
-    return true;
-};
+    return Result::Success;
+}

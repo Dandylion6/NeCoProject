@@ -146,7 +146,7 @@ void CircuitBreakerSystem::UpdateNormalOperations(
 
 void CircuitBreakerSystem::UpdateIndicator(
     entt::registry& registry, 
-    const entt::entity entity, 
+    entt::entity entity, 
     const Component::CircuitBreaker& breaker, 
     float deltaTime
 ) noexcept

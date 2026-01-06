@@ -12,11 +12,11 @@
 #include <utility>
 
 
-const entt::entity Entity::Note::Create(entt::registry& registry, Nc::ResourceStore& resourceStore) noexcept
+entt::entity Entity::Note::Create(entt::registry& registry, Nc::ResourceStore& resourceStore) noexcept
 {
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(Nc::RENDER_RESOLUTION) * 0.5f;
 
-	const entt::entity entity = registry.create();
+	entt::entity entity = registry.create();
 
 	registry.emplace<Component::Note>(entity);
 	

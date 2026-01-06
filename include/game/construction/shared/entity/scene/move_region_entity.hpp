@@ -13,7 +13,7 @@ namespace Entity
 class MoveRegion final
 {
 public:
-	static const entt::entity Create(
+	static entt::entity Create(
 		entt::registry& registry, 
 		Nc::ResourceStore& resourceStore,
 		GameState& gameState, 
@@ -24,7 +24,7 @@ public:
 	) noexcept;
 
 
-	static const entt::entity Create(
+	static entt::entity Create(
 		entt::registry& registry, 
 		Nc::ResourceStore& resourceStore,
 		GameState& gameState, 

@@ -28,13 +28,13 @@ void Object::SettingsBackground::Create(
 }
 
 
-const entt::entity Object::SettingsBackground::FrontTexture::Create(
+entt::entity Object::SettingsBackground::FrontTexture::Create(
 	entt::registry& registry, GameState& gameState
 ) noexcept
 {
 	constexpr Nc::Vector2f CENTER = Nc::Vector2f::Scale(0.5);
 
-	const entt::entity entity = registry.create();
+	entt::entity entity = registry.create();
 
 	registry.emplace<Tag::Settings>(entity);
 	registry.emplace<Tag::DontDestroyOnLoad>(entity);
@@ -56,13 +56,13 @@ const entt::entity Object::SettingsBackground::FrontTexture::Create(
 }
 
 
-const entt::entity Object::SettingsBackground::Backdrop::Create(
+entt::entity Object::SettingsBackground::Backdrop::Create(
 	entt::registry& registry, Nc::Vector2f windowSize
 ) noexcept
 {
 	constexpr Nc::Vector2f CENTER = Nc::Vector2f::Scale(0.5f);
 
-	const entt::entity entity = registry.create();
+	entt::entity entity = registry.create();
 
 	registry.emplace<Tag::DontDestroyOnLoad>(entity);
 	registry.emplace<Tag::Settings>(entity);

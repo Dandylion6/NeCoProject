@@ -96,7 +96,7 @@ void RenderingSystem::DrawUi(
 
 
 RenderingSystem::RenderType RenderingSystem::GetRenderType(
-    entt::registry& registry, const entt::entity entity
+    entt::registry& registry, entt::entity entity
 )
 {
     if (registry.all_of<Component::Sprite>(entity)) return RenderType::Sprite;

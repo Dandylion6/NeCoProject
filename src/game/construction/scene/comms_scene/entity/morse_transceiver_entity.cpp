@@ -13,13 +13,13 @@
 #include <utility>
 
 
-const entt::entity Entity::MorseTransceiver::Create(
+entt::entity Entity::MorseTransceiver::Create(
 	entt::registry& registry, Nc::ResourceStore& resourceStore
 )
 {
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(Nc::RENDER_RESOLUTION) * 0.5f;
 	
-	const entt::entity entity = registry.create();
+	entt::entity entity = registry.create();
 
 	registry.emplace<Component::Transform>(entity, CommsRoom, POSITION);
 	registry.emplace<Component::Morse::Transceiver>(entity);

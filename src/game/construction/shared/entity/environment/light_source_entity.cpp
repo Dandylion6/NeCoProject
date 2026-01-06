@@ -8,7 +8,7 @@
 #include "game/state/scene.hpp"
 
 
-const entt::entity Entity::LightPoint::Create(
+entt::entity Entity::LightPoint::Create(
     entt::registry& registry, 
     Scene boundScene, 
     Nc::Vector2f position, 
@@ -17,7 +17,7 @@ const entt::entity Entity::LightPoint::Create(
     float range
 ) noexcept
 {
-    const entt::entity entity = registry.create();
+    entt::entity entity = registry.create();
 
     registry.emplace<Component::Transform>(entity, boundScene, position);
     registry.emplace<Component::Light::Point>(entity, color, range, strength);

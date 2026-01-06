@@ -8,17 +8,17 @@
 namespace Entity
 {
 
-    class LightPoint final
-    {
-    public:
-        static const entt::entity Create(
-            entt::registry& registry,
-            Scene boundScene,
-            Nc::Vector2f position,
-            Nc::RGBa color,
-            float strength,
-            float range
-        ) noexcept;
-    };
+class LightPoint final
+{
+public:
+    static entt::entity Create(
+        entt::registry& registry,
+        Scene boundScene,
+        Nc::Vector2f position,
+        Nc::RGBa color,
+        float strength,
+        float range
+    ) noexcept;
+};
 
 }

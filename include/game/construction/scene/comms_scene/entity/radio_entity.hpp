@@ -8,7 +8,7 @@ namespace Entity
 class Radio final
 {
 public:
-	static const entt::entity Create(
+	static entt::entity Create(
 		entt::registry& registry
 	) noexcept;
 

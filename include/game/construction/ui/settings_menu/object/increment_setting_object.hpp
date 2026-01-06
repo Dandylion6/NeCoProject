@@ -42,7 +42,7 @@ private:
     class Label final
     {
     public:
-        static const entt::entity Create(
+        static entt::entity Create(
             entt::registry& registry,
             std::string&& display,
             Nc::Vector2f position
@@ -54,7 +54,7 @@ private:
     class ValueDisplay final
     {
     public:
-        static const entt::entity Create(
+        static entt::entity Create(
             entt::registry& registry,
             Component::UI::Increment&& increment,
             Nc::Vector2f position,
@@ -67,7 +67,7 @@ private:
     class IncreaseButton final
     {
     public:
-        static const entt::entity Create(
+        static entt::entity Create(
             entt::registry& registry,
             Component::UI::Increment& increment,
             Component::Text& valueDisplay,
@@ -81,7 +81,7 @@ private:
     class DecreaseButton final
     {
     public:
-        static const entt::entity Create(
+        static entt::entity Create(
             entt::registry& registry,
             Component::UI::Increment& increment, 
             Component::Text& valueDisplay,

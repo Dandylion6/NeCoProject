@@ -10,7 +10,7 @@
 #include <utility>
 
 
-const entt::entity Entity::SceneBackground::Create(
+entt::entity Entity::SceneBackground::Create(
 	Texture2D&& texture, 
 	entt::registry& registry, 
 	Scene scene
@@ -18,7 +18,7 @@ const entt::entity Entity::SceneBackground::Create(
 {
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(Nc::RENDER_RESOLUTION) * 0.5f;
 	
-	const entt::entity entity = registry.create();
+	entt::entity entity = registry.create();
 
 	Nc::Vector2f size = Nc::Vector2f(texture.width, texture.height);
 	registry.emplace<Component::Transform>(entity, scene, POSITION, size, size * 0.5f);

@@ -23,7 +23,7 @@ private:
 		entt::registry& registry,
 		GameState& gameState,
 		Nc::RenderContext& renderContext, 
-		const entt::entity entity, 
+		entt::entity entity, 
 		Component::Action::Drag& drag
 	);
 	static bool UpdateUiDrag(entt::registry& registry, GameState& gameState, Nc::Vector2i windowSize);

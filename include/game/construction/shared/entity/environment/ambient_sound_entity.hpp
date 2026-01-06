@@ -8,7 +8,7 @@ namespace Entity
 class AmbientSound final
 {
 public:
-	static const entt::entity Create(entt::registry& registry) noexcept;
+	static entt::entity Create(entt::registry& registry) noexcept;
 
 };
 

@@ -25,7 +25,7 @@
 #include <utility>
 
 #ifdef DEBUG_BUILD
-#include "game/game.hpp"
+#include "game/component/shared/debug/dev_settings_component.hpp"
 #endif
 
 
@@ -34,7 +34,7 @@ void Object::Radar::Create(entt::registry& registry, Nc::ResourceStore& resource
 	constexpr float ATTRACTION_REDUCTION_PER_SECOND = 0.09f;
 	constexpr uint16_t POWER_USAGE = 500u;
 
-	const entt::entity entity = registry.create();
+	entt::entity entity = registry.create();
 
 	Texture2D texture = resourceStore.GetTexture("assets/environment/objects/radar/radar_screen.png");
 	registry.emplace<Component::Transform>(entity, RadarScene);
@@ -47,7 +47,12 @@ void Object::Radar::Create(entt::registry& registry, Nc::ResourceStore& resource
 	Object::RadarBreaker::Create(registry, resourceStore, entity);
 	
 #ifdef DEBUG_BUILD
-	ToggleState radarState = Game::debugContext.isRadarActiveOnStart ? On : Off;
+	bool isRadarActiveOnStart = false;
+	auto view = registry.view<Component::Debug::DevSettings>();
+	for (auto [entity, devSettings] : view.each())
+		isRadarActiveOnStart = devSettings.isRadarActiveOnStart;
+
+	ToggleState radarState = isRadarActiveOnStart ? On : Off;
 	Component::Action::Toggle& toggle = registry.emplace<Component::Action::Toggle>(entity, radarState);
 #else
 	Component::Action::Toggle& toggle = registry.emplace<Component::Action::Toggle>(entity, Off);
@@ -61,7 +66,7 @@ void Object::Radar::Create(entt::registry& registry, Nc::ResourceStore& resource
 }
 
 
-const entt::entity Object::Radar::Path::Create(
+entt::entity Object::Radar::Path::Create(
 	entt::registry& registry, 
 	Nc::ResourceStore& resourceStore
 ) noexcept
@@ -70,7 +75,7 @@ const entt::entity Object::Radar::Path::Create(
 	constexpr Nc::Vector2f TRAVEL_RANGE = Nc::Vector2f(320.0f, -128.0f);
 	constexpr float RADAR_TRAVEL_TIME = 10.0f;
 
-	const entt::entity entity = registry.create();
+	entt::entity entity = registry.create();
 
 	registry.emplace<Tag::Radar::Path>(entity);
 	
@@ -99,9 +104,9 @@ const entt::entity Object::Radar::Path::Create(
 }
 
 
-const entt::entity Object::Radar::Artillery::Create(entt::registry& registry, Nc::ResourceStore& resourceStore) noexcept
+entt::entity Object::Radar::Artillery::Create(entt::registry& registry, Nc::ResourceStore& resourceStore) noexcept
 {
-	const entt::entity entity = registry.create();
+	entt::entity entity = registry.create();
 
 	registry.emplace<Tag::Radar::Artillery>(entity);
 
@@ -115,11 +120,11 @@ const entt::entity Object::Radar::Artillery::Create(entt::registry& registry, Nc
 }
 
 
-const entt::entity Object::Radar::ErrorWarning::Create(entt::registry& registry) noexcept
+entt::entity Object::Radar::ErrorWarning::Create(entt::registry& registry) noexcept
 {
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(8.0f, RADAR_BOUNDS.max.y - 8.0f);
 
-	const entt::entity entity = registry.create();
+	entt::entity entity = registry.create();
 
 	registry.emplace<Component::Transform>(entity, RadarScene, POSITION);
 	Component::Text& text = registry.emplace<Component::Text>(entity, "( , )", Palette::RADAR_COLOR, Nc::Font::WDXL, Nc::Font::Size::Tiny, Alignment::BottomLeft);
@@ -143,11 +148,11 @@ const entt::entity Object::Radar::ErrorWarning::Create(entt::registry& registry)
 }
 
 
-const entt::entity Object::Radar::RecalibrationText::Create(entt::registry& registry) noexcept
+entt::entity Object::Radar::RecalibrationText::Create(entt::registry& registry) noexcept
 {
 	constexpr Nc::Vector2f POSITION = RADAR_BOUNDS.max * 0.5f;
 
-	const entt::entity entity = registry.create();
+	entt::entity entity = registry.create();
 
 	registry.emplace<Tag::Radar::Recalibration>(entity);
 
@@ -165,7 +170,7 @@ const entt::entity Object::Radar::RecalibrationText::Create(entt::registry& regi
 }
 
 
-const entt::entity Object::Radar::PowerButton::Create(
+entt::entity Object::Radar::PowerButton::Create(
 	entt::registry& registry, 
 	Component::Radar& radar, 
 	Component::Action::Toggle& toggle
@@ -175,7 +180,7 @@ const entt::entity Object::Radar::PowerButton::Create(
 	constexpr Nc::Vector2f POSITION = RADAR_POSITION + Nc::Vector2f(280.0f, 340.0f);
 	constexpr Nc::Vector2f SIZE = Nc::Vector2f(20.0f, 20.0f);
 
-	const entt::entity entity = registry.create();
+	entt::entity entity = registry.create();
 
 	registry.emplace<Tag::Radar::Button>(entity);
 

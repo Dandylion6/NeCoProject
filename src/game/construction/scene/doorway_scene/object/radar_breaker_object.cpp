@@ -13,14 +13,14 @@
 // TODO: Add visuals
 
 
-const entt::entity Object::RadarBreaker::LeverBase::Create(
+entt::entity Object::RadarBreaker::LeverBase::Create(
 	entt::registry& registry, Nc::ResourceStore& resourceStore
 ) noexcept
 {
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(200.0f, 100.0f);
 	constexpr Nc::Vector2f SIZE = Nc::Vector2f(60.0f, 90.0f);
 
-	const entt::entity entity = registry.create();
+	entt::entity entity = registry.create();
 
 	registry.emplace<Component::Transform>(entity, Doorway, POSITION, SIZE, SIZE * 0.5f);
 	registry.emplace<Component::Rectangle>(entity, GRAY);
@@ -29,10 +29,10 @@ const entt::entity Object::RadarBreaker::LeverBase::Create(
 }
 
 
-const entt::entity Object::RadarBreaker::LeverHandle::Create(
+entt::entity Object::RadarBreaker::LeverHandle::Create(
 	entt::registry& registry, 
 	Nc::ResourceStore& resourceStore, 
-	const entt::entity radar
+	entt::entity radar
 ) noexcept
 {
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(200.0f, 100.0f);
@@ -51,7 +51,7 @@ const entt::entity Object::RadarBreaker::LeverHandle::Create(
 void Object::RadarBreaker::Create(
 	entt::registry& registry, 
 	Nc::ResourceStore& resourceStore, 
-	const entt::entity radar
+	entt::entity radar
 ) noexcept
 {
 	Object::RadarBreaker::LeverHandle::Create(registry, resourceStore, radar);

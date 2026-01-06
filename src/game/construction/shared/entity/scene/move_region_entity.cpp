@@ -15,7 +15,7 @@
 #include <utility>
 
 
-const entt::entity Entity::MoveRegion::Create(
+entt::entity Entity::MoveRegion::Create(
 	entt::registry& registry, 
 	Nc::ResourceStore& resourceStore,
 	GameState& gameState, 
@@ -25,7 +25,7 @@ const entt::entity Entity::MoveRegion::Create(
 	float moveTime
 ) noexcept
 {
-	const entt::entity entity = registry.create();
+	entt::entity entity = registry.create();
 
 	registry.emplace<Tag::MoveRegion>(entity);
 	registry.emplace<Component::Transform>(entity, transform);
@@ -47,7 +47,7 @@ const entt::entity Entity::MoveRegion::Create(
 }
 
 
-const entt::entity Entity::MoveRegion::Create(
+entt::entity Entity::MoveRegion::Create(
 	entt::registry& registry, 
 	Nc::ResourceStore& resourceStore,
 	GameState& gameState, 

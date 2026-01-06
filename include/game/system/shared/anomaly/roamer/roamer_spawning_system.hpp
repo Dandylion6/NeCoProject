@@ -12,7 +12,7 @@ public:
 	static void Update(
 		entt::registry& registry, Nc::ResourceStore& resourceStore, GameState& gameState, float time
 	);
-	static const entt::entity SpawnRoamer(
+	static entt::entity SpawnRoamer(
 		entt::registry& registry, Nc::ResourceStore& resourceStore, Nc::Vector2f spawnPoint, AnomalyState& anomalyState
 	);
 	static Nc::Vector2f GenerateRandomSpawnPoint();

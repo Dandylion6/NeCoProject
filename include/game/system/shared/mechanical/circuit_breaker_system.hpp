@@ -16,7 +16,7 @@ public:
 
 private:
     static void UpdateDischarge(
-        Component::CircuitBreaker& breaker,
+        Component::Logic::CircuitBreaker& breaker,
         Component::Action::Toggle& breakerToggle,
         float deltaTime,
         bool isReadyToRestart
@@ -25,7 +25,7 @@ private:
     static void UpdateBreakerOff(
         entt::registry& registry,
         AnomalyState& anomalyState,
-        Component::CircuitBreaker& breaker,
+        Component::Logic::CircuitBreaker& breaker,
         Component::Action::Toggle& breakerToggle,
         Component::Action::Toggle& systemToggle,
         bool isReadyToRestart,
@@ -35,19 +35,19 @@ private:
     static void DesyncRestart(
         entt::registry& registry,
         AnomalyState& anomalyState,
-        Component::CircuitBreaker& breaker
+        Component::Logic::CircuitBreaker& breaker
     ) noexcept;
 
     static void UpdateNormalOperations(
-        Component::CircuitBreaker& breaker,
+        Component::Logic::CircuitBreaker& breaker,
         const Component::Action::Toggle& breakerToggle,
         Component::Action::Toggle& systemToggle
     ) noexcept;
 
     static void UpdateIndicator(
         entt::registry& registry, 
-        const entt::entity entity,
-        const Component::CircuitBreaker& breaker,
+        entt::entity entity,
+        const Component::Logic::CircuitBreaker& breaker,
         float deltaTime
     ) noexcept;
 

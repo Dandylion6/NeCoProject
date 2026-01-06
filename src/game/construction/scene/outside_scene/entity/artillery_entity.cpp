@@ -14,7 +14,7 @@
 #include <utility>
 
 
-const entt::entity Entity::Artillery::Create(
+entt::entity Entity::Artillery::Create(
 	entt::registry& registry
 ) noexcept
 {
@@ -22,7 +22,7 @@ const entt::entity Entity::Artillery::Create(
 	constexpr uint16_t SQUAD_COUNT = 3u;
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(Nc::RENDER_RESOLUTION) * 0.5f;
 
-	const entt::entity entity = registry.create();
+	entt::entity entity = registry.create();
 
 	registry.emplace<Component::Artillery>(entity);
 	registry.emplace<Component::Receiver>(entity);

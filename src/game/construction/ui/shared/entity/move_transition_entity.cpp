@@ -16,13 +16,13 @@
 #include <functional>
 
 
-const entt::entity Entity::MoveTransition::Create(
+entt::entity Entity::MoveTransition::Create(
 	entt::registry& registry, 
 	Nc::RenderContext& renderContext, 
 	GameState& gameState
 ) noexcept
 {
-    const entt::entity entity = registry.create();
+    entt::entity entity = registry.create();
 
 	Nc::Vector2f size = Nc::Vector2f(renderContext.windowSize);
 	Component::UI::Transform& transform = registry.emplace<Component::UI::Transform>(

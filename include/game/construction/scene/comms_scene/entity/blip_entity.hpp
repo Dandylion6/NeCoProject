@@ -11,7 +11,7 @@ namespace Entity
 class Blip final
 {
 public:
-	static const entt::entity Create(
+	static entt::entity Create(
 		entt::registry& registry, 
 		Nc::ResourceStore& resourceStore, 
 		Nc::Vector2f position, 

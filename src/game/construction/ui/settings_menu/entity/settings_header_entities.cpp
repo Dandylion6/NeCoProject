@@ -8,11 +8,11 @@
 #include "game/utility/color_palette.hpp"
 
 
-const entt::entity Entity::SettingsHeader::Create(entt::registry& registry) noexcept
+entt::entity Entity::SettingsHeader::Create(entt::registry& registry) noexcept
 {
     constexpr Nc::Vector2f ANCHOR = Nc::Vector2f(0.5f, 0.1f);
 
-    const entt::entity entity = registry.create();
+    entt::entity entity = registry.create();
 
     registry.emplace<Tag::DontDestroyOnLoad>(entity);
     registry.emplace<Tag::Settings>(entity);
@@ -31,11 +31,11 @@ const entt::entity Entity::SettingsHeader::Create(entt::registry& registry) noex
 }
 
 
-const entt::entity Entity::GameplaySettingsHeader::Create(entt::registry& registry) noexcept
+entt::entity Entity::GameplaySettingsHeader::Create(entt::registry& registry) noexcept
 {
     constexpr Nc::Vector2f ANCHOR = Nc::Vector2f(0.3f, 0.25f);
 
-    const entt::entity entity = registry.create();
+    entt::entity entity = registry.create();
 
     registry.emplace<Tag::DontDestroyOnLoad>(entity);
     registry.emplace<Tag::Settings>(entity);

@@ -24,14 +24,14 @@ public:
     static Data Create(
         entt::registry& registry,
         Component::Transform&& transform,
-        const entt::entity system
+        entt::entity system
     ) noexcept;
 
 private:
     class Indicator final
     {
     public:
-        static const entt::entity Create(
+        static entt::entity Create(
             entt::registry& registry,
             Scene scene,
             Nc::Vector2f breakerCenterPosition

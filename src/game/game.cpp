@@ -53,16 +53,17 @@
 #include "game/component/core/interactive/click_action_component.hpp"
 #include "game/component/core/rendering/text_component.hpp"
 #include "game/component/core/transform_component.hpp"
-#include "game/debug/debug_context.hpp"
+#include "game/component/shared/debug/dev_settings_component.hpp"
+#include "game/component/shared/debug/runtime_readouts_component.hpp"
 #include "game/save/save_game.hpp"
 #include "game/state/scene.hpp"
+#include "game/tag/core/life_cycle/dont_destroy_on_load_tag.hpp"
 #include "game/utility/morse_code.hpp"
 #include <cstdint>
 #include <cstring>
 #include <functional>
 #include <string>
 #include <utility>
-DebugContext Game::debugContext{};
 #endif // DEBUG_BUILD
 
 
@@ -111,23 +112,29 @@ void Game::SetupRenderContext()
 #ifdef DEBUG_BUILD
 void Game::SetupDebug(int args, char* argv[])
 {
+	entt::entity entity = registry.create();
+
+	registry.emplace<Tag::DontDestroyOnLoad>(entity);
+	registry.emplace<Component::Debug::RuntimeReadouts>(entity);
+
+	Component::Debug::DevSettings& devSettings = registry.emplace<Component::Debug::DevSettings>(entity);
 	for (int i = 0; i < args; ++i)
 	{
 		if (strcmp(argv[i], "--ignore-main-menu") == 0)
 		{
-			Game::debugContext.ignoreMainMenu = true;
+			devSettings.ignoreMainMenu = true;
 			continue;
 		}
 
 		if (strcmp(argv[i], "--maximized-windowed") == 0)
 		{
-			Game::debugContext.isMaximizedWindowed = true;
+			devSettings.isMaximizedWindowed = true;
 			continue;
 		}
 
 		if (strcmp(argv[i], "--auto-start-radar") == 0)
 		{
-			Game::debugContext.isRadarActiveOnStart = true;
+			devSettings.isRadarActiveOnStart = true;
 			continue;
 		}
 
@@ -140,6 +147,30 @@ void Game::SetupDebug(int args, char* argv[])
 #endif // DEBUG_BUILD
 
 
+void Game::Save()
+{
+	Save::GameToDisk(registry, gameState);
+}
+
+
+void Game::Load()
+{
+	// Clean up any entities that are load dependant.
+	std::vector<entt::entity> toClean;
+    for (entt::entity entity : registry.view<entt::entity>())
+    {
+        bool canIgnore = registry.any_of<Tag::DontDestroyOnLoad>(entity);
+        if (!canIgnore)
+            toClean.emplace_back(entity);
+    }
+    for (entt::entity entity : toClean) registry.destroy(entity);
+
+    BuildRuntimeScenes();
+
+	Load::GameFromDisk(registry, gameState);
+}
+
+
 void Game::BuildMenuUI()
 {
 	Nc::Vector2f windowSize = Nc::Vector2f(renderContext.windowSize);
@@ -149,7 +180,12 @@ void Game::BuildMenuUI()
 	Structure::RestartMenu::Build(registry, resourceStore, *this, gameState, windowSize);
 
 #ifdef DEBUG_BUILD
- 	if (!Game::debugContext.ignoreMainMenu) 
+	bool ignoreMainMenu = false;
+	auto view = registry.view<Component::Debug::DevSettings>();
+	for (auto [entity, devSettings] : view.each())
+		ignoreMainMenu = devSettings.ignoreMainMenu;
+
+ 	if (!ignoreMainMenu) 
 		Structure::MainMenu::Open(registry, gameState);
 	else
 	{
@@ -158,12 +194,12 @@ void Game::BuildMenuUI()
 		BuildRuntimeScenes();
 	}
 
-	const entt::entity entity = registry.create();
+	entt::entity entity = registry.create();
 
 	registry.emplace<Component::UI::Transform>(entity, Nc::Vector2f(0.06f, 0.9f), Nc::Vector2f::Scale(0.5f), Nc::Vector2f(180.0f, 32.0f));
 	registry.emplace<Component::Text>(entity, "SAVE STATE", Palette::RADAR_COLOR);
 	
-	std::function<void()> onClick = [&registry = registry, &gameState = gameState]() { Save::SaveGame(registry, gameState); };
+	std::function<void()> onClick = [&registry = registry, &gameState = gameState]() { Save::GameToDisk(registry, gameState); };
 	registry.emplace<Component::Action::Click>(entity, std::move(onClick));
 
 #else
@@ -194,7 +230,12 @@ void Game::SetupWindow() const
 #ifdef DEBUG_BUILD
 	SetExitKey(KEY_BACKSPACE);
 	
-	if (Game::debugContext.isMaximizedWindowed)
+	bool isMaximizedWindowed = false;
+	auto view = registry.view<Component::Debug::DevSettings>();
+	for (auto [entity, devSettings] : view.each())
+		isMaximizedWindowed = devSettings.isMaximizedWindowed;
+
+	if (isMaximizedWindowed)
 	{
 		SetWindowState(FLAG_WINDOW_RESIZABLE);
 		MaximizeWindow();
@@ -236,8 +277,12 @@ void Game::Update(float deltaTime)
 	if (IsKeyPressed(KEY_NINE)) gameState.anomalyState.attractionPercentage += 5.0f;
 	if (IsKeyPressed(KEY_ZERO)) gameState.anomalyState.attractionPercentage -= 5.0f;
 
-	if (IsKeyPressed(KEY_M)) Game::debugContext.timeScale += 0.5f;
-	if (IsKeyPressed(KEY_N)) Game::debugContext.timeScale = std::fmaxf(Game::debugContext.timeScale - 0.5f, 0.0f);
+	auto view = registry.view<Component::Debug::RuntimeReadouts>();
+	for (auto [entity, readouts] : view.each())
+	{
+		if (IsKeyPressed(KEY_M)) readouts.timeScale += 0.5f;
+		if (IsKeyPressed(KEY_N)) readouts.timeScale = std::fmaxf(readouts.timeScale - 0.5f, 0.0f);
+	}
 
 	if (IsKeyPressed(KEY_P)) Game::Death(registry, gameState);
 	#endif
@@ -362,58 +407,63 @@ void Game::DrawRenderTexture() const
 
 
 #ifdef DEBUG_BUILD
-void Game::DrawDebugUi() const
+void Game::DrawDebugUi()
 {
-	Game::debugContext.frames.pop_back();
-	Game::debugContext.frames.push_front(GetFPS());
-	int averageFps = 0;
-	for (const int frame : Game::debugContext.frames)
+	auto view = registry.view<Component::Debug::RuntimeReadouts>();
+	for (auto [entity, readouts] : view.each())
 	{
-		averageFps += frame;
+
+		readouts.fpsHistory.pop_back();
+		readouts.fpsHistory.push_front(static_cast<int16_t>(GetFPS()));
+		
+		int fpsTotal = 0;
+		for (const int16_t fps : readouts.fpsHistory)
+			fpsTotal += fps;
+
+		int averageFps = fpsTotal / 32;
+		std::string text = "FPS: " + std::to_string(averageFps);
+		DrawText(text.c_str(), 32, 32, 32, GREEN);
+
+		text = "MSG: " + readouts.receiverMessage;
+		DrawText(text.c_str(), 32, 70, 32, GREEN);
+
+		text = "PULSE: ";
+		switch (readouts.pulse)
+		{
+		case MorseCode::Invalid:
+			break;
+		case MorseCode::Short:
+			text += ".";
+			break;
+		case MorseCode::Long:
+			text += "-";
+			break;
+		}
+		DrawText(text.c_str(), 32, 110, 32, GREEN);
+
+		text = "DNGER LVL: " + std::to_string(gameState.anomalyState.intensityLevel);
+		DrawText(text.c_str(), 32, 148, 32, GREEN);
+
+		text = "ATRCTION: " + std::to_string(static_cast<int32_t>(gameState.anomalyState.attractionPercentage)) + "%";
+		DrawText(text.c_str(), 32, 186, 32, GREEN);
+
+		text = "RADAR: " + std::to_string(static_cast<int32_t>(readouts.radarStabilityPercentage)) + "%";
+		DrawText(text.c_str(), 32, 224, 32, GREEN);
+
+		text = "TIME SPD: " + std::to_string(readouts.timeScale);
+		DrawText(text.c_str(), 32, 272, 32, GREEN);
+
+		text = "DAY & H: " + std::to_string(gameState.day) + " / " + std::to_string(static_cast<int32_t>(gameState.hour));
+		DrawText(text.c_str(), 32, 320, 32, GREEN);
+
+		DrawText("Press [/] to delete msg", 32, 540, 24, GREEN);
+		DrawText("Press [.] to spawn roamer", 32, 580, 24, GREEN);
+		DrawText("Press [G] to glitch a blip", 32, 620, 24, GREEN);
+		DrawText("Press [P] to kill player", 32, 660, 24, GREEN);
+		DrawText("Press [-/=] to mod intensity", 32, 700, 18, GREEN);
+		DrawText("Press [9/0] to mod attraction", 32, 740, 18, GREEN);
+		DrawText("Press [K/L] to mod radar stability", 32, 780, 18, GREEN);
+		DrawText("Press [M/N] to mod time scale", 32, 820, 18, GREEN);
 	}
-	averageFps = averageFps / 32;
-	std::string text = "FPS: " + std::to_string(averageFps);
-	DrawText(text.c_str(), 32, 32, 32, GREEN);
-
-	text = "MSG: " + Game::debugContext.receiverMessage;
-	DrawText(text.c_str(), 32, 70, 32, GREEN);
-
-	text = "PULSE: ";
-	switch (Game::debugContext.pulse)
-	{
-	case MorseCode::Invalid:
-		break;
-	case MorseCode::Short:
-		text += ".";
-		break;
-	case MorseCode::Long:
-		text += "-";
-		break;
-	}
-	DrawText(text.c_str(), 32, 110, 32, GREEN);
-
-	text = "DNGER LVL: " + std::to_string(gameState.anomalyState.intensityLevel);
-	DrawText(text.c_str(), 32, 148, 32, GREEN);
-
-	text = "ATRCTION: " + std::to_string(static_cast<int32_t>(gameState.anomalyState.attractionPercentage)) + "%";
-	DrawText(text.c_str(), 32, 186, 32, GREEN);
-
-	text = "RADAR: " + std::to_string(static_cast<int32_t>(Game::debugContext.radarStabilityPercentage)) + "%";
-	DrawText(text.c_str(), 32, 224, 32, GREEN);
-
-	text = "TIME SPD: " + std::to_string(Game::debugContext.timeScale);
-	DrawText(text.c_str(), 32, 272, 32, GREEN);
-
-	text = "DAY & H: " + std::to_string(gameState.day) + " / " + std::to_string(static_cast<int32_t>(gameState.hour));
-	DrawText(text.c_str(), 32, 320, 32, GREEN);
-
-	DrawText("Press [/] to delete msg", 32, 540, 24, GREEN);
-	DrawText("Press [.] to spawn roamer", 32, 580, 24, GREEN);
-	DrawText("Press [G] to glitch a blip", 32, 620, 24, GREEN);
-	DrawText("Press [P] to kill player", 32, 660, 24, GREEN);
-	DrawText("Press [-/=] to mod intensity", 32, 700, 18, GREEN);
-	DrawText("Press [9/0] to mod attraction", 32, 740, 18, GREEN);
-	DrawText("Press [K/L] to mod radar stability", 32, 780, 18, GREEN);
-	DrawText("Press [M/N] to mod time scale", 32, 820, 18, GREEN);
 }
 #endif // DEBUG_BUILD

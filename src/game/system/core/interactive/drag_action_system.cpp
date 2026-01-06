@@ -50,7 +50,7 @@ DragActionSystem::DragResult DragActionSystem::UpdateSceneDrag(
 	entt::registry& registry, 
 	GameState& gameState,
 	Nc::RenderContext& renderContext, 
-	const entt::entity entity, 
+	entt::entity entity, 
 	Component::Action::Drag& drag
 )
 {

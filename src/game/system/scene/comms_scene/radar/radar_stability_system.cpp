@@ -80,7 +80,7 @@ void RadarStabilitySystem::Update(
 
 void RadarStabilitySystem::Restart(
 	entt::registry& registry, 
-	const entt::entity entity
+	entt::entity entity
 ) noexcept
 {
 	Component::Radar& radar = registry.get<Component::Radar>(entity);
@@ -190,7 +190,7 @@ void RadarStabilitySystem::GlitchBlip(
 	entt::registry& registry, 
 	Component::Radar& radar, 
 	Component::Blip& blip, 
-	const entt::entity entity, 
+	entt::entity entity, 
 	float time
 ) noexcept
 {
