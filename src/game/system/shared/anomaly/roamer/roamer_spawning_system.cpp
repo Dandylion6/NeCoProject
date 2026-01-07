@@ -23,7 +23,7 @@ void RoamerSpawningSystem::Update(
 {
 	if (!GameState::IsNight(gameState.hour))
 	{
-		gameState.anomalyState.nextSpawnSecondsLeft = 0.0f;
+		gameState.anomalyState.nextRoamerSpawnSecondsLeft = 0.0f;
 		return;
 	}
 
@@ -38,7 +38,7 @@ void RoamerSpawningSystem::Update(
 	float pressureTarget = AnomalyState::GetPressureTarget(gameState.anomalyState.intensityLevel);
 	float pressureSurplus = std::clamp<float>(gameState.anomalyState.roamerPressureWeight - pressureTarget, -0.5f, 0.5f);
 	float timeScale = 1.0f - pressureSurplus;
-	gameState.anomalyState.nextSpawnSecondsLeft -= deltaTime * timeScale;
+	gameState.anomalyState.nextRoamerSpawnSecondsLeft -= deltaTime * timeScale;
 
 	if (!ShouldSpawnRoamer(gameState.anomalyState)) return;
 
@@ -48,7 +48,7 @@ void RoamerSpawningSystem::Update(
 	float attractionFactor = gameState.anomalyState.attractionPercentage * 0.01f;
 	Nc::Vector2f range = Nc::Vector::Lerp(SPAWN_WAIT_LOW_RANGE, SPAWN_WAIT_HIGH_RANGE, attractionFactor);
 	float nextSpawnSeconds = Nc::Random::Range(range.x, range.y) * 60.0f;
-	gameState.anomalyState.nextSpawnSecondsLeft = nextSpawnSeconds;
+	gameState.anomalyState.nextRoamerSpawnSecondsLeft = nextSpawnSeconds;
 }
 
 
@@ -105,8 +105,8 @@ Nc::Vector2f RoamerSpawningSystem::GenerateRandomSpawnPoint()
 		position.y = static_cast<float>(GetRandomValue(worldMin.y - OVERFLOW_RANGE, worldMax.y + OVERFLOW_RANGE));
 
 		float weight = 1.0f;
-		float sqrDistanceToArtillery = Nc::Vector::SqrDistanceOf(position, ARTILLERY_POSITION);
-		float sqrDistanceToBunker = Nc::Vector::SqrDistanceOf(position, BUNKER_POSITION);
+		float sqrDistanceToArtillery = Nc::Vector::SqrDistanceBetween(position, ARTILLERY_POSITION);
+		float sqrDistanceToBunker = Nc::Vector::SqrDistanceBetween(position, BUNKER_POSITION);
 
 		weight = Nc::Math::Remap(SPAWN_WEIGHT_RANGE_SQR, Nc::Vector2f(0.0f, 1.0f), sqrDistanceToArtillery);
 		weight *= Nc::Math::Remap(SPAWN_WEIGHT_RANGE_SQR, Nc::Vector2f(0.0f, 1.0f), sqrDistanceToBunker);
@@ -127,5 +127,5 @@ Nc::Vector2f RoamerSpawningSystem::GenerateRandomSpawnPoint()
 
 bool RoamerSpawningSystem::ShouldSpawnRoamer(const AnomalyState& anomalyState)
 {
-	return anomalyState.nextSpawnSecondsLeft <= 0.0f;
+	return anomalyState.nextRoamerSpawnSecondsLeft <= 0.0f;
 }

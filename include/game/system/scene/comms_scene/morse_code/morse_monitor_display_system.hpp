@@ -9,14 +9,14 @@ class MorseMonitorDisplaySystem
 public:
 	static void Update(
 		entt::registry& registry,
-		MorseSettings settings,
+		Settings::Morse settings,
 		float deltaTime
 	);
 
 private:
 	static void UpdatePointer(
 		entt::registry& registry,
-		MorseSettings settings,
+		Settings::Morse settings,
 		float deltaTime
 	);
 
@@ -24,7 +24,7 @@ private:
 
 	static void SetRegions(
 		entt::registry& registry,
-		MorseSettings settings
+		Settings::Morse settings
 	);
 
 };

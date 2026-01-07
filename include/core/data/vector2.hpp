@@ -25,11 +25,8 @@ struct Vector2i final
 
 	constexpr Vector2i() = default;
 	constexpr Vector2i(int x, int y) : x(x), y(y) { };
-	constexpr Vector2i(
-		Vector2 vector
-	) noexcept :
-		x(static_cast<int>(vector.x)), 
-		y(static_cast<int>(vector.y))
+	constexpr Vector2i(Vector2 vector) noexcept 
+		: x(static_cast<int>(vector.x)), y(static_cast<int>(vector.y))
 	{ };
 
 
@@ -40,7 +37,9 @@ struct Vector2i final
 
 	// ------ Utility ------
 
-	/// @brief Returns a zero vector (0, 0).
+	/**
+	 * @brief Returns a zero vector `(0, 0)`.
+	 */
 	constexpr static Vector2i Zero() noexcept { return Vector2i(0, 0); };
 
 
@@ -71,15 +70,11 @@ struct Vector2f final
 
 	constexpr Vector2f() = default;
 	constexpr Vector2f(float x, float y) noexcept : x(x), y(y) { };
-	constexpr Vector2f(int x, int y) noexcept : 
-		x(static_cast<float>(x)), y(static_cast<float>(y)) 
+	constexpr Vector2f(int x, int y) noexcept 
+		: x(static_cast<float>(x)), y(static_cast<float>(y)) 
 	{ };
 	
-	constexpr Vector2f(
-		Vector2 vector
-	) noexcept :
-		x(vector.x), y(vector.y)
-	{ };
+	constexpr Vector2f(Vector2 vector) noexcept : x(vector.x), y(vector.y) { };
 
 
 	// ------ Conversion ------
@@ -90,38 +85,54 @@ struct Vector2f final
 
 	// ------ Utility ------
 
-	/// @brief Returns a zero vector (0.0f, 0.0f).
+	/**
+	 * @brief Returns a zero vector (0.0f, 0.0f).
+	 */
 	constexpr static Vector2f Zero() noexcept { return Vector2f(0.0f, 0.0f); };
-	/// @brief Returns an upward unit vector (0.0f, 1.0f).
+	
+	/**
+	 * @brief Returns an upward unit vector (0.0f, 1.0f).
+	 */
 	constexpr static Vector2f Up() noexcept { return Vector2f(0.0f, 1.0f); };
-	/// @brief Returns a downward unit vector (0.0f, -1.0f).
+	
+	/**
+	 * @brief Returns a downward unit vector (0.0f, -1.0f).
+	 */
 	constexpr static Vector2f Down() noexcept { return Vector2f(0.0f, -1.0f); };
-	/// @brief Returns a rightward unit vector (1.0f, 0.0f).
+
+	/**
+	 * @brief Returns a rightward unit vector (1.0f, 0.0f).
+	 */
 	constexpr static Vector2f Right() noexcept { return Vector2f(1.0f, 0.0f); };
+
 	/**
 	 * @brief Returns an upward vector with a given length.
 	 * 
 	 * @param length Desired vector length.
 	 */
 	constexpr static Vector2f Up(const float length) noexcept { return Vector2f(0.0f, length); };
+
 	/**
 	 * @brief Returns a downward vector with a given length.
 	 * 
 	 * @param length Desired vector length.
 	 */
 	constexpr static Vector2f Down(const float length) noexcept { return Vector2f(0.0f, -length); };
+
 	/**
 	 * @brief Returns a rightward vector with a given length.
 	 * 
 	 * @param length Desired vector length.
 	 */
 	constexpr static Vector2f Right(const float length) noexcept { return Vector2f(length, 0.0f); };
+
 	/**
 	 * @brief Returns a leftward vector with a given length.
 	 * 
 	 * @param length Desired vector length.
 	 */
 	constexpr static Vector2f Left(const float length) noexcept { return Vector2f(-length, 0.0f); };
+
 	/**
 	 * @brief Returns a uniform scale vector where x = y = scale.
 	 * 
@@ -135,7 +146,6 @@ struct Vector2f final
 	constexpr Vector2f operator-() const { return Vector2f(-x, -y); };
 	constexpr Vector2f operator+(const Vector2f other) const { return Vector2f(x + other.x, y + other.y); };
 	constexpr Vector2f operator-(const Vector2f other) const { return Vector2f(x - other.x, y - other.y); };
-	constexpr Vector2f operator*(const Vector2f other) const { return Vector2f(x * other.x, y * other.y); };
 	constexpr Vector2f operator*(const float factor) const  { return Vector2f(x * factor, y * factor); };
 	constexpr Vector2f operator/(const Vector2f other) const { return Vector2f(x / other.x, y / other.y); };
 	constexpr Vector2f operator/(const float factor) const { return Vector2f(x / factor, y / factor); };

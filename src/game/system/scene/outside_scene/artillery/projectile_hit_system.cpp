@@ -55,7 +55,7 @@ void ProjectileHitSystem::CheckForHits(entt::registry& registry, std::vector<Nc:
 	{
 		for (Nc::Vector2f hitPosition : hitPositions)
 		{
-			float sqrDistance = Nc::Vector::SqrDistanceOf(hitPosition, transform.position);
+			float sqrDistance = Nc::Vector::SqrDistanceBetween(hitPosition, transform.position);
 			if (sqrDistance > BLAST_RADIUS * BLAST_RADIUS) continue;
 			health.health -= DAMAGE;
 		}

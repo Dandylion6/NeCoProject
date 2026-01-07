@@ -27,8 +27,8 @@ void Object::RestartButton::Create(
 
     std::function<void()> toMainMenu = [&game, &registry, &gameState]()
     {
+        game.Load();
         Structure::RestartMenu::Close(registry, gameState);
-        Save::LoadGame (game, registry, gameState);
     };
     
     Component::UI::Transform transform = Component::UI::Transform(ANCHOR, ORIGIN, 2);

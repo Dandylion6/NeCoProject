@@ -92,7 +92,7 @@ bool RoamerKillSystem::CanKill(
 )
 {
 	float killDistanceSqr = killDistance * killDistance;
-	float sqrDistance = Nc::Vector::SqrDistanceOf(targetPosition, roamerPosition);
+	float sqrDistance = Nc::Vector::SqrDistanceBetween(targetPosition, roamerPosition);
 	return sqrDistance <= killDistance;
 }
 

@@ -26,7 +26,7 @@ void ArtilleryAimingSystem::Update(
 		artillery.aimPosition.y = Nc::Math::SmoothApproach(artillery.aimPosition.y, targetPosition.y, deltaTime, 0.4f);
 
 		Nc::Vector2f difference = artillery.aimPosition - artillery.targetPosition;
-		float sqrDistance = Nc::Vector::SqrDistanceOf(artillery.aimPosition, artillery.targetPosition);
+		float sqrDistance = Nc::Vector::SqrDistanceBetween(artillery.aimPosition, artillery.targetPosition);
 		if (sqrDistance > 0.1f) continue;
 
 		artillery.aimPosition = artillery.targetPosition;

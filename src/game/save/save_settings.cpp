@@ -24,6 +24,7 @@ Save::Result Save::SettingsToDisk(const Settings& settings)
     return Result::Success;
 }
 
+
 Load::Result Load::SettingsFromDisk(Settings& settings)
 {
     std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
@@ -36,8 +37,6 @@ Load::Result Load::SettingsFromDisk(Settings& settings)
     nlohmann::json data = nlohmann::json::parse(stream);
 
     settings.morseSettings.dotTime = data.at("morse_dot_duration");
-    
-    Settings::Apply(settings);
 
     stream.close();
     return Result::Success;

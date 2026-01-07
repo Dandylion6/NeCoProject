@@ -12,7 +12,7 @@
 
 
 void MorseMonitorDisplaySystem::Update(
-	entt::registry& registry, MorseSettings settings, float deltaTime
+	entt::registry& registry, Settings::Morse settings, float deltaTime
 )
 {
 	UpdatePointer(registry, settings, deltaTime);
@@ -21,7 +21,7 @@ void MorseMonitorDisplaySystem::Update(
 
 
 void MorseMonitorDisplaySystem::UpdatePointer(
-	entt::registry& registry, MorseSettings settings, float deltaTime
+	entt::registry& registry, Settings::Morse settings, float deltaTime
 )
 {
 	auto view = registry.view<Tag::Morse::Monitor, Component::Transform>();
@@ -54,7 +54,7 @@ const Component::Morse::Transceiver* MorseMonitorDisplaySystem::GetTrasceiver(en
 
 
 void MorseMonitorDisplaySystem::SetRegions(
-	entt::registry& registry, MorseSettings settings
+	entt::registry& registry, Settings::Morse settings
 )
 {
 	float monitorScale = MorseMonitor::GAUGE_SIZE.x / settings.exitTime;

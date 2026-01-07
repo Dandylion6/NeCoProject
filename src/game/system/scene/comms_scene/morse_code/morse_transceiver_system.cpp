@@ -21,7 +21,7 @@
 
 
 void MorseTransceiverSystem::Update(
-	entt::registry& registry, GameState& gameState, MorseSettings settings, float deltaTime
+	entt::registry& registry, GameState& gameState, Settings::Morse settings, float deltaTime
 )
 {
 	auto view = registry.view<Component::Transform, Component::Morse::Transceiver>();
@@ -53,7 +53,7 @@ void MorseTransceiverSystem::Update(
 
 
 void MorseTransceiverSystem::InputChanged(
-	Component::Morse::Transceiver& transceiver, MorseSettings settings
+	Component::Morse::Transceiver& transceiver, Settings::Morse settings
 )
 {
 	bool inputJustStarted = IsKeyPressed(Component::Morse::Transceiver::INPUT_KEY);
@@ -65,7 +65,7 @@ void MorseTransceiverSystem::InputChanged(
 
 
 void MorseTransceiverSystem::TryEndCharacter(
-	entt::registry& registry, AnomalyState& anomalyState, Component::Morse::Transceiver& transceiver, MorseSettings settings
+	entt::registry& registry, AnomalyState& anomalyState, Component::Morse::Transceiver& transceiver, Settings::Morse settings
 )
 {
 	float longestTime = settings.dashTime + settings.errorMargin;
@@ -98,7 +98,7 @@ void MorseTransceiverSystem::TransmitCharacter(
 
 
 void MorseTransceiverSystem::RecordPulse(
-	Component::Morse::Transceiver& transceiver, MorseSettings settings
+	Component::Morse::Transceiver& transceiver, Settings::Morse settings
 )
 {
 	if (transceiver.pulseCount >= Component::Morse::Transceiver::MAX_PULSES) return;
@@ -117,7 +117,7 @@ void MorseTransceiverSystem::ClearTransceiver(Component::Morse::Transceiver& tra
 }
 
 
-MorseCode::Pulse MorseTransceiverSystem::GetPulseType(float intervalSeconds, MorseSettings settings)
+MorseCode::Pulse MorseTransceiverSystem::GetPulseType(float intervalSeconds, Settings::Morse settings)
 {
 	Nc::Vector2f margins = Nc::Vector2f::Zero();
 	margins.x = settings.dotTime - settings.errorMargin;

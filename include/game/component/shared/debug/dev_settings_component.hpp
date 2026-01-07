@@ -11,6 +11,15 @@ namespace Component::Debug
  * and are ignored in release builds.
  *
  * Written on game initialization based on boot parameters.
+ * 
+ * Usage example:
+ * ```cpp
+ * Component::Debug::DevSettings& devSettings = registry.emplace<Component::Debug::DevSettings>(entity);
+ * 
+ * devSettings.ignoreMainMenu = true;
+ * devSettings.isMinimizedWindowed = true;
+ * devSettings.isRadarActiveOnStart = true;
+ * ```
  */
 struct DevSettings final
 {

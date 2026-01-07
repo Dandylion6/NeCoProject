@@ -264,7 +264,7 @@ bool Game::ShouldRun() const
 
 void Game::Update(float deltaTime)
 {
-	#ifdef DEBUG_BUILD
+#ifdef DEBUG_BUILD
 	if (IsKeyPressed(KEY_PERIOD))
 	{
 		Nc::Vector2f spawnPoint = RoamerSpawningSystem::GenerateRandomSpawnPoint();
@@ -282,10 +282,11 @@ void Game::Update(float deltaTime)
 	{
 		if (IsKeyPressed(KEY_M)) readouts.timeScale += 0.5f;
 		if (IsKeyPressed(KEY_N)) readouts.timeScale = std::fmaxf(readouts.timeScale - 0.5f, 0.0f);
+		deltaTime *= readouts.timeScale;
 	}
 
 	if (IsKeyPressed(KEY_P)) Game::Death(registry, gameState);
-	#endif
+#endif
 
 	if (gameState.isPaused) return;
 	gameState.time += deltaTime;
@@ -307,6 +308,12 @@ void Game::Update(float deltaTime)
 
 void Game::UpdateRegistries(float deltaTime)
 {
+#ifdef DEBUG_BUILD
+	auto view = registry.view<Component::Debug::RuntimeReadouts>();
+	for (auto [entity, readouts] : view.each())
+		deltaTime *= readouts.timeScale;
+#endif
+
 	InputActionSystem::Update(registry, gameState);
 	bool buttonHovering = ClickSystem::Update(registry, gameState, renderContext);
 	bool dragHovering = DragActionSystem::Update(registry, gameState, renderContext);
@@ -320,8 +327,8 @@ void Game::UpdateRegistries(float deltaTime)
 
 	if (gameState.isPaused) return;
 
-	MorseTransceiverSystem::Update(registry, gameState, settings.morseSettings, deltaTime);
-	MorseMonitorDisplaySystem::Update(registry, settings.morseSettings, deltaTime);
+	MorseTransceiverSystem::Update(registry, gameState, settings.Settings::Morse, deltaTime);
+	MorseMonitorDisplaySystem::Update(registry, settings.Settings::Morse, deltaTime);
 	MorseSoundEmitterSystem::Update(registry, gameState.currentScene, deltaTime);
 	MachineSystem::Update(registry, gameState.anomalyState, deltaTime);
 	RadarStabilitySystem::Update(registry, gameState, gameState.time, deltaTime);
@@ -347,6 +354,12 @@ void Game::UpdateRegistries(float deltaTime)
 
 void Game::DrawGame(float deltaTime)
 {
+#ifdef DEBUG_BUILD
+	auto view = registry.view<Component::Debug::RuntimeReadouts>();
+	for (auto [entity, readouts] : view.each())
+		deltaTime *= readouts.timeScale;
+#endif
+
 	RadarRenderSystem::DrawRenderTexture(
 		registry, renderContext.radarRenderTexture, gameState.currentScene, resourceStore
 	);

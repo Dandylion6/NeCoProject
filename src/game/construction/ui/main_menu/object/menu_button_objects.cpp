@@ -28,7 +28,7 @@ void Object::PlayButton::Create(
 
 	std::function<void()> onClick = [&game, &gameState, &registry]()
 	{
-		Save::LoadGame(game, registry, gameState);
+		game.Load();
 		Structure::MainMenu::Close(registry, gameState);
 	};
 	

@@ -13,6 +13,17 @@ namespace Component::Debug
  *
  * Stored in the ECS registry context.
  * Written by gameplay systems, read by debug UI.
+ * 
+ * Usage example:
+ * ```cpp
+ * constexpr float TIME_SCALE = 1.3f;
+ * 
+ * registry.emplace<Component::Debug::RuntimeReadouts>(entity);
+ * 
+ * auto view = registry.view<Component::Debug::RuntimeReadouts>();
+ * for (auto [entity, readouts] : view.each())
+ *  	readouts.timeScale = TIME_SCALE;
+ * ```
  */
 struct RuntimeReadouts final
 {

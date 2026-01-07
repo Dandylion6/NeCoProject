@@ -12,14 +12,9 @@ namespace Nc::Vector
  * @param vector Input vector.
  * @return Rounded vector.
  */
-static Nc::Vector2f Round(
-	const Nc::Vector2f vector
-) noexcept
+inline Nc::Vector2f Round(const Nc::Vector2f vector) noexcept
 {
-	return Nc::Vector2f(
-		std::roundf(vector.x), 
-		std::roundf(vector.y)
-	);
+	return Nc::Vector2f(std::roundf(vector.x), std::roundf(vector.y));
 }
 
 
@@ -34,7 +29,7 @@ static Nc::Vector2f Round(
  * @return Remapped vector.
  * 
  */
-static Nc::Vector2f Remap(
+inline Nc::Vector2f Remap(
 	const Nc::Vector2f fromMin,
 	const Nc::Vector2f fromMax,
 	const Nc::Vector2f toMin,
@@ -56,16 +51,12 @@ static Nc::Vector2f Remap(
  * @param time Interpolation factor in range [0, 1].
  * @return Interpolated vector.
 */
-constexpr static Nc::Vector2f Lerp(
-	const Nc::Vector2f start,
-	const Nc::Vector2f end,
-	const float time
-) noexcept
+inline Nc::Vector2f Lerp(const Nc::Vector2f start, const Nc::Vector2f end, const float time) noexcept
 {
-	return Vector2f(
-		Nc::Math::Lerp(start.x, end.x, time), 
-		Nc::Math::Lerp(start.y, end.y, time)
-	);
+	Nc::Vector2f result = Nc::Vector2f::Zero();
+	result.x = Nc::Math::Lerp(start.x, end.x, time);
+	result.y = Nc::Math::Lerp(start.y, end.y, time);
+	return result;
 }
 	
 
@@ -75,7 +66,7 @@ constexpr static Nc::Vector2f Lerp(
  * @param vector Input vector.
  * @return Minimum component value.
  */
-static float MinOf(const Nc::Vector2f vector) noexcept { return std::fminf(vector.x, vector.y); };
+inline float MinOf(const Nc::Vector2f vector) noexcept { return std::fminf(vector.x, vector.y); };
 
 
 /**
@@ -84,74 +75,91 @@ static float MinOf(const Nc::Vector2f vector) noexcept { return std::fminf(vecto
  * @param vector Input vector.
  * @return Maximum component value.
  */
-static float MaxOf(const Nc::Vector2f vector) noexcept { return std::fmaxf(vector.x, vector.y); };
+inline float MaxOf(const Nc::Vector2f vector) noexcept { return std::fmaxf(vector.x, vector.y); };
 
 
 /**
- * @brief Returns the squared magnitude of the vector (faster than MagnitudeOf).
+ * @brief Returns the squared `magnitude` of the vector (faster than MagnitudeOf).
  * 
  * @param vector Input vector.
  * @return Squared magnitude of the vector.
  */
-static constexpr float SqrMagnitudeOf(
-	const Nc::Vector2f vector
-) noexcept 
+inline constexpr float SqrMagnitudeOf(const Nc::Vector2f vector) noexcept 
 {
 	return vector.x * vector.x + vector.y * vector.y; 
 };
 
 
 /**
- * @brief Returns the magnitude (length) of the vector.
+ * @brief Returns the `magnitude` (length) of the vector.
  * 
  * @param vector Input vector.
  * @return Magnitude of the vector.
  */
-static float MagnitudeOf(const Nc::Vector2f vector) noexcept { return std::sqrtf(SqrMagnitudeOf(vector)); };
+inline float MagnitudeOf(const Nc::Vector2f vector) noexcept { return std::sqrtf(SqrMagnitudeOf(vector)); };
 
 
 /**
- * @brief Calculates the distance between two vectors.
+ * @brief Calculates the `distance` between two vectors.
  * 
- * @param vector1 First vector.
- * @param vector2 Second vector.
+ * @param a First vector.
+ * @param b Second vector.
  * @return Distance between the two.
  */
-static float DistanceOf(
-	const Nc::Vector2f vector1, 
-	const Nc::Vector2f vector2
-) noexcept
-{
-	return MagnitudeOf(vector1 - vector2);
-}
+inline float DistanceBetween(const Nc::Vector2f a, const Nc::Vector2f b) noexcept { return MagnitudeOf(a - b); };
 
 
 /**
- * @brief Calculates the squared distance between two vectors.
+ * @brief Calculates the squared `distance` between two vectors.
  * 
- * @param vector1 First vector.
- * @param vector2 Second vector.
+ * @param a First vector.
+ * @param b Second vector.
  * @return Squared distance between the two.
  */
-static constexpr float SqrDistanceOf(
-	const Nc::Vector2f vector1, 
-	const Nc::Vector2f vector2
-) noexcept
+inline constexpr float SqrDistanceBetween(const Nc::Vector2f a, const Nc::Vector2f b) noexcept
 {
-	return SqrMagnitudeOf(vector1 - vector2);
+	return SqrMagnitudeOf(a - b);
 }
 
 
 /**
- * Returns a normalized copy of the vector (length = 1).
+ * @brief Returns a `normalized` copy of the vector (length = 1).
  * 
  * @param vector Input vector.
  * @return Normalized vector.
  */
-static Nc::Vector2f Normalized(const Nc::Vector2f vector) noexcept
+inline Nc::Vector2f Normalized(const Nc::Vector2f vector) noexcept
 {
 	float length = MagnitudeOf(vector);
 	return Nc::Vector2f(vector.x, vector.y) / length;
 }
 
+}
+
+
+/** 
+ * @brief Performs a component-wise `modulation` of two vectors.
+ * 
+ * Each component of `a` get multiplied with the respective component of `b`.
+ * 
+ * @param a First vector.
+ * @param b Second vector.
+ * @return The modulated vector.
+ */
+inline Nc::Vector2f Modulate(const Nc::Vector2f a, const Nc::Vector2f b) noexcept
+{
+	return Nc::Vector2f(a.x * b.x, a.y * b.y);
+}
+
+
+/**
+ * @brief Calculates the dot product of the two vectors.
+ * 
+ * @param a First vector.
+ * @param b Second vector.
+ * @return Resulting dot product.
+ */
+inline float Dot(const Nc::Vector2f a, const Nc::Vector2f b) noexcept
+{
+	return a.x * b.x + a.y * b.y;
 }
