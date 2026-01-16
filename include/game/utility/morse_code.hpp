@@ -10,7 +10,6 @@ namespace MorseCode
 constexpr char NULL_CODE = '\x0';
 constexpr char CANCEL_CODE = '\x18';
 constexpr char BACK_CODE = '\x8';
-
 constexpr float ERROR_MARGIN = 0.48f;
 
 enum Pulse: uint8_t
@@ -38,14 +37,14 @@ const std::unordered_map<std::string, char> TABLE {
 };
 
 
-inline float DashTime(float dotTime) noexcept { return dotTime * 3.0f; };
-inline float ErrorMargin(float dotTime) noexcept { return dotTime * MorseCode::ERROR_MARGIN; };
-inline float ExitTime(float dotTime) noexcept { return dotTime * (4.0f + ERROR_MARGIN); };
+inline float DashTime(const float dotTime) noexcept { return dotTime * 3.0f; };
+inline float ErrorMargin(const float dotTime) noexcept { return dotTime * ERROR_MARGIN; };
+inline float ExitTime(const float dotTime) noexcept { return dotTime * (4.0f + ERROR_MARGIN); };
 
 
 inline char GetChar(const std::string& code) noexcept
 {
-    if (TABLE.find(code) == TABLE.end()) return MorseCode::NULL_CODE;
+    if (!TABLE.contains(code)) return NULL_CODE;
     return TABLE.at(code);
 }
 

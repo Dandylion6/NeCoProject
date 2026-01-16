@@ -1,30 +1,32 @@
 #include "game/construction/scene/comms_desk_scene/entity/note_entity.hpp"
+
+#include "raylib.h"
 #include "core/data/vector2.hpp"
 #include "core/runtime/render_context.hpp"
 #include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "game/component/core/rendering/sprite_component.hpp"
 #include "game/component/core/transform_component.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
 #include "game/component/scene/comms_desk_scene/note_component.hpp"
+#include "game/contexts/scene_context.hpp"
 #include "game/state/scene.hpp"
-#include "raylib.h"
-#include <utility>
 
 
-entt::entity Entity::Note::Create(entt::registry& registry, Nc::ResourceStore& resourceStore) noexcept
+entt::entity Entity::Note::Create(const SceneContext& context) noexcept
 {
+	constexpr char NOTE_TEXTURE_PATH[] = "assets/environment/objects/note/page_0.png";
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(Nc::RENDER_RESOLUTION) * 0.5f;
 
-	entt::entity entity = registry.create();
+	const entt::entity entity = context.registry.create();
 
-	registry.emplace<Component::Note>(entity);
+	context.registry.emplace<Component::Note>(entity);
 	
-	Texture2D texture = resourceStore.GetTexture("assets/environment/objects/note/page_0.png");
-	Nc::Vector2f size = Nc::Vector2f(texture.width, texture.height);
+	const Texture2D& texture = context.store.GetTexture(NOTE_TEXTURE_PATH);
+	context.registry.emplace<Component::Sprite>(entity, texture);
 
-	registry.emplace<Component::Transform>(entity, CommsDesk, POSITION, size, size * 0.5f);
-	registry.emplace<Component::Sprite>(entity, std::move(texture));
+	auto size = Nc::Vector2f(texture.width, texture.height);
+	context.registry.emplace<Component::Transform>(entity, CommsDesk, POSITION, size, size * 0.5f);
 
 	return entity;
 }

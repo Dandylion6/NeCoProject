@@ -17,8 +17,8 @@ struct Artillery final
 
 	Nc::Vector2f targetPosition = Nc::Vector2f::Zero();
 	Nc::Vector2f aimPosition = targetPosition;
-	float aimStartupDelay = 0.0f;
-	float fireDelay = 0.0f;
+	float aimStartupSeconds = 0.0f;
+	float fireDelaySeconds = 0.0f;
 	bool isReadyToFire = true;
 	bool receivedFireRequest = false;
 

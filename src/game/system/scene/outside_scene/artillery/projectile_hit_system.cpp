@@ -7,7 +7,7 @@
 #include "game/component/scene/comms_scene/blip_components.hpp"
 #include "game/component/scene/outside_scene/projectile_component.hpp"
 #include "game/component/shared/stat/health_component.hpp"
-#include "game/system/core/audio/sound_emitter_system.hpp"
+#include "game/system/core/audio/audio_emitter_system.hpp"
 #include "game/system/scene/outside_scene/artillery/projectile_hit_system.hpp"
 #include "raylib.h"
 #include <cstdint>
@@ -18,7 +18,7 @@ void ProjectileHitSystem::Update(entt::registry& registry, float deltaTime)
 {
 	std::vector<Nc::Vector2f> hitPositions { };
 
-	auto view = registry.view<const Component::Transform, Component::Projectile, Component::SoundEmitter>();
+	auto view = registry.view<const Component::Transform, Component::Projectile, Component::Audio>();
 	for (auto [entity, transform, projectile, emitter] : view.each())
 	{
 		if (!projectile.isActive)

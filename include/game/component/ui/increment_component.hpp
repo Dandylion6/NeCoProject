@@ -1,6 +1,6 @@
 #pragma once
-#include "core/data/vector2.hpp"
 #include <cstdint>
+#include "core/data/vector2.hpp"
 
 
 namespace Component::UI
@@ -12,18 +12,18 @@ namespace Component::UI
  * Other member variables define ways to modify the value, such as `increment` amount.
  * 
  * Usage example:
- * 
- * ```cpp
+ *
+ * @code
  * constexpr float INCREMENT = 0.1f;
  * constexpr Nc::Vector2f RANGE = Nc::Vector2f(0.0f, 1.0f);
  * 
  * float volume = 0.5f;
  * registry.emplace<Component::UI::Increment>(&volume, INCREMENT, RANGE);
- * ```
+ * @endcode
  */
 struct Increment final
 {
-	// ------ Members ------
+    // ------ Members ------
 
     float* value = nullptr;
     Nc::Vector2f range = Nc::Vector2f(0.0f, 1.0f);
@@ -31,19 +31,21 @@ struct Increment final
     uint8_t decimals = 1u;
 
 
-	// ------ Constructors ------
+    // ------ Constructors ------
 
     constexpr Increment() = default;
+
+
     constexpr Increment(
         float* value,
-        float increment,    
-        Nc::Vector2f range = Nc::Vector2f(0.0f, 1.0f),
-        uint8_t decimals = 1u
-    ) noexcept : 
-        value(value), 
-        increment(increment), 
-        range(range), 
-        decimals(decimals) 
+        const float increment,
+        const Nc::Vector2f range = Nc::Vector2f(0.0f, 1.0f),
+        const uint8_t decimals = 1u
+    ) noexcept
+        : value(value),
+          range(range),
+          increment(increment),
+          decimals(decimals)
     { };
 };
 

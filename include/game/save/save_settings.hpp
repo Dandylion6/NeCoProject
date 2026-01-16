@@ -1,5 +1,7 @@
 #pragma once
 #include "game/save/save_result.hpp"
+
+
 struct Settings;
 
 

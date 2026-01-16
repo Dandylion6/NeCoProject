@@ -2,6 +2,8 @@
 #include "core/data/vector2.hpp"
 #include "entt/entity/fwd.hpp"
 #include "raylib.h"
+
+
 struct GameState;
 namespace Nc 
 { 
@@ -10,14 +12,11 @@ namespace Nc
 };
 
 
-class LightingSystem
+class LightingSystem final
 {
 public:
-    static void Initialize(
-        Nc::LightingContext& context, 
-        Nc::ResourceStore& resourceStore
-    );
-
+    // ------ Functions ------
+    static void Initialize(Nc::LightingContext& context, Nc::ResourceStore& resourceStore);
     static void Update(
         entt::registry& registry, 
         Nc::LightingContext& context,
@@ -28,6 +27,7 @@ public:
     );
 
 private:
+    // ------ Types ------
     enum LightType: int
     {
         LightPoint,

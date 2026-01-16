@@ -1,28 +1,27 @@
+#include "game/construction/scene/outside_scene/entity/artillery_entity.hpp"
+
+#include <cstdint>
+
+#include "raylib.h"
 #include "core/data/vector2.hpp"
 #include "core/runtime/render_context.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "game/component/core/audio/sound_emitter_component.hpp"
 #include "game/component/core/transform_component.hpp"
+#include "game/component/core/audio/sound_emitter_component.hpp"
 #include "game/component/scene/outside_scene/artillery_component.hpp"
 #include "game/component/scene/outside_scene/receiver_component.hpp"
 #include "game/component/shared/stat/health_component.hpp"
-#include "game/construction/scene/outside_scene/entity/artillery_entity.hpp"
 #include "game/state/scene.hpp"
-#include "raylib.h"
-#include <cstdint>
-#include <utility>
 
 
-entt::entity Entity::Artillery::Create(
-	entt::registry& registry
-) noexcept
+entt::entity Entity::Artillery::Create(entt::registry& registry) noexcept
 {
-	// @brief Amount of people at the artillery base is considered its health.
+	constexpr char FIRE_SOUND_PATH[] = "assets/audio/object/artillery_fire.wav";
 	constexpr uint16_t SQUAD_COUNT = 3u;
-	constexpr Nc::Vector2f POSITION = Nc::Vector2f(Nc::RENDER_RESOLUTION) * 0.5f;
+	constexpr auto POSITION = Nc::Vector2f(Nc::RENDER_RESOLUTION) * 0.5f;
 
-	entt::entity entity = registry.create();
+	const entt::entity entity = registry.create();
 
 	registry.emplace<Component::Artillery>(entity);
 	registry.emplace<Component::Receiver>(entity);
@@ -30,8 +29,8 @@ entt::entity Entity::Artillery::Create(
 	registry.emplace<Component::Transform>(entity, Outside, POSITION);
 	registry.emplace<Component::Health>(entity, SQUAD_COUNT);
 
-	Sound sound = LoadSound("assets/audio/object/artillery_fire.wav");
-	registry.emplace<Component::SoundEmitter>(entity, std::move(sound));
+	const Sound& sound = LoadSound(FIRE_SOUND_PATH);
+	registry.emplace<Component::Audio>(entity, sound);
 
 	return entity;
 }

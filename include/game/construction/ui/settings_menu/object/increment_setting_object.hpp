@@ -1,12 +1,13 @@
 #pragma once
+#include <array>
+#include <string>
+
 #include "core/data/vector2.hpp"
 #include "entt/entity/entity.hpp"
 #include "entt/entity/fwd.hpp"
 #include "game/component/core/rendering/text_component.hpp"
 #include "game/component/ui/increment_component.hpp"
-#include <array>
-#include <string>
-namespace Nc { class ResourceStore; };
+#include "game/contexts/scene_context.hpp"
 
 
 namespace Object
@@ -15,6 +16,8 @@ namespace Object
 class IncrementSetting final
 {
 public:
+    // ------ Types ------
+
     struct Data final
     {
         entt::entity label = entt::null;
@@ -23,30 +26,54 @@ public:
         entt::entity increaseButton = entt::null;
 
 
-        std::array<entt::entity, 4u> All() const 
-        { 
-            return { label, valueDisplay, decreaseButton, increaseButton }; 
+        [[nodiscard]] std::array<entt::entity, 4u> All() const
+        {
+            return { label, valueDisplay, decreaseButton, increaseButton };
         };
     };
 
 
-    static const Data Create(
-        entt::registry& registry, 
-        Nc::ResourceStore& resourceStore,
+    // ------ Functions ------
+
+    static Data Create(
+        const SceneContext& context,
         std::string&& display,
-        Component::UI::Increment&& increment,
+        const Component::UI::Increment& increment,
         Nc::Vector2f position
     ) noexcept;
 
 private:
+    // ------ Types ------
+
+    struct IncrementContext final
+    {
+        entt::registry& registry;
+        Component::UI::Increment& increment;
+        Component::Text& valueDisplay;
+        Nc::Vector2f position;
+        Nc::Vector2f offset;
+
+
+        IncrementContext(
+            entt::registry& registry,
+            Component::UI::Increment& increment,
+            Component::Text& valueDisplay,
+            const Nc::Vector2f position,
+            const Nc::Vector2f offset
+        ) noexcept
+            : registry(registry),
+              increment(increment),
+              valueDisplay(valueDisplay),
+              position(position),
+              offset(offset) { };
+    };
+
+
     class Label final
     {
     public:
-        static entt::entity Create(
-            entt::registry& registry,
-            std::string&& display,
-            Nc::Vector2f position
-        ) noexcept;     
+        // ------ Functions ------
+        static entt::entity Create(entt::registry& registry, std::string&& display, Nc::Vector2f position) noexcept;
 
     };
 
@@ -54,9 +81,10 @@ private:
     class ValueDisplay final
     {
     public:
+        // ------ Functions ------
         static entt::entity Create(
             entt::registry& registry,
-            Component::UI::Increment&& increment,
+            Component::UI::Increment increment,
             Nc::Vector2f position,
             Nc::Vector2f offset
         ) noexcept;
@@ -67,13 +95,8 @@ private:
     class IncreaseButton final
     {
     public:
-        static entt::entity Create(
-            entt::registry& registry,
-            Component::UI::Increment& increment,
-            Component::Text& valueDisplay,
-            Nc::Vector2f position,
-            Nc::Vector2f offset
-        ) noexcept;    
+        // ------ Functions ------
+        static entt::entity Create(const IncrementContext& context) noexcept;
 
     };
 
@@ -81,13 +104,8 @@ private:
     class DecreaseButton final
     {
     public:
-        static entt::entity Create(
-            entt::registry& registry,
-            Component::UI::Increment& increment, 
-            Component::Text& valueDisplay,
-            Nc::Vector2f position,
-            Nc::Vector2f offset
-        ) noexcept;
+        // ------ Functions ------
+        static entt::entity Create(const IncrementContext& context) noexcept;
 
     };
 

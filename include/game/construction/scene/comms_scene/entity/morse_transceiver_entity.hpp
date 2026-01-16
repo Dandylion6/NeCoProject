@@ -1,6 +1,8 @@
 #pragma once
 #include "entt/entity/fwd.hpp"
-namespace Nc { class ResourceStore; };
+
+
+struct SceneContext;
 
 
 namespace Entity
@@ -9,10 +11,7 @@ namespace Entity
 class MorseTransceiver final
 {
 public:
-	static entt::entity Create(
-		entt::registry& registry, 
-		Nc::ResourceStore& resourceStore
-	) noexcept;
+	static entt::entity Create(const SceneContext& context) noexcept;
 
 };
 

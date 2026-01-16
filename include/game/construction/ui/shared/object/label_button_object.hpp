@@ -1,12 +1,13 @@
 #pragma once
-#include "core/data/vector2.hpp"
-#include "entt/entity/fwd.hpp"
-#include "entt/entity/registry.hpp"
 #include <functional>
 #include <string>
-#include <utility>
+
+#include "entt/entity/fwd.hpp"
+#include "entt/entity/registry.hpp"
+#include "game/contexts/scene_context.hpp"
+
+
 namespace Component::UI { struct Transform; };
-namespace Nc { class ResourceStore; };
 
 
 namespace Object
@@ -21,17 +22,16 @@ public:
         entt::entity button;
 
 
-        std::array<entt::entity, 2u> All() const
-        { 
-            return { label, button }; 
+        [[nodiscard]] std::array<entt::entity, 2u> All() const
+        {
+            return { label, button };
         };
     };
 
 
-    static const Data Create(
-        entt::registry &registry, 
-        Nc::ResourceStore& resourceStore,
-        Component::UI::Transform&& transform, 
+    static Data Create(
+        const SceneContext& context,
+        Component::UI::Transform& transform,
         std::string&& display,
         std::function<void()>&& onClick
     ) noexcept;
@@ -41,8 +41,8 @@ private:
     {
     public:
         static entt::entity Create(
-            entt::registry& registry, 
-            std::string&& label, 
+            entt::registry& registry,
+            std::string&& label,
             const Component::UI::Transform& transform
         ) noexcept;
 
@@ -53,8 +53,8 @@ private:
     {
     public:
         static entt::entity Create(
-            entt::registry& registry, 
-            Component::UI::Transform&& transform, 
+            entt::registry& registry,
+            Component::UI::Transform transform,
             std::function<void()>&& onClick
         ) noexcept;
 

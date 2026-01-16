@@ -1,8 +1,9 @@
 #pragma once
-#include "game/utility/morse_code.hpp"
 #include <cstdint>
 #include <deque>
 #include <string>
+
+#include "game/utility/morse_code.hpp"
 
 
 namespace Component::Debug
@@ -15,7 +16,7 @@ namespace Component::Debug
  * Written by gameplay systems, read by debug UI.
  * 
  * Usage example:
- * ```cpp
+ * @code
  * constexpr float TIME_SCALE = 1.3f;
  * 
  * registry.emplace<Component::Debug::RuntimeReadouts>(entity);
@@ -23,15 +24,15 @@ namespace Component::Debug
  * auto view = registry.view<Component::Debug::RuntimeReadouts>();
  * for (auto [entity, readouts] : view.each())
  *  	readouts.timeScale = TIME_SCALE;
- * ```
+ * @endcode
  */
 struct RuntimeReadouts final
 {
 	std::deque<int16_t> fpsHistory = std::deque<int16_t>(32u, 0);
-	std::string receiverMessage = "";
-	MorseCode::Pulse pulse = MorseCode::Invalid;
+	std::string receiverMessage{ };
 	float radarStabilityPercentage = 0.0f;
 	float timeScale = 1.0f;
+	MorseCode::Pulse pulse = MorseCode::Invalid;
 };
 
 }

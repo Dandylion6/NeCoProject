@@ -1,70 +1,68 @@
 #include "game/construction/ui/settings_menu/object/increment_setting_object.hpp"
+
+#include <functional>
+#include <iomanip>
+#include <string>
+#include <utility>
+
+#include "raylib.h"
 #include "core/data/vector2.hpp"
 #include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
+#include "game/component/core/transform_component.hpp"
 #include "game/component/core/interactive/click_action_component.hpp"
 #include "game/component/core/rendering/text_component.hpp"
-#include "game/component/core/transform_component.hpp"
 #include "game/component/ui/increment_component.hpp"
+#include "game/contexts/scene_context.hpp"
 #include "game/utility/color_palette.hpp"
-#include "raylib.h"
-#include <functional>
-#include <iomanip>
-#include <ios>
-#include <sstream>
-#include <string>
-#include <utility>
 
 
-const Object::IncrementSetting::Data Object::IncrementSetting::Create(
-    entt::registry& registry, 
-    Nc::ResourceStore& resourceStore, 
-    std::string&& display, 
-    Component::UI::Increment&& increment,
-    Nc::Vector2f position
+Object::IncrementSetting::Data Object::IncrementSetting::Create(
+    const SceneContext& context,
+    std::string&& display,
+    const Component::UI::Increment& increment,
+    const Nc::Vector2f position
 ) noexcept
 {
-    Nc::Vector2f size = MeasureTextEx(
-        resourceStore.GetFont(Nc::Font::WDXL, Nc::Font::Size::Medium),
-        display.c_str(), 
-        static_cast<float>(Nc::Font::Size::Medium), 
-        0.0f
-    );
+    const Font& font = context.store.GetFont(Nc::Font::WDXL, Nc::Font::Size::Medium);
+    const float fontSize = Nc::Font::SizeToFloat(Nc::Font::Size::Medium);
+
+    auto size = Nc::Vector2f(MeasureTextEx(font, display.c_str(), fontSize, 0.0f));
     size.y = 0.0f;
-    
-    entt::entity label = Label::Create(registry, std::move(display), position);
 
-    Nc::Vector2f displayOffset = size + Nc::Vector2f::Right(28.0f);
-    entt::entity valueDisplay = ValueDisplay::Create(registry, std::move(increment), position, displayOffset);
-    Component::Text& valueText = registry.get<Component::Text>(valueDisplay); 
+    const entt::entity label = Label::Create(context.registry, std::move(display), position);
 
-    Nc::Vector2f increaseOffset = size + Nc::Vector2f::Right(72.0f);
-    entt::entity decreaseButton = DecreaseButton::Create(registry, increment, valueText, position, increaseOffset);
+    const Nc::Vector2f displayOffset = size + Nc::Vector2f::Right(28.0f);
+    const entt::entity valueDisplay = ValueDisplay::Create(context.registry, increment, position, displayOffset);
 
-    Nc::Vector2f decreaseOffset = size + Nc::Vector2f::Right(98.0f);
-    entt::entity increaseButton = IncreaseButton::Create(registry, increment, valueText, position, decreaseOffset);
+    auto& valueText = context.registry.get<Component::Text>(valueDisplay);
+    auto& valueIncrement = context.registry.get<Component::UI::Increment>(valueDisplay);
+
+    const auto incrementContext = IncrementContext(context.registry, valueIncrement, valueText, position, size);
+
+    const entt::entity decreaseButton = DecreaseButton::Create(incrementContext);
+    const entt::entity increaseButton = IncreaseButton::Create(incrementContext);
 
     return { label, valueDisplay, decreaseButton, increaseButton };
-
 }
 
 
 entt::entity Object::IncrementSetting::Label::Create(
-    entt::registry& registry, 
-    std::string&& display, 
+    entt::registry& registry,
+    std::string&& display,
     Nc::Vector2f position
 ) noexcept
 {
-    entt::entity entity = registry.create();
+    const entt::entity entity = registry.create();
 
     registry.emplace<Component::UI::Transform>(entity, position, Nc::Vector2f::Zero(), 2);
     registry.emplace<Component::Text>(
-        entity, 
-        std::move(display), 
-        Palette::RADAR_COLOR, 
-        Nc::Font::WDXL, 
-        Nc::Font::Size::Medium, 
+        entity,
+        std::move(display),
+        Palette::RADAR_COLOR,
+        Nc::Font::WDXL,
+        Nc::Font::Size::Medium,
         Alignment::Left
     );
 
@@ -73,15 +71,15 @@ entt::entity Object::IncrementSetting::Label::Create(
 
 
 entt::entity Object::IncrementSetting::ValueDisplay::Create(
-    entt::registry& registry, 
-    Component::UI::Increment&& increment, 
-    Nc::Vector2f position, 
+    entt::registry& registry,
+    Component::UI::Increment increment,
+    Nc::Vector2f position,
     Nc::Vector2f offset
 ) noexcept
 {
     constexpr Nc::Vector2f ORIGIN = Nc::Vector2f::Scale(0.5f);
 
-    entt::entity entity = registry.create();
+    const entt::entity entity = registry.create();
 
     registry.emplace<Component::UI::Transform>(entity, position, ORIGIN, Nc::Vector2f::Zero(), offset, 2);
     registry.emplace<Component::Text>(entity, "", Palette::RADAR_COLOR, Nc::Font::WDXL, Nc::Font::Size::Medium);
@@ -91,56 +89,45 @@ entt::entity Object::IncrementSetting::ValueDisplay::Create(
 }
 
 
-entt::entity Object::IncrementSetting::IncreaseButton::Create(
-    entt::registry& registry, 
-    Component::UI::Increment& increment, 
-    Component::Text& valueDisplay, 
-    Nc::Vector2f position, 
-    Nc::Vector2f offset
-) noexcept
+entt::entity Object::IncrementSetting::IncreaseButton::Create(const IncrementContext& context) noexcept
 {
     constexpr Nc::Vector2f ORIGIN = Nc::Vector2f::Scale(0.5f);
     constexpr Nc::Vector2f SIZE = Nc::Vector2f::Scale(32.0f);
-    
-    entt::entity entity = registry.create();
 
-    offset += Nc::Vector2f::Up(2.0f);
-    registry.emplace<Component::UI::Transform>(entity, position, ORIGIN, SIZE, offset, 2);
-    registry.emplace<Component::Text>(entity, "+", RAYWHITE, Nc::Font::WDXL, Nc::Font::Size::Medium);
+    const entt::entity entity = context.registry.create();
 
-    std::function<void()> onClick = [increment = increment, &valueDisplay]()
+    const Nc::Vector2f offset = context.offset + Nc::Vector2f(72.0f, 2.0f);
+    context.registry.emplace<Component::UI::Transform>(entity, context.position, ORIGIN, SIZE, offset, 2);
+    context.registry.emplace<Component::Text>(entity, "+", RAYWHITE, Nc::Font::WDXL, Nc::Font::Size::Medium);
+
+    std::function<void()> onClick = [increment = context.increment, &valueDisplay = context.valueDisplay]()
     {
         if (increment.value == nullptr) return;
         *increment.value = (*increment.value) + increment.increment;
     };
 
-    registry.emplace<Component::Action::Click>(entity, std::move(onClick));
+    context.registry.emplace<Component::Action::Click>(entity, std::move(onClick));
     return entity;
 }
 
 
-entt::entity Object::IncrementSetting::DecreaseButton::Create(
-    entt::registry& registry,
-    Component::UI::Increment& increment, 
-    Component::Text& valueDisplay, 
-    Nc::Vector2f position, 
-    Nc::Vector2f offset 
-) noexcept
+entt::entity Object::IncrementSetting::DecreaseButton::Create(const IncrementContext& context) noexcept
 {
     constexpr Nc::Vector2f ORIGIN = Nc::Vector2f::Scale(0.5f);
     constexpr Nc::Vector2f SIZE = Nc::Vector2f::Scale(24.0f);
 
-    entt::entity entity = registry.create();
+    const entt::entity entity = context.registry.create();
 
-    registry.emplace<Component::UI::Transform>(entity, position, ORIGIN, SIZE, offset, 2);
-    registry.emplace<Component::Text>(entity, "-", RAYWHITE, Nc::Font::WDXL, Nc::Font::Size::Large);
+    const Nc::Vector2f offset = context.offset + Nc::Vector2f::Right(98.0f);
+    context.registry.emplace<Component::UI::Transform>(entity, context.position, ORIGIN, SIZE, offset, 2);
+    context.registry.emplace<Component::Text>(entity, "-", RAYWHITE, Nc::Font::WDXL, Nc::Font::Size::Large);
 
-    std::function<void()> onClick = [increment = increment, &valueDisplay]()
+    std::function<void()> onClick = [increment = context.increment, &valueDisplay = context.valueDisplay]()
     {
         if (increment.value == nullptr) return;
         *increment.value = (*increment.value) - increment.increment;
     };
 
-    registry.emplace<Component::Action::Click>(entity, std::move(onClick));
+    context.registry.emplace<Component::Action::Click>(entity, std::move(onClick));
     return entity;
 }

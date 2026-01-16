@@ -1,14 +1,9 @@
 #include "game/construction/scene/outside_scene/outside_scene.hpp"
-#include "core/runtime/resource_store.hpp"
-#include "entt/entity/fwd.hpp"
 #include "game/construction/scene/outside_scene/entity/artillery_entity.hpp"
+#include "game/contexts/build_context.hpp"
 
 
-void Structure::OutsideScene::Build(
-	entt::registry& registry, 
-	Nc::ResourceStore& resourceStore, 
-	GameState& gameState
-) noexcept
+void Structure::OutsideScene::Build(const BuildContext& context) noexcept
 {
-	Entity::Artillery::Create(registry);
+	Entity::Artillery::Create(context.registry);
 }

@@ -11,5 +11,14 @@ struct Settings final
 
 	// ------ Members ------
 
-    Morse morseSettings{};
+	Morse morseSettings{ };
+
+
+	// ------ Functions ------
+
+	static bool Matches(const Settings& settings, const Settings& pending)
+	{
+		if (settings.morseSettings.dotTime != pending.morseSettings.dotTime) return false;
+		return true;
+	}
 };

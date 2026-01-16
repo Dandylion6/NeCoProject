@@ -1,51 +1,46 @@
 #pragma once
 #include "entt/entity/fwd.hpp"
-
+struct SystemContext;
 struct AnomalyState;
-struct GameState;
+
+
 namespace Component
 {
-	struct Blip;
-	struct Radar;
+struct Blip;
+struct Radar;
 }
 
 
-class RadarStabilitySystem
+namespace System::Radar
+{
+
+class Stability final
 {
 public:
-	static void Update(
-		entt::registry& registry, 
-		GameState& gameState, 
-		float time, 
-		float deltaTime
-	) noexcept;
-
-	static void Restart(entt::registry& registry, entt::entity entity) noexcept;
+	// ------ Functions ------
+	static void Update(const SystemContext& context, AnomalyState& anomaly);
+	static void Restart(entt::registry& registry, entt::entity entity);
 
 private:
+	// ------ Functions ------
+	static void CheckBreakdown(entt::registry& registry, Component::Radar& radar);
 	static void UpdateBlipStability(
-		entt::registry& registry, 
-		AnomalyState& anomalyState, 
-		Component::Radar& machine, 
-		float time
-	) noexcept;
+		const SystemContext& context,
+		AnomalyState& anomaly,
+		Component::Radar& radar
+	);
 
-	static bool ShouldBlipGlitch(
-		Component::Blip& blip, 
-		Component::Radar& machine, 
-		float secondsSinceLastGlitch, 
-		size_t blipCount
-	) noexcept;
-
-	static float GetDegradationValue(float attractionPercentage) noexcept;
-
+	static bool ShouldBlipGlitch(entt::registry& registry, size_t blipCount);
+	static float GetDegradationValue(float attractionPercentage);
 	static void GlitchBlip(
-		entt::registry& registry, 
-		Component::Radar& radar, 
-		Component::Blip& blip, 
-		entt::entity entity, 
-		float time
-	) noexcept;
+		const SystemContext& context,
+		const Component::Radar& radar,
+		Component::Blip& blip,
+		entt::entity entity
+	);
 
-	static void SetRandomGlitchSpawnInterval(Component::Radar& machine) noexcept;
+	static void SetRandomGlitchSpawnInterval(entt::registry& registry, Component::Radar& radar);
 };
+
+}
+

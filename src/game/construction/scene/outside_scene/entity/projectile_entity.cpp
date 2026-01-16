@@ -25,7 +25,7 @@ entt::entity Entity::Projectile::Create(
 	registry.emplace<Component::Projectile>(entity, TRAVEL_TIME);
 
 	Sound sound = LoadSoundAlias(resourceStore.GetSound("assets/audio/object/artillery_hit.wav"));
-	registry.emplace<Component::SoundEmitter>(entity, std::move(sound));
+	registry.emplace<Component::Audio>(entity, std::move(sound));
 
 	return entity;
 }

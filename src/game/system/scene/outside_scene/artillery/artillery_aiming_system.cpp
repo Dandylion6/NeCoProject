@@ -15,9 +15,9 @@ void ArtilleryAimingSystem::Update(
 	for (auto [entity, artillery] : view.each())
 	{
 		if (artillery.isReadyToFire) continue;
-		if (artillery.aimStartupDelay > 0.0f)
+		if (artillery.aimStartupSeconds > 0.0f)
 		{
-			artillery.aimStartupDelay -= deltaTime;
+			artillery.aimStartupSeconds -= deltaTime;
 			return;
 		}
 

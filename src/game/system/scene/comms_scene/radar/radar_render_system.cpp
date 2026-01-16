@@ -144,7 +144,7 @@ void RadarRenderSystem::DrawBlips(
 		Nc::Vector2f glitchOffset = Nc::Vector2f::Zero();
 		if (blip.state == Component::Blip::CompleteFailure)
 		{
-			Component::BlipState::CompleteFailure& failure = registry.get<Component::BlipState::CompleteFailure>(entity);
+			Component::Glitch::ContactFailure& failure = registry.get<Component::Glitch::ContactFailure>(entity);
 			glitchOffset = failure.glitchedOffset;
 		}
 		

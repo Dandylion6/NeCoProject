@@ -1,17 +1,34 @@
 #pragma once
-#include "game/component/core/transform_component.hpp"
-#include "game/component/scene/comms_scene/radar_components.hpp"
 #include "entt/entity/fwd.hpp"
+
+namespace Component
+{
+struct Transform;
+}
+
+namespace Nc
+{
 struct Tween;
+}
 
 
-class BlipBlinkSystem
+namespace System::Blip
+{
+class Blink final
 {
 public:
+	// ------ Functions ------
 	static void Update(entt::registry& registry);
 
 private:
+	// ------ Functions ------
 	static void UpdateBlips(entt::registry& registry, const Component::Transform& pathTransform);
-	static bool BlipShouldAppear(Component::Transform blip, Component::Transform path, Tween& tween);
-
+	static bool BlipShouldAppear(
+		entt::registry& registry,
+		const Component::Transform& blip,
+		const Component::Transform& path,
+		const Nc::Tween& tween
+	);
 };
+}
+

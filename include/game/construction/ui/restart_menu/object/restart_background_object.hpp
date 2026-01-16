@@ -1,8 +1,7 @@
 #pragma once
 #include "core/data/vector2.hpp"
+#include "game/contexts/scene_context.hpp"
 #include "entt/entity/fwd.hpp"
-struct GameState;
-namespace Nc { class ResourceStore; };
 
 
 namespace Object
@@ -11,20 +10,13 @@ namespace Object
 class RestartMenuBackground final
 {
 public:
-	static void Create(
-		entt::registry& registry, 
-		Nc::ResourceStore& resourceStore, 
-		Nc::Vector2f windowSize
-	) noexcept;
+	static void Create(SceneContext context, Nc::Vector2f windowSize) noexcept;
 
 private:
 	class FrontTexture final
 	{
 	public:
-		static entt::entity Create(
-			entt::registry& registry, 
-			Nc::ResourceStore& resourceStore
-		) noexcept;
+		static entt::entity Create(SceneContext context) noexcept;
 
 	};
 
@@ -32,10 +24,7 @@ private:
 	class Backdrop final
 	{
 	public:
-		static entt::entity Create(
-			entt::registry& registry, 
-			Nc::Vector2f windowSize
-		) noexcept;
+		static entt::entity Create(entt::registry& registry, Nc::Vector2f windowSize) noexcept;
 
 	};
 

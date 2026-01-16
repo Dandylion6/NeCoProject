@@ -1,25 +1,34 @@
 #pragma once
-#include "game/component/core/tween_component.hpp"
-#include "entt/entity/fwd.hpp"
-struct GameState;
+struct SystemContext;
+
+
+namespace Nc
+{
 struct Tween;
+}
 
 
-class TweenSystem
+namespace Component
+{
+struct TweenCollection;
+}
+
+
+namespace System
+{
+
+class Tween final
 {
 public:
-	static void Update(
-		entt::registry& registry,
-		GameState& gameState,
-		float deltaTime
-	);
+	// ------ Functions ------
+	static void Update(const SystemContext& context);
 
 private:
-	static void UpdateTweenCollection(
-		Component::TweenCollection& collection,
-		float deltaTime
-	);
-
-	static void TweenEnded(Tween& tween);
+	// ------ Functions ------
+	static void UpdateTweenCollection(Component::TweenCollection& collection, float deltaTime);
+	static void TweenEnded(Nc::Tween& tween);
 
 };
+
+}
+

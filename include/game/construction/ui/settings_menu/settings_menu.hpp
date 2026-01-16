@@ -1,9 +1,7 @@
 #pragma once
 #include "core/data/vector2.hpp"
-#include "entt/entity/fwd.hpp"
 #include "game/component/core/interactive/toggle_component.hpp"
-struct GameState;
-namespace Nc { class ResourceStore; };
+#include "game/contexts/scene_context.hpp"
 struct Settings;
 
 
@@ -13,28 +11,22 @@ namespace Structure
 class SettingsMenu final
 {
 public:
+	// ------ Functions ------
 	static void Build(
-		entt::registry& registry,
-		Nc::ResourceStore& resourceStore,
-		Settings& settings,
-		Settings& pendingSettings,
-		GameState& gameState,
-		Nc::Vector2f windowSize
+		const SceneContext& context,
+		Nc::Vector2f windowSize,
+		Settings& live,
+		Settings& pending
 	) noexcept;
 
-
-	static void Toggle(entt::registry& registry, GameState& gameState) noexcept;
-	static void Open(entt::registry& registry, GameState& gameState) noexcept;
-	static void Close(entt::registry& registry, GameState& gameState) noexcept;
-	static void Close(
-		entt::registry& registry,
-		GameState& gameState,
-		Settings& settings,
-		Settings& pendingSettings
-	) noexcept;
+	static void Toggle(const SceneContext& context) noexcept;
+	static void Open(const SceneContext& context) noexcept;
+	static void Close(const SceneContext& context) noexcept;
+	static void Close(const SceneContext& context, const Settings& live, Settings& pending) noexcept;
 
 private:
-	static void Toggle(entt::registry& registry, GameState& gameState, ToggleState state) noexcept;
+	// ------ Functions ------
+	static void Toggle(const SceneContext& context, ToggleState state) noexcept;
 
 };
 

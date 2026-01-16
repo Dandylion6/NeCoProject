@@ -1,7 +1,8 @@
 #pragma once
-#include "core/math/interpolation.hpp"
 #include <cstdint>
 #include <functional>
+
+#include "core/math/interpolation.hpp"
 
 
 enum Easing : uint16_t
@@ -17,6 +18,8 @@ enum Easing : uint16_t
 };
 
 
+namespace Nc
+{
 struct Tween final
 {
 	// ------ Members ------
@@ -26,8 +29,17 @@ struct Tween final
 	float* value = nullptr;
 	float start = 0.0f;
 	float end = 1.0f;
+
+	/**
+	 * The amount of time the animation runs for in <c>seconds</c>.
+	 */
 	float duration = 1.0f;
 	float elapsed = 0.0f;
+
+	/**
+	 * The amount of <c>seconds</c> to wait after the tween is finished before
+	 * making it considered complete.
+	 */
 	float delayComplete = 0.0f;
 	Easing easing = Linear;
 	bool isPlaying = false;
@@ -37,29 +49,28 @@ struct Tween final
 
 	constexpr Tween() noexcept = default;
 	Tween(
-		float* value, 
-		float start, 
-		float end, 
-		float duration, 
-		Easing easing, 
-		float delayComplete = 0.0f
+		float* value,
+		const float start,
+		const float end,
+		const float duration,
+		const Easing easing,
+		const float delayComplete = 0.0f
 	) noexcept :
 		value(value),
 		start(start),
 		end(end),
 		duration(duration),
-		easing(easing),
-		delayComplete(delayComplete)
-	{ };
+		delayComplete(delayComplete),
+		easing(easing) { }
 
 	static constexpr void Build(
 		Tween& tween,
 		float* value,
-		float start,
-		float end,
-		float duration,
-		Easing easing,
-		float delayComplete = 0.0f
+		const float start,
+		const float end,
+		const float duration,
+		const Easing easing,
+		const float delayComplete = 0.0f
 	) noexcept
 	{
 		tween.value = value;
@@ -73,9 +84,7 @@ struct Tween final
 
 	// ------ Utility ------
 
-	static constexpr float GetEasing(
-		Easing easing, float value
-	) noexcept
+	static constexpr float GetEasing(const Easing easing, const float value) noexcept
 	{
 		switch (easing)
 		{
@@ -91,11 +100,14 @@ struct Tween final
 		}
 	}
 
+	
 	static constexpr void Play(Tween& tween) noexcept { tween.isPlaying = true; };
 	static constexpr void Stop(Tween& tween) noexcept { tween.isPlaying = false; };
 	static constexpr void Replay(Tween& tween) noexcept
 	{
 		tween.elapsed = 0.0f;
-		Tween::Play(tween);
+		Play(tween);
 	}
 };
+
+}

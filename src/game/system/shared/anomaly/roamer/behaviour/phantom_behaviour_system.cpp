@@ -26,7 +26,7 @@ void PhantomBehaviourSystem::Spawn(
 	}
 
 	constexpr Nc::Vector2f MOVE_SPEED_RANGE = Nc::Vector2f(0.13f, 0.17f);
-	float moveSpeed = Nc::Random::Range(MOVE_SPEED_RANGE.x, MOVE_SPEED_RANGE.y);
+	float moveSpeed = Nc::Random::RangeFloat(MOVE_SPEED_RANGE.x, MOVE_SPEED_RANGE.y);
 	registry.emplace<Component::Anomaly::Strider>(entity, moveSpeed);
 }
 

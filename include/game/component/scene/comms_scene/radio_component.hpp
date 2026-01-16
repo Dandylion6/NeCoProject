@@ -4,11 +4,11 @@
 
 /**
  * @brief An enum that indicates the importance of a broadcast.
- * 
- * Can be used to determine what boradcast should or shouldn't override
+ *
+ * Can be used to determine what broadcast should or shouldn't override
  * the current one.
  */
-enum BroadcastPriority : uint8_t
+enum class BroadcastPriority : uint8_t
 {
 	Idle = 0,
 	Low = 1,

@@ -1,115 +1,121 @@
-#include "game/component/core/transform_component.hpp"
-#include "game/component/scene/comms_scene/morse_components.hpp"
-#include "game/component/scene/outside_scene/receiver_component.hpp"
-#include "game/state/settings.hpp"
-#include "game/state/anomaly_state.hpp"
-#include "game/state/game_state.hpp"
-#include "entt/entity/fwd.hpp"
-#include "entt/entity/registry.hpp"
-#include "raylib.h"
 #include "game/system/scene/comms_scene/morse_code/morse_transceiver_system.hpp"
-#include "game/utility/morse_code.hpp"
-#include "core/data/vector2.hpp"
+
 #include <cmath>
 #include <cstdint>
 #include <string>
 
+#include "raylib.h"
+#include "core/data/vector2.hpp"
+#include "core/runtime/entity_helpers.hpp"
+#include "entt/entity/fwd.hpp"
+#include "entt/entity/registry.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/scene/comms_scene/morse_components.hpp"
+#include "game/component/scene/outside_scene/receiver_component.hpp"
+#include "game/contexts/system_context.hpp"
+#include "game/state/anomaly_state.hpp"
+#include "game/state/game_state.hpp"
+#include "game/state/settings.hpp"
+#include "game/utility/morse_code.hpp"
+
 #ifdef DEBUG_BUILD
-#include "game/debug/debug_context.hpp"
-#include "game/game.hpp"
+#include "game/component/shared/debug/runtime_readouts_component.hpp"
+#endif
+
+
+void System::Morse::Transceiver::Update(const SystemContext& context, AnomalyState& anomaly, Settings::Morse settings)
+{
+	const entt::entity entity = entt::get_single<Component::Morse::Transceiver>(context.registry);
+	const auto& transform = context.registry.get<Component::Transform>(entity);
+	auto& transceiver = context.registry.get<Component::Morse::Transceiver>(entity);
+
+	if (context.game.currentScene != transform.boundScene) return;
+
+	const bool inputKeyPressed = IsKeyDown(Component::Morse::Transceiver::INPUT_KEY);
+
+	if (inputKeyPressed != transceiver.isInputActive) InputChanged(transceiver, settings);
+	else if (!inputKeyPressed) TryEndCharacter(context.registry, anomaly, transceiver, settings);
+
+	transceiver.isInputActive = inputKeyPressed;
+
+	const float increasedInterval = transceiver.intervalSeconds + context.deltaTime;
+	const float exitTime = MorseCode::ExitTime(settings.dotTime);
+	transceiver.intervalSeconds = std::fminf(increasedInterval, exitTime);
+
+#ifdef DEBUG_BUILD
+	const entt::entity debugEntity = entt::get_single<Component::Debug::RuntimeReadouts>(context.registry);
+	auto& readout = context.registry.get<Component::Debug::RuntimeReadouts>(debugEntity);
+	readout.pulse = transceiver.isInputActive ?
+		                GetPulseType(transceiver.intervalSeconds, settings) :
+		                MorseCode::Invalid;
 #endif // DEBUG_BUILD
+}
 
 
-void MorseTransceiverSystem::Update(
-	entt::registry& registry, GameState& gameState, Settings::Morse settings, float deltaTime
+void System::Morse::Transceiver::InputChanged(
+	Component::Morse::Transceiver& transceiver,
+	const Settings::Morse settings
 )
 {
-	auto view = registry.view<Component::Transform, Component::Morse::Transceiver>();
-	for (auto [entity, transform, transceiver] : view.each())
+	if (IsKeyPressed(Component::Morse::Transceiver::INPUT_KEY))
 	{
-		if (gameState.currentScene != transform.boundScene) continue;
-
-		bool inputKeyPressed = IsKeyDown(Component::Morse::Transceiver::INPUT_KEY);
-		bool inputStateChanged = inputKeyPressed != transceiver.isInputActive;
-
-		if (inputStateChanged) InputChanged(transceiver, settings);
-		else if (!inputKeyPressed) TryEndCharacter(registry, gameState.anomalyState, transceiver, settings);
-
-		transceiver.isInputActive = inputKeyPressed;
-		
-		float increasedInverval = transceiver.intervalSeconds + deltaTime;
-		transceiver.intervalSeconds = std::fminf(increasedInverval, settings.exitTime);
-
-#ifdef DEBUG_BUILD
-		if (!transceiver.isInputActive)
-		{
-			Game::debugContext.pulse = MorseCode::Invalid;
-			continue;
-		}
-		Game::debugContext.pulse = GetPulseType(transceiver.intervalSeconds, settings);
-#endif // DEBUG_BUILD
+		transceiver.intervalSeconds = 0.0f;
+	} else
+	{
+		RecordPulse(transceiver, settings); // Input just stopped
 	}
 }
 
 
-void MorseTransceiverSystem::InputChanged(
-	Component::Morse::Transceiver& transceiver, Settings::Morse settings
+void System::Morse::Transceiver::TryEndCharacter(
+	entt::registry& registry,
+	AnomalyState& anomalyState,
+	Component::Morse::Transceiver& transceiver,
+	const Settings::Morse settings
 )
 {
-	bool inputJustStarted = IsKeyPressed(Component::Morse::Transceiver::INPUT_KEY);
-	if (inputJustStarted)
-	{
-		transceiver.intervalSeconds = 0.0f;
-	} else RecordPulse(transceiver, settings); // Input just stopped
-}
+	const float longestTime = MorseCode::ExitTime(settings.dotTime);
+	const bool shouldEndCharacter = transceiver.intervalSeconds > longestTime;
 
-
-void MorseTransceiverSystem::TryEndCharacter(
-	entt::registry& registry, AnomalyState& anomalyState, Component::Morse::Transceiver& transceiver, Settings::Morse settings
-)
-{
-	float longestTime = settings.dashTime + settings.errorMargin;
-	bool shouldEndCharacter = transceiver.intervalSeconds > longestTime;
-	
 	if (!shouldEndCharacter) return;
 	if (transceiver.pulseCount == 0u) return;
 
-	int8_t character = PulsesToChar(transceiver.pulses, transceiver.pulseCount);
+	const int8_t character = PulsesToChar(transceiver.pulses, transceiver.pulseCount);
 
 	TransmitCharacter(registry, anomalyState, character);
 	ClearTransceiver(transceiver);
 }
 
 
-void MorseTransceiverSystem::TransmitCharacter(
-	entt::registry& registry, AnomalyState& anomalyState, char character
+void System::Morse::Transceiver::TransmitCharacter(
+	entt::registry& registry,
+	AnomalyState& anomalyState,
+	const char character
 )
 {
-	constexpr float ATTRACTION_INCREASE = 0.42f;
-
-	auto receiverView = registry.view<Component::Receiver>();
+	const auto receiverView = registry.view<Component::Receiver>();
 	for (auto [entity, receiver] : receiverView.each())
 	{
-		// Transmission inncreases attraction level
+		constexpr float ATTRACTION_INCREASE = 0.42f;
+
+		// Transmission increases attraction level
 		anomalyState.attractionPercentage += ATTRACTION_INCREASE;
 		receiver.incomingCharacter = character;
 	}
 }
 
 
-void MorseTransceiverSystem::RecordPulse(
-	Component::Morse::Transceiver& transceiver, Settings::Morse settings
-)
+void System::Morse::Transceiver::RecordPulse(Component::Morse::Transceiver& transceiver, const Settings::Morse settings)
 {
 	if (transceiver.pulseCount >= Component::Morse::Transceiver::MAX_PULSES) return;
-	
+
 	transceiver.pulses[transceiver.pulseCount] = GetPulseType(transceiver.intervalSeconds, settings);
 	++transceiver.pulseCount;
 	transceiver.intervalSeconds = 0.0f;
 }
 
 
-void MorseTransceiverSystem::ClearTransceiver(Component::Morse::Transceiver& transceiver)
+void System::Morse::Transceiver::ClearTransceiver(Component::Morse::Transceiver& transceiver)
 {
 	transceiver.intervalSeconds = 0.0f;
 	transceiver.pulses.fill(MorseCode::Invalid);
@@ -117,17 +123,21 @@ void MorseTransceiverSystem::ClearTransceiver(Component::Morse::Transceiver& tra
 }
 
 
-MorseCode::Pulse MorseTransceiverSystem::GetPulseType(float intervalSeconds, Settings::Morse settings)
+MorseCode::Pulse System::Morse::Transceiver::GetPulseType(const float intervalSeconds, const Settings::Morse settings)
 {
+	const float errorMargin = MorseCode::ErrorMargin(settings.dotTime);
+
 	Nc::Vector2f margins = Nc::Vector2f::Zero();
-	margins.x = settings.dotTime - settings.errorMargin;
-	margins.y = settings.dotTime + settings.errorMargin;
+	margins.x = settings.dotTime - errorMargin;
+	margins.y = settings.dotTime + errorMargin;
 
 	if (intervalSeconds >= margins.x && intervalSeconds <= margins.y)
 		return MorseCode::Short;
-	
-	margins.x = settings.dashTime - settings.errorMargin;
-	margins.y = settings.dashTime + settings.errorMargin;
+
+	const float dashTime = MorseCode::DashTime(settings.dotTime);
+
+	margins.x = dashTime - errorMargin;
+	margins.y = dashTime + errorMargin;
 
 	if (intervalSeconds >= margins.x && intervalSeconds <= margins.y)
 		return MorseCode::Long;
@@ -136,19 +146,23 @@ MorseCode::Pulse MorseTransceiverSystem::GetPulseType(float intervalSeconds, Set
 }
 
 
-char MorseTransceiverSystem::PulsesToChar(
-	const Component::Morse::Transceiver::PulseArray& pulses, uint8_t pulseCount
+char System::Morse::Transceiver::PulsesToChar(
+	const Component::Morse::Transceiver::PulseArray& pulses,
+	const uint8_t pulseCount
 )
 {
-	std::string codeString { };
+	std::string codeString{ };
 	for (uint8_t i = 0u; i < pulseCount; ++i)
 	{
-		MorseCode::Pulse pulse = pulses.at(i);
-		switch (pulse)
+		switch (pulses.at(i))
 		{
 		case MorseCode::Invalid: return MorseCode::NULL_CODE;
-		case MorseCode::Short: codeString += '.'; break;
-		case MorseCode::Long: codeString += '-'; break;
+		case MorseCode::Short:
+			codeString += '.';
+			break;
+		case MorseCode::Long:
+			codeString += '-';
+			break;
 		default: return MorseCode::NULL_CODE;
 		}
 	}

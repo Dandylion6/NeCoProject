@@ -1,22 +1,26 @@
- #pragma once
+#pragma once
+#include "core/math/random.hpp"
 #include "core/runtime/render_context.hpp"
 #include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
-#include "entt/entity/registry.hpp" 
+#include "entt/entity/registry.hpp"
+#include  "game/contexts/scene_context.hpp"
 #include "game/state/game_state.hpp"
 #include "game/state/settings.hpp"
+#include "state/anomaly_state.hpp"
 
 
 class Game
 {
 public:
+	// ------ Functions ------
 	Game();
 
 	bool ShouldRun() const;
-	
+
 	void BuildMenuUI();
 	void BuildRuntimeScenes();
-	void SetupWindow() const;
+	void SetupWindow();
 	void SetupRenderContext();
 
 #ifdef DEBUG_BUILD
@@ -26,23 +30,26 @@ public:
 	void Save();
 	void Load();
 
-	void Shutdown();
+	static void Shutdown();
 
 	void Update(float deltaTime);
-	// @brief Updates systems.
 	void UpdateRegistries(float deltaTime);
 	void DrawGame(float deltaTime);
 
-	// @brief Handles player death.
-	static void Death(entt::registry& registry, GameState& gameState);
+	static void Death(const SceneContext& context);
 
 private:
-	entt::registry registry { };
-	Nc::ResourceStore resourceStore { };
-	Nc::RenderContext renderContext { };
-	GameState gameState { };
-	Settings settings { };
-	Settings pendingSettings { };
+	// ------ Members ------
+	entt::registry registry{ };
+	Nc::ResourceStore resourceStore{ };
+	Nc::RenderContext renderContext;
+	AnomalyState anomalyState{ };
+	GameState gameState{ };
+	Settings settings{ };
+	Settings pendingSettings{ };
+
+
+	// ------ Functions ------
 
 	void DrawRenderTexture() const;
 

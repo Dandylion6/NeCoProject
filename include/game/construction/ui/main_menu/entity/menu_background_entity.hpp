@@ -1,6 +1,6 @@
 #pragma once
 #include "entt/entity/fwd.hpp"
-namespace Nc { class ResourceStore; };
+#include "game/contexts/scene_context.hpp"
 
 
 namespace Entity
@@ -9,10 +9,8 @@ namespace Entity
 	class MainMenuBackground final
 	{
 	public:
-		static entt::entity Create(
-			entt::registry& registry,
-			Nc::ResourceStore& resourceStore
-		) noexcept;
+		// ------ Functions ------
+		static entt::entity Create(const SceneContext& context) noexcept;
 
 	};
 

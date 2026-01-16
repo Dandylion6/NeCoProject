@@ -2,9 +2,15 @@
 #include "entt/entity/fwd.hpp"
 
 
-class BlipDeathSystem
+namespace System::Blip
+{
+
+class Death final
 {
 public:
+	// ------ Functions ------
 	static void Update(entt::registry& registry);
 
 };
+
+}

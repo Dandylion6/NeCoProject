@@ -1,55 +1,43 @@
-#include "core/runtime/resource_store.hpp"
+#include "game/construction/ui/main_menu/main_menu.hpp"
+
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
 #include "game/construction/ui/main_menu/entity/menu_background_entity.hpp"
-#include "game/construction/ui/main_menu/main_menu.hpp"
 #include "game/construction/ui/main_menu/object/menu_button_objects.hpp"
-#include "game/game.hpp"
 #include "game/state/game_state.hpp"
 #include "game/state/scene.hpp"
 #include "game/tag/ui/main_menu_tag.hpp"
 
 
-void Structure::MainMenu::Build(
-	entt::registry& registry, 
-	Nc::ResourceStore& resourceStore,
-	Game& game, 
-	GameState& gameState
-) noexcept
+void Structure::MainMenu::Build(const SceneContext& context, Game& game) noexcept
 {
-	Object::PlayButton::Create(game, registry, gameState, resourceStore);
-	Object::SettingsButton::Create(registry, gameState, resourceStore);
-	Object::ExitButton::Create(registry, gameState, resourceStore);
+	Object::PlayButton::Create(context, game);
+	Object::SettingsButton::Create(context);
+	Object::ExitButton::Create(context);
 
-	Entity::MainMenuBackground::Create(registry, resourceStore);
+	Entity::MainMenuBackground::Create(context);
 
-	Close(registry, gameState);
+	Close(context);
 }
 
 
-void Structure::MainMenu::Open(
-	entt::registry& registry, GameState& gameState
-) noexcept
+void Structure::MainMenu::Open(const SceneContext& context) noexcept
 {
-	auto view = registry.view<Tag::MainMenu, Component::UI::Transform>();
+	const auto view = context.registry.view<Tag::MainMenu, Component::UI::Transform>();
 	for (auto [entity, transform] : view.each())
-	{
 		transform.isVisible = true;
-	}
-	gameState.currentScene = NullScene;
-	gameState.isPaused = true;
+
+	context.game.currentScene = NullScene;
+	context.game.isPaused = true;
 }
 
 
-void Structure::MainMenu::Close(
-	entt::registry& registry, GameState &gameState
-) noexcept
+void Structure::MainMenu::Close(const SceneContext& context) noexcept
 {
-	auto view = registry.view<Tag::MainMenu, Component::UI::Transform>();
+	const auto view = context.registry.view<Tag::MainMenu, Component::UI::Transform>();
 	for (auto [entity, transform] : view.each())
-	{
 		transform.isVisible = false;
-	}
-	gameState.isPaused = false;
+
+	context.game.isPaused = false;
 }

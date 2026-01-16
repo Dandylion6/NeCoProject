@@ -1,7 +1,8 @@
 #pragma once
+#include <cmath>
+
 #include "core/data/vector2.hpp"
 #include "core/math/interpolation.hpp"
-#include <cmath>
 
 
 namespace Nc::Vector
@@ -12,9 +13,9 @@ namespace Nc::Vector
  * @param vector Input vector.
  * @return Rounded vector.
  */
-inline Nc::Vector2f Round(const Nc::Vector2f vector) noexcept
+inline Vector2f Round(const Nc::Vector2f vector) noexcept
 {
-	return Nc::Vector2f(std::roundf(vector.x), std::roundf(vector.y));
+	return { std::roundf(vector.x), std::roundf(vector.y) };
 }
 
 
@@ -29,17 +30,18 @@ inline Nc::Vector2f Round(const Nc::Vector2f vector) noexcept
  * @return Remapped vector.
  * 
  */
-inline Nc::Vector2f Remap(
-	const Nc::Vector2f fromMin,
-	const Nc::Vector2f fromMax,
-	const Nc::Vector2f toMin,
-	const Nc::Vector2f toMax, 
-	const Nc::Vector2f value
+inline Vector2f Remap(
+	const Vector2f fromMin,
+	const Vector2f fromMax,
+	const Vector2f toMin,
+	const Vector2f toMax,
+	const Vector2f value
 ) noexcept
 {
-	float x = Nc::Math::Remap(fromMin.x, fromMax.x, toMin.x, toMax.y, value.x);
-	float y = Nc::Math::Remap(fromMin.y, fromMax.y, toMin.y, toMax.y, value.y);
-	return Nc::Vector2f(x, y);
+	return {
+		Math::Remap(fromMin.x, fromMax.x, toMin.x, toMax.y, value.x),
+		Math::Remap(fromMin.y, fromMax.y, toMin.y, toMax.y, value.y)
+	};
 }
 
 
@@ -51,14 +53,14 @@ inline Nc::Vector2f Remap(
  * @param time Interpolation factor in range [0, 1].
  * @return Interpolated vector.
 */
-inline Nc::Vector2f Lerp(const Nc::Vector2f start, const Nc::Vector2f end, const float time) noexcept
+inline Vector2f Lerp(const Nc::Vector2f start, const Nc::Vector2f end, const float time) noexcept
 {
-	Nc::Vector2f result = Nc::Vector2f::Zero();
-	result.x = Nc::Math::Lerp(start.x, end.x, time);
-	result.y = Nc::Math::Lerp(start.y, end.y, time);
-	return result;
+	return {
+		Nc::Math::Lerp(start.x, end.x, time),
+		Nc::Math::Lerp(start.y, end.y, time)
+	};
 }
-	
+
 
 /**
  * @brief Returns the smaller of the two vector components.
@@ -84,9 +86,9 @@ inline float MaxOf(const Nc::Vector2f vector) noexcept { return std::fmaxf(vecto
  * @param vector Input vector.
  * @return Squared magnitude of the vector.
  */
-inline constexpr float SqrMagnitudeOf(const Nc::Vector2f vector) noexcept 
+constexpr float SqrMagnitudeOf(const Nc::Vector2f vector) noexcept
 {
-	return vector.x * vector.x + vector.y * vector.y; 
+	return vector.x * vector.x + vector.y * vector.y;
 };
 
 
@@ -116,7 +118,7 @@ inline float DistanceBetween(const Nc::Vector2f a, const Nc::Vector2f b) noexcep
  * @param b Second vector.
  * @return Squared distance between the two.
  */
-inline constexpr float SqrDistanceBetween(const Nc::Vector2f a, const Nc::Vector2f b) noexcept
+constexpr float SqrDistanceBetween(const Nc::Vector2f a, const Nc::Vector2f b) noexcept
 {
 	return SqrMagnitudeOf(a - b);
 }
@@ -128,12 +130,10 @@ inline constexpr float SqrDistanceBetween(const Nc::Vector2f a, const Nc::Vector
  * @param vector Input vector.
  * @return Normalized vector.
  */
-inline Nc::Vector2f Normalized(const Nc::Vector2f vector) noexcept
+inline Vector2f Normalized(const Nc::Vector2f vector) noexcept
 {
-	float length = MagnitudeOf(vector);
+	const float length = MagnitudeOf(vector);
 	return Nc::Vector2f(vector.x, vector.y) / length;
-}
-
 }
 
 
@@ -146,9 +146,9 @@ inline Nc::Vector2f Normalized(const Nc::Vector2f vector) noexcept
  * @param b Second vector.
  * @return The modulated vector.
  */
-inline Nc::Vector2f Modulate(const Nc::Vector2f a, const Nc::Vector2f b) noexcept
+constexpr Vector2f Modulate(const Nc::Vector2f a, const Nc::Vector2f b) noexcept
 {
-	return Nc::Vector2f(a.x * b.x, a.y * b.y);
+	return { a.x * b.x, a.y * b.y };
 }
 
 
@@ -162,4 +162,5 @@ inline Nc::Vector2f Modulate(const Nc::Vector2f a, const Nc::Vector2f b) noexcep
 inline float Dot(const Nc::Vector2f a, const Nc::Vector2f b) noexcept
 {
 	return a.x * b.x + a.y * b.y;
+}
 }

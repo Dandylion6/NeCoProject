@@ -4,7 +4,7 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "game/system/scene/comms_scene/radio/radio_sound_system.hpp"
+#include "game/system/scene/comms_scene/radio/radio_emitter_system.hpp"
 #include "game/system/scene/outside_scene/receiver/receiver_code_response_system.hpp"
 #include "game/utility/morse_code.hpp"
 #include <format>

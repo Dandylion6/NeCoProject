@@ -1,26 +1,27 @@
+#include "game/construction/scene/comms_scene/entity/radio_entity.hpp"
+
 #include "core/data/vector2.hpp"
 #include "core/runtime/render_context.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "game/component/core/audio/sound_emitter_component.hpp"
 #include "game/component/core/transform_component.hpp"
+#include "game/component/core/audio/sound_emitter_component.hpp"
 #include "game/component/scene/comms_scene/radio_component.hpp"
-#include "game/construction/scene/comms_scene/entity/radio_entity.hpp"
+#include  "game/contexts/scene_context.hpp"
 #include "game/state/scene.hpp"
-#include "raylib.h"
 
 
-entt::entity Entity::Radio::Create(
-	entt::registry& registry
-) noexcept
+entt::entity Entity::Radio::Create(const SceneContext& context) noexcept
 {
+	// TODO: Add visuals.
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(Nc::RENDER_RESOLUTION) * 0.5f;
 
-	entt::entity entity = registry.create();
+	const entt::entity entity = context.registry.create();
 
-	registry.emplace<Component::Transform>(entity, CommsRoom, POSITION);
-	registry.emplace<Component::SoundEmitter>(entity, Sound { });
-	registry.emplace<Component::Radio>(entity);
+	context.registry.emplace<Component::Transform>(entity, CommsRoom, POSITION);
+
+	context.registry.emplace<Component::Audio>(entity);
+	context.registry.emplace<Component::Radio>(entity);
 
 	return entity;
 }

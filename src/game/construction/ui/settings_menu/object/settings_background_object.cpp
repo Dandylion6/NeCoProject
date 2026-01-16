@@ -17,48 +17,40 @@
 #include <utility>
 
 
-void Object::SettingsBackground::Create(
-	entt::registry& registry, 
-	GameState& gameState, 
-	Nc::Vector2f windowSize
-) noexcept
+void Object::SettingsBackground::Create(SceneContext context, Nc::Vector2f windowSize) noexcept
 {
-	Backdrop::Create(registry, windowSize);
-	FrontTexture::Create(registry, gameState);
+	Backdrop::Create(context.registry, windowSize);
+	FrontTexture::Create(context);
 }
 
 
-entt::entity Object::SettingsBackground::FrontTexture::Create(
-	entt::registry& registry, GameState& gameState
-) noexcept
+entt::entity Object::SettingsBackground::FrontTexture::Create(SceneContext context) noexcept
 {
 	constexpr Nc::Vector2f CENTER = Nc::Vector2f::Scale(0.5);
 
-	entt::entity entity = registry.create();
+	entt::entity entity = context.registry.create();
 
-	registry.emplace<Tag::Settings>(entity);
-	registry.emplace<Tag::DontDestroyOnLoad>(entity);
+	context.registry.emplace<Tag::Settings>(entity);
+	context.registry.emplace<Tag::DontDestroyOnLoad>(entity);
 
 	Texture2D texture = LoadTexture("assets/environment/backgrounds/main_menu.png");
 	Nc::Vector2f size = Nc::Vector2f(texture.width, texture.height);
 
-	registry.emplace<Component::UI::Transform>(entity, CENTER, CENTER, size, Nc::Vector2f::Zero(), 1);
-	registry.emplace<Component::Sprite>(entity, std::move(texture), 0.4f);
+	context.registry.emplace<Component::UI::Transform>(entity, CENTER, CENTER, size, Nc::Vector2f::Zero(), 1);
+	context.registry.emplace<Component::Sprite>(entity, std::move(texture), 0.4f);
 
-	std::function<void()> toggleSettings = [&registry, &gameState]()
+	std::function<void()> toggleSettings = [context]()
 	{
-		Structure::SettingsMenu::Toggle(registry, gameState);
+		Structure::SettingsMenu::Toggle(context);
 	};
-	registry.emplace<Component::Action::Input>(entity, std::move(toggleSettings), KEY_ESCAPE);
-	registry.emplace<Component::Action::Toggle>(entity);
+	context.registry.emplace<Component::Action::Input>(entity, std::move(toggleSettings), KEY_ESCAPE);
+	context.registry.emplace<Component::Action::Toggle>(entity);
 
 	return entity;
 }
 
 
-entt::entity Object::SettingsBackground::Backdrop::Create(
-	entt::registry& registry, Nc::Vector2f windowSize
-) noexcept
+entt::entity Object::SettingsBackground::Backdrop::Create(entt::registry& registry, Nc::Vector2f windowSize) noexcept
 {
 	constexpr Nc::Vector2f CENTER = Nc::Vector2f::Scale(0.5f);
 
@@ -66,6 +58,7 @@ entt::entity Object::SettingsBackground::Backdrop::Create(
 
 	registry.emplace<Tag::DontDestroyOnLoad>(entity);
 	registry.emplace<Tag::Settings>(entity);
+	
 	registry.emplace<Component::UI::Transform>(entity, CENTER, CENTER, windowSize);
 	registry.emplace<Component::Rectangle>(entity, Palette::BACKGROUND_COLOR);
 

@@ -1,53 +1,55 @@
-#include "game/component/core/transform_component.hpp"
-#include "game/component/core/tween_component.hpp"
-#include "game/state/game_state.hpp"
+#include "game/system/core/tween_system.hpp"
+
+#include "core/data/tween.hpp"
+#include "core/math/interpolation.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "game/system/core/tween_system.hpp"
-#include "core/math/interpolation.hpp"
-#include "core/data/tween.hpp"
-#include <algorithm>
+#include "game/component/core/transform_component.hpp"
+#include "game/component/core/tween_component.hpp"
+#include "game/contexts/system_context.hpp"
+#include "game/state/game_state.hpp"
 
 
-void TweenSystem::Update(entt::registry& registry, GameState& gameState, float deltaTime)
+void System::Tween::Update(const SystemContext& context)
 {
-	auto view = registry.view<Component::TweenCollection>();
+	const auto view = context.registry.view<Component::TweenCollection>();
 	for (auto [entity, tweenCollection] : view.each())
 	{
-		if (registry.all_of<Component::Transform>(entity) && gameState.isPaused) continue;
-		UpdateTweenCollection(tweenCollection, deltaTime);
+		// World tweens will be paused with game.
+		if (context.registry.all_of<Component::Transform>(entity) && context.game.isPaused) continue;
+		UpdateTweenCollection(tweenCollection, context.deltaTime);
 	}
 }
 
 
-void TweenSystem::UpdateTweenCollection(Component::TweenCollection& collection, float deltaTime)
+void System::Tween::UpdateTweenCollection(Component::TweenCollection& collection, const float deltaTime)
 {
-	for (Tween& tween : collection.tweens)
+	for (Nc::Tween& tween : collection.tweens)
 	{
 		if (!tween.isPlaying) continue;
-		if (tween.elapsed >= tween.duration + tween.delayComplete)
+		if (tween.value == nullptr) continue;
+
+		const float totalTime = tween.duration + tween.delayComplete;
+		if (tween.elapsed >= totalTime)
 		{
 			TweenEnded(tween);
 			continue;
 		}
 
 		tween.elapsed += deltaTime;
-		float cappedTime = std::min(tween.elapsed, tween.duration);
+		const float cappedTime = std::fminf(tween.elapsed, tween.duration);
 
-		float normalizedTime = cappedTime / tween.duration;
-		float easeTime = Tween::GetEasing(tween.easing, normalizedTime);
+		const float normalizedTime = cappedTime / tween.duration;
+		const float easeTime = Nc::Tween::GetEasing(tween.easing, normalizedTime);
 
 		*tween.value = Nc::Math::Lerp(tween.start, tween.end, easeTime);
 	}
 }
 
 
-void TweenSystem::TweenEnded(Tween& tween)
+void System::Tween::TweenEnded(Nc::Tween& tween)
 {
 	tween.isPlaying = false;
 	tween.elapsed = 0.0f;
-	if (tween.onComplete != nullptr)
-	{
-		tween.onComplete();
-	}
+	if (tween.onComplete != nullptr) tween.onComplete();
 }

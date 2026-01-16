@@ -1,31 +1,52 @@
 #pragma once
-#include "game/component/core/interactive/drag_action_component.hpp"
 #include "entt/entity/fwd.hpp"
 #include "core/data/vector2.hpp"
-struct GameState;
-namespace Nc { struct RenderContext; };
+struct SystemContext;
 
 
-struct DragActionSystem
+namespace Nc
+{
+struct RenderContext;
+};
+
+
+namespace Component::Action
+{
+struct Drag;
+}
+
+
+namespace System::Action
+{
+
+class Drag final
 {
 public:
-	static bool Update(entt::registry& registry, GameState& gameState, Nc::RenderContext& renderContext);
+    // ------ Functions ------
+    static void Update(const SystemContext& context, const Nc::RenderContext& renderContext);
 
 private:
-	enum DragResult
-	{
-		Hovering,
-		NotHovering,
-		Pressed
-	};
+    // ------ Types ------
+    enum Result
+    {
+        Hovering,
+        NotHovering,
+        Pressed
+    };
 
-	static DragResult UpdateSceneDrag(
-		entt::registry& registry,
-		GameState& gameState,
-		Nc::RenderContext& renderContext, 
-		entt::entity entity, 
-		Component::Action::Drag& drag
-	);
-	static bool UpdateUiDrag(entt::registry& registry, GameState& gameState, Nc::Vector2i windowSize);
+
+    // ------ Functions ------
+
+    static Result UpdateSceneDrag(
+        const SystemContext& context,
+        const Nc::RenderContext& renderContext,
+        entt::entity entity,
+        Component::Action::Drag& drag
+    );
+
+    static void UpdateUiDrag(const SystemContext& context, Nc::Vector2i windowSize);
 
 };
+
+}
+

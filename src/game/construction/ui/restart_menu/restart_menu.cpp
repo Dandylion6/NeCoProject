@@ -11,42 +11,23 @@
 #include "game/tag/ui/restart_menu_tag.hpp"
 
 
-void Structure::RestartMenu::Build(
-	entt::registry& registry, 
-	Nc::ResourceStore& resourceStore, 
-	Game& game, 
-	GameState& gameState, 
-	Nc::Vector2f windowSize
-) noexcept 
+void Structure::RestartMenu::Build(SceneContext context, Game &game, Nc::Vector2f windowSize) noexcept
 {
-	Object::RestartMenuBackground::Create(registry, resourceStore, windowSize);
-	Object::RestartButton::Create(registry, resourceStore, game, gameState);
-	Object::RestartToMainButton::Create(registry, resourceStore, gameState);
-	RestartMenu::Close(registry, gameState);
+	Object::RestartMenuBackground::Create(context, windowSize);
+	Object::RestartButton::Create(context, game);
+	Object::RestartToMainButton::Create(context);
+	RestartMenu::Close(context);
 }
 
+void Structure::RestartMenu::Open(SceneContext context) noexcept { RestartMenu::Toggle(context, true); }
 
-void Structure::RestartMenu::Open(entt::registry& registry, GameState& gameState) noexcept
+void Structure::RestartMenu::Close(SceneContext context) noexcept { RestartMenu::Toggle(context, false); }
+
+void Structure::RestartMenu::Toggle(SceneContext context, bool active) noexcept
 {
-	RestartMenu::Toggle(registry, gameState, true);
-}
+	context.game.isPaused = active;
 
-
-void Structure::RestartMenu::Close(entt::registry& registry, GameState& gameState) noexcept
-{
-	RestartMenu::Toggle(registry, gameState, false);
-}
-
-
-void Structure::RestartMenu::Toggle(
-	entt::registry& registry, 
-	GameState& gameState, 
-	bool active
-) noexcept
-{
-	gameState.isPaused = active;
-
-	auto view = registry.view<const Tag::RestartMenu, Component::UI::Transform>();
+	auto view = context.registry.view<const Tag::RestartMenu, Component::UI::Transform>();
 	for (auto [entity, transform] : view.each())
 		transform.isVisible = active;
 }

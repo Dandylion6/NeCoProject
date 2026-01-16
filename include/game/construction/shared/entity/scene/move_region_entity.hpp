@@ -1,10 +1,14 @@
 #pragma once
 #include "core/data/vector2.hpp"
 #include "entt/entity/fwd.hpp"
-#include "game/component/core/transform_component.hpp"
 #include "game/state/scene.hpp"
-struct GameState;
-namespace Nc { class ResourceStore; };
+
+
+struct SceneContext;
+namespace Component
+{
+struct Transform;
+}
 
 
 namespace Entity
@@ -13,24 +17,19 @@ namespace Entity
 class MoveRegion final
 {
 public:
+	// ------ Functions ------
 	static entt::entity Create(
-		entt::registry& registry, 
-		Nc::ResourceStore& resourceStore,
-		GameState& gameState, 
-		const Component::Transform&& transform,
-		Scene currentScene, 
-		Scene nextScene, 
+		const SceneContext& context,
+		const Component::Transform& transform,
+		Scene nextScene,
 		float moveTime = 0.2f
 	) noexcept;
 
-
 	static entt::entity Create(
-		entt::registry& registry, 
-		Nc::ResourceStore& resourceStore,
-		GameState& gameState, 
-		Direction region, 
-		Scene currentScene, 
-		Scene nextScene, 
+		const SceneContext& context,
+		Direction region,
+		Scene currentScene,
+		Scene nextScene,
 		float moveTime = 0.2f
 	) noexcept;
 

@@ -15,97 +15,84 @@
 
 
 Entity::Lever::Data Entity::Lever::Create(
-    entt::registry& registry, 
-    entt::entity entity, 
+    entt::registry& registry,
+    const entt::entity entity,
     Nc::Vector2f heightRange, 
     std::string&& movingAudioFile, 
     std::string&& switchedAudioFile
 ) noexcept
 {
+#ifdef DEBUG_BUILD
     assert(registry.any_of<Component::Transform>(entity) && "LeverEntity requires Transform!");
+#endif
 
     registry.emplace<Component::Action::Drag>(entity);
     registry.emplace<Component::Action::Toggle>(entity, Disabled);
 
-    Component::Logic::Lever& lever = registry.emplace<Component::Logic::Lever>(
-        entity, heightRange, std::move(movingAudioFile), std::move(switchedAudioFile)
+    auto& lever = registry.emplace<Component::Logic::Lever>(
+        entity,
+        heightRange,
+        std::move(movingAudioFile),
+        std::move(switchedAudioFile)
     );
+
     lever.currentHeight = heightRange.x;
     return { lever, entity };
 }
 
 
 Entity::Lever::Data Entity::Lever::Create(
-    entt::registry& registry, 
-    entt::entity entity, 
-    Nc::Vector2f heightRange, 
-    Texture2D&& handleTexture, 
+    entt::registry& registry,
+    const entt::entity entity,
+    const Nc::Vector2f heightRange,
+    const Texture2D& handleTexture,
     std::string&& movingAudioFile, 
     std::string&& switchedAudioFile
 ) noexcept
 {
-    registry.emplace<Component::Sprite>(entity, std::move(handleTexture));
-    return Entity::Lever::Create(
-        registry, 
-        entity, 
-        heightRange, 
-        std::move(movingAudioFile), 
-        std::move(switchedAudioFile)
-    );
+    registry.emplace<Component::Sprite>(entity, handleTexture);
+    return Create(registry, entity, heightRange, std::move(movingAudioFile), std::move(switchedAudioFile));
 }
 
 
 Entity::Lever::Data Entity::Lever::Create(
     entt::registry& registry, 
-    Component::Transform&& transform,
-    float moveRange, 
-    Texture2D&& handleTexture, 
+    const Component::Transform& transform,
+    const float moveRange,
+    const Texture2D& handleTexture,
     std::string&& movingAudioFile, 
     std::string&& switchedAudioFile
 ) noexcept
 {
-    entt::entity entity = registry.create();
+    const entt::entity entity = registry.create();
 
-    Nc::Vector2f center = Nc::Bounds::CenterOf(Nc::Bounds(transform));
-    Nc::Vector2f heightRange = Nc::Vector2f(center.y - moveRange, center.y + moveRange);
+    const Nc::Vector2f center = Nc::Bounds::CenterOf(Nc::Bounds(transform));
+    const Nc::Vector2f heightRange = Nc::Vector2f(center.y - moveRange, center.y + moveRange);
     
     // The lever defaults to being on.
-    transform.position.y = heightRange.x;
-    registry.emplace<Component::Transform>(entity, std::move(transform));
-    
-    return Entity::Lever::Create(
-        registry, 
-        entity, 
-        heightRange, 
-        std::move(handleTexture), 
-        std::move(movingAudioFile), 
-        std::move(switchedAudioFile)
-    );
+    auto& leverTransform = registry.emplace<Component::Transform>(entity, transform);
+    leverTransform.position.y = heightRange.x;
+
+    return Create(registry, entity, heightRange, handleTexture, std::move(movingAudioFile), std::move(switchedAudioFile));
 }
 
 
 Entity::Lever::Data Entity::Lever::Create(
     entt::registry& registry, 
-    Component::Transform&& transform,
-    float moveRange, 
+    const Component::Transform& transform,
+    const float moveRange,
     std::string&& movingAudioFile, 
     std::string&& switchedAudioFile
 ) noexcept
 {
-    entt::entity entity = registry.create();
+    const entt::entity entity = registry.create();
 
-    Nc::Vector2f center = Nc::Bounds::CenterOf(Nc::Bounds(transform));
-    Nc::Vector2f heightRange = Nc::Vector2f(center.y - moveRange, center.y + moveRange);
+    const Nc::Vector2f center = Nc::Bounds::CenterOf(Nc::Bounds(transform));
+    const Nc::Vector2f heightRange = Nc::Vector2f(center.y - moveRange, center.y + moveRange);
 
     // The lever defaults to being on.
-    transform.position.y = heightRange.x;
-    registry.emplace<Component::Transform>(entity, std::move(transform));
+    auto& leverTransform = registry.emplace<Component::Transform>(entity, transform);
+    leverTransform.position.y = heightRange.x;
 
-    return Entity::Lever::Create(
-        registry, 
-        entity, 
-        heightRange, 
-        std::move(movingAudioFile), 
-        std::move(switchedAudioFile)
-    );
+    return Create(registry, entity, heightRange, std::move(movingAudioFile), std::move(switchedAudioFile));
 }

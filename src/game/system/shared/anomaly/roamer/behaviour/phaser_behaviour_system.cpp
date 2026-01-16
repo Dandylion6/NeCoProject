@@ -46,7 +46,7 @@ void PhaserBehaviourSystem::Update(
 	if (phaser.secondsUntilNextPoint > 0.0f) return;
 
 	phaser.currentPointIndex = (phaser.currentPointIndex + 1u) % phaser.pointCount;
-	phaser.secondsUntilNextPoint = Nc::Random::Range(IDLE_SECONDS_RANGE.x, IDLE_SECONDS_RANGE.y);
+	phaser.secondsUntilNextPoint = Nc::Random::RangeFloat(IDLE_SECONDS_RANGE.x, IDLE_SECONDS_RANGE.y);
 	
 	Nc::Vector2f& nextPoint = phaser.points.at(phaser.currentPointIndex);
 	Nc::Vector2f targetPosition = RoamerBehaviourSystem::GetTargetPosition(roamer.target);

@@ -1,6 +1,9 @@
 #pragma once
+#include <array>
+
+#include "entt/entity/entity.hpp"
 #include "entt/entity/fwd.hpp"
-namespace Nc { class ResourceStore; };
+#include "game/contexts/scene_context.hpp"
 
 
 namespace Object
@@ -9,20 +12,26 @@ namespace Object
 class RadarBreaker final
 {
 public:
-	static void Create(
-		entt::registry& registry, 
-		Nc::ResourceStore& resourceStore, 
-		entt::entity radar
-	) noexcept;
+	// ------ Types ------
+	struct Data final
+	{
+		entt::entity base = entt::null;
+		entt::entity lever = entt::null;
+
+		[[nodiscard]] std::array<entt::entity, 2u> All() const noexcept { return { base, lever }; }
+	};
+
+
+	// ------ Functions ------
+
+	static void Create(const SceneContext& context, entt::entity radar) noexcept;
 
 private:
 	class LeverBase final
 	{
 	public:
-		static entt::entity Create(
-			entt::registry& registry,
-			Nc::ResourceStore& resourceStore
-		) noexcept;
+		// ------ Functions ------
+		static entt::entity Create(const SceneContext& context) noexcept;
 
 	};
 
@@ -30,11 +39,8 @@ private:
 	class LeverHandle final
 	{
 	public:
-		static entt::entity Create(
-			entt::registry& registry,
-			Nc::ResourceStore& resourceStore,
-			entt::entity radar
-		) noexcept;
+		// ------ Functions ------
+		static entt::entity Create(const SceneContext& context, entt::entity radar) noexcept;
 
 	};
 

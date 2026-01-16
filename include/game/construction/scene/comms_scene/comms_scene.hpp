@@ -1,11 +1,5 @@
 #pragma once
-#include "entt/entity/fwd.hpp"
-struct GameState;
-namespace Nc 
-{ 
-	struct RenderContext; 
-	class ResourceStore;
-};
+#include "game/contexts/build_context.hpp"
 
 
 namespace Structure
@@ -14,12 +8,8 @@ namespace Structure
 class CommsScene final
 {
 public:
-	static void Build(
-		entt::registry& registry,
-		Nc::ResourceStore& resourceStore,
-		Nc::RenderContext& renderContext,
-		GameState& gameState
-	) noexcept;
+	// ------ Functions ------
+	static void Build(const BuildContext& context) noexcept;
 
 };
 

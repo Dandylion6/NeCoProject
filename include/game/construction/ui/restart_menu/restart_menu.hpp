@@ -1,10 +1,8 @@
 #pragma once
 #include "core/data/vector2.hpp"
+#include "game/contexts/scene_context.hpp"
 #include "entt/entity/fwd.hpp"
 class Game;
-struct GameState;
-namespace Nc { class ResourceStore; };
-struct SaveContext;
 
 
 namespace Structure
@@ -13,20 +11,12 @@ namespace Structure
 class RestartMenu final
 {
 public:
-	static void Build(
-		entt::registry& registry,
-		Nc::ResourceStore& resourceStore,
-		Game& game,
-		GameState& gameState,
-		Nc::Vector2f windowSize
-	) noexcept;
-
-
-	static void Open(entt::registry& registry, GameState& gameState) noexcept;
-	static void Close(entt::registry& registry, GameState& gameState) noexcept;
+	static void Build(SceneContext context, Game& game, Nc::Vector2f windowSize) noexcept;
+	static void Open(SceneContext context) noexcept;
+	static void Close(SceneContext context) noexcept;
 
 private:
-	static void Toggle(entt::registry& registry, GameState& gameState, bool active) noexcept;
+	static void Toggle(SceneContext context, bool active) noexcept;
 
 };
 

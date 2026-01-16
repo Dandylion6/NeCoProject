@@ -1,59 +1,50 @@
+#include "game/construction/scene/doorway_scene/object/radar_breaker_object.hpp"
+
+#include "raylib.h"
 #include "core/data/vector2.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "game/component/core/rendering/rectangle_component.hpp"
 #include "game/component/core/transform_component.hpp"
-#include "game/construction/scene/doorway_scene/object/radar_breaker_object.hpp"
+#include "game/component/core/rendering/rectangle_component.hpp"
+#include  "game/component/shared/mechanical/circuit_breaker_component.hpp"
 #include "game/construction/shared/object/mechanical/circuit_breaker_object.hpp"
 #include "game/state/scene.hpp"
 #include "game/system/scene/comms_scene/radar/radar_stability_system.hpp"
-#include "raylib.h"
-#include <utility>
-
-// TODO: Add visuals
 
 
-entt::entity Object::RadarBreaker::LeverBase::Create(
-	entt::registry& registry, Nc::ResourceStore& resourceStore
-) noexcept
+void Object::RadarBreaker::Create(const SceneContext& context, const entt::entity radar) noexcept
+{
+	LeverHandle::Create(context, radar);
+	LeverBase::Create(context);
+}
+
+
+entt::entity Object::RadarBreaker::LeverBase::Create(const SceneContext& context) noexcept
 {
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(200.0f, 100.0f);
 	constexpr Nc::Vector2f SIZE = Nc::Vector2f(60.0f, 90.0f);
 
-	entt::entity entity = registry.create();
+	const entt::entity entity = context.registry.create();
 
-	registry.emplace<Component::Transform>(entity, Doorway, POSITION, SIZE, SIZE * 0.5f);
-	registry.emplace<Component::Rectangle>(entity, GRAY);
+	context.registry.emplace<Component::Transform>(entity, Doorway, POSITION, SIZE, SIZE * 0.5f);
+	// TODO: Add visuals
+	context.registry.emplace<Component::Rectangle>(entity, GRAY);
 
 	return entity;
 }
 
 
-entt::entity Object::RadarBreaker::LeverHandle::Create(
-	entt::registry& registry, 
-	Nc::ResourceStore& resourceStore, 
-	entt::entity radar
-) noexcept
+entt::entity Object::RadarBreaker::LeverHandle::Create(const SceneContext& context, const entt::entity radar) noexcept
 {
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(200.0f, 100.0f);
 	constexpr Nc::Vector2f SIZE = Nc::Vector2f(55.0f, 20.0f);
+	constexpr auto transform = Component::Transform(Doorway, POSITION, SIZE, SIZE * 0.5f);
 
-	Component::Transform transform = Component::Transform(Doorway, POSITION, SIZE, SIZE * 0.5f);
-	Object::CircuitBreaker::Data breakerData = Object::CircuitBreaker::Create(registry, std::move(transform), radar);
+	const CircuitBreaker::Data breakerData = Object::CircuitBreaker::Create(context.registry, transform, radar);
 	breakerData.breaker.onRestart.connect<&RadarStabilitySystem::Restart>();
 
-	registry.emplace<Component::Rectangle>(breakerData.entity, RAYWHITE);
+	// TODO: Add visuals
+	context.registry.emplace<Component::Rectangle>(breakerData.entity, RAYWHITE);
 
 	return breakerData.entity;
-}
-
-
-void Object::RadarBreaker::Create(
-	entt::registry& registry, 
-	Nc::ResourceStore& resourceStore, 
-	entt::entity radar
-) noexcept
-{
-	Object::RadarBreaker::LeverHandle::Create(registry, resourceStore, radar);
-	Object::RadarBreaker::LeverBase::Create(registry, resourceStore);
 }

@@ -15,26 +15,20 @@
 #include <utility>
 
 
-void Object::RestartButton::Create(
-    entt::registry& registry, 
-    Nc::ResourceStore& resourceStore, 
-    Game& game, 
-    GameState& gameState
-) noexcept 
+void Object::RestartButton::Create(SceneContext context, Game& game) noexcept 
 {
     constexpr Nc::Vector2f ANCHOR = Nc::Vector2f(0.5f, 0.5f);
     constexpr Nc::Vector2f ORIGIN = Nc::Vector2f::Scale(0.5f);
 
-    std::function<void()> toMainMenu = [&game, &registry, &gameState]()
+    std::function<void()> toMainMenu = [context, &game]()
     {
         game.Load();
-        Structure::RestartMenu::Close(registry, gameState);
+        Structure::RestartMenu::Close(context);
     };
     
     Component::UI::Transform transform = Component::UI::Transform(ANCHOR, ORIGIN, 2);
     Object::LabelButton::Create(
-        registry, 
-        resourceStore,
+        context,
         std::move(transform), 
         "RESTART FROM SAVE", 
         std::move(toMainMenu) 
@@ -42,25 +36,20 @@ void Object::RestartButton::Create(
 }
 
 
-void Object::RestartToMainButton::Create(
-    entt::registry& registry, 
-    Nc::ResourceStore& resourceStore, 
-    GameState& gameState
-) noexcept 
+void Object::RestartToMainButton::Create(SceneContext context) noexcept 
 {
     constexpr Nc::Vector2f ANCHOR = Nc::Vector2f (0.5f, 0.56f);
     constexpr Nc::Vector2f ORIGIN = Nc::Vector2f::Scale(0.5f);
 
-    std::function<void()> toMainMenu = [&registry, &gameState]()
+    std::function<void()> toMainMenu = [context]()
     {
-        Structure::RestartMenu::Close(registry, gameState);
-        Structure::MainMenu::Open(registry, gameState);
+        Structure::RestartMenu::Close(context);
+        Structure::MainMenu::Open(context);
     };
     
     Component::UI::Transform transform = Component::UI::Transform(ANCHOR, ORIGIN, 2);
     Object::LabelButton::Create(
-        registry, 
-        resourceStore,
+        context,
         std::move(transform), 
         "TO MAIN MENU", 
         std::move(toMainMenu) 

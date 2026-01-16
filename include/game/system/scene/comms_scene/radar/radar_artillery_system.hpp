@@ -1,17 +1,25 @@
 #pragma once
-#include "entt/entity/fwd.hpp"
 #include "core/data/vector2.hpp"
+#include "entt/entity/fwd.hpp"
 
 
-class RadarArtillerySystem
+struct SystemContext;
+
+
+namespace System::Radar
+{
+
+class Artillery final
 {
 public:
-	static void Update(
-		entt::registry& registry, 
-		float deltaTime
-	);
+	// ------ Functions ------
+	static void Update(const SystemContext& context);
 
 private:
+	// ------ Functions ------
 	static Nc::Vector2f GetArtilleryAimPosition(entt::registry& registry);
 
 };
+
+}
+

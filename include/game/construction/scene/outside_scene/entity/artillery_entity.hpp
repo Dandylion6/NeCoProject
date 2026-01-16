@@ -7,6 +7,7 @@ namespace Entity
 class Artillery final
 {
 public:
+    // ------ Functions ------
     static entt::entity Create(entt::registry& registry) noexcept;
 
 };

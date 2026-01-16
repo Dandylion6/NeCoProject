@@ -2,22 +2,25 @@
 #include "core/data/vector2.hpp"
 #include "entt/entity/fwd.hpp"
 struct AnomalyState;
-struct GameState;
-namespace Nc { class ResourceStore; };
+struct SystemContext;
 
 
-class RoamerSpawningSystem
+namespace Nc
+{
+class Random;
+};
+
+
+class RoamerSpawningSystem final
 {
 public:
-	static void Update(
-		entt::registry& registry, Nc::ResourceStore& resourceStore, GameState& gameState, float time
-	);
-	static entt::entity SpawnRoamer(
-		entt::registry& registry, Nc::ResourceStore& resourceStore, Nc::Vector2f spawnPoint, AnomalyState& anomalyState
-	);
-	static Nc::Vector2f GenerateRandomSpawnPoint();
+	// ------ Functions ------
+	static void Update(const SystemContext& context, AnomalyState& state) noexcept;
+	static entt::entity SpawnRoamer(const SystemContext& context, Nc::Vector2f spawnPoint, AnomalyState& anomalyState) noexcept;
+	static Nc::Vector2f GenerateRandomSpawnPoint(Nc::Random& random) noexcept;
 
 private:
+	// ------ Functions ------
 	static bool ShouldSpawnRoamer(const AnomalyState& anomalyState);
 
 };

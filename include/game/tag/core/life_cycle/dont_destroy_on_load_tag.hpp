@@ -3,5 +3,5 @@
 
 namespace Tag
 {
-    struct DontDestroyOnLoad { };
+    struct DontDestroyOnLoad final { };
 }

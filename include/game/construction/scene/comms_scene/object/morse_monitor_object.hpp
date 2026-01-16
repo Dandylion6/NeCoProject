@@ -1,8 +1,11 @@
 #pragma once
+#include <array>
+
 #include "core/data/vector2.hpp"
+#include "entt/entity/entity.hpp"
 #include "entt/entity/fwd.hpp"
 #include "game/component/scene/comms_scene/morse_components.hpp"
-namespace Nc { class ResourceStore; };
+#include  "game/contexts/scene_context.hpp"
 
 
 namespace Object
@@ -11,22 +14,37 @@ namespace Object
 class MorseMonitor final
 {
 public:
+	// ------ Types ------
+	struct Data final
+	{
+		entt::entity monitor = entt::null;
+		entt::entity gauge = entt::null;
+		entt::entity pointer = entt::null;
+
+
+		[[nodiscard]] std::array<entt::entity, 3u> All() const noexcept
+		{
+			return { monitor, gauge, pointer };
+		}
+	};
+
+
+	// ------ Members ------
+
 	static constexpr Nc::Vector2f GAUGE_SIZE = Nc::Vector2f(98.0f, 8.0f);
 	static constexpr Nc::Vector2f POSITION = Nc::Vector2f(280.0f, 440.0f);
 
-	
-	static void Create(
-		entt::registry& registry, 
-		Nc::ResourceStore& resourceStore
-	) noexcept;
+
+	// ------ Functions ------
+
+	static void Create(const SceneContext& context) noexcept;
 
 private:
 	class Gauge final
 	{
 	public:
-		static entt::entity Create(
-			entt::registry& registry
-		) noexcept;
+		// ------ Functions ------
+		static entt::entity Create(const SceneContext& context) noexcept;
 
 	};
 
@@ -34,9 +52,8 @@ private:
 	class Pointer final
 	{
 	public:
-		static entt::entity Create(
-			entt::registry& registry
-		) noexcept;
+		// ------ Functions ------
+		static entt::entity Create(const SceneContext& context) noexcept;
 
 	};
 
@@ -44,8 +61,9 @@ private:
 	class Region final
 	{
 	public:
+		// ------ Functions ------
 		static entt::entity Create(
-			entt::registry& registry, 
+			const SceneContext& context,
 			Component::Morse::MonitorRegion::Region region
 		) noexcept;
 

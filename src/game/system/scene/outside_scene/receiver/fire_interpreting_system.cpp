@@ -8,8 +8,8 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "raylib.h"
-#include "game/system/core/audio/sound_emitter_system.hpp"
-#include "game/system/scene/comms_scene/radio/radio_sound_system.hpp"
+#include "game/system/core/audio/audio_emitter_system.hpp"
+#include "game/system/scene/comms_scene/radio/radio_emitter_system.hpp"
 #include "game/system/scene/outside_scene/receiver/fire_interpreting_system.hpp"
 #include <string>
 #include <utility>
@@ -32,7 +32,7 @@ void FireInterpretingSystem::HandleReceivedMessage(
 		constexpr float FIRE_DELAY = 4.6f;
 
 		artillery.receivedFireRequest = true;
-		artillery.fireDelay = FIRE_DELAY;
+		artillery.fireDelaySeconds = FIRE_DELAY;
 	}
 	
 	const std::string FIRE_RESPONSE = "assets/audio/voicelines/receiver/commands/fire_request.wav";
@@ -51,15 +51,15 @@ void FireInterpretingSystem::Update(
 	float deltaTime
 )
 {
-	auto view = registry.view<Component::Artillery, Component::SoundEmitter>();
+	auto view = registry.view<Component::Artillery, Component::Audio>();
 	for (auto [entity, artillery, emitter] : view.each())
 	{
 		if (!artillery.receivedFireRequest) continue;
 		if (!artillery.isReadyToFire) continue;
 
-		if (artillery.fireDelay > 0.0f)
+		if (artillery.fireDelaySeconds > 0.0f)
 		{
-			artillery.fireDelay -= deltaTime;
+			artillery.fireDelaySeconds -= deltaTime;
 			continue;
 		}
 

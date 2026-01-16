@@ -1,12 +1,13 @@
 #include "game/save/save_settings.hpp"
-#include "game/state/settings.hpp"
-#include "nlohmann/json.hpp"
-#include "nlohmann/json_fwd.hpp"
+
 #include <cstdio>
 #include <filesystem>
 #include <fstream>
-#include <iostream>
 #include <string>
+
+#include "game/state/settings.hpp"
+#include "nlohmann/json.hpp"
+#include "nlohmann/json_fwd.hpp"
 
 
 Save::Result Save::SettingsToDisk(const Settings& settings)

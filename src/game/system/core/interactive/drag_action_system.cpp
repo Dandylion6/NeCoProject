@@ -1,67 +1,60 @@
-#include "game/component/core/interactive/drag_action_component.hpp"
-#include "game/component/core/transform_component.hpp"
-#include "core/runtime/render_context.hpp"
-#include "game/state/game_state.hpp"
-#include "entt/entity/fwd.hpp"
-#include "entt/entity/registry.hpp"
-#include "raylib.h"
 #include "game/system/core/interactive/drag_action_system.hpp"
+
+#include "raylib.h"
 #include "core/data/bounds.hpp"
 #include "core/data/vector2.hpp"
+#include "core/runtime/render_context.hpp"
+#include "entt/entity/fwd.hpp"
+#include "entt/entity/registry.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/core/interactive/drag_action_component.hpp"
+#include "game/contexts/system_context.hpp"
+#include "game/state/game_state.hpp"
 
 
-bool DragActionSystem::Update(
-	entt::registry& registry, GameState& gameState, Nc::RenderContext& renderContext
-)
+void System::Action::Drag::Update(const SystemContext& context, const Nc::RenderContext& renderContext)
 {
-	bool clickReleased = IsMouseButtonReleased(MOUSE_BUTTON_LEFT);
-
-	bool isHovering = false;
-	auto view = registry.view<Component::Action::Drag>();
+	const bool clickReleased = IsMouseButtonReleased(MOUSE_BUTTON_LEFT);
+	const auto view = context.registry.view<Component::Action::Drag>();
 	for (auto [entity, drag] : view.each())
 	{
 		if (drag.isTarget)
 		{
-			Nc::Vector2f mousePosition = GetMousePosition();
+			auto mousePosition = Nc::Vector2f(GetMousePosition());
 			mousePosition -= Nc::Vector2f(renderContext.renderRectangle.x, renderContext.renderRectangle.y);
 			mousePosition /= renderContext.renderScale;
 
 			drag.draggedDelta = mousePosition - drag.startPosition;
 
 			if (clickReleased) drag.isTarget = false;
-			return false;
+			return;
 		}
 
-		DragResult result = UpdateSceneDrag(registry, gameState, renderContext, entity, drag);
-		switch (result)
+		switch (UpdateSceneDrag(context, renderContext, entity, drag))
 		{
-		case DragActionSystem::Hovering: return true;
-		case DragActionSystem::NotHovering:
-			return UpdateUiDrag(registry, gameState, renderContext.windowSize);
-			break;
-		case DragActionSystem::Pressed: return false;
+		case Hovering: return Nc::Cursor::AssignIfHigherPriority(context.game.cursor, Nc::Cursor::Grab);
+		case NotHovering: return UpdateUiDrag(context, renderContext.windowSize);
+		case Pressed: return;
 		}
 	}
-	return isHovering;
 }
 
 
-DragActionSystem::DragResult DragActionSystem::UpdateSceneDrag(
-	entt::registry& registry, 
-	GameState& gameState,
-	Nc::RenderContext& renderContext, 
-	entt::entity entity, 
+System::Action::Drag::Result System::Action::Drag::UpdateSceneDrag(
+	const SystemContext& context,
+	const Nc::RenderContext& renderContext,
+	const entt::entity entity,
 	Component::Action::Drag& drag
 )
 {
-	const Component::Transform& transform = registry.get<const Component::Transform>(entity);
-	if (gameState.currentScene != transform.boundScene) return NotHovering;
+	const auto& transform = context.registry.get<const Component::Transform>(entity);
+	if (context.game.currentScene != transform.boundScene) return NotHovering;
 
-	Nc::Vector2f mousePosition = GetMousePosition();
+	auto mousePosition = Nc::Vector2f(GetMousePosition());
 	mousePosition -= Nc::Vector2f(renderContext.renderRectangle.x, renderContext.renderRectangle.y);
 	mousePosition /= renderContext.renderScale;
 
-	Nc::Bounds bounds = Nc::Bounds(transform);
+	const auto bounds = Nc::Bounds(transform);
 	if (!Nc::Bounds::PointInBounds(bounds, mousePosition)) return NotHovering;
 	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 	{
@@ -73,10 +66,7 @@ DragActionSystem::DragResult DragActionSystem::UpdateSceneDrag(
 }
 
 
-bool DragActionSystem::UpdateUiDrag(
-	entt::registry& registry, GameState& gameState, Nc::Vector2i windowSize
-)
+void System::Action::Drag::UpdateUiDrag(const SystemContext& context, Nc::Vector2i windowSize)
 {
 	// TODO: Add UI functionality.
-	return false;
 }

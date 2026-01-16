@@ -13,41 +13,31 @@
 #include <utility>
 
 
-void Object::RestartMenuBackground::Create(
-	entt::registry& registry, 
-	Nc::ResourceStore& resourceStore, 
-	Nc::Vector2f windowSize
-) noexcept
+void Object::RestartMenuBackground::Create(SceneContext context, Nc::Vector2f windowSize) noexcept
 {
-	Object::RestartMenuBackground::Backdrop::Create(registry, windowSize);
-	Object::RestartMenuBackground::FrontTexture::Create(registry, resourceStore);
+	Object::RestartMenuBackground::Backdrop::Create(context.registry, windowSize);
+	Object::RestartMenuBackground::FrontTexture::Create(context);
 }
 
 
-entt::entity Object::RestartMenuBackground::FrontTexture::Create(
-	entt::registry& registry, 
-	Nc::ResourceStore& resourceStore
-) noexcept
+entt::entity Object::RestartMenuBackground::FrontTexture::Create(SceneContext context) noexcept
 {
-	entt::entity entity = registry.create();
+	entt::entity entity = context.registry.create();
 
-	Texture2D texture = resourceStore.GetTexture("assets/environment/backgrounds/main_menu.png");
+	Texture2D texture = context.store.GetTexture("assets/environment/backgrounds/main_menu.png");
 	Nc::Vector2f size = Nc::Vector2f(texture.width, texture.height);
 	Nc::Vector2f center = Nc::Vector2f::Scale(0.5f);
 
-	registry.emplace<Tag::DontDestroyOnLoad>(entity);
-	registry.emplace<Tag::RestartMenu>(entity);
-	registry.emplace<Component::UI::Transform>(entity, center, center, size, Nc::Vector2f::Zero(), 1);
-	registry.emplace<Component::Sprite>(entity, std::move(texture), 0.4f);
+	context.registry.emplace<Tag::DontDestroyOnLoad>(entity);
+	context.registry.emplace<Tag::RestartMenu>(entity);
+	context.registry.emplace<Component::UI::Transform>(entity, center, center, size, Nc::Vector2f::Zero(), 1);
+	context.registry.emplace<Component::Sprite>(entity, std::move(texture), 0.4f);
 
 	return entity;
 }
 
 
-entt::entity Object::RestartMenuBackground::Backdrop::Create(
-	entt::registry& registry, 
-	Nc::Vector2f windowSize
-) noexcept
+entt::entity Object::RestartMenuBackground::Backdrop::Create(entt::registry& registry, Nc::Vector2f windowSize) noexcept
 {
 	constexpr Nc::Vector2f CENTER = Nc::Vector2f::Scale(0.5f);
 

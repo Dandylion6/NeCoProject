@@ -1,5 +1,10 @@
 #include "game/game.hpp"
+
+#include <cmath>
+
+#include "raylib.h"
 #include "core/data/vector2.hpp"
+#include "core/runtime/entity_helpers.hpp"
 #include "core/runtime/render_context.hpp"
 #include "entt/entity/fwd.hpp"
 #include "game/construction/scene/comms_desk_scene/comms_desk_scene.hpp"
@@ -11,130 +16,123 @@
 #include "game/construction/ui/restart_menu/restart_menu.hpp"
 #include "game/construction/ui/settings_menu/settings_menu.hpp"
 #include "game/construction/ui/shared/entity/move_transition_entity.hpp"
+#include "game/contexts/build_context.hpp"
+#include "game/contexts/states_context.hpp"
+#include "game/contexts/system_context.hpp"
 #include "game/save/save_settings.hpp"
 #include "game/state/game_state.hpp"
-#include "game/system/core/audio/ambient_sound_system.hpp"
-#include "game/system/core/audio/sound_emitter_system.hpp"
-#include "game/system/core/interactive/button_action_system.hpp"
+#include "game/system/core/tween_system.hpp"
+#include "game/system/core/audio/main_ambience_system.hpp"
+#include "game/system/core/audio/audio_emitter_system.hpp"
+#include "game/system/core/interactive/click_action_system.hpp"
 #include "game/system/core/interactive/drag_action_system.hpp"
 #include "game/system/core/interactive/input_action_system.hpp"
-#include "game/system/core/rendering/lighting/lighting_system.hpp"
 #include "game/system/core/rendering/rendering_system.hpp"
-#include "game/system/core/tween_system.hpp"
+#include "game/system/core/rendering/lighting/lighting_system.hpp"
 #include "game/system/scene/comms_scene/morse_code/morse_monitor_display_system.hpp"
-#include "game/system/scene/comms_scene/morse_code/morse_sound_system.hpp"
+#include "game/system/scene/comms_scene/morse_code/morse_tone_system.hpp"
 #include "game/system/scene/comms_scene/morse_code/morse_transceiver_system.hpp"
-#include "game/system/scene/comms_scene/radar/blip/blip_blink_system.hpp"
-#include "game/system/scene/comms_scene/radar/blip/blip_death_system.hpp"
-#include "game/system/scene/comms_scene/radar/blip/blip_glitch_system.hpp"
 #include "game/system/scene/comms_scene/radar/radar_artillery_system.hpp"
 #include "game/system/scene/comms_scene/radar/radar_render_system.hpp"
 #include "game/system/scene/comms_scene/radar/radar_stability_system.hpp"
-#include "game/system/scene/comms_scene/radio/radio_sound_system.hpp"
+#include "game/system/scene/comms_scene/radar/blip/blip_blink_system.hpp"
+#include "game/system/scene/comms_scene/radar/blip/blip_death_system.hpp"
+#include "game/system/scene/comms_scene/radar/blip/blip_glitch_system.hpp"
+#include "game/system/scene/comms_scene/radio/radio_emitter_system.hpp"
 #include "game/system/scene/outside_scene/artillery/artillery_aiming_system.hpp"
 #include "game/system/scene/outside_scene/artillery/projectile_hit_system.hpp"
 #include "game/system/scene/outside_scene/receiver/fire_interpreting_system.hpp"
-#include "game/system/scene/outside_scene/receiver/recalibrate_interpreting_system.hpp"
+#include "game/system/scene/outside_scene/receiver/interpret_recalibration_system.hpp"
 #include "game/system/scene/outside_scene/receiver/receiver_code_response_system.hpp"
-#include "game/system/scene/outside_scene/receiver/receiver_interpreting_system.hpp"
+#include "game/system/scene/outside_scene/receiver/receiver_command_processor_system.hpp"
 #include "game/system/shared/anomaly/anomaly_attraction_system.hpp"
 #include "game/system/shared/anomaly/roamer/roamer_behaviour_system.hpp"
 #include "game/system/shared/anomaly/roamer/roamer_kill_system.hpp"
 #include "game/system/shared/anomaly/roamer/roamer_spawning_system.hpp"
 #include "game/system/shared/mechanical/circuit_breaker_system.hpp"
 #include "game/system/shared/mechanical/lever_system.hpp"
-#include "game/system/shared/mechanical/machine_system.hpp"
-#include "game/system/ui/interactive/increment_number_system.hpp"
+#include "game/system/shared/mechanical/machine_power_system.hpp"
+#include "game/system/ui/interactive/increment_value_system.hpp"
 #include "game/utility/color_palette.hpp"
-#include "raylib.h"
-#include <cmath>
 
 #ifdef DEBUG_BUILD
-#include "game/component/core/interactive/click_action_component.hpp"
-#include "game/component/core/rendering/text_component.hpp"
-#include "game/component/core/transform_component.hpp"
+#include <cstring>
+#include <string>
+
 #include "game/component/shared/debug/dev_settings_component.hpp"
 #include "game/component/shared/debug/runtime_readouts_component.hpp"
 #include "game/save/save_game.hpp"
 #include "game/state/scene.hpp"
 #include "game/tag/core/life_cycle/dont_destroy_on_load_tag.hpp"
 #include "game/utility/morse_code.hpp"
-#include <cstdint>
-#include <cstring>
-#include <functional>
-#include <string>
-#include <utility>
 #endif // DEBUG_BUILD
 
 
-Game::Game()
+Game::Game() : renderContext(resourceStore)
 {
 	InitAudioDevice();
-	Save::LoadSettings(settings);
+
+	Load::SettingsFromDisk(settings);
 	pendingSettings = settings;
+
+	registry.ctx().emplace<Nc::Random>();
 };
 
 
 void Game::SetupRenderContext()
 {
-	const int monitor = GetCurrentMonitor();
-	const Nc::Vector2i monitorSize = Nc::Vector2i(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
-	renderContext.windowSize = monitorSize;
-
-	const Nc::Vector2i displaySize = Nc::RENDER_RESOLUTION;
-	const Nc::Vector2i radarSize = RADAR_BOUNDS.max;
+	constexpr Nc::Vector2i displaySize = Nc::RENDER_RESOLUTION;
+	constexpr Nc::Vector2i radarSize = Nc::Vector2i(RADAR_BOUNDS.max);
 
 	renderContext.renderTexture = LoadRenderTexture(displaySize.x, displaySize.y);
 	renderContext.radarRenderTexture = LoadRenderTexture(radarSize.x, radarSize.y);
 
-	// Calculate render scale (preserve aspect ratio, clamp to nearest 0.1)
-	const float scaleX = monitorSize.x / static_cast<float>(displaySize.x);
-	const float scaleY = monitorSize.y / static_cast<float>(displaySize.y);
-	const float scale = std::floorf(std::fminf(scaleX, scaleY) * 10.0f) * 0.1f;
+	const int monitor = GetCurrentMonitor();
+	const Nc::Vector2i monitorSize = Nc::Vector2i(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
+	renderContext.windowSize = monitorSize;
 
+	// Calculate render scale (preserve aspect ratio, clamp to nearest 0.1)
+	const float scaleX = static_cast<float>(monitorSize.x) / static_cast<float>(displaySize.x);
+	const float scaleY = static_cast<float>(monitorSize.y) / static_cast<float>(displaySize.y);
+	const float scale = std::floorf(std::fminf(scaleX, scaleY) * 10.0f) * 0.1f;
 	renderContext.renderScale = scale;
 
 	// Compute scaled display size and centered position
-	const Nc::Vector2i trueDisplaySize = Nc::Vector2i(displaySize * scale);
-	const Nc::Vector2i origin = (monitorSize - trueDisplaySize) * 0.5f;
-
-	renderContext.renderRectangle = {
-		static_cast<float>(origin.x),
-		static_cast<float>(origin.y),
-		static_cast<float>(trueDisplaySize.x),
-		static_cast<float>(trueDisplaySize.y)
-	};
+	const Nc::Vector2f scaledDisplay = Nc::Vector2f(displaySize) * scale;
+	const Nc::Vector2f origin = (Nc::Vector2f(monitorSize) - scaledDisplay) * 0.5f;
+	renderContext.renderRectangle = {origin.x, origin.y, scaledDisplay.x, scaledDisplay.y};
 
 	LightingSystem::Initialize(renderContext.lightingContext, resourceStore);
 }
 
 
 #ifdef DEBUG_BUILD
-void Game::SetupDebug(int args, char* argv[])
+void Game::SetupDebug(const int args, char* argv[])
 {
-	entt::entity entity = registry.create();
+	const entt::entity entity = registry.create();
 
 	registry.emplace<Tag::DontDestroyOnLoad>(entity);
 	registry.emplace<Component::Debug::RuntimeReadouts>(entity);
 
-	Component::Debug::DevSettings& devSettings = registry.emplace<Component::Debug::DevSettings>(entity);
+	auto& [ignoreMainMenu, isMaximizedWindowed, isRadarActiveOnStart] =
+		registry.emplace<Component::Debug::DevSettings>(entity);
 	for (int i = 0; i < args; ++i)
 	{
 		if (strcmp(argv[i], "--ignore-main-menu") == 0)
 		{
-			devSettings.ignoreMainMenu = true;
+			ignoreMainMenu = true;
 			continue;
 		}
 
 		if (strcmp(argv[i], "--maximized-windowed") == 0)
 		{
-			devSettings.isMaximizedWindowed = true;
+			isMaximizedWindowed = true;
 			continue;
 		}
 
 		if (strcmp(argv[i], "--auto-start-radar") == 0)
 		{
-			devSettings.isRadarActiveOnStart = true;
+			isRadarActiveOnStart = true;
 			continue;
 		}
 
@@ -144,12 +142,12 @@ void Game::SetupDebug(int args, char* argv[])
 		}
 	}
 }
-#endif // DEBUG_BUILD
+#endif
 
 
 void Game::Save()
 {
-	Save::GameToDisk(registry, gameState);
+	Save::GameToDisk(registry, StatesContext(anomalyState, gameState));
 }
 
 
@@ -159,48 +157,37 @@ void Game::Load()
 	std::vector<entt::entity> toClean;
     for (entt::entity entity : registry.view<entt::entity>())
     {
-        bool canIgnore = registry.any_of<Tag::DontDestroyOnLoad>(entity);
-        if (!canIgnore)
+	    if (!registry.any_of<Tag::DontDestroyOnLoad>(entity))
             toClean.emplace_back(entity);
     }
-    for (entt::entity entity : toClean) registry.destroy(entity);
+    for (const entt::entity entity : toClean) registry.destroy(entity);
 
     BuildRuntimeScenes();
 
-	Load::GameFromDisk(registry, gameState);
+	Load::GameFromDisk(registry, StatesContext(anomalyState, gameState));
 }
 
 
 void Game::BuildMenuUI()
 {
-	Nc::Vector2f windowSize = Nc::Vector2f(renderContext.windowSize);
+	const Nc::Vector2f windowSize = Nc::Vector2f(renderContext.windowSize);
+	const SceneContext context = SceneContext(registry, resourceStore, gameState);
 
-	Structure::MainMenu::Build(registry, resourceStore, *this, gameState);
-	Structure::SettingsMenu::Build(registry, resourceStore, settings, pendingSettings, gameState, windowSize);
-	Structure::RestartMenu::Build(registry, resourceStore, *this, gameState, windowSize);
+	Structure::MainMenu::Build(context, *this);
+	Structure::SettingsMenu::Build(context, windowSize, settings, pendingSettings);
+	Structure::RestartMenu::Build(context, *this, windowSize);
 
 #ifdef DEBUG_BUILD
-	bool ignoreMainMenu = false;
-	auto view = registry.view<Component::Debug::DevSettings>();
-	for (auto [entity, devSettings] : view.each())
-		ignoreMainMenu = devSettings.ignoreMainMenu;
+	const entt::entity entity = entt::get_single<Component::Debug::DevSettings>(registry);
+	const auto& devSettings = registry.get<Component::Debug::DevSettings>(entity);
 
- 	if (!ignoreMainMenu) 
-		Structure::MainMenu::Open(registry, gameState);
+	if (!devSettings.ignoreMainMenu) Structure::MainMenu::Open(context);
 	else
 	{
 		// Load a mock game state for testing.
 		gameState.currentScene = CommsRoom;
 		BuildRuntimeScenes();
 	}
-
-	entt::entity entity = registry.create();
-
-	registry.emplace<Component::UI::Transform>(entity, Nc::Vector2f(0.06f, 0.9f), Nc::Vector2f::Scale(0.5f), Nc::Vector2f(180.0f, 32.0f));
-	registry.emplace<Component::Text>(entity, "SAVE STATE", Palette::RADAR_COLOR);
-	
-	std::function<void()> onClick = [&registry = registry, &gameState = gameState]() { Save::GameToDisk(registry, gameState); };
-	registry.emplace<Component::Action::Click>(entity, std::move(onClick));
 
 #else
 	MainMenu::Open(registry, gameState);
@@ -210,36 +197,41 @@ void Game::BuildMenuUI()
 
 void Game::BuildRuntimeScenes()
 {
-	Entity::MoveTransition::Create(registry, renderContext, gameState);
+	const SceneContext sceneContext = SceneContext(registry, resourceStore, gameState);
+
+	Entity::MoveTransition::Create(sceneContext, renderContext);
 	Entity::AmbientSound::Create(registry);
 
-	Structure::CommsScene::Build(registry, resourceStore, renderContext, gameState);
-	Structure::DeskScene::Build(registry, resourceStore, renderContext, gameState);
-	Structure::DoorwayScene::Build(registry, resourceStore, renderContext, gameState);
-	Structure::OutsideScene::Build(registry, resourceStore, gameState);
+	const BuildContext buildContext = BuildContext(registry, resourceStore, renderContext, gameState);
+
+	Structure::CommsScene::Build(buildContext);
+	Structure::DeskScene::Build(buildContext);
+	Structure::DoorwayScene::Build(buildContext);
+	Structure::OutsideScene::Build(buildContext);
 }
 
 
-void Game::SetupWindow() const
+void Game::SetupWindow()
 {
 	SetConfigFlags(FLAG_VSYNC_HINT);
 
-	Nc::Vector2i monitorSize = Nc::Vector2i(GetMonitorWidth(0), GetMonitorHeight(0));
+	const auto monitorSize = Nc::Vector2i(GetMonitorWidth(0), GetMonitorHeight(0));
 	InitWindow(monitorSize.x, monitorSize.y, "Negative Contact");
 
 #ifdef DEBUG_BUILD
 	SetExitKey(KEY_BACKSPACE);
 	
-	bool isMaximizedWindowed = false;
-	auto view = registry.view<Component::Debug::DevSettings>();
-	for (auto [entity, devSettings] : view.each())
-		isMaximizedWindowed = devSettings.isMaximizedWindowed;
+	const entt::entity entity = entt::get_single<Component::Debug::DevSettings>(registry);
+	const auto& devSettings = registry.get<Component::Debug::DevSettings>(entity);
 
-	if (isMaximizedWindowed)
+	if (!devSettings.isMaximizedWindowed)
+		SetWindowState(FLAG_FULLSCREEN_MODE);
+	else
 	{
 		SetWindowState(FLAG_WINDOW_RESIZABLE);
 		MaximizeWindow();
-	} else SetWindowState(FLAG_FULLSCREEN_MODE);
+	}
+
 #else
 	SetExitKey(KEY_NULL);
 	SetWindowState(FLAG_FULLSCREEN_MODE);
@@ -249,6 +241,7 @@ void Game::SetupWindow() const
 
 void Game::Shutdown()
 {
+	// TODO: Add safety features
 	CloseAudioDevice();
 	CloseWindow();
 }
@@ -264,20 +257,23 @@ bool Game::ShouldRun() const
 
 void Game::Update(float deltaTime)
 {
+	constexpr float NIGHT_END_HOUR = GameState::NIGHT_RANGE.x + 1.0f;
+
 #ifdef DEBUG_BUILD
 	if (IsKeyPressed(KEY_PERIOD))
 	{
-		Nc::Vector2f spawnPoint = RoamerSpawningSystem::GenerateRandomSpawnPoint();
-		RoamerSpawningSystem::SpawnRoamer(registry, resourceStore, spawnPoint, gameState.anomalyState);
+		auto& randomService = registry.ctx().get<Nc::Random>();
+		const Nc::Vector2f spawnPoint = RoamerSpawningSystem::GenerateRandomSpawnPoint(randomService);
+		RoamerSpawningSystem::SpawnRoamer({registry, resourceStore, gameState, deltaTime}, spawnPoint, anomalyState);
 	}
 	
-	if (IsKeyPressed(KEY_MINUS)) ++gameState.anomalyState.intensityLevel;
-	if (IsKeyPressed(KEY_EQUAL)) --gameState.anomalyState.intensityLevel;
+	if (IsKeyPressed(KEY_MINUS)) ++anomalyState.intensityLevel;
+	if (IsKeyPressed(KEY_EQUAL)) --anomalyState.intensityLevel;
 	
-	if (IsKeyPressed(KEY_NINE)) gameState.anomalyState.attractionPercentage += 5.0f;
-	if (IsKeyPressed(KEY_ZERO)) gameState.anomalyState.attractionPercentage -= 5.0f;
+	if (IsKeyPressed(KEY_NINE)) anomalyState.attractionPercentage += 5.0f;
+	if (IsKeyPressed(KEY_ZERO)) anomalyState.attractionPercentage -= 5.0f;
 
-	auto view = registry.view<Component::Debug::RuntimeReadouts>();
+	const auto view = registry.view<Component::Debug::RuntimeReadouts>();
 	for (auto [entity, readouts] : view.each())
 	{
 		if (IsKeyPressed(KEY_M)) readouts.timeScale += 0.5f;
@@ -285,8 +281,11 @@ void Game::Update(float deltaTime)
 		deltaTime *= readouts.timeScale;
 	}
 
-	if (IsKeyPressed(KEY_P)) Game::Death(registry, gameState);
+	if (IsKeyPressed(KEY_P)) Death({registry,resourceStore,gameState});
 #endif
+
+	// Reset cursor type.
+	gameState.cursor = Nc::Cursor::Standard;
 
 	if (gameState.isPaused) return;
 	gameState.time += deltaTime;
@@ -296,12 +295,11 @@ void Game::Update(float deltaTime)
 	constexpr float HOUR_INCREASE_RATE = 1.0f / (GameState::HOUR_MINUTES * 60.0f);
 	constexpr float HOURS_IN_DAY = 24.0f;
 
-	float oldHour = gameState.hour;
-	float newHour = std::fmodf(gameState.hour + HOUR_INCREASE_RATE * deltaTime, HOURS_IN_DAY);
+	const float oldHour = gameState.hour;
+	const float newHour = std::fmodf(gameState.hour + HOUR_INCREASE_RATE * deltaTime, HOURS_IN_DAY);
 	gameState.hour = newHour;
 
-	float nightEndHour = GameState::NIGHT_RANGE.x + 1.0f;
-	if (oldHour < nightEndHour && newHour >= nightEndHour)
+	if (oldHour < NIGHT_END_HOUR && newHour >= NIGHT_END_HOUR)
 		gameState.survivedNight = true;
 }
 
@@ -309,37 +307,46 @@ void Game::Update(float deltaTime)
 void Game::UpdateRegistries(float deltaTime)
 {
 #ifdef DEBUG_BUILD
-	auto view = registry.view<Component::Debug::RuntimeReadouts>();
-	for (auto [entity, readouts] : view.each())
-		deltaTime *= readouts.timeScale;
+	const entt::entity debugEntity = entt::get_single<Component::Debug::RuntimeReadouts>(registry);
+	const auto& readouts = registry.get<Component::Debug::RuntimeReadouts>(debugEntity);
+	deltaTime *= readouts.timeScale;
 #endif
 
-	InputActionSystem::Update(registry, gameState);
-	bool buttonHovering = ClickSystem::Update(registry, gameState, renderContext);
-	bool dragHovering = DragActionSystem::Update(registry, gameState, renderContext);
-	IncrementNumberSystem::Update(registry);
-	AmbientSoundEmitterSystem::Update(registry, gameState, resourceStore, deltaTime);
-	TweenSystem::Update(registry, gameState, deltaTime);
-	SoundEmitterSystem::Update(registry, deltaTime);
+	const auto context = SystemContext(registry, resourceStore, gameState, deltaTime);
 
-	MouseCursor cursor = (buttonHovering || dragHovering) ? MOUSE_CURSOR_POINTING_HAND : MOUSE_CURSOR_DEFAULT;
+	System::Action::Input::Update(context);
+	System::Action::Click::Update(context, renderContext);
+	System::Action::Drag::Update(context, renderContext);
+	System::UI::IncrementValue::Update(registry);
+	System::Audio::MainAmbience::Update(context);
+	System::Tween::Update(context);
+	System::Audio::Emitter::Update(context);
+
+	MouseCursor cursor = MOUSE_CURSOR_DEFAULT;
+	switch (gameState.cursor)
+	{
+	case Nc::Cursor::Clickable:
+		cursor = MOUSE_CURSOR_POINTING_HAND;
+		break;
+	default: break;
+	}
 	SetMouseCursor(cursor);
 
 	if (gameState.isPaused) return;
 
-	MorseTransceiverSystem::Update(registry, gameState, settings.Settings::Morse, deltaTime);
-	MorseMonitorDisplaySystem::Update(registry, settings.Settings::Morse, deltaTime);
-	MorseSoundEmitterSystem::Update(registry, gameState.currentScene, deltaTime);
-	MachineSystem::Update(registry, gameState.anomalyState, deltaTime);
-	RadarStabilitySystem::Update(registry, gameState, gameState.time, deltaTime);
-	RecalibrateInterpretingSystem::Update(registry, deltaTime);
-	BlipDeathSystem::Update(registry);
-	BlipBlinkSystem::Update(registry);
-	BlipGlitchSystem::Update(registry, gameState.time, deltaTime);
-	RadarArtillerySystem::Update(registry, deltaTime);
+	System::Morse::Transceiver::Update(context, anomalyState, settings.morseSettings);
+	System::Morse::MonitorDisplay::Update(context, settings.morseSettings);
+	System::Morse::Tone::Update(context);
+	System::Receiver::Interpret::Recalibration::Update(registry, deltaTime);
+	System::Machine::PowerUsage::Update(context, anomalyState);
+	System::Radar::Stability::Update(context, anomalyState);
+	System::Radar::Artillery::Update(context);
+	System::Blip::Death::Update(registry);
+	System::Blip::Blink::Update(registry);
+	System::Blip::Glitch::Update(context);
 	ReceiverInterpretingSystem::Update(registry, resourceStore);
 	ReceiverCodeResponseSystem::Update(registry, resourceStore);
-	RadioSoundEmitterSystem::Update(registry, deltaTime);
+	System::Radio::Emitter::Update(context);
 	LeverSystem::Update(registry, deltaTime);
 	CircuitBreakerSystem::Update(registry, gameState.anomalyState, deltaTime);
 	ArtilleryAimingSystem::Update(registry, deltaTime);
@@ -355,7 +362,7 @@ void Game::UpdateRegistries(float deltaTime)
 void Game::DrawGame(float deltaTime)
 {
 #ifdef DEBUG_BUILD
-	auto view = registry.view<Component::Debug::RuntimeReadouts>();
+	const auto view = registry.view<Component::Debug::RuntimeReadouts>();
 	for (auto [entity, readouts] : view.each())
 		deltaTime *= readouts.timeScale;
 #endif
@@ -371,6 +378,8 @@ void Game::DrawGame(float deltaTime)
 	BeginTextureMode(renderContext.renderTexture);
 	ClearBackground(BLANK);
 
+	// TODO: Render light at same game size.
+
 	const Shader& shader = resourceStore.GetShader("assets/lighting.fs");
 	LightingSystem::Update(registry, renderContext.lightingContext, shader, gameState, cameraPosition, deltaTime);
 	RenderingSystem::DrawScreen(registry, renderContext, gameState, cameraPosition);
@@ -381,7 +390,7 @@ void Game::DrawGame(float deltaTime)
 	EndTextureMode();
 
 	BeginDrawing();
-	ClearBackground(Palette::BACKGROUND_COLOR);
+	ClearBackground(Color(Palette::BACKGROUND_COLOR));
 
 	BeginShaderMode(shader);
 	DrawRenderTexture();
@@ -397,22 +406,22 @@ void Game::DrawGame(float deltaTime)
 }
 
 
-void Game::Death(entt::registry& registry, GameState& gameState)
+void Game::Death(const SceneContext& context)
 {
-	Structure::RestartMenu::Open(registry, gameState);
+	Structure::RestartMenu::Open(context);
 }
 
 
 void Game::DrawRenderTexture() const
 {
-	Nc::Vector2f displaySize = Nc::Vector2f(Nc::RENDER_RESOLUTION);
-	Rectangle source { 0, 0, displaySize.x, -displaySize.y };
+	constexpr auto DISPLAY_SIZE = Nc::Vector2f(Nc::RENDER_RESOLUTION);
+	constexpr Rectangle SOURCE { 0, 0, DISPLAY_SIZE.x, -DISPLAY_SIZE.y };
 
 	DrawTexturePro(
 		renderContext.renderTexture.texture,
-		source,
+		SOURCE,
 		renderContext.renderRectangle,
-		Nc::Vector2f::Zero(),
+		Vector2(Nc::Vector2f::Zero()),
 		0.0f,
 		WHITE
 	);
@@ -422,7 +431,7 @@ void Game::DrawRenderTexture() const
 #ifdef DEBUG_BUILD
 void Game::DrawDebugUi()
 {
-	auto view = registry.view<Component::Debug::RuntimeReadouts>();
+	const auto view = registry.view<Component::Debug::RuntimeReadouts>();
 	for (auto [entity, readouts] : view.each())
 	{
 
@@ -433,7 +442,7 @@ void Game::DrawDebugUi()
 		for (const int16_t fps : readouts.fpsHistory)
 			fpsTotal += fps;
 
-		int averageFps = fpsTotal / 32;
+		const int averageFps = fpsTotal / 32;
 		std::string text = "FPS: " + std::to_string(averageFps);
 		DrawText(text.c_str(), 32, 32, 32, GREEN);
 

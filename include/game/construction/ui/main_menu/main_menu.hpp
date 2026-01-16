@@ -1,8 +1,6 @@
 #pragma once
-#include "entt/entity/fwd.hpp"
+#include "game/contexts/scene_context.hpp"
 class Game;
-struct GameState;
-namespace Nc { class ResourceStore; };
 
 
 namespace Structure
@@ -11,16 +9,10 @@ namespace Structure
 class MainMenu final
 {
 public:
-	static void Build(
-		entt::registry& registry, 
-		Nc::ResourceStore& resourceStore,
-		Game& game, 
-		GameState& gameState
-	) noexcept;
-
-
-	static void Open(entt::registry& registry, GameState& gameState) noexcept;
-	static void Close(entt::registry& registry, GameState& gameState) noexcept;
+	// ------ Functions ------
+	static void Build(const SceneContext& context, Game& game) noexcept;
+	static void Open(const SceneContext& context) noexcept;
+	static void Close(const SceneContext& context) noexcept;
 
 };
 

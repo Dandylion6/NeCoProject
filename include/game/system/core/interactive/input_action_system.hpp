@@ -1,14 +1,16 @@
 #pragma once
-#include "entt/entity/fwd.hpp"
-struct GameState;
+struct SystemContext;
 
 
-class InputActionSystem 
+namespace System::Action
+{
+
+class Input final
 {
 public:
-    static void Update(
-        entt::registry& registry,
-        GameState& gameState
-    );
+    // ------ Functions ------
+    static void Update(const SystemContext& context);
 
 };
+
+}

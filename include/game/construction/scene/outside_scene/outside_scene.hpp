@@ -1,7 +1,5 @@
 #pragma once
-#include "entt/entity/fwd.hpp"
-struct GameState;
-namespace Nc { class ResourceStore; };
+struct BuildContext;
 
 
 namespace Structure
@@ -10,7 +8,8 @@ namespace Structure
 class OutsideScene final
 {
 public:
-	static void Build(entt::registry& registry, Nc::ResourceStore& resourceStore, GameState& gameState) noexcept;
+	// ------ Functions ------
+	static void Build(const BuildContext& context) noexcept;
 
 };
 

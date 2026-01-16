@@ -24,15 +24,14 @@ struct Vector2i final
 	// ------ Constructors ------
 
 	constexpr Vector2i() = default;
-	constexpr Vector2i(int x, int y) : x(x), y(y) { };
-	constexpr Vector2i(Vector2 vector) noexcept 
-		: x(static_cast<int>(vector.x)), y(static_cast<int>(vector.y))
-	{ };
+	constexpr Vector2i(const int x, const int y) : x(x), y(y) { };
+	explicit constexpr Vector2i(const Vector2 vector) noexcept
+		: x(static_cast<int>(vector.x)), y(static_cast<int>(vector.y)) { };
 
 
 	// ------ Conversion ------
 
-	constexpr operator Vector2() const noexcept { return { static_cast<float>(x), static_cast<float>(y) }; };
+	explicit constexpr operator Vector2() const noexcept { return { static_cast<float>(x), static_cast<float>(y) }; };
 
 
 	// ------ Utility ------
@@ -40,16 +39,19 @@ struct Vector2i final
 	/**
 	 * @brief Returns a zero vector `(0, 0)`.
 	 */
-	constexpr static Vector2i Zero() noexcept { return Vector2i(0, 0); };
+	constexpr static Vector2i Zero() noexcept { return {0, 0}; };
 
 
 	// ------ Operations ------
 
-	constexpr Vector2i operator-(const Vector2i other) const { return Vector2i(x - other.x, y - other.y); };
-	constexpr Vector2i operator*(const int factor) const { return Vector2i(x * factor, y * factor); };
+	constexpr Vector2i operator-(const Vector2i other) const { return {x - other.x, y - other.y}; };
+	constexpr Vector2i operator*(const int factor) const { return {x * factor, y * factor}; };
 	constexpr Vector2i operator*(const float factor) const 
-	{ 
-		return Vector2i(static_cast<int>(x * factor), static_cast<int>(y * factor)); 
+	{
+		return {
+			static_cast<int>(static_cast<float>(x) * factor),
+			static_cast<int>(static_cast<float>(y) * factor)
+		};
 	};
 };
 
@@ -69,18 +71,19 @@ struct Vector2f final
 	// ------ Constructors ------
 
 	constexpr Vector2f() = default;
-	constexpr Vector2f(float x, float y) noexcept : x(x), y(y) { };
-	constexpr Vector2f(int x, int y) noexcept 
-		: x(static_cast<float>(x)), y(static_cast<float>(y)) 
-	{ };
-	
-	constexpr Vector2f(Vector2 vector) noexcept : x(vector.x), y(vector.y) { };
+	constexpr Vector2f(const float x, const float y) noexcept : x(x), y(y) { };
+	constexpr Vector2f(const int x, const int y) noexcept
+		: x(static_cast<float>(x)), y(static_cast<float>(y)) { };
+
+	explicit constexpr Vector2f(const Vector2 vector) noexcept : x(vector.x), y(vector.y) { };
+	explicit  constexpr Vector2f(const Vector2i vector) noexcept :
+		x(static_cast<float>(vector.x)), y(static_cast<float>(vector.y)) { };
 
 
 	// ------ Conversion ------
-	
-	constexpr operator Vector2() const noexcept { return { x, y }; }
-	constexpr operator Vector2i() const noexcept { return Vector2i(static_cast<int>(x), static_cast<int>(y)); };
+
+	explicit constexpr operator Vector2() const noexcept { return { x, y }; }
+	explicit constexpr operator Vector2i() const noexcept { return {static_cast<int>(x), static_cast<int>(y)}; };
 
 
 	// ------ Utility ------
@@ -88,67 +91,67 @@ struct Vector2f final
 	/**
 	 * @brief Returns a zero vector (0.0f, 0.0f).
 	 */
-	constexpr static Vector2f Zero() noexcept { return Vector2f(0.0f, 0.0f); };
+	constexpr static Vector2f Zero() noexcept { return {0.0f, 0.0f}; };
 	
 	/**
 	 * @brief Returns an upward unit vector (0.0f, 1.0f).
 	 */
-	constexpr static Vector2f Up() noexcept { return Vector2f(0.0f, 1.0f); };
+	constexpr static Vector2f Up() noexcept { return {0.0f, 1.0f}; };
 	
 	/**
 	 * @brief Returns a downward unit vector (0.0f, -1.0f).
 	 */
-	constexpr static Vector2f Down() noexcept { return Vector2f(0.0f, -1.0f); };
+	constexpr static Vector2f Down() noexcept { return {0.0f, -1.0f}; };
 
 	/**
 	 * @brief Returns a rightward unit vector (1.0f, 0.0f).
 	 */
-	constexpr static Vector2f Right() noexcept { return Vector2f(1.0f, 0.0f); };
+	constexpr static Vector2f Right() noexcept { return {1.0f, 0.0f}; };
 
 	/**
 	 * @brief Returns an upward vector with a given length.
 	 * 
 	 * @param length Desired vector length.
 	 */
-	constexpr static Vector2f Up(const float length) noexcept { return Vector2f(0.0f, length); };
+	constexpr static Vector2f Up(const float length) noexcept { return {0.0f, length}; };
 
 	/**
 	 * @brief Returns a downward vector with a given length.
 	 * 
 	 * @param length Desired vector length.
 	 */
-	constexpr static Vector2f Down(const float length) noexcept { return Vector2f(0.0f, -length); };
+	constexpr static Vector2f Down(const float length) noexcept { return {0.0f, -length}; };
 
 	/**
 	 * @brief Returns a rightward vector with a given length.
 	 * 
 	 * @param length Desired vector length.
 	 */
-	constexpr static Vector2f Right(const float length) noexcept { return Vector2f(length, 0.0f); };
+	constexpr static Vector2f Right(const float length) noexcept { return {length, 0.0f}; };
 
 	/**
 	 * @brief Returns a leftward vector with a given length.
 	 * 
 	 * @param length Desired vector length.
 	 */
-	constexpr static Vector2f Left(const float length) noexcept { return Vector2f(-length, 0.0f); };
+	constexpr static Vector2f Left(const float length) noexcept { return {-length, 0.0f}; };
 
 	/**
 	 * @brief Returns a uniform scale vector where x = y = scale.
 	 * 
 	 * @param scale Scale factor.
 	 */
-	constexpr static Vector2f Scale(const float scale) noexcept { return Vector2f(scale, scale); };
+	constexpr static Vector2f Scale(const float scale) noexcept { return {scale, scale}; };
 
 
 	// ------ Operations ------
 
-	constexpr Vector2f operator-() const { return Vector2f(-x, -y); };
-	constexpr Vector2f operator+(const Vector2f other) const { return Vector2f(x + other.x, y + other.y); };
-	constexpr Vector2f operator-(const Vector2f other) const { return Vector2f(x - other.x, y - other.y); };
-	constexpr Vector2f operator*(const float factor) const  { return Vector2f(x * factor, y * factor); };
-	constexpr Vector2f operator/(const Vector2f other) const { return Vector2f(x / other.x, y / other.y); };
-	constexpr Vector2f operator/(const float factor) const { return Vector2f(x / factor, y / factor); };
+	constexpr Vector2f operator-() const { return {-x, -y}; };
+	constexpr Vector2f operator+(const Vector2f other) const { return {x + other.x, y + other.y}; };
+	constexpr Vector2f operator-(const Vector2f other) const { return {x - other.x, y - other.y}; };
+	constexpr Vector2f operator*(const float factor) const  { return {x * factor, y * factor}; };
+	constexpr Vector2f operator/(const Vector2f other) const { return {x / other.x, y / other.y}; };
+	constexpr Vector2f operator/(const float factor) const { return {x / factor, y / factor}; };
 	constexpr void operator+=(const Vector2f other) noexcept { x += other.x, y += other.y; };
 	constexpr void operator-=(const Vector2f other) noexcept { x -= other.x, y -= other.y; };
 	constexpr void operator*=(const float factor) noexcept { x *= factor, y *= factor; };

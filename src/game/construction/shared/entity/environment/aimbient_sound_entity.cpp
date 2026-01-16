@@ -18,7 +18,7 @@ entt::entity Entity::AmbientSound::Create(entt::registry& registry) noexcept
 	registry.emplace<Tag::AmbientSound>(entity);
 
 	registry.emplace<Component::Transform>(entity, NullScene, POSITION);
-	registry.emplace<Component::LoopedSoundEmitter>(entity);
+	registry.emplace<Component::LoopedAudio>(entity);
 
 	return entity;
 }

@@ -15,118 +15,125 @@
 #include <cmath>
 #include <cstdint>
 
+#include "core/runtime/entity_helpers.hpp"
+#include "game/contexts/system_context.hpp"
+
 #ifdef  DEBUG_BUILD
 #include "game/game.hpp"
-#include "game/debug/debug_context.hpp"
+#include "game/component/shared/debug/runtime_readouts_component.hpp"
 #endif
 
 
-void RadarStabilitySystem::Update(
-	entt::registry& registry, 
-	GameState& gameState, 
-	float time, 
-	float deltaTime
-) noexcept
+void System::Radar::Stability::Update(const SystemContext& context, AnomalyState& anomaly)
 {
-	// @brief The probablity of spotanous breakdown of the radar every minute.
-	constexpr Nc::Vector2f BREAKDOWN_CHANCE_PER_MINUTE_RANGE = Nc::Vector2f(3.0f, 64.0f);
-	constexpr Nc::Vector2f BREAKDOWN_STABILITY_RANGE = Nc::Vector2f(Component::Radar::STABLE_LEVEL, Component::Radar::UNSTABLE_LEVEL);
-	constexpr float MINUTE_TO_SECOND = 1.0f / 60.0f;
+	const entt::entity entity = entt::get_single<Component::Radar>(context.registry);
+	auto& radar = context.registry.get<Component::Radar>(entity);
+	auto& toggle = context.registry.get<Component::Action::Toggle>(entity);
 
-	auto view = registry.view<Component::Radar, Component::Action::Toggle>();
-	for (auto [entity, radar, toggle] : view.each())
-	{
 #ifdef DEBUG_BUILD
-		if (IsKeyPressed(KEY_K)) radar.stability = std::fminf(radar.stability + 5.0f, 100.0f);
-		if (IsKeyPressed(KEY_L)) radar.stability = std::fmaxf(radar.stability - 5.0f, 0.0f);
-		Game::debugContext.radarStabilityPercentage = radar.stability;
+	if (IsKeyPressed(KEY_K)) radar.stability = std::fminf(radar.stability + 5.0f, 100.0f);
+	if (IsKeyPressed(KEY_L)) radar.stability = std::fmaxf(radar.stability - 5.0f, 0.0f);
+
+	const entt::entity debugEntity = entt::get_single<Component::Debug::RuntimeReadouts>(context.registry);
+	auto& readouts = context.registry.get<Component::Debug::RuntimeReadouts>(debugEntity);
+	readouts.radarStabilityPercentage = radar.stability;
 #endif
 
-		if (toggle.state != On) continue;
-		if (!GameState::IsNight(gameState.hour)) continue;
+	if (toggle.state != On) return;;
+	if (!GameState::IsNight(context.game.hour)) return;
 
-		float degradationValue = GetDegradationValue(gameState.anomalyState.attractionPercentage);
-		radar.stability -= degradationValue * deltaTime;
+	const float degradationValue = GetDegradationValue(anomaly.attractionPercentage);
+	radar.stability -= degradationValue * context.deltaTime;
 
-		radar.breakdownCheckTimer += deltaTime;
-		if (radar.breakdownCheckTimer >= 1.0f)
-		{
-			// Check for breakdown
-			radar.breakdownCheckTimer = 0.0f;
-			float deterministcValue = Nc::Random::Range(0.0f, 100.0f);
-			float stabilityCurve = Nc::Math::SineInOut(radar.stability * 0.01f) * 100.0f;
+	radar.breakdownCheckTimer += context.deltaTime;
+	if (radar.breakdownCheckTimer >= 1.0f)
+		CheckBreakdown(context.registry, radar);
 
-			float breakdownMapped = Nc::Math::ClampedRemap(BREAKDOWN_STABILITY_RANGE, BREAKDOWN_CHANCE_PER_MINUTE_RANGE, stabilityCurve);
-			float breakdownChance = breakdownMapped * MINUTE_TO_SECOND;
-
-			if (deterministcValue <= breakdownChance) 
-				radar.stability = 0.0f;
-		}
-
-		// TODO: Add effects for breakdown.
-		// Turns off the radar if stability is 0.
-		if (radar.stability <= 0.0f)
-		{
-			toggle.state = Disabled;
-			continue;
-		}
-
-		bool spawnNextGlitch = radar.nextGlitchSpawnSeconds == 0.0f;
-		if (spawnNextGlitch) SetRandomGlitchSpawnInterval(radar);
-		UpdateBlipStability(registry, gameState.anomalyState, radar, time);
+	// TODO: Add effects for breakdown.
+	// Turns off the radar if stability is 0.
+	if (radar.stability <= 0.0f)
+	{
+		toggle.state = Disabled;
+		return;
 	}
+
+	if (radar.nextGlitchSpawnSeconds <= 0.0f) SetRandomGlitchSpawnInterval(context.registry, radar);
+	UpdateBlipStability(context, anomaly, radar);
 }
 
 
-void RadarStabilitySystem::Restart(
-	entt::registry& registry, 
-	entt::entity entity
-) noexcept
+void System::Radar::Stability::Restart(entt::registry& registry, const entt::entity entity)
 {
-	Component::Radar& radar = registry.get<Component::Radar>(entity);
+	auto& radar = registry.get<Component::Radar>(entity);
 	radar.stability = Component::Radar::STABLE_LEVEL;
 }
 
 
-void RadarStabilitySystem::UpdateBlipStability(
-	entt::registry& registry, 
-	AnomalyState& anomalyState,
-	Component::Radar& machine, 
-	float time
-) noexcept
+void System::Radar::Stability::CheckBreakdown(entt::registry& registry, Component::Radar& radar)
 {
-	constexpr float STABILITY_REDUCTION = 2.0f;
-	constexpr float ATTRACTION_GAIN = 1.2f;
+	/**
+	 * @brief The probability of spontaneous breakdown of the radar every minute.
+	 */
+	constexpr Nc::Vector2f BREAKDOWN_CHANCE_PER_MINUTE_RANGE = Nc::Vector2f(3.0f, 64.0f);
+	constexpr Nc::Vector2f BREAKDOWN_STABILITY_RANGE = Nc::Vector2f(
+		Component::Radar::STABLE_LEVEL,
+		Component::Radar::UNSTABLE_LEVEL
+	);
+	constexpr float MINUTE_TO_SECOND = 1.0f / 60.0f;
 
-	bool isStable = machine.stability >= Component::Radar::STABLE_LEVEL;
-	float secondsSinceLastGlitch = time - machine.lastGlitchTime;
+	radar.breakdownCheckTimer = 0.0f;
+
+	auto& randomService = registry.ctx().get<Nc::Random>();
+
+	const float deterministicValue = randomService.RangeFloat(0.0f, 100.0f);
+	const float stabilityCurve = Nc::Math::SineInOut(radar.stability * 0.01f) * 100.0f;
+
+	const float breakdownMapped = Nc::Math::ClampedRemap(
+		BREAKDOWN_STABILITY_RANGE,
+		BREAKDOWN_CHANCE_PER_MINUTE_RANGE,
+		stabilityCurve
+	);
+	const float breakdownChance = breakdownMapped * MINUTE_TO_SECOND;
+
+	if (deterministicValue <= breakdownChance)
+		radar.stability = 0.0f;
+}
+
+
+void System::Radar::Stability::UpdateBlipStability(
+	const SystemContext& context,
+	AnomalyState& anomaly,
+	Component::Radar& radar
+)
+{
+	const bool isStable = radar.stability >= Component::Radar::STABLE_LEVEL;
+	const float secondsSinceLastGlitch = context.game.time - radar.lastGlitchTime;
 
 	bool spawnNewGlitch = false;
-	if (!isStable && secondsSinceLastGlitch >= machine.nextGlitchSpawnSeconds)
+	if (!isStable && secondsSinceLastGlitch >= radar.nextGlitchSpawnSeconds)
 	{
-		SetRandomGlitchSpawnInterval(machine);
+		SetRandomGlitchSpawnInterval(context.registry, radar);
 		spawnNewGlitch = true;
 	}
 
 #ifdef DEBUG_BUILD
-	bool hasCommandGliched = IsKeyPressed(KEY_G);
-#endif // DEBUG_BUILD
+	bool commandGlitched = IsKeyPressed(KEY_G);
+#endif
 
 	uint8_t glitchCount = 0u;
-	auto view = registry.view<Component::Blip>();
+	const auto view = context.registry.view<Component::Blip>();
 	for (auto [entity, blip] : view.each())
 	{
+		constexpr float ATTRACTION_GAIN = 1.2f;
+		constexpr float STABILITY_REDUCTION = 2.0f;
+
 #ifdef DEBUG_BUILD
-		if (hasCommandGliched)
+		if (commandGlitched && blip.state == Component::Blip::Stable)
 		{
-			if (blip.state == Component::Blip::Stable) 
-			{
-				hasCommandGliched = false;
-				RadarStabilitySystem::GlitchBlip(registry, machine, blip, entity, time);
-				break;
-			}
+			GlitchBlip(context, radar, blip, entity);
+			commandGlitched = false;
 		}
-#endif // DEBUG_BUILD
+#endif
 
 		if (isStable)
 		{
@@ -142,87 +149,97 @@ void RadarStabilitySystem::UpdateBlipStability(
 		}
 
 		if (!spawnNewGlitch) continue;
-		if (!ShouldBlipGlitch(blip, machine, secondsSinceLastGlitch, view.size())) continue;
+		if (!ShouldBlipGlitch(context.registry, view.size())) continue;
 
-		anomalyState.attractionPercentage += ATTRACTION_GAIN;
-		machine.stability -= STABILITY_REDUCTION;
+		anomaly.attractionPercentage += ATTRACTION_GAIN;
+		radar.stability -= STABILITY_REDUCTION;
 
-		machine.lastGlitchTime = time;
+		radar.lastGlitchTime = context.game.time;
 		spawnNewGlitch = false;
-		RadarStabilitySystem::GlitchBlip(registry, machine, blip, entity, time);
+		GlitchBlip(context, radar, blip, entity);
 	}
 
-	machine.glitchCount = glitchCount;
+	radar.glitchCount = glitchCount;
 }
 
 
-bool RadarStabilitySystem::ShouldBlipGlitch(
-	Component::Blip& blip, 
-	Component::Radar& machine, 
-	float secondsSinceLastGlitch, 
-	size_t blipCount
-) noexcept
+bool System::Radar::Stability::ShouldBlipGlitch(entt::registry& registry, const size_t blipCount)
 {
-	float deterministicValue = Nc::Random::Range(0.0f, 100.0f);
-	float chance = 100.0f / static_cast<float>(blipCount);
+	auto& randomService = registry.ctx().get<Nc::Random>();
+
+	const float deterministicValue = randomService.RangeFloat(0.0f, 100.0f);
+	const float chance = 100.0f / static_cast<float>(blipCount);
 	return deterministicValue < chance;
 }
 
 
-float RadarStabilitySystem::GetDegradationValue(float attractionPercentage) noexcept
+float System::Radar::Stability::GetDegradationValue(const float attractionPercentage)
 {
-	/// @brief The maximum duration going from 100% to 0% stability in minutes.
+	/**
+	 * @brief The maximum duration going from 100% to 0% stability in minutes.
+	 */
 	constexpr float MAX_DECAY_DURATION_MINUTES = 29.0f;
-	/// @brief The minimum duration going from 100% to 0% stability in minutes.
+
+	/**
+	 * @brief The minimum duration going from 100% to 0% stability in minutes.
+	 */
 	constexpr float MIN_DECAY_DURATION_MINUTES = 5.6f;
 
 	constexpr float MAX_DECAY_RATE = 100.0f / MAX_DECAY_DURATION_MINUTES;
 	constexpr float MIN_DECAY_RATE = 100.0f / MIN_DECAY_DURATION_MINUTES;
 	constexpr float MINUTE_TO_SECONDS = 1.0f / 60.0f;
 
-	float curveFactor = Nc::Math::SineOut(attractionPercentage * 0.01f);
-	float decayMinutes = Nc::Math::Lerp(MAX_DECAY_RATE, MIN_DECAY_RATE, curveFactor);
+	const float curveFactor = Nc::Math::SineOut(attractionPercentage * 0.01f);
+	const float decayMinutes = Nc::Math::Lerp(MAX_DECAY_RATE, MIN_DECAY_RATE, curveFactor);
 	return decayMinutes * MINUTE_TO_SECONDS;
 }
 
 
-void RadarStabilitySystem::GlitchBlip(
-	entt::registry& registry, 
-	Component::Radar& radar, 
-	Component::Blip& blip, 
-	entt::entity entity, 
-	float time
-) noexcept
+void System::Radar::Stability::GlitchBlip(
+	const SystemContext& context,
+	const Component::Radar& radar,
+	Component::Blip& blip,
+	const entt::entity entity
+)
 {
-	int determiniticValue = Nc::Random::Range(0, 100);
+	auto& randomService = context.registry.ctx().get<Nc::Random>();
+
+	const int deterministicValue = randomService.RangeInt(0, 100);
 	if (radar.stability > Component::Radar::HEALTHY_LEVEL)
 	{
-		BlipGlitchSystem::JumbleBlip(registry, entity, blip, radar.stability);
+		BlipGlitchSystem::JumbleBlip(context.registry, entity, blip, radar.stability);
 		return;
 	}
 
 	if (radar.stability > Component::Radar::UNSTABLE_LEVEL)
 	{
-		if (determiniticValue > 30) BlipGlitchSystem::GlitchBlipText(registry, entity, blip, radar.stability);
-		else BlipGlitchSystem::JumbleBlip(registry, entity, blip, radar.stability);
+		if (deterministicValue > 30) BlipGlitchSystem::GlitchBlipText(context.registry, entity, blip, radar.stability);
+		else BlipGlitchSystem::JumbleBlip(context.registry, entity, blip, radar.stability);
 		return;
 	}
-	
-	if (determiniticValue > 20) BlipGlitchSystem::TriggerBlipFailure(registry, entity, blip, radar.stability);
-	else BlipGlitchSystem::GlitchBlipText(registry, entity, blip, radar.stability);
+
+	if (deterministicValue > 20) BlipGlitchSystem::TriggerBlipFailure(context.registry, entity, blip, radar.stability);
+	else BlipGlitchSystem::GlitchBlipText(context.registry, entity, blip, radar.stability);
 }
 
 
-void RadarStabilitySystem::SetRandomGlitchSpawnInterval(Component::Radar& machine) noexcept
+void System::Radar::Stability::SetRandomGlitchSpawnInterval(entt::registry& registry, Component::Radar& radar)
 {
-	/// @brief The base interval range for new glitches to appear. Measured in minutes.
+	/**
+	 * @brief The base interval range for new glitches to appear. Measured in minutes.
+	 */
 	constexpr Nc::Vector2f BASE_GLITCH_SPAWN_RANGE = Nc::Vector2f(0.8f, 1.6f);
-	/// @brief How much the degradation affects the spawn interval.
+
+	/**
+	 * @brief How much the degradation affects the spawn interval.
+	 */
 	constexpr float DEGRADATION_AFFECT_SCALE = 0.7f;
 
-	float minutesToNextGlitch = Nc::Random::Range(BASE_GLITCH_SPAWN_RANGE.x, BASE_GLITCH_SPAWN_RANGE.y);
-	float degradationScale = (100.0f - machine.stability) * 0.01f;
+	auto& randomService = registry.ctx().get<Nc::Random>();
+
+	float minutesToNextGlitch = randomService.RangeFloat(BASE_GLITCH_SPAWN_RANGE.x, BASE_GLITCH_SPAWN_RANGE.y);
+	const float degradationScale = (100.0f - radar.stability) * 0.01f;
 	minutesToNextGlitch *= 1.0f - degradationScale * DEGRADATION_AFFECT_SCALE;
 
-	machine.nextGlitchSpawnSeconds = minutesToNextGlitch * 60.0f;
+	radar.nextGlitchSpawnSeconds = minutesToNextGlitch * 60.0f;
 }

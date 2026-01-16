@@ -29,7 +29,7 @@ public:
 	 * @param filePath Path to the texture file.
 	 * @return Const reference to the cached Texture2D. Safe to copy into components.
 	 */
-	const Texture2D& GetTexture(const std::string& filePath);
+	const Texture2D& GetTexture(const std::string& filePath) noexcept(false);
 
 	/**
 	 * @brief Retrieves or loads a shader by file path.
@@ -41,19 +41,7 @@ public:
 	 */
 	const Shader& GetShader(const std::string& filePath);
 
-	/**
-	 * @brief Retrieves or loads a music stream by file path.
-	 *
-	 * Music streams are long-form audio assets typically streamed from disk.
-	 * The returned reference is read-only; modifying it would affect all users
-	 * of the same cached instance.
-	 *
-	 * @param filePath Path to the music file.
-	 * @return Const reference to the cached Music instance.
-	 */
-	const ::Font& GetFont(
-		Nc::Font::Style style, Nc::Font::Size fontSize
-	);
+	const ::Font& GetFont(Font::Style style, Font::Size fontSize) noexcept(false);
 
 	/**
 	 * @brief Retrieves or loads a sound effect by file path.
@@ -64,7 +52,7 @@ public:
 	 * @param filePath Path to the sound file.
 	 * @return Const reference to the cached Sound instance.
 	 */
-	const Sound& GetSound(const std::string& filePath);
+	const Sound& GetSound(const std::string& filePath) noexcept(false);
 
 	/**
 	 * @brief Retrieves or loads a music stream by file path.
@@ -75,7 +63,7 @@ public:
 	 * @param filePath Path to the music file.
 	 * @return Const reference to the cached Music instance.
 	 */
-	const Music& GetMusic(const std::string& filePath);
+	const Music& GetMusic(const std::string& filePath) noexcept(false);
 
 private:
 	std::unordered_map<std::string, Texture2D> textureStore { };

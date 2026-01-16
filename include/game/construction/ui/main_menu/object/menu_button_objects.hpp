@@ -1,8 +1,6 @@
 #pragma once
-#include "entt/entity/fwd.hpp"
+#include "game/contexts/scene_context.hpp"
 class Game;
-struct GameState;
-namespace Nc { class ResourceStore; };
 
 
 namespace Object
@@ -11,12 +9,8 @@ namespace Object
 class PlayButton final
 {
 public:
-	static void Create(
-		Game& game, 
-		entt::registry& registry, 
-		GameState& gameState, 
-		Nc::ResourceStore& resourceStore
-	) noexcept;
+	// ------ Functions ------
+	static void Create(const SceneContext& context, Game& game) noexcept;
 
 };
 
@@ -24,7 +18,8 @@ public:
 class SettingsButton final
 {
 public:
-	static void Create(entt::registry& registry, GameState& gameState, Nc::ResourceStore& resourceStore) noexcept;
+	// ------ Functions ------
+	static void Create(const SceneContext& context) noexcept;
 
 };
 
@@ -32,7 +27,8 @@ public:
 class ExitButton final
 {
 public:
-	static void Create(entt::registry& registry, GameState& gameState, Nc::ResourceStore& resourceStore) noexcept;
+	// ------ Functions ------
+	static void Create(const SceneContext& context) noexcept;
 
 };
 

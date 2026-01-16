@@ -1,7 +1,8 @@
 #pragma once
-#include "raylib.h"
 #include <cmath>
 #include <cstdint>
+
+#include "raylib.h"
 
 
 namespace Nc
@@ -24,30 +25,25 @@ struct RGBa final
 	uint8_t blue = 0xff;
 	uint8_t alpha = 0xff;
 
-	
+
 	// ------ Constructors ------
 
 	constexpr RGBa() = default;
 	constexpr RGBa(
-		uint8_t r, 
-		uint8_t g, 
-		uint8_t b, 
-		uint8_t a
-	) noexcept :
-		red(r), 
-		green(g), 
-		blue(b), 
-		alpha(a)
-	{ };
-		
-	constexpr RGBa(Color color) noexcept :
-		red(color.r), 
-		green(color.g), 
-		blue(color.b), 
-		alpha(color.a) 
-	{ };
+		const uint8_t r,
+		const uint8_t g,
+		const uint8_t b,
+		const uint8_t a
+	) noexcept
+		: red(r),
+		  green(g),
+		  blue(b),
+		  alpha(a) { };
 
-	constexpr RGBa(uint32_t hex) noexcept
+	explicit constexpr RGBa(const Color color) noexcept
+		: red(color.r), green(color.g), blue(color.b), alpha(color.a) { }
+
+	explicit constexpr RGBa(const uint32_t hex) noexcept
 	{
 		red = (hex & 0xff000000) >> 24u;
 		green = (hex & 0x00ff0000) >> 16u;
@@ -58,20 +54,12 @@ struct RGBa final
 
 	// ------ Conversion ------
 
-	constexpr operator Color() const noexcept
-	{
-		return { red, green, blue, alpha };
-	}
-
-
-	constexpr operator Vector4() const noexcept
-	{
-		return RGBa::FloatFrom(*this);
-	}
+	explicit constexpr operator Color() const noexcept { return { red, green, blue, alpha }; }
+	explicit constexpr operator Vector4() const noexcept { return RGBa::FloatFrom(*this); }
 
 
 	// ------ Utility ------
-	
+
 	/**
 	 * @brief Converts 8-bit RGBA values to a normalized float Vector4.
 	 * 
@@ -82,17 +70,15 @@ struct RGBa final
 	 * @param rgba is the source RGBa color (8-bit per channel).
 	 * @return Vector4 containing normalized RGBA values.
 	 */
-	static constexpr Vector4 FloatFrom(
-		const RGBa rgba
-	) noexcept
+	static constexpr Vector4 FloatFrom(const RGBa rgba) noexcept
 	{
-		return {
-			rgba.red / 255.0f, 
-			rgba.green / 255.0f, 
-			rgba.blue / 255.0f, 
-			rgba.alpha / 255.0f
-		};
+		const auto red = static_cast<float>(rgba.red) / 255.0f;
+		const auto green = static_cast<float>(rgba.green) / 255.0f;
+		const auto blue = static_cast<float>(rgba.blue) / 255.0f;
+		const auto alpha = static_cast<float>(rgba.alpha) / 255.0f;
+		return { red, green, blue, alpha };
 	}
+
 
 	/**
 	 * @brief Sets the alpha channel of an RGBA color from a normalized float value.
@@ -103,9 +89,10 @@ struct RGBa final
 	 * @param rgba  Reference to the color to modify.
 	 * @param alpha Normalized alpha in [0.0, 1.0], where 0.0 is transparent and 1.0 is fully opaque.
 	 */
-	static void SetAlphaFor(RGBa& rgba, const float alpha) noexcept
+	static void SetAlphaFor(RGBa& rgba, float alpha) noexcept
 	{
-		rgba.alpha = static_cast<uint8_t>(std::roundf(alpha * 255.0f));
+		alpha = std::roundf(alpha * 255.0f);
+		rgba.alpha = static_cast<uint8_t>(alpha);
 	}
 };
 
@@ -130,21 +117,16 @@ struct Hex final
 	// ------ Constructors ------
 
 	constexpr Hex() noexcept = default;
-	constexpr Hex(int hex) noexcept : hex(static_cast<uint32_t>(hex)) { };
-	constexpr Hex(uint32_t hex) noexcept : hex(hex) { };
-	constexpr Hex(Color rgba) noexcept :
-		Hex(rgba.r, rgba.g, rgba.b, rgba.a) 
-	{ };
-
-	constexpr Hex(RGBa rgba) noexcept :
-		Hex(static_cast<Color>(rgba)) 
-	{ };
+	explicit constexpr Hex(const int hex) noexcept : hex(static_cast<uint32_t>(hex)) { };
+	explicit constexpr Hex(const uint32_t hex) noexcept : hex(hex) { };
+	explicit constexpr Hex(const Color rgba) noexcept : Hex(rgba.r, rgba.g, rgba.b, rgba.a) { };
+	explicit constexpr Hex(const RGBa rgba) noexcept : Hex(static_cast<Color>(rgba)) { };
 
 	constexpr Hex(
-		uint8_t r, 
-		uint8_t g, 
-		uint8_t b, 
-		uint8_t a
+		const uint8_t r,
+		const uint8_t g,
+		const uint8_t b,
+		const uint8_t a
 	) noexcept
 	{
 		hex = (r << 24u) | (g << 16u) | (b << 8u) | a;
@@ -153,8 +135,12 @@ struct Hex final
 
 	// ------ Conversion ------
 
-	constexpr operator Color() const noexcept { return RGBa(hex); }
-	constexpr operator RGBa() const noexcept { return RGBa(hex); }
+	explicit constexpr operator RGBa() const noexcept { return RGBa(hex); }
+	explicit constexpr operator Color() const noexcept
+	{
+		const auto color = RGBa(hex);
+		return { color.red, color.green, color.blue, color.alpha };
+	}
 };
 
 }

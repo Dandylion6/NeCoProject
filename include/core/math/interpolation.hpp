@@ -18,9 +18,7 @@ namespace Nc::Math
  * @param time Normalized interpolation factor in [0.0, 1.0].
  * @return Interpolated value between start and end.
  */
-static constexpr float Lerp(
-	float start, float end, float time
-) noexcept
+inline constexpr float Lerp(float start, float end, float time) noexcept
 {
 	return start + (end - start) * time;
 }
@@ -39,9 +37,7 @@ static constexpr float Lerp(
  * @param value The input value.
  * @return Normalized factor representing value's position between start and end.
  */
-static float InverseLerp(
-	float start, float end, float value
-) noexcept
+inline float InverseLerp(float start, float end, float value) noexcept
 {
 	bool hasNoLength = start == end;
 	if (hasNoLength) 
@@ -65,7 +61,7 @@ static float InverseLerp(
  * @param value Input value within the source range.
  * @return Remapped value in the target range.
  */
-static float Remap(
+inline float Remap(
 	float fromMin,
 	float fromMax,
 	float toMin,
@@ -88,15 +84,9 @@ static float Remap(
  * @param value Input value within the source range.
  * @return Remapped value in the target range.
  */
-static float Remap(
-	Nc::Vector2f from, 
-	Nc::Vector2f to, 
-	float value
-) noexcept
+inline float Remap(Nc::Vector2f from, Nc::Vector2f to, float value) noexcept
 {
-	return Remap(
-		from.x, from.y, to.x, to.y, value
-	);
+	return Remap(from.x, from.y, to.x, to.y, value);
 }
 
 /**
@@ -110,14 +100,11 @@ static float Remap(
  * @param value Input value to remap.
  * @return Remapped and clamped value.
  */
-static float ClampedRemap(
-	Nc::Vector2f from, 
-	Nc::Vector2f to, 
-	float value
-) noexcept
+inline float ClampedRemap(Nc::Vector2f from, Nc::Vector2f to, float value) noexcept
 {
 	float fromMin = std::fminf(from.x, from.y);
 	float fromMax = std::fmaxf(from.x, from.y);
+
 	value = std::clamp<float>(value, fromMin, fromMax);
 	return Remap(from, to, value);
 }
@@ -125,8 +112,8 @@ static float ClampedRemap(
 /**
  * @brief Smoothly approaches a target value over time using exponential decay.
  *
- * Computes a frame-rate–independent interpolation between @p start and @p end
- * based on @p deltaTime and @p speed. Larger speed values increase responsiveness.
+ * Computes a frame-rate–independent interpolation between <c>start</c> and <c>end</c>
+ * based on <c>deltaTime</c> and <c>speed</c>. Larger speed values increase responsiveness.
  *
  * This method is useful for smoothing abrupt changes such as camera motion,
  * UI transitions, or gradual parameter adjustments.
@@ -137,34 +124,35 @@ static float ClampedRemap(
  * @param speed Smoothing rate; higher values yield faster convergence.
  * @return The new interpolated value approaching end.
  */
-static float SmoothApproach(
-	float start,
-	float end,
-	float deltaTime,
-	float speed
+inline float SmoothApproach(
+	const float start,
+	const float end,
+	const float deltaTime,
+	const float speed
 ) noexcept
 {
-	float time = 1.0f - std::expf(-speed * deltaTime);
+	const float time = 1.0f - std::expf(-speed * deltaTime);
 	return Lerp(start, end, time);
 }
 
-static float SineIn(float linearValue) noexcept { return 1.0f - std::cosf((linearValue * PI) * 0.5f); }
-static float SineOut(float linearValue) noexcept { return std::sinf((linearValue * PI) * 0.5f); }
-static float SineInOut(float linearValue) noexcept { return -(std::cosf(linearValue * PI) - 1.0f) * 0.5f; }
-static float QuadIn(float linearValue) noexcept { return linearValue * linearValue; }
-static float QuadOut(float linearValue) noexcept
+inline float SineIn(float linearValue) noexcept { return 1.0f - std::cosf((linearValue * PI) * 0.5f); }
+inline float SineOut(float linearValue) noexcept { return std::sinf((linearValue * PI) * 0.5f); }
+inline float SineInOut(float linearValue) noexcept { return -(std::cosf(linearValue * PI) - 1.0f) * 0.5f; }
+inline float QuadIn(float linearValue) noexcept { return linearValue * linearValue; }
+inline float QuadOut(float linearValue) noexcept
 { 
 	float function = 1.0f - linearValue;
 	return 1.0f - function * function; 
 }
-static float CubicIn(float linearValue) noexcept { return linearValue * linearValue * linearValue; }
-static float CubicOut(float linearValue) noexcept
+
+inline float CubicIn(float linearValue) noexcept { return linearValue * linearValue * linearValue; }
+inline float CubicOut(float linearValue) noexcept
 { 
 	float function = 1.0f - linearValue;
 	return 1.0f - function * function * function; 
 }
 
-static float CubicInOut(float linearValue) noexcept
+inline float CubicInOut(float linearValue) noexcept
 {
 	if (linearValue < 0.5f) return 4.0f * linearValue * linearValue * linearValue;
 	else
@@ -175,15 +163,15 @@ static float CubicInOut(float linearValue) noexcept
 	return linearValue;
 }
 
-static float ExpoIn(float linearValue) noexcept { return std::exp2f(10.0f * (linearValue - 1.0f)); }
-static float ExpoOut(float linearValue) noexcept
+inline float ExpoIn(float linearValue) noexcept { return std::exp2f(10.0f * (linearValue - 1.0f)); }
+inline float ExpoOut(float linearValue) noexcept
 { 
 	bool atEndValue = linearValue >= 1.0f;
 	if (atEndValue) return 1.0f;
 	return 1.0f - std::exp2f(-10.0f * linearValue);
 }
 
-static float BackOut(float linearValue) noexcept
+inline float BackOut(float linearValue) noexcept
 {
 	constexpr float OVERSHOOT = 1.70158f;
 	constexpr float ADJUSTED = OVERSHOOT + 1.0f;

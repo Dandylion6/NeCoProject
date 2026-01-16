@@ -14,27 +14,20 @@
 #include <utility>
 
 
-void Object::SettingsToMainButton::Create(
-    entt::registry& registry, 
-    Nc::ResourceStore& resourceStore, 
-    Settings& settings, 
-    Settings& pendingSettings, 
-    GameState& gameState
-) noexcept
+void Object::SettingsToMainButton::Create(SceneContext context, Settings& settings, Settings& pendingSettings) noexcept
 {
     constexpr Nc::Vector2f ANCHOR = Nc::Vector2f(0.3f, 0.8f);
     constexpr Nc::Vector2f ORIGIN = Nc::Vector2f::Scale(0.5f);
 
-    std::function<void()> toMainMenu = [&registry, &gameState, &settings, &pendingSettings]()
+    std::function<void()> toMainMenu = [context, &settings, &pendingSettings]()
     {
-        Structure::SettingsMenu::Close(registry, gameState, settings, pendingSettings);
-        Structure::MainMenu::Open(registry, gameState);
+        Structure::SettingsMenu::Close(context, settings, pendingSettings);
+        Structure::MainMenu::Open(context);
     };
     
     Component::UI::Transform transform = Component::UI::Transform(ANCHOR, ORIGIN, 2);
     Object::LabelButton::Data data = Object::LabelButton::Create(
-        registry, 
-        resourceStore, 
+        context,
         std::move(transform), 
         "BACK TO MAIN", 
         std::move(toMainMenu)
@@ -42,32 +35,26 @@ void Object::SettingsToMainButton::Create(
 
     for (entt::entity entity : data.All())
     {
-        registry.emplace<Tag::Settings>(entity);
-        registry.emplace<Tag::DontDestroyOnLoad>(entity);
+        context.registry.emplace<Tag::Settings>(entity);
+        context.registry.emplace<Tag::DontDestroyOnLoad>(entity);
     }
 }
 
 
-void Object::ApplySettingsButton::Create(
-    entt::registry& registry, 
-    Nc::ResourceStore& resourceStore, 
-    Settings& settings, 
-    Settings& pendingSettings
-) noexcept
+void Object::ApplySettingsButton::Create(SceneContext context, Settings& settings, Settings& pendingSettings) noexcept
 {
     constexpr Nc::Vector2f ANCHOR = Nc::Vector2f(0.7f, 0.8f);
     constexpr Nc::Vector2f ORIGIN = Nc::Vector2f::Scale(0.5f);
 
     std::function<void()> applySettings = [&settings, &pendingSettings]()
     {
-        Save::SaveSettings(pendingSettings);
-        Settings::Apply(settings, pendingSettings);
+        Save::SettingsToDisk(pendingSettings);
+        settings = pendingSettings;
     };
     
     Component::UI::Transform transform = Component::UI::Transform(ANCHOR, ORIGIN, 2);
     Object::LabelButton::Data data = Object::LabelButton::Create(
-        registry, 
-        resourceStore, 
+        context,
         std::move(transform), 
         "APPLY", 
         std::move(applySettings)
@@ -75,7 +62,7 @@ void Object::ApplySettingsButton::Create(
 
     for (entt::entity entity : data.All())
     {
-        registry.emplace<Tag::Settings>(entity);
-        registry.emplace<Tag::DontDestroyOnLoad>(entity);
+        context.registry.emplace<Tag::Settings>(entity);
+        context.registry.emplace<Tag::DontDestroyOnLoad>(entity);
     }
 }

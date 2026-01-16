@@ -1,8 +1,18 @@
 #pragma once
 #include "core/data/vector2.hpp"
 #include "raylib.h"
-namespace Component { struct Transform; }
-namespace Component::UI { struct Transform; }
+
+
+namespace Component
+{
+struct Transform;
+}
+
+
+namespace Component::UI
+{
+struct Transform;
+}
 
 
 namespace Nc
@@ -17,49 +27,35 @@ struct Bounds final
 {
 	// ------ Members ------
 
-	Nc::Vector2f min = Nc::Vector2f::Zero();
-	Nc::Vector2f max = Nc::Vector2f::Zero();
+	Vector2f min = Vector2f::Zero();
+	Vector2f max = Vector2f::Zero();
 
 
 	// ------ Constructors ------
 
 	constexpr Bounds() = default;
-	Bounds(const Component::Transform& transform) noexcept;
-	Bounds(
-		const Component::UI::Transform& transform, 
-		Nc::Vector2i screenSize
-	) noexcept;
+	explicit Bounds(const Component::Transform& transform) noexcept;
+	Bounds(const Component::UI::Transform& transform, Vector2i screenSize) noexcept;
+
 
 	constexpr Bounds(
-		float minX, 
-		float minY, 
-		float maxX, 
-		float maxY
-	) noexcept : 
-		min(Nc::Vector2f(minX, minY)), 
-		max(Nc::Vector2f(maxX, maxY)) 
-	{ };
+		const float minX,
+		const float minY,
+		const float maxX,
+		const float maxY
+	) noexcept
+		: min(Vector2f(minX, minY)),
+		  max(Vector2f(maxX, maxY)) { };
 
-	constexpr Bounds(
-		Nc::Vector2f min, 
-		Nc::Vector2f max
-	) noexcept : 
-		min(min), 
-		max(max) 
-	{ };
+	constexpr Bounds(const Vector2f min, const Vector2f max) noexcept : min(min), max(max) { }
 
 
 	// ------ Conversion ------
 
-	constexpr operator Rectangle() const noexcept
+	explicit constexpr operator Rectangle() const noexcept
 	{
-		Nc::Vector2f size = Bounds::SizeOf(*this);
-		return {
-			min.x,
-			min.y,
-			size.x,
-			size.y
-		};
+		const Vector2f size = SizeOf(*this);
+		return { min.x, min.y, size.x, size.y };
 	}
 
 
@@ -71,10 +67,7 @@ struct Bounds final
 	 * @param bounds is the bounds to measure.
 	 * @return Vector2f representing (width, height).
 	 */
-	constexpr static Vector2f SizeOf(const Bounds bounds) noexcept
-	{
-		return bounds.max - bounds.min;
-	}
+	constexpr static Vector2f SizeOf(const Bounds bounds) noexcept { return bounds.max - bounds.min; }
 
 	/**
 	 * @brief Get the geometric center of the bounds.
@@ -82,10 +75,7 @@ struct Bounds final
 	 * @param bounds is the bounds to measure.
 	 * @return Vector2f representing the midpoint between min and max.
 	 */
-	constexpr static Nc::Vector2f CenterOf(const Bounds bounds) noexcept
-	{
-		return (bounds.min + bounds.max) * 0.5f;
-	}
+	constexpr static Vector2f CenterOf(const Bounds bounds) noexcept { return (bounds.min + bounds.max) * 0.5f; }
 
 	/**
 	 * @brief Test if a point lies within the bounds.
@@ -94,10 +84,7 @@ struct Bounds final
 	 * @param point is the vector2f point to test.
 	 * @return True if point is inside or on the boundary, false otherwise.
 	 */
-	static bool PointInBounds(
-		const Bounds bounds,
-		const Nc::Vector2f point
-	) noexcept;
+	static bool PointInBounds(Bounds bounds, Vector2f point) noexcept;
 };
 
 }

@@ -1,6 +1,8 @@
 #pragma once
 #include "entt/entity/fwd.hpp"
-namespace Nc { class ResourceStore; };
+
+
+struct SceneContext;
 
 
 namespace Entity
@@ -9,7 +11,8 @@ namespace Entity
 class Note final
 {
 public:
-	static entt::entity Create(entt::registry& registry, Nc::ResourceStore& resourceStore) noexcept;
+	// ------ Functions ------
+	static entt::entity Create(const SceneContext& context) noexcept;
 
 };
 

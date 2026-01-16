@@ -2,7 +2,7 @@
 #include "core/runtime/resource_store.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/system/scene/outside_scene/receiver/adjust_interpreting_system.hpp"
-#include "game/system/scene/comms_scene/radio/radio_sound_system.hpp"
+#include "game/system/scene/comms_scene/radio/radio_emitter_system.hpp"
 #include "game/system/scene/outside_scene/receiver/coordinate_interpreting_system.hpp"
 
 
@@ -52,7 +52,7 @@ void AdjustInterpretingSystem::AdjustArtilery(entt::registry& registry, CoordRes
 	for (auto [entity, artillery] : view.each())
 	{
 		constexpr float DELAY = 0.75f;
-		artillery.aimStartupDelay = DELAY;
+		artillery.aimStartupSeconds = DELAY;
 		artillery.isReadyToFire = false;
 		
 		switch (result.axis)

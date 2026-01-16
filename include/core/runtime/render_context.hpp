@@ -1,5 +1,4 @@
 #pragma once
-#include "core/data/bounds.hpp"
 #include "core/data/vector2.hpp"
 #include "core/runtime/lighting_context.hpp"
 #include "raylib.h"
@@ -8,11 +7,13 @@
 namespace Nc
 {
 
+class ResourceStore;
+
 /**
  * @brief Base internal resolution the game is rendered at before scaling to the window.
  * Used for retro-style pixel-perfect rendering.
 */
-constexpr Nc::Vector2i RENDER_RESOLUTION = Nc::Vector2i(980, 740);
+constexpr Vector2i RENDER_RESOLUTION = Vector2i(980, 740);
 
 
 /**
@@ -25,17 +26,19 @@ struct RenderContext final
 {
 	// ------ Members ------
 
-	RenderTexture2D renderTexture { };
-	RenderTexture2D radarRenderTexture { };
-	LightingContext lightingContext { };
-	Rectangle renderRectangle { };
+	RenderTexture2D renderTexture{ };
+	RenderTexture2D radarRenderTexture{ };
+	LightingContext lightingContext{ };
+	Rectangle renderRectangle{ };
+	ResourceStore& resourceStore;
+	Vector2i windowSize = Vector2i::Zero();
 	float renderScale = 1.0f;
-	Nc::Vector2i windowSize = Nc::Vector2i::Zero();
 
 
 	// ------ Constructors ------
 
-	constexpr RenderContext() noexcept = default;
+	explicit constexpr RenderContext(ResourceStore& resourceStore) noexcept
+		: resourceStore(resourceStore) { }
 };
 
 }

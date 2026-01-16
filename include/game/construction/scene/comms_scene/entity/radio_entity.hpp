@@ -2,15 +2,17 @@
 #include "entt/entity/fwd.hpp"
 
 
+struct SceneContext;
+
+
 namespace Entity
 {
 
 class Radio final
 {
 public:
-	static entt::entity Create(
-		entt::registry& registry
-	) noexcept;
+	// ------ Functions ------
+	static entt::entity Create(const SceneContext& context) noexcept;
 
 };
 

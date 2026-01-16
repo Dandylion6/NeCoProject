@@ -1,115 +1,85 @@
+#include "game/construction/ui/main_menu/object/menu_button_objects.hpp"
+
+#include <functional>
+#include <utility>
+
 #include "core/data/vector2.hpp"
 #include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
+#include "game/game.hpp"
 #include "game/component/core/transform_component.hpp"
 #include "game/construction/ui/main_menu/main_menu.hpp"
-#include "game/construction/ui/main_menu/object/menu_button_objects.hpp"
 #include "game/construction/ui/settings_menu/settings_menu.hpp"
 #include "game/construction/ui/shared/object/label_button_object.hpp"
-#include "game/game.hpp"
-#include "game/save/save_game.hpp"
 #include "game/state/game_state.hpp"
 #include "game/tag/core/life_cycle/dont_destroy_on_load_tag.hpp"
 #include "game/tag/ui/main_menu_tag.hpp"
-#include <functional>
-#include <utility>
 
 
-void Object::PlayButton::Create(
-	Game& game, 
-	entt::registry& registry, 
-	GameState& gameState, 
-	Nc::ResourceStore& resourceStore
-) noexcept
+void Object::PlayButton::Create(const SceneContext& context, Game& game) noexcept
 {
 	constexpr Nc::Vector2f ANCHOR_POINT = Nc::Vector2f(0.5f, 0.5f);
 	constexpr Nc::Vector2f ORIGIN = Nc::Vector2f::Scale(0.5f);
 
-	std::function<void()> onClick = [&game, &gameState, &registry]()
+	std::function onClick = [&game, context]()
 	{
 		game.Load();
-		Structure::MainMenu::Close(registry, gameState);
+		Structure::MainMenu::Close(context);
 	};
-	
-	Component::UI::Transform transform = Component::UI::Transform(ANCHOR_POINT, ORIGIN);
-	Object::LabelButton::Data data = Object::LabelButton::Create(
-		registry,
-		resourceStore,
-		std::move(transform),
-		"PLAY",
-		std::move(onClick)
-	);
 
-	for (entt::entity entity : data.All())
+	Component::UI::Transform transform = Component::UI::Transform(ANCHOR_POINT, ORIGIN);
+	const LabelButton::Data data = LabelButton::Create(context, transform, "PLAY", std::move(onClick));
+
+	for (const entt::entity entity : data.All())
 	{
-		registry.emplace<Tag::MainMenu>(entity);
-		registry.emplace<Tag::DontDestroyOnLoad>(entity);
+		context.registry.emplace<Tag::MainMenu>(entity);
+		context.registry.emplace<Tag::DontDestroyOnLoad>(entity);
 	}
 }
 
 
-void Object::SettingsButton::Create(
-	entt::registry& registry, 
-	GameState& gameState, 
-	Nc::ResourceStore& resourceStore
-) noexcept
+void Object::SettingsButton::Create(const SceneContext& context) noexcept
 {
 	constexpr Nc::Vector2f ANCHOR_POINT = Nc::Vector2f(0.5f, 0.56f);
 	constexpr Nc::Vector2f ORIGIN = Nc::Vector2f::Scale(0.5f);
 
-	std::function<void()> onClick = [&gameState, &registry]()
+	std::function onClick = [context]()
 	{
-		auto view = registry.view<Tag::MainMenu, Component::UI::Transform>();
-		for (auto [entity, transform] : view.each()) transform.isVisible = false;
-		
-		Structure::SettingsMenu::Open(registry, gameState);
-	};
-	
-	Component::UI::Transform transform = Component::UI::Transform(ANCHOR_POINT, ORIGIN);
-	Object::LabelButton::Data data = Object::LabelButton::Create(
-		registry,
-		resourceStore,
-		std::move(transform),
-		"SETTINGS",
-		std::move(onClick)
-	);
+		const auto view = context.registry.view<Tag::MainMenu, Component::UI::Transform>();
+		for (auto [entity, transform] : view.each())
+			transform.isVisible = false;
 
-	for (entt::entity entity : data.All())
+		Structure::SettingsMenu::Open(context);
+	};
+
+	Component::UI::Transform transform = Component::UI::Transform(ANCHOR_POINT, ORIGIN);
+	const LabelButton::Data data = LabelButton::Create(context, transform, "SETTINGS", std::move(onClick));
+
+	for (const entt::entity entity : data.All())
 	{
-		registry.emplace<Tag::MainMenu>(entity);
-		registry.emplace<Tag::DontDestroyOnLoad>(entity);
+		context.registry.emplace<Tag::MainMenu>(entity);
+		context.registry.emplace<Tag::DontDestroyOnLoad>(entity);
 	}
 }
 
 
-void Object::ExitButton::Create(
-	entt::registry& registry, 
-	GameState& gameState, 
-	Nc::ResourceStore& resourceStore
-) noexcept
+void Object::ExitButton::Create(const SceneContext& context) noexcept
 {
 	constexpr Nc::Vector2f ANCHOR_POINT = Nc::Vector2f(0.5f, 0.62f);
 	constexpr Nc::Vector2f ORIGIN = Nc::Vector2f::Scale(0.5f);
 
-	Component::UI::Transform transform = Component::UI::Transform(ANCHOR_POINT, ORIGIN);
-
-	std::function<void()> onClick = [&gameState]()
-		{
-			gameState.shouldExit = true;
-		};
-
-	Object::LabelButton::Data data = Object::LabelButton::Create(
-		registry,
-		resourceStore,
-		std::move(transform),
-		"EXIT",
-		std::move(onClick)
-	);
-
-	for (entt::entity entity : data.All())
+	std::function onClick = [&gameState = context.game]()
 	{
-		registry.emplace<Tag::MainMenu>(entity);
-		registry.emplace<Tag::DontDestroyOnLoad>(entity);
+		gameState.shouldExit = true;
+	};
+
+	Component::UI::Transform transform = Component::UI::Transform(ANCHOR_POINT, ORIGIN);
+	const LabelButton::Data data = LabelButton::Create(context, transform, "EXIT", std::move(onClick));
+
+	for (const entt::entity entity : data.All())
+	{
+		context.registry.emplace<Tag::MainMenu>(entity);
+		context.registry.emplace<Tag::DontDestroyOnLoad>(entity);
 	}
 }
