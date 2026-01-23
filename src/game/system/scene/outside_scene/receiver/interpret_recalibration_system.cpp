@@ -65,7 +65,7 @@ void System::Receiver::Interpret::Recalibration::ConfirmCommand(const SystemCont
 	// TODO: Add response
     constexpr char COORDINATE_RESPONSE[] = "assets/audio/voicelines/receiver/commands/coordinate_received.wav";
 
-	const Sound& response = context.store.GetSound(COORDINATE_RESPONSE);
+	const Sound& response = context.store.CreateSoundHandle(COORDINATE_RESPONSE);
 	Radio::Emitter::Broadcast(context.registry, response, BroadcastPriority::Medium);
 
 	receiver.message.clear();

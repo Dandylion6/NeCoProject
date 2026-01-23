@@ -1,22 +1,32 @@
 #pragma once
-#include "game/component/scene/outside_scene/receiver_component.hpp"
-#include "entt/entity/fwd.hpp"
-namespace Nc { class ResourceStore; };
+struct SystemContext;
 
 
-class ReceiverCodeResponseSystem
+namespace Component
+{
+struct Receiver;
+}
+
+
+namespace Nc
+{
+class ResourceStore;
+};
+
+
+namespace System::Receiver
+{
+
+class CodeResponse final
 {
 public:
-	static void Update(
-		entt::registry& registry,
-		Nc::ResourceStore& resourceStore
-	);
+	// ------ Functions ------
+	static void Update(const SystemContext& context) noexcept;
 
 private:
-	static void RespondToCharacterCode(
-		entt::registry& registry,
-		Component::Receiver& receiver,
-		Nc::ResourceStore& resourceStore
-	);
-
+	// ------ Functions ------
+	static void ConfirmCodeReceived(const SystemContext& context, Component::Receiver& receiver);
 };
+
+}
+

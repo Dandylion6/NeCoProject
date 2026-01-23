@@ -3,7 +3,7 @@
 #include "entt/entity/registry.hpp"
 #include "game/system/scene/outside_scene/receiver/adjust_interpreting_system.hpp"
 #include "game/system/scene/comms_scene/radio/radio_emitter_system.hpp"
-#include "game/system/scene/outside_scene/receiver/coordinate_interpreting_system.hpp"
+#include "game/system/scene/outside_scene/receiver/interpret_coordinate_system.hpp"
 
 
 const std::string AdjustInterpretingSystem::COMMAND = "ADJ";
@@ -39,7 +39,7 @@ void AdjustInterpretingSystem::ConfirmAdjustCommand(
 {
 	const std::string RESPONSE = "assets/audio/voicelines/receiver/commands/aim_request.wav";
 
-    Sound response = LoadSoundAlias(resourceStore.GetSound(RESPONSE));
+    Sound response = LoadSoundAlias(resourceStore.CreateSoundHandle(RESPONSE));
 	RadioSoundEmitterSystem::Broadcast(registry, std::move(response), Medium);
 
 	receiver.message.clear();

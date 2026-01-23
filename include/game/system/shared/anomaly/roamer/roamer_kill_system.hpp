@@ -4,36 +4,38 @@
 #include "game/component/shared/anomaly/roamer/anomaly_roamer_component.hpp"
 #include "game/component/core/transform_component.hpp"
 #include "game/component/shared/stat/health_component.hpp"
+struct SystemContext;
 struct GameState;
 
 
-class RoamerKillSystem
+namespace System::Anomaly::Roamer
+{
+
+
+class Kill final
 {
 public:
-	static void Update(
-		entt::registry& registry, GameState& gameState, float deltaTime
-	);
+	// ------ Functions ------
+	static void Update(const SystemContext& context) noexcept;
 
 private:
+	// ------ Functions ------
 	static void UpdateBunkerRoamer(
-		entt::registry& registry,
-		entt::entity entity,
+		const SystemContext& context,
 		const Component::Transform& transform,
-		const Component::Anomaly::Roamer& roamer,
-		Component::Health& health,
-		GameState& gameState
-	);
-	static void UpdateArtilleryRoamer(
-		entt::registry& registry,
-		entt::entity entity,
-		const Component::Transform& transform,
-		const Component::Anomaly::Roamer& roamer,
 		Component::Health& health
 	);
-	// @brief Checks if the roamer can kill the target.
-	static bool CanKill(
-		Nc::Vector2f roamerPosition, Nc::Vector2f targetPosition, float killDistance = 6.0f
+
+	static void UpdateArtilleryRoamer(
+		entt::registry& registry,
+		const Component::Transform& transform,
+		Component::Health& health
 	);
+
+	// @brief Checks if the roamer can kill the target.
+	static bool CanKill(Nc::Vector2f roamerPosition, Nc::Vector2f targetPosition, float killDistance = 6.0f);
 	static void KillArtillery(entt::registry& registry);
 
 };
+
+}

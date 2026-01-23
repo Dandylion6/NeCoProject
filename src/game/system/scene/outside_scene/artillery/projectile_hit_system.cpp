@@ -14,50 +14,57 @@
 #include <vector>
 
 
-void ProjectileHitSystem::Update(entt::registry& registry, float deltaTime)
+void System::Projectile::Hit::Update(const SystemContext& context) noexcept
 {
-	std::vector<Nc::Vector2f> hitPositions { };
+	size_t hitCount = 0u;
+	Nc::Vector2f hitPositions[MAX_HITS] = { };
 
-	auto view = registry.view<const Component::Transform, Component::Projectile, Component::Audio>();
+	const auto view = context.registry.view<const Component::Transform, Component::Projectile, Component::Audio>();
 	for (auto [entity, transform, projectile, emitter] : view.each())
 	{
 		if (!projectile.isActive)
 		{
-			if (!IsSoundPlaying(emitter.sound)) registry.destroy(entity);
+			if (!IsSoundPlaying(emitter.sound))
+				context.registry.destroy(entity);
 			continue;
 		}
 
 		if (projectile.travelSecondsLeft > 0.0f)
 		{
-			projectile.travelSecondsLeft -= deltaTime;
+			projectile.travelSecondsLeft -= context.deltaTime;
 			continue;
 		}
 
 		projectile.isActive = false;
-		hitPositions.push_back(transform.position);
-		SoundEmitterSystem::PlayEmitter(emitter);
+		hitPositions[hitCount++] = transform.position;
+		Audio::Emitter::PlayEmitter(emitter);
 	}
 
-	if (hitPositions.empty()) return;
-
-	CheckForHits(registry, hitPositions);
+	if (hitCount > 0)
+		CheckForHits(context.registry, hitPositions, hitCount);
 }
 
 
-void ProjectileHitSystem::CheckForHits(entt::registry& registry, std::vector<Nc::Vector2f>& hitPositions)
+void System::Projectile::Hit::CheckForHits(
+	entt::registry& registry,
+	Nc::Vector2f hitPositions[MAX_HITS],
+	const size_t hitCount
+) noexcept
 {
 	constexpr float BLAST_RADIUS = 12.0f;
 	constexpr float SQR_BLAST_RADIUS = BLAST_RADIUS * BLAST_RADIUS;
-	constexpr int16_t DAMAGE = 10;
 
-	auto view = registry.view<Component::Blip, Component::Transform, Component::Health>();
+	const auto view = registry.view<Component::Blip, Component::Transform, Component::Health>();
 	for (auto [entity, blip, transform, health] : view.each())
 	{
-		for (Nc::Vector2f hitPosition : hitPositions)
+		for (size_t i = 0; i < hitCount; ++i)
 		{
-			float sqrDistance = Nc::Vector::SqrDistanceBetween(hitPosition, transform.position);
-			if (sqrDistance > BLAST_RADIUS * BLAST_RADIUS) continue;
-			health.health -= DAMAGE;
+			constexpr int16_t DAMAGE = 10;
+
+			const Nc::Vector2f hitPosition = hitPositions[i];
+			const float sqrDistance = Nc::Vector::SqrDistanceBetween(hitPosition, transform.position);
+			if (sqrDistance <= SQR_BLAST_RADIUS)
+				health.health -= DAMAGE;
 		}
 	}
 };

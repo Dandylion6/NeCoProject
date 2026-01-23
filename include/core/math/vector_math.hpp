@@ -15,7 +15,7 @@ namespace Nc::Vector
  */
 inline Vector2f Round(const Nc::Vector2f vector) noexcept
 {
-	return { std::roundf(vector.x), std::roundf(vector.y) };
+	return {std::roundf(vector.x), std::roundf(vector.y)};
 }
 
 
@@ -53,11 +53,35 @@ inline Vector2f Remap(
  * @param time Interpolation factor in range [0, 1].
  * @return Interpolated vector.
 */
-inline Vector2f Lerp(const Nc::Vector2f start, const Nc::Vector2f end, const float time) noexcept
+inline Vector2f Lerp(const Vector2f start, const Vector2f end, const float time) noexcept
 {
 	return {
 		Nc::Math::Lerp(start.x, end.x, time),
 		Nc::Math::Lerp(start.y, end.y, time)
+	};
+}
+
+
+/**
+ * @brief Smoothly approaches a target vector over time using exponential decay.
+ *
+ * Computes a frame-rate–independent interpolation between <c>start</c> and <c>end</c>
+ * based on <c>deltaTime</c> and <c>speed</c>. Larger speed values increase responsiveness.
+ *
+ * This method is useful for smoothing abrupt changes such as camera motion,
+ * UI transitions, or gradual parameter adjustments.
+ *
+ * @param start Current vector.
+ * @param end Target vector.
+ * @param deltaTime Elapsed time since the previous update.
+ * @param speed Smoothing rate; higher values yield faster convergence.
+ * @return The new interpolated value approaching end.
+ */
+inline Vector2f SmoothApproach(const Vector2f start, const Vector2f end, const float deltaTime, const float speed)
+{
+	return {
+		Math::SmoothApproach(start.x, end.x, deltaTime, speed),
+		Math::SmoothApproach(start.y, end.y, deltaTime, speed)
 	};
 }
 
@@ -148,7 +172,7 @@ inline Vector2f Normalized(const Nc::Vector2f vector) noexcept
  */
 constexpr Vector2f Modulate(const Nc::Vector2f a, const Nc::Vector2f b) noexcept
 {
-	return { a.x * b.x, a.y * b.y };
+	return {a.x * b.x, a.y * b.y};
 }
 
 

@@ -6,7 +6,7 @@
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
 #include "game/component/core/rendering/rectangle_component.hpp"
-#include  "game/component/shared/mechanical/circuit_breaker_component.hpp"
+#include  "game/component/shared/mechanical/breaker_component.hpp"
 #include "game/construction/shared/object/mechanical/circuit_breaker_object.hpp"
 #include "game/state/scene.hpp"
 #include "game/system/scene/comms_scene/radar/radar_stability_system.hpp"

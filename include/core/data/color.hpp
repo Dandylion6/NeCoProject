@@ -55,7 +55,7 @@ struct RGBa final
 	// ------ Conversion ------
 
 	explicit constexpr operator Color() const noexcept { return { red, green, blue, alpha }; }
-	explicit constexpr operator Vector4() const noexcept { return RGBa::FloatFrom(*this); }
+	explicit constexpr operator Vector4() const noexcept { return FloatFrom(*this); }
 
 
 	// ------ Utility ------

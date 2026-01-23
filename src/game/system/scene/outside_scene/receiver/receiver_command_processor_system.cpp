@@ -14,7 +14,7 @@
 #include "game/system/scene/comms_scene/radio/radio_emitter_system.hpp"
 #include "game/system/scene/outside_scene/receiver/adjust_interpreting_system.hpp"
 #include "game/system/scene/outside_scene/receiver/interpret_aiming_system.hpp"
-#include "game/system/scene/outside_scene/receiver/fire_interpreting_system.hpp"
+#include "game/system/scene/outside_scene/receiver/interpret_fire_system.hpp"
 #include "game/system/scene/outside_scene/receiver/interpret_recalibration_system.hpp"
 #include "game/utility/morse_code.hpp"
 
@@ -49,7 +49,10 @@ void System::Receiver::CommandProcessor::Update(const SystemContext& context)
 }
 
 
-bool System::Receiver::CommandProcessor::CheckCharacterCommand(const SystemContext& context, Component::Receiver& receiver)
+bool System::Receiver::CommandProcessor::CheckCharacterCommand(
+	const SystemContext& context,
+	Component::Receiver& receiver
+)
 {
 	switch (receiver.incomingCharacter)
 	{
@@ -62,7 +65,7 @@ bool System::Receiver::CommandProcessor::CheckCharacterCommand(const SystemConte
 			receiver.incomingCharacter = MorseCode::NULL_CODE;
 			receiver.message.pop_back();
 
-			const Sound& response = context.store.GetSound(RESPONSE);
+			const Sound& response = context.store.CreateSoundHandle(RESPONSE);
 			Radio::Emitter::Broadcast(context.registry, response, BroadcastPriority::Low);
 			return true;
 		}
@@ -73,7 +76,7 @@ bool System::Receiver::CommandProcessor::CheckCharacterCommand(const SystemConte
 			receiver.incomingCharacter = MorseCode::NULL_CODE;
 			receiver.message.clear();
 
-			const Sound& response = context.store.GetSound(RESPONSE);
+			const Sound& response = context.store.CreateSoundHandle(RESPONSE);
 			Radio::Emitter::Broadcast(context.registry, response, BroadcastPriority::Low);
 			return true;
 		}
@@ -84,7 +87,11 @@ bool System::Receiver::CommandProcessor::CheckCharacterCommand(const SystemConte
 }
 
 
-void System::Receiver::CommandProcessor::ProcessMessage(const SystemContext& context, Component::Receiver& receiver, const std::string& message)
+void System::Receiver::CommandProcessor::ProcessMessage(
+	const SystemContext& context,
+	Component::Receiver& receiver,
+	const std::string& message
+)
 {
 	const TransmissionContext newContext = DetermineContext(message);
 	if (newContext != OnStandby) receiver.currentContext = newContext;
@@ -94,11 +101,11 @@ void System::Receiver::CommandProcessor::ProcessMessage(const SystemContext& con
 	case OnStandby:
 		break;
 	case AimingArtillery:
-		return AimInterpretingSystem::HandleReceivedMessage(registry, resourceStore, receiver, message);
+		return Interpret::Aiming::HandleMessage(context, receiver, message);
 	case AdjustArtillery:
-		return AdjustInterpretingSystem::HandleReceivedMessage(registry, resourceStore, receiver, message);
+		return Interpret::Adjust::HandleMessage(context, receiver, message);
 	case FiringArtillery:
-		return FireInterpretingSystem::HandleReceivedMessage(registry, resourceStore, receiver, message);
+		return Interpret::Fire::HandleMessage(context, receiver);
 	case RecalibrateRadar:
 		return Interpret::Recalibration::HandleMessage(context, receiver);
 	default:
@@ -112,9 +119,9 @@ TransmissionContext System::Receiver::CommandProcessor::DetermineContext(const s
 	static const auto commandMap = []
 	{
 		std::unordered_map<std::string, TransmissionContext> map;
-		map[AimInterpretingSystem::COMMAND] = AimingArtillery;
-		map[AdjustInterpretingSystem::COMMAND] = AdjustArtillery;
-		map[FireInterpretingSystem::COMMAND] = FiringArtillery;
+		map[Interpret::Aiming::COMMAND] = AimingArtillery;
+		map[Interpret::Adjust::COMMAND] = AdjustArtillery;
+		map[Interpret::Fire::COMMAND] = FiringArtillery;
 		map[Interpret::Recalibration::COMMAND] = RecalibrateRadar;
 		return map;
 	}();

@@ -1,14 +1,7 @@
 #pragma once
+#include "game/component/scene/outside_scene/receiver_component.hpp"
 #include <string>
-
-
 struct SystemContext;
-
-
-namespace Component
-{
-struct Receiver;
-}
 
 
 namespace Nc

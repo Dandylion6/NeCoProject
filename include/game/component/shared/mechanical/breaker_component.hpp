@@ -2,7 +2,6 @@
 #include "entt/entity/entity.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/signal/delegate.hpp"
-#include <cstdint>
 
 
 namespace Component::Logic
@@ -14,34 +13,45 @@ namespace Component::Logic
  * its status. Relies on `Component::Logic::Lever`
  * 
  * Usage example:
- * 
- * ```cpp
+ * @code
  * entt::entity systemEntity = registry.create();
  * ...
  * entt::entity indicatorEntity = registry.create();
  * ...
  * registry.emplace<Component::Logic::Lever>(entity, ...);
  * registry.emplace<Component::Logic::CircuitBreaker>(entity, systemEntity, indicatorEntity);
- * ```
+ * @endcode
  */
-struct CircuitBreaker
+struct Breaker
 {
     using OnRestart = entt::delegate<void(entt::registry&, entt::entity)>;
     static constexpr float BREAKER_DISCHARGE_SECONDS = 6.0f;
 
     enum Status : uint8_t
     {
-        // @brief The system is running as intended.
+        /**
+         * @brief The system is running as intended.
+         */
         Operational,
-        // @brief The system has been manually set to offline.
+        /**
+         * @brief The system has been manually set to offline.
+         */
         Offline,
-        // @brief The system brokedown and requires attention.
+        /**
+         * @brief The system brokedown and requires attention.
+         */
         Faulted,
-        // @brief Breaker has been set off and is waiting for restart.
+        /**
+         * @brief Breaker has been set off and is waiting for restart.
+         */
         Discharging,
-        // @brief The breaker is ready to restart.
+        /**
+         * @brief The breaker is ready to restart.
+         */
         ReadyToRestart,
-        // @brief Restart was miss-timed.
+        /**
+         * @brief Restart was miss-timed.
+         */
         DesyncedRestart
     };
 
@@ -58,11 +68,8 @@ struct CircuitBreaker
 
     // ------ Constructors ------
 
-    constexpr CircuitBreaker(
-        entt::entity system, entt::entity indicator
-    ) noexcept :
-        system(system), indicator(indicator) 
-    { };
+    constexpr Breaker(const entt::entity system, const entt::entity indicator) noexcept :
+        system(system), indicator(indicator) { }
 };   
 
 }

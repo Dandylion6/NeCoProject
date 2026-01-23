@@ -1,7 +1,7 @@
 #pragma once
 #include "core/data/vector2.hpp"
 #include "entt/entity/fwd.hpp"
-namespace Nc { class ResourceStore; };
+struct SceneContext;
 
 
 namespace Entity
@@ -10,12 +10,8 @@ namespace Entity
 class Projectile final
 {
 public:
-	static entt::entity Create(
-		entt::registry& registry,
-		Nc::ResourceStore& resourceStore,
-		Nc::Vector2f hitPosition
-	) noexcept;
-
+	// ------ Functions ------
+	static entt::entity Create(const SceneContext& context, Nc::Vector2f hitPosition) noexcept;
 };
 
 }

@@ -7,7 +7,7 @@
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
 #include "game/component/core/rendering/rectangle_component.hpp"
-#include "game/component/shared/mechanical/circuit_breaker_component.hpp"
+#include "game/component/shared/mechanical/breaker_component.hpp"
 #include "game/construction/shared/entity/mechanical/lever_entity.hpp"
 #include "game/state/scene.hpp"
 
@@ -33,7 +33,7 @@ Object::CircuitBreaker::Data Object::CircuitBreaker::Create(
     const Nc::Vector2f centerPosition = Nc::Bounds::CenterOf(Nc::Bounds(transform));
     entt::entity indicator = Indicator::Create(registry, scene, centerPosition);
 
-    auto& breaker = registry.emplace<Component::Logic::CircuitBreaker>(entity, system, indicator);
+    auto& breaker = registry.emplace<Component::Logic::Breaker>(entity, system, indicator);
 
     return { breaker, entity, indicator };
 }

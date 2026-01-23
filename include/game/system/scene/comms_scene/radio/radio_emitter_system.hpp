@@ -1,6 +1,6 @@
 #pragma once
-#include "game/component/scene/comms_scene/radio_component.hpp"
 #include "entt/entity/fwd.hpp"
+#include "game/component/scene/comms_scene/radio_component.hpp"
 struct Sound;
 struct SystemContext;
 

@@ -20,6 +20,7 @@ namespace Nc
 class ResourceStore final
 {
 public:
+	// ------ Functions ------
 	/**
 	 * @brief Retrieves or loads a texture by file path.
 	 *
@@ -37,22 +38,22 @@ public:
 	 * If not yet cached, the shader is loaded and compiled before being stored.
 	 *
 	 * @param filePath Path to the shader file.
-	 * @return Const reference to the cached Shader.
+	 * @return Const reference to the cached <c>Shader</c>.
 	 */
 	const Shader& GetShader(const std::string& filePath);
 
 	const ::Font& GetFont(Font::Style style, Font::Size fontSize) noexcept(false);
 
 	/**
-	 * @brief Retrieves or loads a sound effect by file path.
+	 * @brief Creates a playable sound handle by file name.
 	 *
-	 * Cached sounds can be safely reused by copying the returned handle into
-	 * audio-related components.
+	 * Returns a new playback handle based on a shared sound master.
+	 * Each call produces an independently playable sound.
 	 *
 	 * @param filePath Path to the sound file.
-	 * @return Const reference to the cached Sound instance.
+	 * @return Const reference to the cached <c>Sound</c> instance.
 	 */
-	const Sound& GetSound(const std::string& filePath) noexcept(false);
+	Sound CreateSoundHandle(const std::string& filePath) noexcept(false);
 
 	/**
 	 * @brief Retrieves or loads a music stream by file path.
@@ -66,11 +67,26 @@ public:
 	const Music& GetMusic(const std::string& filePath) noexcept(false);
 
 private:
+	// ------ Members ------
 	std::unordered_map<std::string, Texture2D> textureStore { };
 	std::unordered_map<std::string, Shader> shaderStore { };
 	std::unordered_map<FontKey, ::Font, FontKeyHash> fontStore { };
 	std::unordered_map<std::string, Sound> soundStore { };
 	std::unordered_map<std::string, Music> musicStore { };
+
+
+	// ------ Functions ------
+
+	/**
+	 * @brief Retrieves or loads a sound effect by file path.
+	 *
+	 * Cached sounds can be safely reused by loading an alias,
+	 * this sound is specifically treated as master data for them to be built.
+	 *
+	 * @param filePath Path to the sound file.
+	 * @return Const reference to the cached <c>Sound</c>.
+	 */
+	const Sound& GetSoundMaster(const std::string& filePath) noexcept(false);
 
 };
 

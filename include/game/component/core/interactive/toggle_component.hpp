@@ -15,17 +15,16 @@ namespace Component::Action
 /**
  * @brief Action component that defines an entities toggle state.
  * 
- * The component's `state` can either be `Disabled`, `Off` or `On`. 
- * This is used by systems to create toggleable behaviour.
+ * The component's <c>state</c> can either be `Disabled</c>, <c>Off</c< or <c>On</c>.
+ * This is used by systems to create toggleable behavior.
  * 
  * Usage example:
- * 
- * ```cpp
+ * @code
  * registry.emplace<Component::Action::Toggle>(entity, On);
  * registry.emplace<Component::Machine>(entity, ...);
- * ```
+ * @endcode
  */
-struct Toggle
+struct Toggle final
 {
     // ------ Members ------
 
@@ -35,9 +34,7 @@ struct Toggle
     // ------ Constructors ------
 
     constexpr Toggle() noexcept = default;
-    constexpr Toggle(ToggleState state) noexcept : 
-        state(state) 
-    { };
+    explicit constexpr Toggle(const ToggleState state) noexcept : state(state) { }
 
 
     // ------ Utility ------
@@ -45,12 +42,10 @@ struct Toggle
     /**
     * @brief Toggles based on state given.
     * 
-    * @param state Is the state to change based on toggle behaviour.
+    * @param state Is the state to change based on toggle behavior.
     * @return The next logical state.
     */
-    static constexpr ToggleState Next(
-        ToggleState state
-    ) noexcept
+    static constexpr ToggleState Next(const ToggleState state) noexcept
     {
         switch (state)
         {

@@ -1,30 +1,32 @@
 #pragma once
-#include "game/component/scene/outside_scene/receiver_component.hpp"
 #include "entt/entity/fwd.hpp"
-#include "game/system/scene/outside_scene/receiver/coordinate_interpreting_system.hpp"
+#include "game/component/scene/outside_scene/receiver_component.hpp"
+#include "game/system/scene/outside_scene/receiver/interpret_coordinate_system.hpp"
 #include <string>
+struct SystemContext;
+
 namespace Nc { class ResourceStore; };
 
 
-class AdjustInterpretingSystem
+namespace System::Receiver::Interpret
+{
+
+class Adjust final
 {
 public:
-    static const std::string COMMAND;
+	// ------ Members ------
+    static constexpr char COMMAND[] = "ADJ";
 
-	static void HandleReceivedMessage(
-		entt::registry& registry,
-		Nc::ResourceStore& resourceStore,
-		Component::Receiver& receiver,
-		const std::string& message
-	);
+
+	// ------ Functions ------
+
+	static void HandleMessage(const SystemContext& context, Component::Receiver& receiver, const std::string& message);
 
 private:
-    static void ConfirmAdjustCommand(
-		entt::registry& registry,
-		Nc::ResourceStore& resourceStore,
-		Component::Receiver& receiver
-	);
-
-	static void AdjustArtilery(entt::registry& registry, CoordResult result);
+	// ------ Functions ------
+    static void ConfirmCommand(const SystemContext& context, Component::Receiver& receiver);
+	static void AdjustArtillery(entt::registry& registry, CoordResult result);
     
 };
+
+}

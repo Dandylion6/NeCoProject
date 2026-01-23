@@ -7,7 +7,7 @@
 #include "game/state/scene.hpp"
 
 
-namespace Component::Logic { struct CircuitBreaker; }
+namespace Component::Logic { struct Breaker; }
 namespace Component { struct Transform; }
 
 
@@ -20,7 +20,7 @@ public:
     // ------ Types ------
     struct Data final
     {
-        Component::Logic::CircuitBreaker& breaker;
+        Component::Logic::Breaker& breaker;
         entt::entity entity = entt::null;
         entt::entity indicator = entt::null;
 

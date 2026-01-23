@@ -2,7 +2,7 @@
 #include <string>
 
 #include "entt/entity/fwd.hpp"
-#include "game/system/scene/outside_scene/receiver/coordinate_interpreting_system.hpp"
+#include "game/system/scene/outside_scene/receiver/interpret_coordinate_system.hpp"
 struct SystemContext;
 
 

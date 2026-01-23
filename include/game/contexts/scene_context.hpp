@@ -19,12 +19,6 @@ struct SceneContext final
 
     // ------ Constructors ------
 
-    SceneContext(
-        entt::registry& registry,
-        Nc::ResourceStore& resourceStore,
-        GameState& gameState
-    ) noexcept
-        : registry(registry),
-          store(resourceStore),
-          game(gameState) { }
+    SceneContext(entt::registry& registry, Nc::ResourceStore& resourceStore, GameState& gameState) noexcept
+        : registry(registry), store(resourceStore), game(gameState) {}
 };

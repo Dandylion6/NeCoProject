@@ -1,20 +1,27 @@
 #pragma once
-#include "entt/entity/fwd.hpp"
 #include "core/data/vector2.hpp"
-#include <vector>
+#include "entt/entity/fwd.hpp"
+struct SystemContext;
 
 
-class ProjectileHitSystem
+namespace System::Projectile
+{
+
+class Hit final
 {
 public:
-	static void Update(
-		entt::registry& registry, float deltaTime
-	);
+	// ------ Members ------
+	static constexpr size_t MAX_HITS = 4u;
+
+
+	// ------ Functions ------
+
+	static void Update(const SystemContext& context) noexcept;
 
 private:
-	static void CheckForHits(
-		entt::registry& registry,
-		std::vector<Nc::Vector2f>& hitPositions
-	);
+	// ------ Functions ------
+	static void CheckForHits(entt::registry& registry, Nc::Vector2f hitPositions[MAX_HITS], size_t hitCount) noexcept;
 
 };
+
+}

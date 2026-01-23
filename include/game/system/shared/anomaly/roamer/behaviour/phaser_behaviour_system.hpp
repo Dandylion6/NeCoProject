@@ -4,18 +4,23 @@
 #include "entt/entity/fwd.hpp"
 
 
-class PhaserBehaviourSystem
+namespace System::Anomaly::Roamer
+{
+
+class Phaser final
 {
 public:
-	static void Spawn(
-		entt::registry& registry, entt::entity entity, Component::Anomaly::Roamer& roamer
-	);
+	// ------ Functions ------
+	static void Spawn(entt::registry& registry, entt::entity entity) noexcept;
 	static void Update(
 		entt::registry& registry,
 		entt::entity entity,
 		Component::Transform& transform,
 		Component::Anomaly::Roamer& roamer,
 		float deltaTime
-	);
+	) noexcept;
 
 };
+
+}
+

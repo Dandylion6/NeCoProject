@@ -41,7 +41,7 @@
 #include "game/system/scene/comms_scene/radio/radio_emitter_system.hpp"
 #include "game/system/scene/outside_scene/artillery/artillery_aiming_system.hpp"
 #include "game/system/scene/outside_scene/artillery/projectile_hit_system.hpp"
-#include "game/system/scene/outside_scene/receiver/fire_interpreting_system.hpp"
+#include "game/system/scene/outside_scene/receiver/interpret_fire_system.hpp"
 #include "game/system/scene/outside_scene/receiver/interpret_recalibration_system.hpp"
 #include "game/system/scene/outside_scene/receiver/receiver_code_response_system.hpp"
 #include "game/system/scene/outside_scene/receiver/receiver_command_processor_system.hpp"
@@ -52,6 +52,9 @@
 #include "game/system/shared/mechanical/circuit_breaker_system.hpp"
 #include "game/system/shared/mechanical/lever_system.hpp"
 #include "game/system/shared/mechanical/machine_power_system.hpp"
+#include "game/system/shared/mechanical/breaker/breaker_display_system.hpp"
+#include "game/system/shared/mechanical/breaker/breaker_operation_system.hpp"
+#include "game/system/shared/mechanical/breaker/breaker_restart_system.hpp"
 #include "game/system/ui/interactive/increment_value_system.hpp"
 #include "game/utility/color_palette.hpp"
 
@@ -94,7 +97,7 @@ void Game::SetupRenderContext()
 	// Calculate render scale (preserve aspect ratio, clamp to nearest 0.1)
 	const float scaleX = static_cast<float>(monitorSize.x) / static_cast<float>(displaySize.x);
 	const float scaleY = static_cast<float>(monitorSize.y) / static_cast<float>(displaySize.y);
-	const float scale = std::floorf(std::fminf(scaleX, scaleY) * 10.0f) * 0.1f;
+	const float scale = std::floor(std::fminf(scaleX, scaleY) * 10.0f) * 0.1f;
 	renderContext.renderScale = scale;
 
 	// Compute scaled display size and centered position
@@ -296,7 +299,7 @@ void Game::Update(float deltaTime)
 	constexpr float HOURS_IN_DAY = 24.0f;
 
 	const float oldHour = gameState.hour;
-	const float newHour = std::fmodf(gameState.hour + HOUR_INCREASE_RATE * deltaTime, HOURS_IN_DAY);
+	const float newHour = std::fmod(gameState.hour + HOUR_INCREASE_RATE * deltaTime, HOURS_IN_DAY);
 	gameState.hour = newHour;
 
 	if (oldHour < NIGHT_END_HOUR && newHour >= NIGHT_END_HOUR)
@@ -344,16 +347,18 @@ void Game::UpdateRegistries(float deltaTime)
 	System::Blip::Death::Update(registry);
 	System::Blip::Blink::Update(registry);
 	System::Blip::Glitch::Update(context);
-	ReceiverInterpretingSystem::Update(registry, resourceStore);
-	ReceiverCodeResponseSystem::Update(registry, resourceStore);
+	System::Receiver::CommandProcessor::Update(context);
+	System::Receiver::Interpret::Fire::Update(context);
+	System::Receiver::CodeResponse::Update(context);
 	System::Radio::Emitter::Update(context);
-	LeverSystem::Update(registry, deltaTime);
-	CircuitBreakerSystem::Update(registry, gameState.anomalyState, deltaTime);
-	ArtilleryAimingSystem::Update(registry, deltaTime);
-	FireInterpretingSystem::Update(registry, resourceStore, deltaTime);
-	ProjectileHitSystem::Update(registry, deltaTime);
-	RoamerSpawningSystem::Update(registry, resourceStore, gameState, deltaTime);
-	RoamerBehaviourSystem::Update(registry, gameState.anomalyState, deltaTime);
+	System::Logic::Lever::Update(context);
+	System::Logic::Breaker::Restart::Update(context, anomalyState);
+	System::Logic::Breaker::Operation::Update(context);
+	System::Logic::Breaker::Display::Update(context);
+	System::Artillery::Aiming::Update(context);
+	System::Projectile::Hit::Update(context);
+	System::Anomaly::Roamer::Spawning::Update(context, anomalyState);
+	System::Anomaly::Roamer::Behaviour::Update(registry, anomalyState, deltaTime);
 	RoamerKillSystem::Update(registry, gameState, deltaTime);
 	AnomalyAttractionSystem::Update(gameState, deltaTime);
 }

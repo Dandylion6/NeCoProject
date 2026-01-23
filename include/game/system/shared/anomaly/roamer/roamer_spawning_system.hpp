@@ -11,12 +11,15 @@ class Random;
 };
 
 
-class RoamerSpawningSystem final
+namespace System::Anomaly::Roamer
+{
+
+class Spawning final
 {
 public:
 	// ------ Functions ------
 	static void Update(const SystemContext& context, AnomalyState& state) noexcept;
-	static entt::entity SpawnRoamer(const SystemContext& context, Nc::Vector2f spawnPoint, AnomalyState& anomalyState) noexcept;
+	static entt::entity SpawnRoamer(const SystemContext& context, Nc::Vector2f spawnPoint, const AnomalyState& anomalyState) noexcept;
 	static Nc::Vector2f GenerateRandomSpawnPoint(Nc::Random& random) noexcept;
 
 private:
@@ -24,3 +27,6 @@ private:
 	static bool ShouldSpawnRoamer(const AnomalyState& anomalyState);
 
 };
+
+}
+

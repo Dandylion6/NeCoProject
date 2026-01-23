@@ -1,50 +1,46 @@
-#include "game/component/scene/comms_scene/radio_component.hpp"
-#include "game/component/scene/outside_scene/receiver_component.hpp"
-#include "core/runtime/resource_store.hpp"
-#include "entt/entity/fwd.hpp"
-#include "entt/entity/registry.hpp"
-#include "raylib.h"
-#include "game/system/scene/comms_scene/radio/radio_emitter_system.hpp"
 #include "game/system/scene/outside_scene/receiver/receiver_code_response_system.hpp"
-#include "game/utility/morse_code.hpp"
+
 #include <format>
 #include <string>
 #include <string_view>
-#include <utility>
+
+#include "raylib.h"
+#include "core/runtime/entity_helpers.hpp"
+#include "core/runtime/resource_store.hpp"
+#include "entt/entity/fwd.hpp"
+#include "entt/entity/registry.hpp"
+#include "game/component/scene/comms_scene/radio_component.hpp"
+#include "game/component/scene/outside_scene/receiver_component.hpp"
+#include "game/contexts/system_context.hpp"
+#include "game/system/scene/comms_scene/radio/radio_emitter_system.hpp"
+#include "game/utility/morse_code.hpp"
 
 
-void ReceiverCodeResponseSystem::Update(
-	entt::registry& registry, Nc::ResourceStore& resourceStore
-)
+void System::Receiver::CodeResponse::Update(const SystemContext& context) noexcept
 {
-	auto view = registry.view<Component::Receiver>();
-	for (auto [entity, receiver] : view.each())
+	const entt::entity entity = entt::get_single<Component::Receiver>(context.registry);
+	auto& receiver = context.registry.get<Component::Receiver>(entity);
+
+	switch (receiver.incomingCharacter)
 	{
-		switch (receiver.incomingCharacter)
-		{
-		case MorseCode::NULL_CODE: continue;
-		case MorseCode::BACK_CODE: continue;
-		case MorseCode::CANCEL_CODE: continue;
-		default:
-		{
-			RespondToCharacterCode(registry, receiver, resourceStore);
-			receiver.incomingCharacter = MorseCode::NULL_CODE;
-			break;
-		}
-		}
+	case MorseCode::NULL_CODE:
+	case MorseCode::BACK_CODE:
+	case MorseCode::CANCEL_CODE:
+		return;
+
+	default:
+		ConfirmCodeReceived(context, receiver);
+		receiver.incomingCharacter = MorseCode::NULL_CODE;
+		break;
 	}
 }
 
 
-void ReceiverCodeResponseSystem::RespondToCharacterCode(
-	entt::registry& registry,
-	Component::Receiver& receiver, 
-	Nc::ResourceStore& resourceStore
-)
+void System::Receiver::CodeResponse::ConfirmCodeReceived(const SystemContext& context, Component::Receiver& receiver)
 {
 	constexpr std::string_view FORMAT = "assets/audio/voicelines/receiver/{}_received.wav";
-	std::string filePath = std::format(FORMAT, receiver.incomingCharacter);
 
-	Sound response = LoadSoundAlias(resourceStore.GetSound(filePath));
-	RadioSoundEmitterSystem::Broadcast(registry, std::move(response), Low);
+	const std::string filePath = std::format(FORMAT, receiver.incomingCharacter);
+	const Sound& response = context.store.CreateSoundHandle(filePath);
+	Radio::Emitter::Broadcast(context.registry, response, BroadcastPriority::Low);
 }

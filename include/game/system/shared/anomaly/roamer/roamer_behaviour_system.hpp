@@ -5,10 +5,17 @@
 struct AnomalyState;
 
 
-class RoamerBehaviourSystem
+namespace System::Anomaly::Roamer
+{
+
+class Behaviour final
 {
 public:
+	// ------ Functions ------
 	static void Update(entt::registry& registry, AnomalyState& anomalyState, float deltaTime);
 	static Nc::Vector2f GetTargetPosition(RoamerTarget target);
 
 };
+
+}
+

@@ -58,14 +58,10 @@ const ::Font& ResourceStore::GetFont(const Font::Style style, Font::Size fontSiz
 }
 
 
-const Sound& ResourceStore::GetSound(const std::string& filePath) noexcept(false)
+Sound ResourceStore::CreateSoundHandle(const std::string& filePath) noexcept(false)
 {
-	if (!soundStore.contains(filePath))
-	{
-		Sound sound = LoadSound(filePath.c_str());
-		soundStore.emplace(filePath, sound);
-	}
-	return soundStore.at(filePath);
+	const Sound& master = GetSoundMaster(filePath);
+	return LoadSoundAlias(master);
 }
 
 
@@ -77,6 +73,17 @@ const Music& ResourceStore::GetMusic(const std::string& filePath) noexcept(false
 		musicStore.emplace(filePath, music);
 	}
 	return musicStore.at(filePath);
+}
+
+
+const Sound& ResourceStore::GetSoundMaster(const std::string& filePath) noexcept(false)
+{
+	if (!soundStore.contains(filePath))
+	{
+		Sound sound = LoadSound(filePath.c_str());
+		soundStore.emplace(filePath, sound);
+	}
+	return soundStore.at(filePath);
 }
 
 }

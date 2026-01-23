@@ -1,10 +1,16 @@
 #pragma once
-#include "entt/entity/fwd.hpp"
+struct SystemContext;
 
 
-class ArtilleryAimingSystem
+namespace System::Artillery
+{
+
+class Aiming final
 {
 public:
-	static void Update(entt::registry& registry, float deltaTime);
+	// ------ Functions ------
+	static void Update(const SystemContext& context) noexcept;
 
 };
+
+}

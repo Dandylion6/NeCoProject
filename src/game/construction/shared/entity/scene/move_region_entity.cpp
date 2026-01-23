@@ -38,7 +38,7 @@ entt::entity Entity::MoveRegion::Create(
 
 		MoveTransition::StartMoveScene(context, nextScene, moveTime);
 
-		const Sound& transitionSound = context.store.GetSound(TRANSITION_SOUND_PATH);
+		const Sound& transitionSound = context.store.CreateSoundHandle(TRANSITION_SOUND_PATH);
 		PlaySound(transitionSound);
 	};
 

@@ -20,15 +20,11 @@
 #include "game/system/shared/anomaly/roamer/behaviour/strider_behaviour_system.hpp"
 
 
-void RoamerSpawningSystem::Update(const SystemContext& context, AnomalyState& state) noexcept
+void System::Anomaly::Roamer::Spawning::Update(const SystemContext& context, AnomalyState& state) noexcept
 {
-	/**
-	 * @brief Spawn wait interval range in minutes for high attraction.
-	 */
+	// Spawn wait interval range in minutes for high attraction.
 	constexpr auto SPAWN_WAIT_HIGH_RANGE = Nc::Vector2f(1.4f, 2.3f);
-	/**
-	 *@brief Spawn wait interval range in minutes for low attraction.
-	 */
+	// Spawn wait interval range in minutes for low attraction.
 	constexpr auto SPAWN_WAIT_LOW_RANGE = Nc::Vector2f(2.1f, 3.2f);
 
 	if (!GameState::IsNight(context.game.hour))
@@ -59,10 +55,10 @@ void RoamerSpawningSystem::Update(const SystemContext& context, AnomalyState& st
 }
 
 
-entt::entity RoamerSpawningSystem::SpawnRoamer(
+entt::entity System::Anomaly::Roamer::Spawning::SpawnRoamer(
 	const SystemContext& context,
 	const Nc::Vector2f spawnPoint,
-	AnomalyState& anomalyState
+	const AnomalyState& anomalyState
 ) noexcept
 {
 	constexpr int16_t BASE_HEALTH = 10;
@@ -80,24 +76,20 @@ entt::entity RoamerSpawningSystem::SpawnRoamer(
 
 	switch (behaviour)
 	{
-	case RoamerBehaviour::Strider:
-		StriderBehaviourSystem::Spawn(context.registry, entity, roamer);
+	case RoamerBehaviour::Strider: Strider::Spawn(context.registry, entity);
 		break;
-	case RoamerBehaviour::Phaser:
-		PhaserBehaviourSystem::Spawn(context.registry, entity, roamer);
+	case RoamerBehaviour::Phaser: Phaser::Spawn(context.registry, entity);
 		break;
-	case RoamerBehaviour::Phantom:
-		PhantomBehaviourSystem::Spawn(context.registry, anomalyState, entity, roamer);
+	case RoamerBehaviour::Phantom: Phantom::Spawn(context.registry, anomalyState, entity, roamer);
 		break;
-	default:
-		break;
+	default: break;
 	}
 
 	return entity;
 }
 
 
-Nc::Vector2f RoamerSpawningSystem::GenerateRandomSpawnPoint(Nc::Random& random) noexcept
+Nc::Vector2f System::Anomaly::Roamer::Spawning::GenerateRandomSpawnPoint(Nc::Random& random) noexcept
 {
 	constexpr auto WORLD_MIN = WORLD_BOUNDS.min;
 	constexpr auto WORLD_MAX = WORLD_BOUNDS.max;
@@ -137,7 +129,7 @@ Nc::Vector2f RoamerSpawningSystem::GenerateRandomSpawnPoint(Nc::Random& random) 
 }
 
 
-bool RoamerSpawningSystem::ShouldSpawnRoamer(const AnomalyState& anomalyState)
+bool System::Anomaly::Roamer::Spawning::ShouldSpawnRoamer(const AnomalyState& anomalyState)
 {
 	return anomalyState.nextRoamerSpawnSecondsLeft <= 0.0f;
 }

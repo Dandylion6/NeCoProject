@@ -1,23 +1,35 @@
 #pragma once
-#include "entt/entity/fwd.hpp"
 #include "game/component/core/interactive/toggle_component.hpp"
-#include "game/component/shared/mechanical/lever_component.hpp"
 
 
-struct LeverSystem
+struct SystemContext;
+
+
+namespace Component::Logic
+{
+struct Lever;
+}
+
+
+namespace System::Logic
+{
+class Lever final
 {
 public:
-    static void Update(entt::registry& registry, float deltaTime) noexcept;
-
+    // ------ Functions ------
+    static void Update(const SystemContext& context) noexcept;
     static float GetHeightTarget(
-        const Component::Action::Toggle& toggle, const Component::Logic::Lever& lever
+        const Component::Action::Toggle& toggle,
+        const Component::Logic::Lever& lever
     ) noexcept;
 
 private:
+    // ------ Functions ------
     static ToggleState GetToggleState(
-        const Component::Action::Toggle& toggle, 
-        const Component::Logic::Lever& lever, 
+        const Component::Action::Toggle& toggle,
+        const Component::Logic::Lever& lever,
         bool isHeld
     ) noexcept;
-
 };
+}
+

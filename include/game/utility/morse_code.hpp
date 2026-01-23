@@ -12,6 +12,7 @@ constexpr char CANCEL_CODE = '\x18';
 constexpr char BACK_CODE = '\x8';
 constexpr float ERROR_MARGIN = 0.48f;
 
+
 enum Pulse: uint8_t
 {
     Invalid,
@@ -19,7 +20,8 @@ enum Pulse: uint8_t
 	Long,
 };
 
-const std::unordered_map<std::string, char> TABLE {
+
+const std::unordered_map<std::string_view, char> TABLE {
     { ".-", 'A' },  { "-...", 'B' },  { "-.-.", 'C' },
       { "-..", 'D' },     { ".", 'E' },  { "..-.", 'F' },
       { "--.", 'G' },  { "....", 'H' },    { "..", 'I' },
@@ -46,6 +48,12 @@ inline char GetChar(const std::string& code) noexcept
 {
     if (!TABLE.contains(code)) return NULL_CODE;
     return TABLE.at(code);
+}
+
+
+constexpr bool IsAsciiDigit(const char character) noexcept
+{
+    return character >= '0' && character <= '9';
 }
 
 }

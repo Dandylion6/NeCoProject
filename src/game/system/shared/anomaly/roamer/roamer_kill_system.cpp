@@ -11,16 +11,16 @@
 #include "game/system/shared/anomaly/roamer/roamer_behaviour_system.hpp"
 #include "game/system/shared/anomaly/roamer/roamer_kill_system.hpp"
 
+#include "game/contexts/system_context.hpp"
 
-void RoamerKillSystem::Update(
-	entt::registry& registry, GameState& gameState, float deltaTime
-)
+
+void System::Anomaly::Roamer::Kill::Update(const SystemContext& context) noexcept
 {
-	auto view = registry.view<const Component::Transform, const Component::Anomaly::Roamer, Component::Health>();
+	const auto view = context.registry.view<const Component::Transform, const Component::Anomaly::Roamer, Component::Health>();
 	for (auto [entity, transform, roamer, health] : view.each())
 	{
 		// Kills all roamers
-		if (!GameState::IsNight(gameState.hour))
+		if (!GameState::IsNight(context.game.hour))
 		{
 			health.health = 0;
 			continue;
@@ -30,7 +30,7 @@ void RoamerKillSystem::Update(
 		if (roamer.behaviour == RoamerBehaviour::Phantom)
 		{
 			// Roamer self-destructs if very close to target.
-			Nc::Vector2f targetPosition = RoamerBehaviourSystem::GetTargetPosition(roamer.target);
+			const Nc::Vector2f targetPosition = Behaviour::GetTargetPosition(roamer.target);
 			if (CanKill(transform.position, targetPosition, 32.0f)) health.health = 0;
 			continue;
 		}
@@ -38,44 +38,37 @@ void RoamerKillSystem::Update(
 		switch (roamer.target)
 		{
 		case RoamerTarget::Bunker:
-		{
-			UpdateBunkerRoamer(registry, entity, transform, roamer, health, gameState);
+			UpdateBunkerRoamer(context, transform, health);
 			break;
-		}
 		case RoamerTarget::Artillery:
-		{
-			UpdateBunkerRoamer(registry, entity, transform, roamer, health, gameState);
+			// TODO: Add artillery logic.
+			UpdateBunkerRoamer(context, transform, health);
 			break;
-		}
-		default:
-			break;
+		default: break;
 		}
 	}
 }
 
 
-void RoamerKillSystem::UpdateBunkerRoamer(
-	entt::registry& registry, 
-	entt::entity entity, 
-	const Component::Transform& transform, 
-	const Component::Anomaly::Roamer& roamer, 
-	Component::Health& health, 
-	GameState& gameState
+void System::Anomaly::Roamer::Kill::UpdateBunkerRoamer(
+	const SystemContext& context,
+	const Component::Transform& transform,
+	Component::Health& health
 )
 {
 	if (!CanKill(transform.position, BUNKER_POSITION))
 		return;
 
 	health.health = 0; // Roamer kills itself.
-	Game::Death(registry, gameState); // Player dies.
+
+	const SceneContext sceneContext = SceneContext(context.registry, context.store, context.game);
+	Game::Death(sceneContext); // Player dies.
 }
 
 
-void RoamerKillSystem::UpdateArtilleryRoamer(
-	entt::registry& registry, 
-	entt::entity entity, 
-	const Component::Transform& transform, 
-	const Component::Anomaly::Roamer& roamer,
+void System::Anomaly::Roamer::Kill::UpdateArtilleryRoamer(
+	entt::registry& registry,
+	const Component::Transform& transform,
 	Component::Health& health
 )
 {
@@ -87,19 +80,19 @@ void RoamerKillSystem::UpdateArtilleryRoamer(
 }
 
 
-bool RoamerKillSystem::CanKill(
-	Nc::Vector2f roamerPosition, Nc::Vector2f targetPosition, float killDistance
+bool System::Anomaly::Roamer::Kill::CanKill(
+	const Nc::Vector2f roamerPosition, const Nc::Vector2f targetPosition, const float killDistance
 )
 {
-	float killDistanceSqr = killDistance * killDistance;
-	float sqrDistance = Nc::Vector::SqrDistanceBetween(targetPosition, roamerPosition);
-	return sqrDistance <= killDistance;
+	const float killDistanceSqr = killDistance * killDistance;
+	const float sqrDistance = Nc::Vector::SqrDistanceBetween(targetPosition, roamerPosition);
+	return sqrDistance <= killDistanceSqr;
 }
 
 
-void RoamerKillSystem::KillArtillery(entt::registry& registry)
+void System::Anomaly::Roamer::Kill::KillArtillery(entt::registry& registry)
 {
-	auto view = registry.view<const Component::Artillery, Component::Health>();
+	const auto view = registry.view<const Component::Artillery, Component::Health>();
 	for (auto [entity, artillery, health] : view.each())
 		--health.health;
 }

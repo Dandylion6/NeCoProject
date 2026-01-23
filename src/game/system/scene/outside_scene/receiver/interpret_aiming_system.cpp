@@ -12,7 +12,7 @@
 #include "game/component/scene/outside_scene/receiver_component.hpp"
 #include "game/contexts/system_context.hpp"
 #include "game/system/scene/comms_scene/radio/radio_emitter_system.hpp"
-#include "game/system/scene/outside_scene/receiver/coordinate_interpreting_system.hpp"
+#include "game/system/scene/outside_scene/receiver/interpret_coordinate_system.hpp"
 
 
 void System::Receiver::Interpret::Aiming::HandleMessage(const SystemContext& context, Component::Receiver& receiver, const std::string& message)
@@ -23,12 +23,11 @@ void System::Receiver::Interpret::Aiming::HandleMessage(const SystemContext& con
 		return ConfirmCommand(context, receiver);
 	}
 
-	CoordResult result = CoordinateInterpretingSystem::InterpretMessageAsCoord(registry, resourceStore, receiver, message);
+	const CoordResult result = Coordinate::MessageAsCoord(message);
 	if (!result.isValid) return;
 
 	SetArtilleryTarget(context.registry, result);
-
-	CoordinateInterpretingSystem::ConfirmCoordinateCommand(registry, resourceStore, receiver);
+	Coordinate::ConfirmCommand(context, receiver);
 }
 
 
@@ -36,7 +35,7 @@ void System::Receiver::Interpret::Aiming::ConfirmCommand(const SystemContext& co
 {
 	constexpr char AIM_RESPONSE[] = "assets/audio/voicelines/receiver/commands/aim_request.wav";
 
-	const Sound& response = context.store.GetSound(AIM_RESPONSE);
+	const Sound& response = context.store.CreateSoundHandle(AIM_RESPONSE);
 	Radio::Emitter::Broadcast(context.registry, response, BroadcastPriority::Medium);
 	receiver.message.clear();
 }
@@ -51,7 +50,7 @@ void System::Receiver::Interpret::Aiming::SetArtilleryTarget(
 	const entt::entity entity = entt::get_single<Component::Artillery>(registry);
 	auto& artillery = registry.get<Component::Artillery>(entity);
 
-	// Can't fire artillery if arming.
+	// Can't fire artillery if aiming.
 	artillery.aimStartupSeconds = DELAY_SECONDS;
 	artillery.isReadyToFire = false;
 

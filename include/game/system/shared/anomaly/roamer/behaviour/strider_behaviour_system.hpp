@@ -14,17 +14,21 @@ struct Roamer;
 }
 
 
-class StriderBehaviourSystem final
+namespace System::Anomaly::Roamer
+{
+
+class Strider final
 {
 public:
 	// ------ Functions ------
-	static void Spawn(entt::registry& registry, entt::entity entity, Component::Anomaly::Roamer& roamer);
+	static void Spawn(entt::registry& registry, entt::entity entity) noexcept;
 	static void Update(
 		entt::registry& registry,
 		entt::entity entity,
 		Component::Transform& transform,
-		Component::Anomaly::Roamer& roamer,
+		const Component::Anomaly::Roamer& roamer,
 		float deltaTime
-	);
-
+	) noexcept;
 };
+
+}

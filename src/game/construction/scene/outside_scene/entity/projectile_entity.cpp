@@ -1,31 +1,29 @@
+#include "game/construction/scene/outside_scene/entity/projectile_entity.hpp"
+
+#include "raylib.h"
 #include "core/data/vector2.hpp"
 #include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "game/component/core/audio/sound_emitter_component.hpp"
 #include "game/component/core/transform_component.hpp"
+#include "game/component/core/audio/sound_emitter_component.hpp"
 #include "game/component/scene/outside_scene/projectile_component.hpp"
-#include "game/construction/scene/outside_scene/entity/projectile_entity.hpp"
+#include "game/contexts/scene_context.hpp"
 #include "game/state/scene.hpp"
-#include "raylib.h"
-#include <utility>
 
 
-entt::entity Entity::Projectile::Create(
-	entt::registry& registry, 
-	Nc::ResourceStore& resourceStore, 
-	Nc::Vector2f hitPosition
-) noexcept
+entt::entity Entity::Projectile::Create(const SceneContext& context, Nc::Vector2f hitPosition) noexcept
 {
+	constexpr char HIT_SOUND_PATH[] = "assets/audio/object/artillery_hit.wav";
 	constexpr float TRAVEL_TIME = 4.5f;
 
-	entt::entity entity = registry.create();
+	const entt::entity entity = context.registry.create();
 
-	registry.emplace<Component::Transform>(entity, Outside, hitPosition);
-	registry.emplace<Component::Projectile>(entity, TRAVEL_TIME);
+	context.registry.emplace<Component::Transform>(entity, Outside, hitPosition);
+	context.registry.emplace<Component::Projectile>(entity, TRAVEL_TIME);
 
-	Sound sound = LoadSoundAlias(resourceStore.GetSound("assets/audio/object/artillery_hit.wav"));
-	registry.emplace<Component::Audio>(entity, std::move(sound));
+	const Sound& sound = context.store.CreateSoundHandle(HIT_SOUND_PATH);
+	context.registry.emplace<Component::Audio>(entity, sound);
 
 	return entity;
 }
