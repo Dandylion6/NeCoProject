@@ -52,7 +52,7 @@ entt::entity Object::CircuitBreaker::Indicator::Create(
 
     const Nc::Vector2f position = breakerCenterPosition + Nc::Vector2f::Right(80.0f);
     registry.emplace<Component::Transform>(entity, scene, position, SIZE, SIZE * 0.5f);
-    registry.emplace<Component::Rectangle>(entity, WHITE);
+    registry.emplace<Component::Rectangle>(entity, Nc::RGBa(WHITE));
 
     return entity;
 }

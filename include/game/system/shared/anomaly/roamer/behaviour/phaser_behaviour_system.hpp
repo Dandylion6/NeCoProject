@@ -1,7 +1,8 @@
 #pragma once
-#include "game/component/shared/anomaly/roamer/anomaly_roamer_component.hpp"
-#include "game/component/core/transform_component.hpp"
 #include "entt/entity/fwd.hpp"
+
+
+struct SystemContext;
 
 
 namespace System::Anomaly::Roamer
@@ -12,13 +13,10 @@ class Phaser final
 public:
 	// ------ Functions ------
 	static void Spawn(entt::registry& registry, entt::entity entity) noexcept;
-	static void Update(
-		entt::registry& registry,
-		entt::entity entity,
-		Component::Transform& transform,
-		Component::Anomaly::Roamer& roamer,
-		float deltaTime
-	) noexcept;
+	static void Update(const SystemContext& context) noexcept;
+
+private:
+	static void ChangeToStrider(entt::registry& registry, entt::entity entity) noexcept;
 
 };
 

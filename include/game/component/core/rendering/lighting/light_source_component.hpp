@@ -1,6 +1,6 @@
 #pragma once
-#include "core/data/color.hpp"
 #include "raylib.h"
+#include "core/data/color.hpp"
 
 
 namespace Component::Light
@@ -12,12 +12,11 @@ namespace Component::Light
  * The light has a color, range (radius in pixels), and adjustable strength.
  * It can be attached to an entity to simulate local lighting effects.
  * 
- * The `currentStrength` field can be dynamically adjusted during runtime
- * (e.g. flickering, fading, or pulsing effects) without modifying the base `strength`.
+ * The <c>currentStrength</c> field can be dynamically adjusted during runtime
+ * (e.g. flickering, fading, or pulsing effects) without modifying the base <c>strength</c>.
  * 
  * Usage example:
- * 
- * ```cpp
+ * @code
  * constexpr Nc::Hex COLOR = 0xffffffff;
  * constexpr float RANGE = 64.0f;
  * constexpr float STRENGTH = 1.0f;
@@ -25,13 +24,13 @@ namespace Component::Light
  * registry.emplace<Component::Light::Point>(
  *  entity, COLOR, RANGE, STRENGTH
  * );
- * ```
+ * @endcode
  */
 struct Point final
 {
     // ------ Members ------
 
-    Nc::RGBa color = WHITE;
+    Nc::RGBa color = Nc::RGBa(WHITE);
     float range = 32.0f;
     float strength = 1.0f;
     float currentStrength = strength;
@@ -40,16 +39,8 @@ struct Point final
     // ------ Constructors ------
 
     constexpr Point() noexcept = default;
-    constexpr Point(
-        Nc::RGBa color, 
-        float range, 
-        float strength
-    ) noexcept : 
-        color(color), 
-        range(range), 
-        strength(strength), 
-        currentStrength(strength) 
-    { };
+    constexpr Point(const Nc::RGBa color, const float range, const float strength) noexcept :
+        color(color), range(range), strength(strength), currentStrength(strength) { }
 };
 
 }

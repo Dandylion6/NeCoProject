@@ -1,7 +1,7 @@
 #pragma once
+#include "raylib.h"
 #include "core/data/vector2.hpp"
 #include "core/runtime/lighting_context.hpp"
-#include "raylib.h"
 
 
 namespace Nc

@@ -12,11 +12,10 @@ namespace Component
  * and 'fillColor'. 
  * 
  * Usage example:
- * 
- * ```cpp
+ * @code
  * registry.emplace<Component::Transform>(entity, ...);
  * registry.emplace<Component::Rectangle>(entity, WHITE);
- * ```
+ * @endcode
  */
 struct Rectangle final
 {
@@ -28,9 +27,12 @@ struct Rectangle final
 	// ------ Constructors ------
 
 	constexpr Rectangle() noexcept = default;
-	constexpr Rectangle(Nc::RGBa fillColor) noexcept : 
-		fillColor(fillColor) 
-	{ };
+	explicit constexpr Rectangle(const Nc::RGBa fillColor) noexcept :
+		fillColor(fillColor) { }
+
+	explicit constexpr Rectangle(const Nc::Hex fillColor) noexcept :
+		fillColor(Nc::RGBa(fillColor)) { }
+
 };
 
 }

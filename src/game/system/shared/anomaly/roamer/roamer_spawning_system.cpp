@@ -33,6 +33,8 @@ void System::Anomaly::Roamer::Spawning::Update(const SystemContext& context, Ano
 		return;
 	}
 
+	// TODO: Make sure the spawning is fair and respects difficulty. Spawning should avoid being tied to attraction.
+
 	const uint8_t maxRoamers = AnomalyState::GetMaxRoamers(state.intensityLevel);
 	if (state.totalRoamerCount >= maxRoamers) return;
 

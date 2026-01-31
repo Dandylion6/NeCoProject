@@ -24,8 +24,7 @@ namespace Component
  * Has many variables that dictate how the text is shown.
  * 
  * Usage example:
- * 
- * ```cpp
+ * @code
  * registry.emplace<Component::UI::Transform>(entity, ...);
  * registry.emplace<Component::Text>(
  *	entity,
@@ -36,12 +35,12 @@ namespace Component
  *	Alignment::Left,
  *	4u
  * );
- * ```
+ * @endcode
  */
 struct Text final
 {
 	std::string text = "Hello, World!";
-	Nc::RGBa color = RAYWHITE;
+	Nc::RGBa color = Nc::RGBa(RAYWHITE);
 	Nc::Font::Style style = Nc::Font::WDXL;
 	Nc::Font::Size fontSize = Nc::Font::Size::Medium;
 	Alignment alignment = Alignment::Center;
@@ -51,21 +50,35 @@ struct Text final
 	// ------ Constructors ------
 
 	constexpr Text() noexcept = default;
-	constexpr Text(
+	explicit constexpr Text(
 		std::string&& text,
-		Nc::RGBa color = RAYWHITE,
-		Nc::Font::Style style = Nc::Font::WDXL,
-		Nc::Font::Size fontSize = Nc::Font::Size::Medium,
-		Alignment alignment = Alignment::Center,
-		uint8_t spacing = 0u
+		const Nc::RGBa color = Nc::RGBa(RAYWHITE),
+		const Nc::Font::Style style = Nc::Font::WDXL,
+		const Nc::Font::Size fontSize = Nc::Font::Size::Medium,
+		const Alignment alignment = Alignment::Center,
+		const uint8_t spacing = 0u
 	) :
 		text(std::move(text)),
 		color(color),
 		style(style),
 		fontSize(fontSize),
 		alignment(alignment),
-		spacing(spacing)
-	{ };
+		spacing(spacing) { }
+
+	explicit constexpr Text(
+		std::string&& text,
+		const Nc::Hex color = Nc::Hex(0xffffffff),
+		const Nc::Font::Style style = Nc::Font::WDXL,
+		const Nc::Font::Size fontSize = Nc::Font::Size::Medium,
+		const Alignment alignment = Alignment::Center,
+		const uint8_t spacing = 0u
+	) :
+		text(std::move(text)),
+		color(color),
+		style(style),
+		fontSize(fontSize),
+		alignment(alignment),
+		spacing(spacing) { }
 };
 
 }

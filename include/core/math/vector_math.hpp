@@ -122,7 +122,7 @@ constexpr float SqrMagnitudeOf(const Nc::Vector2f vector) noexcept
  * @param vector Input vector.
  * @return Magnitude of the vector.
  */
-inline float MagnitudeOf(const Nc::Vector2f vector) noexcept { return std::sqrtf(SqrMagnitudeOf(vector)); };
+inline float MagnitudeOf(const Nc::Vector2f vector) noexcept { return std::sqrt(SqrMagnitudeOf(vector)); };
 
 
 /**

@@ -1,22 +1,23 @@
+#include "game/system/shared/anomaly/roamer/roamer_kill_system.hpp"
+
 #include "core/data/vector2.hpp"
 #include "core/math/vector_math.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
+#include "game/game.hpp"
 #include "game/component/core/transform_component.hpp"
 #include "game/component/scene/outside_scene/artillery_component.hpp"
 #include "game/component/shared/anomaly/roamer/anomaly_roamer_component.hpp"
 #include "game/component/shared/stat/health_component.hpp"
-#include "game/game.hpp"
+#include "game/contexts/system_context.hpp"
 #include "game/state/game_state.hpp"
 #include "game/system/shared/anomaly/roamer/roamer_behaviour_system.hpp"
-#include "game/system/shared/anomaly/roamer/roamer_kill_system.hpp"
-
-#include "game/contexts/system_context.hpp"
 
 
 void System::Anomaly::Roamer::Kill::Update(const SystemContext& context) noexcept
 {
-	const auto view = context.registry.view<const Component::Transform, const Component::Anomaly::Roamer, Component::Health>();
+	const auto view = context.registry.view<const Component::Transform, const Component::Anomaly::Roamer,
+	                                        Component::Health>();
 	for (auto [entity, transform, roamer, health] : view.each())
 	{
 		// Kills all roamers
@@ -41,8 +42,7 @@ void System::Anomaly::Roamer::Kill::Update(const SystemContext& context) noexcep
 			UpdateBunkerRoamer(context, transform, health);
 			break;
 		case RoamerTarget::Artillery:
-			// TODO: Add artillery logic.
-			UpdateBunkerRoamer(context, transform, health);
+			UpdateArtilleryRoamer(context.registry, transform, health);
 			break;
 		default: break;
 		}
@@ -54,13 +54,14 @@ void System::Anomaly::Roamer::Kill::UpdateBunkerRoamer(
 	const SystemContext& context,
 	const Component::Transform& transform,
 	Component::Health& health
-)
+) noexcept
 {
 	if (!CanKill(transform.position, BUNKER_POSITION))
 		return;
 
 	health.health = 0; // Roamer kills itself.
 
+	// TODO: Add death state visuals.
 	const SceneContext sceneContext = SceneContext(context.registry, context.store, context.game);
 	Game::Death(sceneContext); // Player dies.
 }
@@ -70,7 +71,7 @@ void System::Anomaly::Roamer::Kill::UpdateArtilleryRoamer(
 	entt::registry& registry,
 	const Component::Transform& transform,
 	Component::Health& health
-)
+) noexcept
 {
 	if (!CanKill(transform.position, BUNKER_POSITION))
 		return;
@@ -81,8 +82,10 @@ void System::Anomaly::Roamer::Kill::UpdateArtilleryRoamer(
 
 
 bool System::Anomaly::Roamer::Kill::CanKill(
-	const Nc::Vector2f roamerPosition, const Nc::Vector2f targetPosition, const float killDistance
-)
+	const Nc::Vector2f roamerPosition,
+	const Nc::Vector2f targetPosition,
+	const float killDistance
+) noexcept
 {
 	const float killDistanceSqr = killDistance * killDistance;
 	const float sqrDistance = Nc::Vector::SqrDistanceBetween(targetPosition, roamerPosition);
@@ -90,8 +93,9 @@ bool System::Anomaly::Roamer::Kill::CanKill(
 }
 
 
-void System::Anomaly::Roamer::Kill::KillArtillery(entt::registry& registry)
+void System::Anomaly::Roamer::Kill::KillArtillery(entt::registry& registry) noexcept
 {
+	// TODO: Determine some game relevant logic to this.
 	const auto view = registry.view<const Component::Artillery, Component::Health>();
 	for (auto [entity, artillery, health] : view.each())
 		--health.health;

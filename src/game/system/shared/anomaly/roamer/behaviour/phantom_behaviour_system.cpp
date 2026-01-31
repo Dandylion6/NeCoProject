@@ -38,26 +38,22 @@ void System::Anomaly::Roamer::Phantom::Spawn(
 }
 
 
-void System::Anomaly::Roamer::Phantom::Update(
-	entt::registry& registry,
-	const entt::entity entity,
-	Component::Transform& transform,
-	const Component::Anomaly::Roamer& roamer,
-	const float deltaTime
-) noexcept
+void System::Anomaly::Roamer::Phantom::Update(const SystemContext& context) noexcept
 {
-	// Speed multiplier when nearly invisible
-	constexpr float HIDDEN_SPEED_MULTIPLIER = 13.0f;
+	const auto view = context.registry.view<Component::Transform, Component::Sprite, Component::Anomaly::Roamer,
+	                                        Component::Anomaly::Strider>();
+	for (auto [entity, transform, sprite, roamer, strider] : view.each())
+	{
+		constexpr float HIDDEN_SPEED_MULTIPLIER = 13.0f;
 
-	const Nc::Vector2f targetPosition = RoamerBehaviourSystem::GetTargetPosition(roamer.target);
-	const auto& sprite = registry.get<const Component::Sprite>(entity);
-	const auto& strider = registry.get<Component::Anomaly::Strider>(entity);
+		const Nc::Vector2f targetPosition = Behaviour::GetTargetPosition(roamer.target);
 
-	float speedMultiplier = 1.0f;
-	if (sprite.alpha < 0.2f)
-		speedMultiplier = HIDDEN_SPEED_MULTIPLIER;
+		float speedMultiplier = 1.0f;
+		if (sprite.alpha < 0.2f)
+			speedMultiplier = HIDDEN_SPEED_MULTIPLIER;
 
-	const Nc::Vector2f difference = targetPosition - transform.position;
-	const Nc::Vector2f direction = Nc::Vector::Normalized(difference);
-	transform.position += direction * strider.moveSpeed * speedMultiplier * deltaTime;
+		const Nc::Vector2f difference = targetPosition - transform.position;
+		const Nc::Vector2f direction = Nc::Vector::Normalized(difference);
+		transform.position += direction * strider.moveSpeed * speedMultiplier * context.deltaTime;
+	}
 }

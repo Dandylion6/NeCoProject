@@ -1,10 +1,10 @@
+#include "game/construction/ui/settings_menu/entity/settings_header_entities.hpp"
 #include "core/data/font.hpp"
 #include "core/data/vector2.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "game/component/core/rendering/text_component.hpp"
 #include "game/component/core/transform_component.hpp"
-#include "game/construction/ui/settings_menu/entity/settings_header_entities.hpp"
+#include "game/component/core/rendering/text_component.hpp"
 #include "game/tag/core/life_cycle/dont_destroy_on_load_tag.hpp"
 #include "game/tag/ui/settings_tag.hpp"
 #include "game/utility/color_palette.hpp"
@@ -14,7 +14,7 @@ entt::entity Entity::SettingsHeader::Create(entt::registry& registry) noexcept
 {
     constexpr auto ANCHOR = Nc::Vector2f(0.5f, 0.1f);
 
-    entt::entity entity = registry.create();
+    const entt::entity entity = registry.create();
 
     registry.emplace<Tag::DontDestroyOnLoad>(entity);
     registry.emplace<Tag::Settings>(entity);
@@ -37,7 +37,7 @@ entt::entity Entity::GameplaySettingsHeader::Create(entt::registry& registry) no
 {
     constexpr auto ANCHOR = Nc::Vector2f(0.3f, 0.25f);
 
-    entt::entity entity = registry.create();
+    const entt::entity entity = registry.create();
 
     registry.emplace<Tag::DontDestroyOnLoad>(entity);
     registry.emplace<Tag::Settings>(entity);

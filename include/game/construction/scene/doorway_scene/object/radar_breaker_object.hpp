@@ -24,14 +24,14 @@ public:
 
 	// ------ Functions ------
 
-	static void Create(const SceneContext& context, entt::entity radar) noexcept;
+	static void Create(const SceneContext& context, entt::entity radar);
 
 private:
 	class LeverBase final
 	{
 	public:
 		// ------ Functions ------
-		static entt::entity Create(const SceneContext& context) noexcept;
+		static entt::entity Create(const SceneContext& context);
 
 	};
 
@@ -40,7 +40,7 @@ private:
 	{
 	public:
 		// ------ Functions ------
-		static entt::entity Create(const SceneContext& context, entt::entity radar) noexcept;
+		static entt::entity Create(const SceneContext& context, entt::entity radar);
 
 	};
 

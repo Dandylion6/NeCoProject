@@ -40,12 +40,12 @@ entt::entity Entity::Blip::Create(const SceneContext& context, Nc::Vector2f posi
 
 	auto& collection = context.registry.emplace<Component::TweenCollection>(entity);
 
-	Tween& fadeOutTween = collection.tweens.at(Component::Blip::BlipFadeOut);
-	Tween::Build(fadeOutTween, &sprite.alpha, 1.0f, 0.0f, FADE_OUT_TIME, QuadOut);
+	Nc::Tween& fadeOutTween = collection.tweens.at(Component::Blip::BlipFadeOut);
+	Nc::Tween::Build(fadeOutTween, &sprite.alpha, 1.0f, 0.0f, FADE_OUT_TIME, QuadOut);
 
-	Tween& fadeInTween = collection.tweens.at(Component::Blip::BlipFadeIn);
-	Tween::Build(fadeInTween, &sprite.alpha, sprite.alpha, 1.0f, FADE_IN_TIME, CubicOut, FADE_OUT_DELAY);
-	fadeInTween.onComplete = fadeInTween.onComplete = [&fadeOutTween]() { Tween::Replay(fadeOutTween); };
+	Nc::Tween& fadeInTween = collection.tweens.at(Component::Blip::BlipFadeIn);
+	Nc::Tween::Build(fadeInTween, &sprite.alpha, sprite.alpha, 1.0f, FADE_IN_TIME, CubicOut, FADE_OUT_DELAY);
+	fadeInTween.onComplete = fadeInTween.onComplete = [&fadeOutTween] { Nc::Tween::Replay(fadeOutTween); };
 
 	return entity;
 }

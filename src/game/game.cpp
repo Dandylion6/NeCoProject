@@ -4,6 +4,7 @@
 
 #include "raylib.h"
 #include "core/data/vector2.hpp"
+#include "core/math/nc_math.hpp"
 #include "core/runtime/entity_helpers.hpp"
 #include "core/runtime/render_context.hpp"
 #include "entt/entity/fwd.hpp"
@@ -19,11 +20,12 @@
 #include "game/contexts/build_context.hpp"
 #include "game/contexts/states_context.hpp"
 #include "game/contexts/system_context.hpp"
+#include "game/save/save_game.hpp"
 #include "game/save/save_settings.hpp"
 #include "game/state/game_state.hpp"
 #include "game/system/core/tween_system.hpp"
-#include "game/system/core/audio/main_ambience_system.hpp"
 #include "game/system/core/audio/audio_emitter_system.hpp"
+#include "game/system/core/audio/main_ambience_system.hpp"
 #include "game/system/core/interactive/click_action_system.hpp"
 #include "game/system/core/interactive/drag_action_system.hpp"
 #include "game/system/core/interactive/input_action_system.hpp"
@@ -49,13 +51,16 @@
 #include "game/system/shared/anomaly/roamer/roamer_behaviour_system.hpp"
 #include "game/system/shared/anomaly/roamer/roamer_kill_system.hpp"
 #include "game/system/shared/anomaly/roamer/roamer_spawning_system.hpp"
-#include "game/system/shared/mechanical/circuit_breaker_system.hpp"
+#include "game/system/shared/anomaly/roamer/behaviour/phantom_behaviour_system.hpp"
+#include "game/system/shared/anomaly/roamer/behaviour/phaser_behaviour_system.hpp"
+#include "game/system/shared/anomaly/roamer/behaviour/strider_behaviour_system.hpp"
 #include "game/system/shared/mechanical/lever_system.hpp"
 #include "game/system/shared/mechanical/machine_power_system.hpp"
 #include "game/system/shared/mechanical/breaker/breaker_display_system.hpp"
 #include "game/system/shared/mechanical/breaker/breaker_operation_system.hpp"
 #include "game/system/shared/mechanical/breaker/breaker_restart_system.hpp"
 #include "game/system/ui/interactive/increment_value_system.hpp"
+#include "game/tag/core/life_cycle/dont_destroy_on_load_tag.hpp"
 #include "game/utility/color_palette.hpp"
 
 #ifdef DEBUG_BUILD
@@ -64,11 +69,9 @@
 
 #include "game/component/shared/debug/dev_settings_component.hpp"
 #include "game/component/shared/debug/runtime_readouts_component.hpp"
-#include "game/save/save_game.hpp"
 #include "game/state/scene.hpp"
-#include "game/tag/core/life_cycle/dont_destroy_on_load_tag.hpp"
 #include "game/utility/morse_code.hpp"
-#endif // DEBUG_BUILD
+#endif
 
 
 Game::Game() : renderContext(resourceStore)
@@ -105,7 +108,7 @@ void Game::SetupRenderContext()
 	const Nc::Vector2f origin = (Nc::Vector2f(monitorSize) - scaledDisplay) * 0.5f;
 	renderContext.renderRectangle = {origin.x, origin.y, scaledDisplay.x, scaledDisplay.y};
 
-	LightingSystem::Initialize(renderContext.lightingContext, resourceStore);
+	System::Render::Lighting::Initialize(renderContext.lightingContext, resourceStore);
 }
 
 
@@ -119,6 +122,9 @@ void Game::SetupDebug(const int args, char* argv[])
 
 	auto& [ignoreMainMenu, isMaximizedWindowed, isRadarActiveOnStart] =
 		registry.emplace<Component::Debug::DevSettings>(entity);
+
+	isMaximizedWindowed = true;
+	ignoreMainMenu = true;
 	for (int i = 0; i < args; ++i)
 	{
 		if (strcmp(argv[i], "--ignore-main-menu") == 0)
@@ -158,14 +164,14 @@ void Game::Load()
 {
 	// Clean up any entities that are load dependant.
 	std::vector<entt::entity> toClean;
-    for (entt::entity entity : registry.view<entt::entity>())
-    {
-	    if (!registry.any_of<Tag::DontDestroyOnLoad>(entity))
-            toClean.emplace_back(entity);
-    }
-    for (const entt::entity entity : toClean) registry.destroy(entity);
+	for (entt::entity entity : registry.view<entt::entity>())
+	{
+		if (!registry.any_of<Tag::DontDestroyOnLoad>(entity))
+			toClean.emplace_back(entity);
+	}
+	for (const entt::entity entity : toClean) registry.destroy(entity);
 
-    BuildRuntimeScenes();
+	BuildRuntimeScenes();
 
 	Load::GameFromDisk(registry, StatesContext(anomalyState, gameState));
 }
@@ -173,8 +179,10 @@ void Game::Load()
 
 void Game::BuildMenuUI()
 {
-	const Nc::Vector2f windowSize = Nc::Vector2f(renderContext.windowSize);
-	const SceneContext context = SceneContext(registry, resourceStore, gameState);
+	const auto context = SceneContext(registry, resourceStore, gameState);
+	const auto windowSize = Nc::Vector2f(renderContext.windowSize);
+
+	Entity::AmbientSound::Create(registry);
 
 	Structure::MainMenu::Build(context, *this);
 	Structure::SettingsMenu::Build(context, windowSize, settings, pendingSettings);
@@ -193,8 +201,8 @@ void Game::BuildMenuUI()
 	}
 
 #else
-	MainMenu::Open(registry, gameState);
-#endif // DEBUG_BUILD
+	Structure::MainMenu::Open(context);
+#endif
 }
 
 
@@ -203,7 +211,6 @@ void Game::BuildRuntimeScenes()
 	const SceneContext sceneContext = SceneContext(registry, resourceStore, gameState);
 
 	Entity::MoveTransition::Create(sceneContext, renderContext);
-	Entity::AmbientSound::Create(registry);
 
 	const BuildContext buildContext = BuildContext(registry, resourceStore, renderContext, gameState);
 
@@ -223,7 +230,7 @@ void Game::SetupWindow()
 
 #ifdef DEBUG_BUILD
 	SetExitKey(KEY_BACKSPACE);
-	
+
 	const entt::entity entity = entt::get_single<Component::Debug::DevSettings>(registry);
 	const auto& devSettings = registry.get<Component::Debug::DevSettings>(entity);
 
@@ -266,13 +273,17 @@ void Game::Update(float deltaTime)
 	if (IsKeyPressed(KEY_PERIOD))
 	{
 		auto& randomService = registry.ctx().get<Nc::Random>();
-		const Nc::Vector2f spawnPoint = RoamerSpawningSystem::GenerateRandomSpawnPoint(randomService);
-		RoamerSpawningSystem::SpawnRoamer({registry, resourceStore, gameState, deltaTime}, spawnPoint, anomalyState);
+		const Nc::Vector2f spawnPoint = System::Anomaly::Roamer::Spawning::GenerateRandomSpawnPoint(randomService);
+		System::Anomaly::Roamer::Spawning::SpawnRoamer(
+			{registry, resourceStore, gameState, deltaTime},
+			spawnPoint,
+			anomalyState
+		);
 	}
-	
+
 	if (IsKeyPressed(KEY_MINUS)) ++anomalyState.intensityLevel;
 	if (IsKeyPressed(KEY_EQUAL)) --anomalyState.intensityLevel;
-	
+
 	if (IsKeyPressed(KEY_NINE)) anomalyState.attractionPercentage += 5.0f;
 	if (IsKeyPressed(KEY_ZERO)) anomalyState.attractionPercentage -= 5.0f;
 
@@ -284,7 +295,7 @@ void Game::Update(float deltaTime)
 		deltaTime *= readouts.timeScale;
 	}
 
-	if (IsKeyPressed(KEY_P)) Death({registry,resourceStore,gameState});
+	if (IsKeyPressed(KEY_P)) Death({registry, resourceStore, gameState});
 #endif
 
 	// Reset cursor type.
@@ -358,54 +369,60 @@ void Game::UpdateRegistries(float deltaTime)
 	System::Artillery::Aiming::Update(context);
 	System::Projectile::Hit::Update(context);
 	System::Anomaly::Roamer::Spawning::Update(context, anomalyState);
-	System::Anomaly::Roamer::Behaviour::Update(registry, anomalyState, deltaTime);
-	RoamerKillSystem::Update(registry, gameState, deltaTime);
-	AnomalyAttractionSystem::Update(gameState, deltaTime);
+	System::Anomaly::Roamer::Strider::Update(context);
+	System::Anomaly::Roamer::Phaser::Update(context);
+	System::Anomaly::Roamer::Phantom::Update(context);
+	System::Anomaly::Roamer::Behaviour::Update(context, anomalyState);
+	System::Anomaly::Roamer::Kill::Update(context);
+	System::Anomaly::Attraction::Update(context, anomalyState);
 }
 
 
 void Game::DrawGame(float deltaTime)
 {
+	constexpr auto CAMERA_SWAY_STRENGTH = Nc::Vector2f(5.0f, 4.0f);
+	constexpr auto CAMERA_SWAY_SPEED = Nc::Vector2f(0.08f, 0.6f) * Nc::Math::TWO_PI;
+	constexpr auto HEIGHT_SWAY_PHASE = 0.2f;
+
 #ifdef DEBUG_BUILD
-	const auto view = registry.view<Component::Debug::RuntimeReadouts>();
-	for (auto [entity, readouts] : view.each())
-		deltaTime *= readouts.timeScale;
+	const entt::entity debugEntity = entt::get_single<Component::Debug::RuntimeReadouts>(registry);
+	const auto& readouts = registry.get<Component::Debug::RuntimeReadouts>(debugEntity);
+	deltaTime *= readouts.timeScale;
 #endif
 
-	RadarRenderSystem::DrawRenderTexture(
-		registry, renderContext.radarRenderTexture, gameState.currentScene, resourceStore
-	);
+	const auto context = SystemContext(registry, resourceStore, gameState, deltaTime);
+	System::Render::Radar::DrawRenderTexture(context, renderContext.radarRenderTexture);
 
-	Nc::Vector2f cameraPosition = Nc::Vector2f::Zero();
-	cameraPosition.x = std::cosf(gameState.time * 0.6f) * 5.0f;
-	cameraPosition.y = std::sinf((gameState.time * 2.4f) - 0.2f) * 4.0f;
+	auto cameraPosition = Nc::Vector2f::Zero();
+	const Nc::Vector2f swayTime = CAMERA_SWAY_SPEED * gameState.time;
+
+	cameraPosition.x = std::cos(swayTime.x) * CAMERA_SWAY_STRENGTH.x;
+	cameraPosition.y = std::sin(swayTime.y - HEIGHT_SWAY_PHASE) * CAMERA_SWAY_STRENGTH.y;
 
 	BeginTextureMode(renderContext.renderTexture);
 	ClearBackground(BLANK);
 
 	// TODO: Render light at same game size.
 
-	const Shader& shader = resourceStore.GetShader("assets/lighting.fs");
-	LightingSystem::Update(registry, renderContext.lightingContext, shader, gameState, cameraPosition, deltaTime);
-	RenderingSystem::DrawScreen(registry, renderContext, gameState, cameraPosition);
-	RadarRenderSystem::DrawRadar(
-		registry, renderContext.radarRenderTexture, cameraPosition, gameState.currentScene
-	);
+	const Shader& shader = System::Render::Lighting::Update(context, renderContext.lightingContext, cameraPosition);
+	BeginShaderMode(shader);
+
+	RenderingSystem::DrawScreen(registry, gameState, cameraPosition);
+	System::Render::Radar::DrawRadar(context, renderContext.radarRenderTexture, cameraPosition);
 
 	EndTextureMode();
+	EndShaderMode();
 
 	BeginDrawing();
 	ClearBackground(Color(Palette::BACKGROUND_COLOR));
 
-	BeginShaderMode(shader);
 	DrawRenderTexture();
-	EndShaderMode();
 
-	RenderingSystem::DrawUi(registry, resourceStore, renderContext, gameState);
+	RenderingSystem::DrawUi(registry, resourceStore, renderContext);
 
 #ifdef DEBUG_BUILD
 	DrawDebugUi();
-#endif // DEBUG_BUILD
+#endif
 
 	EndDrawing();
 }
@@ -420,7 +437,7 @@ void Game::Death(const SceneContext& context)
 void Game::DrawRenderTexture() const
 {
 	constexpr auto DISPLAY_SIZE = Nc::Vector2f(Nc::RENDER_RESOLUTION);
-	constexpr Rectangle SOURCE { 0, 0, DISPLAY_SIZE.x, -DISPLAY_SIZE.y };
+	constexpr Rectangle SOURCE{0, 0, DISPLAY_SIZE.x, -DISPLAY_SIZE.y};
 
 	DrawTexturePro(
 		renderContext.renderTexture.texture,
@@ -436,61 +453,60 @@ void Game::DrawRenderTexture() const
 #ifdef DEBUG_BUILD
 void Game::DrawDebugUi()
 {
-	const auto view = registry.view<Component::Debug::RuntimeReadouts>();
-	for (auto [entity, readouts] : view.each())
+	const entt::entity debugEntity = entt::get_single<Component::Debug::RuntimeReadouts>(registry);
+	auto& [fpsHistory, receiverMessage, radarStabilityPercentage, timeScale, pulse] = registry.get<
+		Component::Debug::RuntimeReadouts>(debugEntity);
+
+	fpsHistory.pop_back();
+	fpsHistory.push_front(static_cast<int16_t>(GetFPS()));
+
+	int fpsTotal = 0;
+	for (const int16_t fps : fpsHistory)
+		fpsTotal += fps;
+
+	const int averageFps = fpsTotal / 32;
+	std::string text = "FPS: " + std::to_string(averageFps);
+	DrawText(text.c_str(), 32, 32, 32, GREEN);
+
+	text = "MSG: " + receiverMessage;
+	DrawText(text.c_str(), 32, 70, 32, GREEN);
+
+	text = "PULSE: ";
+	switch (pulse)
 	{
-
-		readouts.fpsHistory.pop_back();
-		readouts.fpsHistory.push_front(static_cast<int16_t>(GetFPS()));
-		
-		int fpsTotal = 0;
-		for (const int16_t fps : readouts.fpsHistory)
-			fpsTotal += fps;
-
-		const int averageFps = fpsTotal / 32;
-		std::string text = "FPS: " + std::to_string(averageFps);
-		DrawText(text.c_str(), 32, 32, 32, GREEN);
-
-		text = "MSG: " + readouts.receiverMessage;
-		DrawText(text.c_str(), 32, 70, 32, GREEN);
-
-		text = "PULSE: ";
-		switch (readouts.pulse)
-		{
-		case MorseCode::Invalid:
-			break;
-		case MorseCode::Short:
-			text += ".";
-			break;
-		case MorseCode::Long:
-			text += "-";
-			break;
-		}
-		DrawText(text.c_str(), 32, 110, 32, GREEN);
-
-		text = "DNGER LVL: " + std::to_string(gameState.anomalyState.intensityLevel);
-		DrawText(text.c_str(), 32, 148, 32, GREEN);
-
-		text = "ATRCTION: " + std::to_string(static_cast<int32_t>(gameState.anomalyState.attractionPercentage)) + "%";
-		DrawText(text.c_str(), 32, 186, 32, GREEN);
-
-		text = "RADAR: " + std::to_string(static_cast<int32_t>(readouts.radarStabilityPercentage)) + "%";
-		DrawText(text.c_str(), 32, 224, 32, GREEN);
-
-		text = "TIME SPD: " + std::to_string(readouts.timeScale);
-		DrawText(text.c_str(), 32, 272, 32, GREEN);
-
-		text = "DAY & H: " + std::to_string(gameState.day) + " / " + std::to_string(static_cast<int32_t>(gameState.hour));
-		DrawText(text.c_str(), 32, 320, 32, GREEN);
-
-		DrawText("Press [/] to delete msg", 32, 540, 24, GREEN);
-		DrawText("Press [.] to spawn roamer", 32, 580, 24, GREEN);
-		DrawText("Press [G] to glitch a blip", 32, 620, 24, GREEN);
-		DrawText("Press [P] to kill player", 32, 660, 24, GREEN);
-		DrawText("Press [-/=] to mod intensity", 32, 700, 18, GREEN);
-		DrawText("Press [9/0] to mod attraction", 32, 740, 18, GREEN);
-		DrawText("Press [K/L] to mod radar stability", 32, 780, 18, GREEN);
-		DrawText("Press [M/N] to mod time scale", 32, 820, 18, GREEN);
+	case MorseCode::Invalid:
+		break;
+	case MorseCode::Short:
+		text += ".";
+		break;
+	case MorseCode::Long:
+		text += "-";
+		break;
 	}
+	DrawText(text.c_str(), 32, 110, 32, GREEN);
+
+	text = "DNGER LVL: " + std::to_string(anomalyState.intensityLevel);
+	DrawText(text.c_str(), 32, 148, 32, GREEN);
+
+	text = "ATRCTION: " + std::to_string(static_cast<int32_t>(anomalyState.attractionPercentage)) + "%";
+	DrawText(text.c_str(), 32, 186, 32, GREEN);
+
+	text = "RADAR: " + std::to_string(static_cast<int32_t>(radarStabilityPercentage)) + "%";
+	DrawText(text.c_str(), 32, 224, 32, GREEN);
+
+	text = "TIME SPD: " + std::to_string(timeScale);
+	DrawText(text.c_str(), 32, 272, 32, GREEN);
+
+	text = "DAY & H: " + std::to_string(gameState.day) + " / " + std::to_string(static_cast<int32_t>(gameState.hour));
+	DrawText(text.c_str(), 32, 320, 32, GREEN);
+
+	DrawText("Press [/] to delete msg", 32, 540, 24, GREEN);
+	DrawText("Press [.] to spawn roamer", 32, 580, 24, GREEN);
+	DrawText("Press [G] to glitch a blip", 32, 620, 24, GREEN);
+	DrawText("Press [P] to kill player", 32, 660, 24, GREEN);
+	DrawText("Press [-/=] to mod intensity", 32, 700, 18, GREEN);
+	DrawText("Press [9/0] to mod attraction", 32, 740, 18, GREEN);
+	DrawText("Press [K/L] to mod radar stability", 32, 780, 18, GREEN);
+	DrawText("Press [M/N] to mod time scale", 32, 820, 18, GREEN);
 }
 #endif // DEBUG_BUILD

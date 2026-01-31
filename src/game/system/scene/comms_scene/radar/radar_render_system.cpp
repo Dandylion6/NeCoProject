@@ -22,132 +22,120 @@
 #include <sstream>
 #include <string>
 
+#include "core/math/nc_math.hpp"
+#include "core/runtime/entity_helpers.hpp"
+#include "game/component/core/interactive/drag_action_component.hpp"
+#include "game/contexts/system_context.hpp"
 
-void RadarRenderSystem::DrawRenderTexture(
-	entt::registry& registry, const RenderTexture2D& radarRenderTexture, Scene currentScene, Nc::ResourceStore& resourceStore
-)
+
+void System::Render::Radar::DrawRenderTexture(const SystemContext& context, const RenderTexture2D& radarRenderTexture)
 {
-	if (currentScene != CommsRoom) return;
-
-	auto view = registry.view<Component::Action::Toggle, Component::Radar, Component::Sprite>();
+	if (context.game.currentScene != CommsRoom) return;
 
 	BeginTextureMode(radarRenderTexture);
 	BeginBlendMode(BLEND_ADDITIVE);
 
-	for (auto [entity, toggle, radar, sprite] : view.each())
+	const entt::entity entity = entt::get_single<Component::Radar>(context.registry);
+	const auto& toggle = context.registry.get<Component::Action::Toggle>(entity);
+	auto& radar = context.registry.get<Component::Radar>(entity);
+	auto& sprite = context.registry.get<Component::Sprite>(entity);
+
+	const Context radarContext = {context, radar, sprite};
+
+	// TODO: Add different visual states for on, off, and disabled (broken).
+	if (toggle.state != On)
 	{
-		// TODO: Add different visual states for on, off, and disabled (broken).
-		if (toggle.state != On)
-		{
-			ClearBackground(BLACK);
-			continue;
-		}
-
-		bool isRecalibrating = radar.recalibrationTimeLeft > 0.0f;
-		if (isRecalibrating)
-		{
-			DrawRecalibratingScreen(registry, resourceStore, radar, sprite);
-			continue;
-		}
-
-		DrawActiveScreen(registry, resourceStore, radar, sprite);
+		ClearBackground(BLACK);
+		return;
 	}
+
+	if (radar.recalibrationTimeLeft > 0.0f)
+	{
+		DrawRecalibratingScreen(radarContext);
+		return;
+	}
+
+	DrawActiveScreen(radarContext);
 
 	EndTextureMode();
 	EndBlendMode();
 }
 
 
-void RadarRenderSystem::DrawRadar(
-	entt::registry& registry,
-	const RenderTexture2D& radarRenderTexture,
-	Nc::Vector2f cameraPosition,
-	Scene currentScene
-)
+void System::Render::Radar::DrawRadar(const SystemContext& context,	const RenderTexture2D& radarRenderTexture, const Nc::Vector2f cameraPosition)
 {
-	if (currentScene != CommsRoom) return;
+	constexpr Nc::Vector2f RADAR_SIZE = RADAR_BOUNDS.max;
+	constexpr Rectangle SOURCE { 0, 0, RADAR_SIZE.x, -RADAR_SIZE.y };
 
-	Nc::Vector2f radarSize = RADAR_BOUNDS.max;
-	Nc::Vector2f position = RADAR_POSITION + cameraPosition;
+	if (context.game.currentScene != CommsRoom) return;
 
-	Rectangle source { 0, 0, radarSize.x, -radarSize.y };
-	Rectangle destination { position.x, position.y, radarSize.x, radarSize.y };
+	const Nc::Vector2f position = RADAR_POSITION + cameraPosition;
+	const Rectangle destination { position.x, position.y, RADAR_SIZE.x, RADAR_SIZE.y };
 
-	DrawTexturePro(
-		radarRenderTexture.texture,
-		source,
-		destination,
-		Nc::Vector2f::Zero(),
-		0.0f,
-		WHITE
-	);
+	DrawTexturePro(radarRenderTexture.texture, SOURCE, destination,Vector2(), 0.0f, WHITE);
 }
 
 
-void RadarRenderSystem::DrawActiveScreen(
-	entt::registry& registry, Nc::ResourceStore& resourceStore, Component::Radar& radar, Component::Sprite& sprite
-)
+void System::Render::Radar::DrawActiveScreen(const Context& context)
 {
-	const std::string BACKGROUND_FILE = "assets/environment/objects/radar/radar_screen.png";
+	constexpr char BACKGROUND_FILE[] = "assets/environment/objects/radar/radar_screen.png";
 
 	ClearBackground(BLANK);
 	
-	sprite.texture = resourceStore.GetTexture(BACKGROUND_FILE);
-	Renderer::DrawSprite(sprite, Nc::Vector2f::Zero());
+	context.sprite.texture = context.systemContext.store.GetTexture(BACKGROUND_FILE);
+	Renderer::DrawSprite(context.sprite, Nc::Vector2f::Zero());
 
-	DrawPath(registry);
-	DrawRadarArtillery(registry);
-	DrawBlips(registry, resourceStore);
+	DrawPath(context.systemContext.registry);
+	DrawRadarArtillery(context.systemContext.registry);
+	DrawBlips(context.systemContext);
 
-	bool hasWarnings = radar.glitchCount > 0u && radar.stability <= Component::Radar::HEALTHY_LEVEL;
-	if (hasWarnings) 
-		DrawErrorWarning(registry, resourceStore, radar);
+	if (context.radar.glitchCount > 0u && context.radar.stability <= Component::Radar::HEALTHY_LEVEL)
+		DrawErrorWarning(context);
 }
 
 
-void RadarRenderSystem::DrawPath(entt::registry& registry)
+void System::Render::Radar::DrawPath(entt::registry& registry)
 {
-	auto view = registry.view<Tag::Radar::Path, const Component::Transform, const Component::Sprite>();
-	for (auto [entity, transform, sprite] : view.each())
-	{
-		Renderer::DrawSprite(sprite, transform.position, transform.offset, transform.rotation);
-	}
+	const entt::entity entity = entt::get_single<Tag::Radar::Path>(registry);
+	const auto& transform = registry.get<Component::Transform>(entity);
+	const auto& sprite = registry.get<Component::Sprite>(entity);
+
+	Renderer::DrawSprite(sprite, transform.position, transform.offset, transform.rotation);
 }
 
 
-void RadarRenderSystem::DrawRadarArtillery(entt::registry& registry)
+void System::Render::Radar::DrawRadarArtillery(entt::registry& registry)
 {
-	auto view = registry.view<Tag::Radar::Artillery, const Component::Transform, const Component::Sprite>();
-	for (auto [entity, transform, sprite] : view.each())
-	{
-		Nc::Vector2f position = Nc::Vector::Remap(
+	const entt::entity entity = entt::get_single<Tag::Radar::Artillery>(registry);
+	const auto& transform = registry.get<Component::Transform>(entity);
+	const auto& sprite = registry.get<Component::Sprite>(entity);
+
+	const Nc::Vector2f position = Nc::Vector::Remap(
 			WORLD_BOUNDS.min,
 			WORLD_BOUNDS.max,
 			RADAR_BOUNDS.min,
 			RADAR_BOUNDS.max,
 			transform.position
 		);
-		Renderer::DrawSprite(sprite, position, transform.offset, transform.rotation);
-	}
+
+	Renderer::DrawSprite(sprite, position, transform.offset, transform.rotation);
 }
 
 
-void RadarRenderSystem::DrawBlips(
-	entt::registry& registry, Nc::ResourceStore& resourceStore
-)
+void System::Render::Radar::DrawBlips(const SystemContext& context)
 {
 	constexpr Nc::Vector2f TEXT_OFFSET = Nc::Vector2f::Down(12.0f);
-	
-	auto view = registry.view<Component::Blip, const Component::Transform, const Component::Sprite, Component::Text>();
+
+	const auto view = context.registry.view<Component::Blip, Component::Transform, Component::Sprite, Component::Text>();
 	for (auto [entity, blip, transform, sprite, text] : view.each())
 	{
 		Nc::Vector2f glitchOffset = Nc::Vector2f::Zero();
 		if (blip.state == Component::Blip::CompleteFailure)
 		{
-			Component::Glitch::ContactFailure& failure = registry.get<Component::Glitch::ContactFailure>(entity);
+			const auto& failure = context.registry.get<Component::Glitch::ContactFailure>(entity);
 			glitchOffset = failure.glitchedOffset;
 		}
-		
+
 		Nc::Vector2f position = Nc::Vector::Remap(
 			WORLD_BOUNDS.min,
 			WORLD_BOUNDS.max,
@@ -157,62 +145,69 @@ void RadarRenderSystem::DrawBlips(
 		);
 		position += glitchOffset;
 		Renderer::DrawSprite(sprite, position, transform.offset, transform.rotation);
-		
-		Nc::Vector2f textPosition = position + TEXT_OFFSET;
-		Nc::Vector2f offset = Renderer::GetTextOffset(text, resourceStore);
-		
+
+		const Nc::Vector2f textPosition = position + TEXT_OFFSET;
+		const Nc::Vector2f offset = Renderer::GetTextOffset(text, context.store);
+
 		Nc::RGBa::SetAlphaFor(text.color, sprite.alpha);
-		Renderer::DrawText(text, textPosition, offset, resourceStore);
+		Renderer::DrawText(text, textPosition, offset, context.store);
 	}
 }
 
 
-void RadarRenderSystem::DrawErrorWarning(
-	entt::registry &registry, Nc::ResourceStore& resourceStore, Component::Radar& machine
-)
+void System::Render::Radar::DrawErrorWarning(const Context& context)
 {
-	auto view = registry.view<const Component::RadarErrorWarning, const Component::Transform, Component::Text>();
-	for (auto [entity, errorWarning, transform, text] : view.each())
-	{
-		std::ostringstream stringStream;
-		stringStream << "ERRORS ( " << std::to_string(machine.glitchCount) << " )";
-		text.text = stringStream.str();
-		Nc::RGBa::SetAlphaFor(text.color, errorWarning.alpha);
+	const entt::entity entity = entt::get_single<Component::RadarErrorWarning>(context.systemContext.registry);
+	const auto& errorWarning = context.systemContext.registry.get<Component::RadarErrorWarning>(entity);
+	const auto& transform = context.systemContext.registry.get<Component::Transform>(entity);
+	auto& text = context.systemContext.registry.get<Component::Text>(entity);
 
-		Nc::Vector2f offset = transform.offset + Renderer::GetTextOffset(text, resourceStore);
-		Renderer::DrawText(text, transform.position, offset, resourceStore);
-	}
+	text.text = "ERRORS ( " + std::to_string(context.radar.glitchCount) + " )";
+	Nc::RGBa::SetAlphaFor(text.color, errorWarning.alpha);
+
+	const Nc::Vector2f offset = transform.offset + Renderer::GetTextOffset(text, context.systemContext.store);
+	Renderer::DrawText(text, transform.position, offset, context.systemContext.store);
 }
 
 
-void RadarRenderSystem::DrawRecalibratingScreen(
-	entt::registry& registry, Nc::ResourceStore& resourceStore, Component::Radar& radar, Component::Sprite& sprite
-)
+void System::Render::Radar::DrawRecalibratingScreen(const Context& context)
 {
-	constexpr float ANIMATION_SPEED = 6.0f;
-	constexpr float BLINK_TIME = 1.4f;
-	const std::array<std::string, 6u> loadingStrings = {
-		"[O o o o]", "[o O o o]", "[o o O o]", "[o o o O]", "[o o O o]", "[o O o o]"
-	};
-
 	// TODO: Add custom recalibration background
 	ClearBackground(BLACK);
-	
-	auto view = registry.view<const Tag::Radar::Recalibration, const Component::Transform, Component::Text>();
-	for (auto [entity, transform, text] : view.each())
+
+	const entt::entity entity = entt::get_single<Tag::Radar::Recalibration>(context.systemContext.registry);
+	const auto& transform = context.systemContext.registry.get<Component::Transform>(entity);
+	auto& text = context.systemContext.registry.get<Component::Text>(entity);
+
+	constexpr float BLINK_TIME = 1.4f;
+
+	const float time = Component::Radar::RECALIBRATION_TIME - context.radar.recalibrationTimeLeft;
+	const std::string& loadingString = GetRecalibratingText(time);
+
+	const float blink = 0.7f + std::cos(time * Nc::Math::TWO_PI / BLINK_TIME) * 0.3f;
+	Nc::RGBa::SetAlphaFor(text.color, blink);
+
+	text.text = "RECALIBRATING " + loadingString;
+
+	const Nc::Vector2f offset = transform.offset + Renderer::GetTextOffset(text, context.systemContext.store);
+	Renderer::DrawText(text, transform.position, offset, context.systemContext.store);
+}
+
+
+std::string System::Render::Radar::GetRecalibratingText(const float time)
+{
+	constexpr float ANIMATION_SPEED = 6.0f;
+	constexpr int ANIMATION_COUNT = 4;
+
+	std::string text = "[";
+	const int index = static_cast<int>(time * ANIMATION_SPEED) % ANIMATION_COUNT;
+
+	for (int i = 0; i < ANIMATION_COUNT; ++i)
 	{
-		float time = Component::Radar::RECALIBRATION_TIME - radar.recalibrationTimeLeft;
-		uint8_t index = static_cast<uint8_t>(time * ANIMATION_SPEED) % loadingStrings.size();
-		const std::string& loadingCharacter = loadingStrings.at(index);
-
-		float blink = 0.7f + std::cosf(time * PI * 2.0f / BLINK_TIME) * 0.3f;
-		Nc::RGBa::SetAlphaFor(text.color, blink);
-
-		std::ostringstream stringStream;
-		stringStream << "RECALIBRATING " << loadingCharacter;
-		text.text = stringStream.str();
-
-		Nc::Vector2f offset = transform.offset + Renderer::GetTextOffset(text, resourceStore);
-		Renderer::DrawText(text, transform.position, offset, resourceStore);
+		text += i == index ? "O" : "o";
+		if (i < ANIMATION_COUNT - 1)
+			text += " ";
 	}
+
+	return text + "]";
 }

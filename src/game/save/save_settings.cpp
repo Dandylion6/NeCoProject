@@ -12,7 +12,7 @@
 
 Save::Result Save::SettingsToDisk(const Settings& settings)
 {
-    std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
+    const auto dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
     if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
     std::ofstream stream(dataDirectoryPath / "settings.json");
 
@@ -28,7 +28,7 @@ Save::Result Save::SettingsToDisk(const Settings& settings)
 
 Load::Result Load::SettingsFromDisk(Settings& settings)
 {
-    std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
+    const auto dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
     if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
     std::ifstream stream(dataDirectoryPath / "settings.json");
 

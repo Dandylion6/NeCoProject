@@ -1,9 +1,7 @@
 #include "game/save/save_game.hpp"
 
-#include <cstdint>
 #include <filesystem>
 #include <fstream>
-#include <iostream>
 #include <string>
 
 #include "entt/entity/fwd.hpp"
@@ -72,7 +70,7 @@ static Result SaveToggleComponents(entt::registry& registry, nlohmann::json& dat
 
 Result GameToDisk(entt::registry& registry, const StatesContext& context)
 {
-    std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
+    const auto dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
     if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
 
     std::ofstream stream(dataDirectoryPath / "game.save", std::ios::out);
@@ -108,7 +106,7 @@ static Result LoadGameState(const StatesContext& context, nlohmann::json& data)
         gameStateData["attraction_percentage"] = AnomalyState::BASE_ATTRACTION;
         gameStateData["day"] = 0;
         gameStateData["time"] = 0.0f;
-        gameStateData["current_scene"] = static_cast<uint8_t>(CommsRoom);
+        gameStateData["current_scene"] = CommsRoom;
     }
 
     nlohmann::json& gameStateData = data["game_state"];
@@ -152,7 +150,7 @@ static Result LoadToggleComponents(entt::registry& registry, nlohmann::json& dat
         if (registry.any_of<Component::Logic::Lever>(entity))
         {
             Component::Logic::Lever& lever = registry.get<Component::Logic::Lever>(entity);
-            lever.currentHeight = LeverSystem::GetHeightTarget(toggle.state, lever);
+            lever.currentHeight = System::Logic::Lever::GetHeightTarget(toggle, lever);
         }
     }
     return Result::Success;
@@ -161,7 +159,7 @@ static Result LoadToggleComponents(entt::registry& registry, nlohmann::json& dat
 
 Result GameFromDisk(entt::registry& registry, const StatesContext& context)
 {
-    std::filesystem::path dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
+    const auto dataDirectoryPath = std::filesystem::path(BUILD_DIR_PATH) / "data";
     if (!std::filesystem::is_directory(dataDirectoryPath)) std::filesystem::create_directories(dataDirectoryPath);
 
     std::ifstream stream(dataDirectoryPath / "game.save", std::ios::in);

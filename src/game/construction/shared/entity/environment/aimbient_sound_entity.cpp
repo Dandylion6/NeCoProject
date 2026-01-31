@@ -13,7 +13,7 @@ entt::entity Entity::AmbientSound::Create(entt::registry& registry) noexcept
 {
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(Nc::RENDER_RESOLUTION) * 0.5f;
 
-	entt::entity entity = registry.create();
+	const entt::entity entity = registry.create();
 
 	registry.emplace<Tag::AmbientSound>(entity);
 

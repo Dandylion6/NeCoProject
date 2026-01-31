@@ -58,8 +58,6 @@ struct Transform final
 	// ------ Constructors ------
 
 	constexpr Transform() noexcept = default;
-
-
 	explicit constexpr Transform(
 		const Scene boundScene,
 		const Nc::Vector2f position = Nc::Vector2f::Zero(),
@@ -73,10 +71,8 @@ struct Transform final
 		  offset(offset),
 		  rotation(rotation),
 		  boundScene(boundScene),
-		  index(index)
-	{ };
+		  index(index) {};
 };
-
 }
 
 
@@ -99,7 +95,6 @@ namespace Component::UI
  * - <b>isVisible</b>: determines whether the element is drawn at all.
  *
  * Usage example:
- * 
  * @code
  * constexpr Nc::Vector2f ANCHOR = Nc::Vector2f(0.5f, 0.5f);  // Center of the screen
  * constexpr Nc::Vector2f ORIGIN = Nc::Vector2f(0.0f, 0.5f);  // Left-center pivot
@@ -125,11 +120,11 @@ struct Transform final
 
 	// ------ Constructors ------
 
-	constexpr Transform() noexcept = default;
+	constexpr Transform() = default;
 
 
 	constexpr Transform(const Nc::Vector2f anchor, const Nc::Vector2f origin, const SortIndex index) noexcept
-		: anchor(anchor), origin(origin), index(index) { };
+		: anchor(anchor), origin(origin), index(index) {}
 
 
 	explicit constexpr Transform(
@@ -145,8 +140,7 @@ struct Transform final
 		  size(size),
 		  offset(offset),
 		  rotation(rotation),
-		  index(index)
-	{ };
+		  index(index) {}
 };
 
 }

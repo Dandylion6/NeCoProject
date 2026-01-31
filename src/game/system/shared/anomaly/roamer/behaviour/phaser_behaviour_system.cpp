@@ -26,46 +26,54 @@ void System::Anomaly::Roamer::Phaser::Spawn(entt::registry& registry, const entt
 }
 
 
-void System::Anomaly::Roamer::Phaser::Update(
-	entt::registry& registry,
-	const entt::entity entity,
-	Component::Transform& transform, 
-	Component::Anomaly::Roamer& roamer,
-	const float deltaTime
-) noexcept
+void System::Anomaly::Roamer::Phaser::Update(const SystemContext& context) noexcept
 {
 	constexpr Nc::Vector2f IDLE_SECONDS_RANGE = Nc::Vector2f(18.0f, 22.0f);
-	constexpr float MOVE_DISTANCE = 10.6f;
 	// Distance from target that turns into striding movement
 	constexpr float STRIDING_DISTANCE = 26.0f;
 	constexpr float STRIDING_DISTANCE_SQR = STRIDING_DISTANCE * STRIDING_DISTANCE;
 
-	auto& randomService = registry.ctx().get<Nc::Random>();
-	auto& phaser = registry.get<Component::Anomaly::Phaser>(entity);
+	auto& randomService = context.registry.ctx().get<Nc::Random>();
 
-	phaser.secondsUntilNextPoint -= deltaTime;
-	if (phaser.secondsUntilNextPoint > 0.0f) return;
-
-	phaser.currentPointIndex = (phaser.currentPointIndex + 1u) % phaser.pointCount;
-	phaser.secondsUntilNextPoint = randomService.RangeFloat(IDLE_SECONDS_RANGE.x, IDLE_SECONDS_RANGE.y);
-	
-	Nc::Vector2f& nextPoint = phaser.points.at(phaser.currentPointIndex);
-	const Nc::Vector2f targetPosition = RoamerBehaviourSystem::GetTargetPosition(roamer.target);
-
-	const Nc::Vector2f difference = targetPosition - nextPoint;
-	const float sqrDistance = Nc::Vector::SqrMagnitudeOf(difference);
-
-	if (sqrDistance <= STRIDING_DISTANCE_SQR)
+	const auto view = context.registry.view<Component::Transform, Component::Anomaly::Roamer, Component::Anomaly::Phaser>();
+	for (auto [entity, transform, roamer, phaser] : view.each())
 	{
-		roamer.behaviour = RoamerBehaviour::Strider;
-		registry.remove<Component::Anomaly::Phaser>(entity);
-		Strider::Spawn(registry, entity);
-		return;
+		constexpr float MOVE_DISTANCE = 10.6f;
+
+		const Nc::Vector2f targetPosition = Behaviour::GetTargetPosition(roamer.target);
+		const Nc::Vector2f toTargetDelta = targetPosition - transform.position;
+		const float sqrDistanceToTarget = Nc::Vector::SqrMagnitudeOf(toTargetDelta);
+
+		if (sqrDistanceToTarget <= STRIDING_DISTANCE_SQR)
+		{
+			ChangeToStrider(context.registry, entity);
+			return;
+		}
+
+		phaser.secondsUntilNextPoint -= context.deltaTime;
+		if (phaser.secondsUntilNextPoint > 0.0f) return;
+
+		phaser.secondsUntilNextPoint = randomService.RangeFloat(IDLE_SECONDS_RANGE.x, IDLE_SECONDS_RANGE.y);
+
+		// Gets the next point to teleport to.
+		const int nextPointIndex = (phaser.currentPointIndex + 1u) % phaser.pointCount;
+		phaser.currentPointIndex = nextPointIndex;
+
+		Nc::Vector2f& newPosition = phaser.points.at(nextPointIndex);
+		const Nc::Vector2f direction = Nc::Vector::Normalized(targetPosition - newPosition);
+
+		// Moves the next point closer to the target.
+		newPosition += direction * MOVE_DISTANCE;
+		transform.position = newPosition;
 	}
+}
 
-	// Moves the next point closer to the target.
-	const Nc::Vector2f direction = Nc::Vector::Normalized(difference);
-	nextPoint += direction * MOVE_DISTANCE;
 
-	transform.position = nextPoint;
+void System::Anomaly::Roamer::Phaser::ChangeToStrider(entt::registry& registry, const entt::entity entity) noexcept
+{
+	auto& roamer = registry.get<Component::Anomaly::Roamer>(entity);
+	roamer.behaviour = RoamerBehaviour::Strider;
+
+	registry.remove<Component::Anomaly::Phaser>(entity);
+	Strider::Spawn(registry, entity);
 };

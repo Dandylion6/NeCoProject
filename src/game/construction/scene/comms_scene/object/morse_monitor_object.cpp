@@ -14,10 +14,10 @@
 void Object::MorseMonitor::Create(const SceneContext& context) noexcept
 {
 	// TODO: Add visuals.
-	MorseMonitor::Pointer::Create(context);
-	MorseMonitor::Region::Create(context, Component::Morse::MonitorRegion::Dot);
-	MorseMonitor::Region::Create(context, Component::Morse::MonitorRegion::Dash);
-	MorseMonitor::Gauge::Create(context);
+	Pointer::Create(context);
+	Region::Create(context, Component::Morse::MonitorRegion::Dot);
+	Region::Create(context, Component::Morse::MonitorRegion::Dash);
+	Gauge::Create(context);
 }
 
 

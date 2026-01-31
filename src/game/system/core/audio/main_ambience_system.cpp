@@ -63,7 +63,7 @@ void System::Audio::MainAmbience::TryPlayAmbience(
 		filePath = "assets/audio/ambient/comms_ambience.wav";
 		break;
 	default:
-		SoundEmitterSystem::StopEmitter(context.emitter);
+		Emitter::StopEmitter(context.emitter);
 		break;
 	}
 
@@ -76,12 +76,12 @@ void System::Audio::MainAmbience::TransitionAmbientAudio(const Context& context,
 {
 	auto& randomService = context.registry.ctx().get<Nc::Random>();
 
-	SoundEmitterSystem::StopEmitter(context.emitter);
+	Emitter::StopEmitter(context.emitter);
 
 	const Music& ambience = context.store.GetMusic(filePath);
 	context.emitter.sound = ambience;
 
-	SoundEmitterSystem::PlayEmitter(context.emitter);
+	Emitter::PlayEmitter(context.emitter);
 
 	const float soundLength = GetMusicTimeLength(context.emitter.sound);
 	const float randomStart = randomService.RangeFloat(0.0f, soundLength);

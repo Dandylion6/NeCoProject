@@ -1,27 +1,32 @@
-#include "game/state/anomaly_state.hpp"
-#include "game/state/game_state.hpp"
 #include "game/system/shared/anomaly/anomaly_attraction_system.hpp"
-#include "core/math/interpolation.hpp"
-#include "core/data/vector2.hpp"
+
 #include <cmath>
 
+#include "core/data/vector2.hpp"
+#include "core/math/interpolation.hpp"
+#include "game/contexts/system_context.hpp"
+#include "game/state/anomaly_state.hpp"
+#include "game/state/game_state.hpp"
 
-void AnomalyAttractionSystem::Update(GameState& gameState, float deltaTime)
+
+void System::Anomaly::Attraction::Update(const SystemContext& context, AnomalyState& anomaly)
 {
-	if (!GameState::IsNight(gameState.hour))
+	// Attraction decrease per second minimum and maximum values.
+	constexpr Nc::Vector2f ATTRACTION_DECAY_RANGE = Nc::Vector2f(0.1f, 0.4f);
+	// The percentage range over which the decay interpolates.
+	constexpr Nc::Vector2f DECAY_CHANGE_RANGE = Nc::Vector2f(20.0f, 80.0f);
+
+	if (!GameState::IsNight(context.game.hour))
 	{
-		gameState.anomalyState.attractionPercentage = 0.0f;
+		// Daytime is completely safe.
+		anomaly.attractionPercentage = 0.0f;
 		return;
 	}
 
-	// @brief Attraction decrease per second minimum and maximum values.
-	constexpr Nc::Vector2f ATTRACTION_DECAY_RANGE = Nc::Vector2f(0.01f, 0.04f);
-	// @brief The percentage range over which the decay interpolates.
-	constexpr Nc::Vector2f DECAY_CHANGE_RANGE = Nc::Vector2f(20.0f, 80.0f);
-
-	float decay = Nc::Math::ClampedRemap(DECAY_CHANGE_RANGE, ATTRACTION_DECAY_RANGE, gameState.anomalyState.attractionPercentage);
-	gameState.anomalyState.attractionPercentage -= decay * deltaTime;
+	// NOTE: Attraction currently reduces faster with a higher percentage, for now this is to make the game more fair.
+	const float decay = Nc::Math::ClampedRemap(DECAY_CHANGE_RANGE, ATTRACTION_DECAY_RANGE, anomaly.attractionPercentage);
+	anomaly.attractionPercentage -= decay * context.deltaTime;
 
 	// Ensure attraction does not go below base level.
-	gameState.anomalyState.attractionPercentage = std::fmaxf(gameState.anomalyState.attractionPercentage, AnomalyState::BASE_ATTRACTION);
+	anomaly.attractionPercentage = std::fmaxf(anomaly.attractionPercentage, AnomalyState::BASE_ATTRACTION);
 }

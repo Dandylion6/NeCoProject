@@ -1,25 +1,25 @@
+#include "game/system/scene/comms_scene/radar/radar_stability_system.hpp"
+
+#include <cmath>
+
+#include "raylib.h"
 #include "core/data/vector2.hpp"
 #include "core/math/interpolation.hpp"
 #include "core/math/random.hpp"
+#include "core/runtime/entity_helpers.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/component/core/interactive/toggle_component.hpp"
 #include "game/component/scene/comms_scene/blip_components.hpp"
 #include "game/component/scene/comms_scene/radar_components.hpp"
-#include "game/component/shared/mechanical/machine_component.hpp"
+#include "game/contexts/system_context.hpp"
 #include "game/state/anomaly_state.hpp"
 #include "game/state/game_state.hpp"
-#include "game/system/scene/comms_scene/radar/blip/blip_glitch_system.hpp"
-#include "game/system/scene/comms_scene/radar/radar_stability_system.hpp"
-#include "raylib.h"
-#include <cmath>
-#include <cstdint>
-
-#include "core/runtime/entity_helpers.hpp"
-#include "game/contexts/system_context.hpp"
+#include "game/system/scene/comms_scene/radar/blip/glitch/blip_contact_failure_system.hpp"
+#include "game/system/scene/comms_scene/radar/blip/glitch/blip_distortion_system.hpp"
+#include "game/system/scene/comms_scene/radar/blip/glitch/blip_signal_noise_system.hpp"
 
 #ifdef  DEBUG_BUILD
-#include "game/game.hpp"
 #include "game/component/shared/debug/runtime_readouts_component.hpp"
 #endif
 
@@ -207,19 +207,19 @@ void System::Radar::Stability::GlitchBlip(
 	const int deterministicValue = randomService.RangeInt(0, 100);
 	if (radar.stability > Component::Radar::HEALTHY_LEVEL)
 	{
-		BlipGlitchSystem::JumbleBlip(context.registry, entity, blip, radar.stability);
+		Blip::Jumble::Initialize(context.registry, entity, blip, radar.stability);
 		return;
 	}
 
 	if (radar.stability > Component::Radar::UNSTABLE_LEVEL)
 	{
-		if (deterministicValue > 30) BlipGlitchSystem::GlitchBlipText(context.registry, entity, blip, radar.stability);
-		else BlipGlitchSystem::JumbleBlip(context.registry, entity, blip, radar.stability);
+		if (deterministicValue > 30) Blip::TextError::Initialize(context.registry, entity, blip);
+		else Blip::Jumble::Initialize(context.registry, entity, blip, radar.stability);
 		return;
 	}
 
-	if (deterministicValue > 20) BlipGlitchSystem::TriggerBlipFailure(context.registry, entity, blip, radar.stability);
-	else BlipGlitchSystem::GlitchBlipText(context.registry, entity, blip, radar.stability);
+	if (deterministicValue > 20) Blip::ContactFailure::Initialize(context.registry, entity, blip);
+	else Blip::TextError::Initialize(context.registry, entity, blip);
 }
 
 

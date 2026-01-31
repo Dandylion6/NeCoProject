@@ -29,16 +29,8 @@ struct RGBa final
 	// ------ Constructors ------
 
 	constexpr RGBa() = default;
-	constexpr RGBa(
-		const uint8_t r,
-		const uint8_t g,
-		const uint8_t b,
-		const uint8_t a
-	) noexcept
-		: red(r),
-		  green(g),
-		  blue(b),
-		  alpha(a) { };
+	constexpr RGBa(const uint8_t r, const uint8_t g, const uint8_t b, const uint8_t a) noexcept
+		: red(r), green(g), blue(b), alpha(a) { }
 
 	explicit constexpr RGBa(const Color color) noexcept
 		: red(color.r), green(color.g), blue(color.b), alpha(color.a) { }

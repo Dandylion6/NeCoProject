@@ -16,7 +16,7 @@ void System::Morse::Tone::Update(const SystemContext& context)
 
 	const entt::entity entity = entt::get_single<Component::Morse::Transceiver>(context.registry);
 	const auto& transceiver = context.registry.get<Component::Morse::Transceiver>(entity);
-	auto& emitter = context.registry.get<Component::Audio>(entity);
+	auto& emitter = context.registry.get<Component::LoopedAudio>(entity);
 
 	const float targetVolume = transceiver.isInputActive ? TONE_VOLUME : 0.0f;
 	emitter.volume = Nc::Math::SmoothApproach(emitter.volume, targetVolume, context.deltaTime, FADE_SPEED);

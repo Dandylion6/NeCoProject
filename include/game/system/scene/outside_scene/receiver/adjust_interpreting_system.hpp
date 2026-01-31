@@ -1,8 +1,9 @@
 #pragma once
+#include <string>
+
 #include "entt/entity/fwd.hpp"
 #include "game/component/scene/outside_scene/receiver_component.hpp"
 #include "game/system/scene/outside_scene/receiver/interpret_coordinate_system.hpp"
-#include <string>
 struct SystemContext;
 
 namespace Nc { class ResourceStore; };

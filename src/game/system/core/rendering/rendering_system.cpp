@@ -1,31 +1,32 @@
-#include "game/component/core/rendering/rectangle_component.hpp"
-#include "game/component/core/rendering/sprite_component.hpp"
-#include "game/component/core/rendering/text_component.hpp"
-#include "game/component/core/transform_component.hpp"
-#include "core/runtime/render_context.hpp"
-#include "game/state/scene.hpp"
-#include "game/state/game_state.hpp"
-#include "entt/entity/fwd.hpp"
-#include "entt/entity/registry.hpp"
-#include "game/system/core/rendering/rectangle_render_system.hpp"
-#include "game/system/core/rendering/sprite_render_system.hpp"
-#include "game/system/core/rendering/text_render_system.hpp"
 #include "game/system/core/rendering/rendering_system.hpp"
-#include "core/data/vector2.hpp"
+
 #include <algorithm>
 #include <vector>
 
+#include "core/data/vector2.hpp"
+#include "core/runtime/render_context.hpp"
+#include "entt/entity/fwd.hpp"
+#include "entt/entity/registry.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/core/rendering/rectangle_component.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
+#include "game/component/core/rendering/text_component.hpp"
+#include "game/state/game_state.hpp"
+#include "game/state/scene.hpp"
+#include "game/system/core/rendering/rectangle_render_system.hpp"
+#include "game/system/core/rendering/sprite_render_system.hpp"
+#include "game/system/core/rendering/text_render_system.hpp"
+
 
 void RenderingSystem::DrawScreen(
-    entt::registry& registry, 
-    Nc::RenderContext& renderContext, 
-    GameState& gameState, 
-    Nc::Vector2f cameraPosition
+    entt::registry& registry,
+    const GameState& gameState,
+    const Nc::Vector2f cameraPosition
 )
 {
-    std::vector<Renderable> entities { };
+    std::vector<Renderable> entities{ };
 
-    auto view = registry.view<Component::Transform>();
+    const auto view = registry.view<Component::Transform>();
     for (auto [entity, transform] : view.each())
     {
         RenderType type = GetRenderType(registry, entity);
@@ -34,11 +35,11 @@ void RenderingSystem::DrawScreen(
         entities.emplace_back(entity, type, transform.index);
     }
 
-    std::sort(entities.begin(), entities.end(), SortComparison);
+    std::ranges::sort(entities, SortComparison);
 
-    for (Renderable renderable : entities)
+    for (const Renderable renderable : entities)
     {
-        switch (renderable.type) 
+        switch (renderable.type)
         {
         case RenderType::Sprite:
             SpriteRenderSystem::DrawScreen(renderable.entity, registry, cameraPosition);
@@ -47,7 +48,6 @@ void RenderingSystem::DrawScreen(
             RectangleRenderSystem::DrawScreen(renderable.entity, registry, cameraPosition);
             break;
         case RenderType::Text:
-            break;
         default:
             break;
         }
@@ -56,15 +56,14 @@ void RenderingSystem::DrawScreen(
 
 
 void RenderingSystem::DrawUi(
-    entt::registry& registry, 
+    entt::registry& registry,
     Nc::ResourceStore& resourceStore,
-    Nc::RenderContext& renderContext, 
-    GameState& gameState
+    const Nc::RenderContext& renderContext
 )
 {
-    std::vector<Renderable> entities { };
+    std::vector<Renderable> entities{ };
 
-    auto viewUi = registry.view<Component::UI::Transform>();
+    const auto viewUi = registry.view<Component::UI::Transform>();
     for (auto [entity, transform] : viewUi.each())
     {
         RenderType type = GetRenderType(registry, entity);
@@ -73,11 +72,11 @@ void RenderingSystem::DrawUi(
         entities.emplace_back(entity, type, transform.index);
     }
 
-    std::sort(entities.begin(), entities.end(), SortComparison);
+    std::ranges::sort(entities, SortComparison);
 
-    for (Renderable renderable : entities)
+    for (const Renderable renderable : entities)
     {
-        switch (renderable.type) 
+        switch (renderable.type)
         {
         case RenderType::Sprite:
             SpriteRenderSystem::DrawUi(renderable.entity, registry, Nc::Vector2f(renderContext.windowSize));
@@ -86,7 +85,12 @@ void RenderingSystem::DrawUi(
             RectangleRenderSystem::DrawUi(renderable.entity, registry, Nc::Vector2f(renderContext.windowSize));
             break;
         case RenderType::Text:
-            TextRenderSystem::DrawUi(renderable.entity, registry, resourceStore, Nc::Vector2f(renderContext.windowSize));
+            TextRenderSystem::DrawUi(
+                renderable.entity,
+                registry,
+                resourceStore,
+                Nc::Vector2f(renderContext.windowSize)
+            );
             break;
         default:
             break;
@@ -95,9 +99,7 @@ void RenderingSystem::DrawUi(
 }
 
 
-RenderingSystem::RenderType RenderingSystem::GetRenderType(
-    entt::registry& registry, entt::entity entity
-)
+RenderingSystem::RenderType RenderingSystem::GetRenderType(const entt::registry& registry, const entt::entity entity)
 {
     if (registry.all_of<Component::Sprite>(entity)) return RenderType::Sprite;
     if (registry.all_of<Component::Rectangle>(entity)) return RenderType::Rectangle;
@@ -106,9 +108,7 @@ RenderingSystem::RenderType RenderingSystem::GetRenderType(
 }
 
 
-bool RenderingSystem::ShouldRender(
-	const Component::Transform& transform, Scene currentScene
-)
+bool RenderingSystem::ShouldRender(const Component::Transform& transform, const Scene currentScene)
 {
     if (transform.boundScene == currentScene) return true;
     if (transform.boundScene == NullScene) return true;
@@ -116,15 +116,13 @@ bool RenderingSystem::ShouldRender(
 }
 
 
-bool RenderingSystem::ShouldRender(
-    const Component::UI::Transform& transform
-)
+bool RenderingSystem::ShouldRender(const Component::UI::Transform& transform)
 {
     return transform.isVisible;
 }
 
 
-bool RenderingSystem::SortComparison(Renderable a, Renderable b)
+bool RenderingSystem::SortComparison(const Renderable a, const Renderable b)
 {
     return a.index < b.index;
 }

@@ -7,8 +7,8 @@ namespace entt
 {
 
 template<class... Cs>
-entity get_single(registry& reg) {
-    auto view = reg.view<Cs...>();
+entity get_single(registry& registry) {
+    auto view = registry.view<Cs...>();
     auto it = view.begin();
 
 #ifdef DEBUG_BUILD

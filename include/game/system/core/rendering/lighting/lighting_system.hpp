@@ -4,6 +4,7 @@
 #include "raylib.h"
 
 
+struct SystemContext;
 struct GameState;
 namespace Nc 
 { 
@@ -12,19 +13,18 @@ namespace Nc
 };
 
 
-class LightingSystem final
+namespace System::Render
+{
+
+/**
+ * @brief Sets up and handles passing data to the lighting shader.
+ */
+class Lighting final
 {
 public:
     // ------ Functions ------
     static void Initialize(Nc::LightingContext& context, Nc::ResourceStore& resourceStore);
-    static void Update(
-        entt::registry& registry, 
-        Nc::LightingContext& context,
-        const Shader& lightShader, 
-        GameState& gameState, 
-        Nc::Vector2f cameraPosition, 
-        float deltaTime
-    );
+    static const Shader& Update(const SystemContext& systemContext, const Nc::LightingContext& context, Nc::Vector2f cameraPosition);
 
 private:
     // ------ Types ------
@@ -35,3 +35,6 @@ private:
     };
 
 };
+
+}
+

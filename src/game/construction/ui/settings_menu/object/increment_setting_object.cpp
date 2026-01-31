@@ -44,7 +44,7 @@ Object::IncrementSetting::Data Object::IncrementSetting::Create(
     const entt::entity decreaseButton = DecreaseButton::Create(incrementContext);
     const entt::entity increaseButton = IncreaseButton::Create(incrementContext);
 
-    return { label, valueDisplay, decreaseButton, increaseButton };
+    return {label, valueDisplay, decreaseButton, increaseButton};
 }
 
 
@@ -98,9 +98,9 @@ entt::entity Object::IncrementSetting::IncreaseButton::Create(const IncrementCon
 
     const Nc::Vector2f offset = context.offset + Nc::Vector2f(72.0f, 2.0f);
     context.registry.emplace<Component::UI::Transform>(entity, context.position, ORIGIN, SIZE, offset, 2);
-    context.registry.emplace<Component::Text>(entity, "+", RAYWHITE, Nc::Font::WDXL, Nc::Font::Size::Medium);
+    context.registry.emplace<Component::Text>(entity, "+", Nc::RGBa(RAYWHITE), Nc::Font::WDXL, Nc::Font::Size::Medium);
 
-    std::function<void()> onClick = [increment = context.increment, &valueDisplay = context.valueDisplay]()
+    std::function onClick = [increment = context.increment]
     {
         if (increment.value == nullptr) return;
         *increment.value = (*increment.value) + increment.increment;
@@ -120,9 +120,9 @@ entt::entity Object::IncrementSetting::DecreaseButton::Create(const IncrementCon
 
     const Nc::Vector2f offset = context.offset + Nc::Vector2f::Right(98.0f);
     context.registry.emplace<Component::UI::Transform>(entity, context.position, ORIGIN, SIZE, offset, 2);
-    context.registry.emplace<Component::Text>(entity, "-", RAYWHITE, Nc::Font::WDXL, Nc::Font::Size::Large);
+    context.registry.emplace<Component::Text>(entity, "-", Nc::RGBa(RAYWHITE), Nc::Font::WDXL, Nc::Font::Size::Large);
 
-    std::function<void()> onClick = [increment = context.increment, &valueDisplay = context.valueDisplay]()
+    std::function onClick = [increment = context.increment]
     {
         if (increment.value == nullptr) return;
         *increment.value = (*increment.value) - increment.increment;

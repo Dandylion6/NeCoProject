@@ -3,9 +3,9 @@
 #include <memory>
 
 
-int main(int args, char* argv[])
+int main(const int args, char* argv[])
 {
-	std::unique_ptr<Game> game = std::make_unique<Game>();
+	const std::unique_ptr<Game> game = std::make_unique<Game>();
 
 #ifdef DEBUG_BUILD
 	game->SetupDebug(args, argv);
@@ -17,14 +17,14 @@ int main(int args, char* argv[])
 
 	while (game->ShouldRun())
 	{
-		float deltaTime = GetFrameTime();
+		const float deltaTime = GetFrameTime();
 
 		game->Update(deltaTime);
 		game->UpdateRegistries(deltaTime);
 		game->DrawGame(deltaTime);
 	}
 
-	game->Shutdown();
+	Game::Shutdown();
 
 	return 0;
 }

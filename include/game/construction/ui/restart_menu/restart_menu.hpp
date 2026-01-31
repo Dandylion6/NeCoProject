@@ -11,12 +11,12 @@ namespace Structure
 class RestartMenu final
 {
 public:
-	static void Build(SceneContext context, Game& game, Nc::Vector2f windowSize) noexcept;
-	static void Open(SceneContext context) noexcept;
-	static void Close(SceneContext context) noexcept;
+	static void Build(const SceneContext& context, Game& game, Nc::Vector2f windowSize) noexcept;
+	static void Open(const SceneContext& context) noexcept;
+	static void Close(const SceneContext& context) noexcept;
 
 private:
-	static void Toggle(SceneContext context, bool active) noexcept;
+	static void Toggle(const SceneContext& context, bool active) noexcept;
 
 };
 

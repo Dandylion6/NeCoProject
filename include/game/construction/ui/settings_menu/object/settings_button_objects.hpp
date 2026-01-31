@@ -19,7 +19,7 @@ public:
 class ApplySettingsButton final
 {
 public:
-    static void Create(SceneContext context, Settings& settings, Settings& pendingSettings) noexcept;
+    static void Create(const SceneContext& context, Settings& settings, Settings& pendingSettings) noexcept;
 
 };
 

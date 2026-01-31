@@ -22,18 +22,14 @@ void System::Anomaly::Roamer::Strider::Spawn(entt::registry& registry, const ent
 }
 
 
-void System::Anomaly::Roamer::Strider::Update(
-	entt::registry& registry,
-	const entt::entity entity,
-	Component::Transform& transform,
-	const Component::Anomaly::Roamer& roamer,
-	const float deltaTime
-) noexcept
+void System::Anomaly::Roamer::Strider::Update(const SystemContext& context) noexcept
 {
-	const Nc::Vector2f targetPosition = RoamerBehaviourSystem::GetTargetPosition(roamer.target);
-	const Component::Anomaly::Strider& strider = registry.get<Component::Anomaly::Strider>(entity);
-
-	const Nc::Vector2f difference = targetPosition - transform.position;
-	const Nc::Vector2f direction = Nc::Vector::Normalized(difference);
-	transform.position += direction * strider.moveSpeed * deltaTime;
+	const auto view = context.registry.view<Component::Transform, Component::Anomaly::Roamer, Component::Anomaly::Strider>();
+	for (auto [entity, transform, roamer, strider] : view.each())
+	{
+		const Nc::Vector2f targetPosition = Behaviour::GetTargetPosition(roamer.target);
+		const Nc::Vector2f difference = targetPosition - transform.position;
+		const Nc::Vector2f direction = Nc::Vector::Normalized(difference);
+		transform.position += direction * strider.moveSpeed * context.deltaTime;
+	}
 }

@@ -48,7 +48,7 @@ void Structure::SettingsMenu::Build(
     }
 
     Object::SettingsBackground::Create(context, windowSize);
-    SettingsMenu::Close(context);
+    Close(context);
 }
 
 
@@ -58,21 +58,21 @@ void Structure::SettingsMenu::Toggle(const SceneContext& context) noexcept
     for (auto [settingsEntity, toggle] : view.each())
     {
         if (context.game.currentScene != NullScene)
-            SettingsMenu::Toggle(context, Component::Action::Toggle::Next(toggle.state));
+            Toggle(context, Component::Action::Toggle::Next(toggle.state));
     }
 }
 
 
-void Structure::SettingsMenu::Open(const SceneContext& context) noexcept { SettingsMenu::Toggle(context, On); }
+void Structure::SettingsMenu::Open(const SceneContext& context) noexcept { Toggle(context, On); }
 
 
-void Structure::SettingsMenu::Close(const SceneContext& context) noexcept { SettingsMenu::Toggle(context, Off); }
+void Structure::SettingsMenu::Close(const SceneContext& context) noexcept { Toggle(context, Off); }
 
 
 void Structure::SettingsMenu::Close(const SceneContext& context, const Settings& live, Settings& pending) noexcept
 {
     // TODO: Add warning for unsaved changes.
-    SettingsMenu::Close(context);
+    Close(context);
     pending = live;
 }
 

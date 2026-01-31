@@ -14,16 +14,14 @@ class RenderingSystem
 public:
 	static void DrawScreen(
 		entt::registry& registry,
-		Nc::RenderContext& renderContext,
-		GameState& gameState,
+		const GameState& gameState,
 		Nc::Vector2f cameraPosition
 	);
 
 	static void DrawUi(
 		entt::registry& registry,
 		Nc::ResourceStore& resourceStore,
-		Nc::RenderContext& renderContext,
-		GameState& gameState
+		const Nc::RenderContext& renderContext
 	);
 
 private:
@@ -42,7 +40,7 @@ private:
         SortIndex index = 0;
     };
 
-	static RenderType GetRenderType(entt::registry& registry, entt::entity entity);
+	static RenderType GetRenderType(const entt::registry& registry, entt::entity entity);
 
 	static bool ShouldRender(const Component::Transform& transform, Scene currentScene);
 

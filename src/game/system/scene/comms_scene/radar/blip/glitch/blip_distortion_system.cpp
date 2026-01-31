@@ -2,7 +2,6 @@
 
 #include <format>
 #include <string>
-#include <fmt/format.h>
 
 #include "core/math/interpolation.hpp"
 #include "core/math/random.hpp"
@@ -34,26 +33,28 @@ void System::Blip::Jumble::Update(const SystemContext& context)
 {
 	auto& randomService = context.registry.ctx().get<Nc::Random>();
 
-    const auto view = context.registry.view<Component::Blip, Component::Transform, Component::Glitch::Distortion, Component::Text>();
-    for (auto [entity, blip, transform, jumble, text] : view.each())
-    {
-	    jumble.jumbleSecondsLeft -= context.deltaTime;
-	    blip.remainingGlitchSeconds -= context.deltaTime;
+	const auto view = context.registry.view<Component::Blip, Component::Transform, Component::Glitch::Distortion,
+	                                        Component::Text>();
+	for (auto [entity, blip, transform, jumble, text] : view.each())
+	{
+		jumble.jumbleSecondsLeft -= context.deltaTime;
+		blip.remainingGlitchSeconds -= context.deltaTime;
 
-	    if (blip.remainingGlitchSeconds <= 0.0f)
+		if (blip.remainingGlitchSeconds <= 0.0f)
 		{
 			blip.state = Component::Blip::Stable;
 			context.registry.remove<Component::Glitch::Distortion>(entity);
 			return;
 		}
 
-	    const Nc::Vector2i displayedPosition = GetDisplayPosition(transform, jumble);
-	    text.text = "{" + std::to_string(displayedPosition.x) + " , " + std::to_string(displayedPosition.y) + "}";
+		const Nc::Vector2i displayedPosition = GetDisplayPosition(transform, jumble);
+		text.text = "{" + std::to_string(displayedPosition.x) + " , " + std::to_string(displayedPosition.y) + "}";
 
-	    if (jumble.jumbleSecondsLeft <= 0.0f)
+		if (jumble.jumbleSecondsLeft <= 0.0f)
 			jumble = GenerateRandomJumble(randomService, jumble.stability);
-    }
+	}
 }
+
 
 Nc::Vector2i System::Blip::Jumble::GetDisplayPosition(
 	const Component::Transform& transform,
@@ -76,11 +77,17 @@ Nc::Vector2i System::Blip::Jumble::GetDisplayPosition(
 }
 
 
-Component::Glitch::Distortion System::Blip::Jumble::GenerateRandomJumble(Nc::Random& randomService, const float stability)
+Component::Glitch::Distortion System::Blip::Jumble::GenerateRandomJumble(
+	Nc::Random& randomService,
+	const float stability
+)
 {
 	constexpr Nc::Vector2f INTERVAL_LOW_STABILITY = Component::Glitch::Distortion::JUMBLE_INTERVAL_LOW_RANGE;
 	constexpr Nc::Vector2f INTERVAL_HIGH_STABILITY = Component::Glitch::Distortion::JUMBLE_INTERVAL_HIGH_RANGE;
-	constexpr Nc::Vector2f STABILITY_RANGE = Nc::Vector2f(Component::Radar::STABLE_LEVEL, Component::Radar::HEALTHY_LEVEL);
+	constexpr Nc::Vector2f STABILITY_RANGE = Nc::Vector2f(
+		Component::Radar::STABLE_LEVEL,
+		Component::Radar::HEALTHY_LEVEL
+	);
 	constexpr Nc::Vector2f DEGRADATION_SCALE_RANGE = Nc::Vector2f(0.0f, 1.0f);
 
 	auto jumble = Component::Glitch::Distortion(stability);
@@ -90,7 +97,11 @@ Component::Glitch::Distortion System::Blip::Jumble::GenerateRandomJumble(Nc::Ran
 	jumble.flippedSignX = randomService.RangeInt(0, 10) <= 4;
 	jumble.flippedSignY = randomService.RangeInt(0, 10) <= 4;
 
-	float degradationScale = Nc::Math::Remap(STABILITY_RANGE, DEGRADATION_SCALE_RANGE, std::fmaxf(jumble.stability, Component::Radar::HEALTHY_LEVEL));
+	float degradationScale = Nc::Math::Remap(
+		STABILITY_RANGE,
+		DEGRADATION_SCALE_RANGE,
+		std::fmaxf(jumble.stability, Component::Radar::HEALTHY_LEVEL)
+	);
 	degradationScale = Nc::Math::SineInOut(degradationScale);
 	const Nc::Vector2f range = Nc::Vector::Lerp(INTERVAL_HIGH_STABILITY, INTERVAL_LOW_STABILITY, degradationScale);
 

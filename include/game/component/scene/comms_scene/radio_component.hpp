@@ -30,7 +30,7 @@ struct Radio final
 	// ------ Members ------
 
 	float broadcastDelay = 0.0f;
-	BroadcastPriority priority = Idle;
+	BroadcastPriority priority = BroadcastPriority::Idle;
 	bool isSendingBroadcast = false;
 
 

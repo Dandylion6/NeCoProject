@@ -1,70 +1,64 @@
-#include "game/component/scene/outside_scene/artillery_component.hpp"
+#include "game/system/scene/outside_scene/receiver/adjust_interpreting_system.hpp"
+
+#include "core/runtime/entity_helpers.hpp"
 #include "core/runtime/resource_store.hpp"
 #include "entt/entity/registry.hpp"
-#include "game/system/scene/outside_scene/receiver/adjust_interpreting_system.hpp"
+#include "game/component/scene/outside_scene/artillery_component.hpp"
+#include "game/contexts/system_context.hpp"
 #include "game/system/scene/comms_scene/radio/radio_emitter_system.hpp"
 #include "game/system/scene/outside_scene/receiver/interpret_coordinate_system.hpp"
 
 
-const std::string AdjustInterpretingSystem::COMMAND = "ADJ";
-
-
-void AdjustInterpretingSystem::HandleReceivedMessage(
-	entt::registry& registry,
-	Nc::ResourceStore& resourceStore,
+void System::Receiver::Interpret::Adjust::HandleMessage(
+	const SystemContext& context,
 	Component::Receiver& receiver,
 	const std::string& message
 )
 {
 	if (message == COMMAND)
 	{
-		receiver.currentContext = AdjustArtillery;
-		return ConfirmAdjustCommand(registry, resourceStore, receiver);
+		receiver.currentContext = TransmissionContext::AdjustArtillery;
+		return ConfirmCommand(context, receiver);
 	}
 
-	CoordResult result = CoordinateInterpretingSystem::InterpretMessageAsCoord(registry, resourceStore, receiver, message);
+	const CoordResult result = Coordinate::MessageAsCoord(message);
 	if (!result.isValid) return;
 
-	AdjustArtilery(registry, result);
+	AdjustArtillery(context.registry, result);
 
-	CoordinateInterpretingSystem::ConfirmCoordinateCommand(registry, resourceStore, receiver);
+	Coordinate::ConfirmCommand(context, receiver);
 }
 
 
-void AdjustInterpretingSystem::ConfirmAdjustCommand(
-	entt::registry& registry, 
-	Nc::ResourceStore& resourceStore, 
-	Component::Receiver& receiver
-)
+void System::Receiver::Interpret::Adjust::ConfirmCommand(const SystemContext& context, Component::Receiver& receiver)
 {
-	const std::string RESPONSE = "assets/audio/voicelines/receiver/commands/aim_request.wav";
+	constexpr char RESPONSE[] = "assets/audio/voicelines/receiver/commands/aim_request.wav";
 
-    Sound response = LoadSoundAlias(resourceStore.CreateSoundHandle(RESPONSE));
-	RadioSoundEmitterSystem::Broadcast(registry, std::move(response), Medium);
+	const Sound& response = context.store.CreateSoundHandle(RESPONSE);
+	Radio::Emitter::Broadcast(context.registry, std::move(response), BroadcastPriority::Medium);
 
 	receiver.message.clear();
 }
 
 
-void AdjustInterpretingSystem::AdjustArtilery(entt::registry& registry, CoordResult result)
+void System::Receiver::Interpret::Adjust::AdjustArtillery(entt::registry& registry, const CoordResult result)
 {
-	auto view = registry.view<Component::Artillery>();
-	for (auto [entity, artillery] : view.each())
+	constexpr float DELAY = 0.75f;
+
+	const entt::entity entity = entt::get_single<Component::Artillery>(registry);
+	auto& artillery = registry.get<Component::Artillery>(entity);
+
+	artillery.aimStartupSeconds = DELAY;
+	artillery.isReadyToFire = false;
+
+	switch (result.axis)
 	{
-		constexpr float DELAY = 0.75f;
-		artillery.aimStartupSeconds = DELAY;
-		artillery.isReadyToFire = false;
-		
-		switch (result.axis)
-		{
-		case CoordResult::Invalid:
-			break;
-		case CoordResult::Horizontal:
-			artillery.targetPosition.x = artillery.targetPosition.x + result.coordinateLength;
-			break;
-		case CoordResult::Vertical:
-			artillery.targetPosition.y = artillery.targetPosition.y + result.coordinateLength;
-			break;
-		}
+	case CoordResult::Invalid: break;
+	case CoordResult::Horizontal:
+		artillery.targetPosition.x = artillery.targetPosition.x + result.coordinateLength;
+		break;
+	case CoordResult::Vertical:
+		artillery.targetPosition.y = artillery.targetPosition.y + result.coordinateLength;
+		break;
 	}
 }

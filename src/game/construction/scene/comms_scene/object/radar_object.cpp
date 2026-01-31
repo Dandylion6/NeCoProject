@@ -1,7 +1,5 @@
 #include "game/construction/scene/comms_scene/object/radar_object.hpp"
 
-#include <cstdint>
-
 #include "raylib.h"
 #include "core/data/font.hpp"
 #include "core/data/tween.hpp"
@@ -67,7 +65,7 @@ Object::Radar::Data Object::Radar::Create(const SceneContext& context) noexcept
 	const entt::entity recalibrationText = RecalibrationText::Create(context.registry);
 	const entt::entity powerButton = PowerButton::Create(context.registry, radar, toggle);
 
-	return { entity, path, artillery, errorWarning, recalibrationText, powerButton };
+	return {entity, path, artillery, errorWarning, recalibrationText, powerButton};
 }
 
 
@@ -91,8 +89,8 @@ entt::entity Object::Radar::Path::Create(const SceneContext& context) noexcept
 	auto& collection = context.registry.emplace<Component::TweenCollection>(entity);
 
 	// Linear radar path travel animation
-	Tween& travel = collection.tweens.at(RADAR_MOVE);
-	Tween::Build(
+	Nc::Tween& travel = collection.tweens.at(RADAR_MOVE);
+	Nc::Tween::Build(
 		travel,
 		&transform.position.y,
 		TRAVEL_RANGE.x,
@@ -101,8 +99,8 @@ entt::entity Object::Radar::Path::Create(const SceneContext& context) noexcept
 		Linear,
 		RADAR_DELAY_SECONDS
 	);
-	travel.onComplete = [&travel]() { Tween::Replay(travel); };
-	Tween::Play(travel);
+	travel.onComplete = [&travel] { Nc::Tween::Replay(travel); };
+	Nc::Tween::Play(travel);
 
 	return entity;
 }
@@ -148,10 +146,10 @@ entt::entity Object::Radar::ErrorWarning::Create(entt::registry& registry) noexc
 	auto& collection = registry.emplace<Component::TweenCollection>(entity);
 
 	// Basic blink animation
-	Tween& blinkFade = collection.tweens.at(Component::RadarErrorWarning::BlinkFade);
-	Tween::Build(blinkFade, &errorWarning.alpha, 1.0f, 0.0f, BLINK_FADE_SECONDS, QuadIn, BLINK_DELAY_SECONDS);
-	blinkFade.onComplete = [&blinkFade]() { Tween::Replay(blinkFade); };
-	Tween::Play(blinkFade);
+	Nc::Tween& blinkFade = collection.tweens.at(Component::RadarErrorWarning::BlinkFade);
+	Nc::Tween::Build(blinkFade, &errorWarning.alpha, 1.0f, 0.0f, BLINK_FADE_SECONDS, QuadIn, BLINK_DELAY_SECONDS);
+	blinkFade.onComplete = [&blinkFade] { Nc::Tween::Replay(blinkFade); };
+	Nc::Tween::Play(blinkFade);
 
 	return entity;
 }
@@ -193,11 +191,11 @@ entt::entity Object::Radar::PowerButton::Create(
 	registry.emplace<Tag::Radar::Button>(entity);
 
 	registry.emplace<Component::Transform>(entity, CommsRoom, POSITION, SIZE, SIZE * 0.5f);
-	registry.emplace<Component::Rectangle>(entity, RED);
+	registry.emplace<Component::Rectangle>(entity, Nc::RGBa(RED));
 
 	// Toggles radar machine
 	auto& action = registry.emplace<Component::Action::Click>(entity);
-	action.onClick = [&action, &radar, &toggle]()
+	action.onClick = [&action, &radar, &toggle]
 	{
 		// TODO: Add active/inactive visual state change and prevent spamming.
 		if (!radar.isRecalibrating)

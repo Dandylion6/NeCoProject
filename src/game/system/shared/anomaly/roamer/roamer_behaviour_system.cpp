@@ -4,73 +4,66 @@
 #include "core/math/interpolation.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "game/component/core/transform_component.hpp"
 #include "game/component/shared/anomaly/roamer/anomaly_roamer_component.hpp"
+#include "game/contexts/system_context.hpp"
 #include "game/state/anomaly_state.hpp"
 #include "game/state/game_state.hpp"
-#include "game/system/shared/anomaly/roamer/behaviour/phantom_behaviour_system.hpp"
-#include "game/system/shared/anomaly/roamer/behaviour/phaser_behaviour_system.hpp"
-#include "game/system/shared/anomaly/roamer/behaviour/strider_behaviour_system.hpp"
 
 
-void System::Anomaly::Roamer::Behaviour::Update(
-	entt::registry& registry,
-	AnomalyState& anomalyState,
-	const float deltaTime
-)
+void System::Anomaly::Roamer::Behaviour::Update(const SystemContext& context, AnomalyState& anomalyState) noexcept
 {
-	// TODO: Make each behavior update itself.
 	constexpr float PRESSURE_WEIGHT_SMOOTHING = 0.4f;
 
 	float roamerPressureWeight = 0.0f;
-	uint8_t totalRoamerCount = 0u;
-	uint8_t roamerThreatCount = 0u;
+	size_t totalRoamerCount = 0u;
+	size_t roamerThreatCount = 0u;
 
-	const auto view = registry.view<Component::Transform, Component::Anomaly::Roamer>();
-	for (auto [entity, transform, roamer] : view.each())
+	const auto view = context.registry.view<Component::Anomaly::Roamer>();
+	for (auto [entity, roamer] : view.each())
 	{
-		constexpr float PHANTOM_PRESSURE = 0.2f;
-		constexpr float PHASER_PRESSURE = 1.2f;
-		constexpr float STRIDER_PRESSURE = 0.8f;
-
-		switch (roamer.behaviour)
-		{
-		case RoamerBehaviour::Strider:
-			Strider::Update(registry, entity, transform, roamer, deltaTime);
-			roamerPressureWeight += STRIDER_PRESSURE;
-			break;
-		case RoamerBehaviour::Phaser:
-			Phaser::Update(registry, entity, transform, roamer, deltaTime);
-			roamerPressureWeight += PHASER_PRESSURE;
-			break;
-		case RoamerBehaviour::Phantom:
-			Phantom::Update(registry, entity, transform, roamer, deltaTime);
-			roamerPressureWeight += PHANTOM_PRESSURE;
-			--roamerThreatCount; // Doesn't count as a threat.
-			break;
-		default: break;
-		}
-		++roamerThreatCount;
 		++totalRoamerCount;
+		roamerPressureWeight += GetPressureWeight(roamer.behaviour);
+		if (roamer.behaviour != RoamerBehaviour::Phantom)
+		{
+			// Phantoms don't add to the threat value.
+			++roamerThreatCount;
+		}
 	}
 
-	anomalyState.roamerPressureWeight = roamerThreatCount;
-	anomalyState.totalRoamerCount = totalRoamerCount;
+	anomalyState.roamerThreatCount = static_cast<uint32_t>(roamerThreatCount);
+	anomalyState.totalRoamerCount = static_cast<uint8_t>(totalRoamerCount);
+
 	anomalyState.roamerPressureWeight = Nc::Math::SmoothApproach(
 		anomalyState.roamerPressureWeight,
 		roamerPressureWeight,
-		deltaTime,
+		context.deltaTime,
 		PRESSURE_WEIGHT_SMOOTHING
 	);
 };
 
 
-Nc::Vector2f System::Anomaly::Roamer::Behaviour::GetTargetPosition(const RoamerTarget target)
+Nc::Vector2f System::Anomaly::Roamer::Behaviour::GetTargetPosition(const RoamerTarget target) noexcept
 {
 	switch (target)
 	{
 	case RoamerTarget::Bunker: return BUNKER_POSITION;
 	case RoamerTarget::Artillery: return ARTILLERY_POSITION;
 	default: return Nc::Vector2f::Zero();
+	}
+}
+
+
+float System::Anomaly::Roamer::Behaviour::GetPressureWeight(const RoamerBehaviour behaviour) noexcept
+{
+	constexpr float PHANTOM_PRESSURE = 0.2f;
+	constexpr float PHASER_PRESSURE = 1.2f;
+	constexpr float STRIDER_PRESSURE = 0.8f;
+
+	switch (behaviour)
+	{
+	case RoamerBehaviour::Strider: return STRIDER_PRESSURE;
+	case RoamerBehaviour::Phaser: return PHASER_PRESSURE;
+	case RoamerBehaviour::Phantom: return PHANTOM_PRESSURE;
+	default: return 0.0f;
 	}
 }

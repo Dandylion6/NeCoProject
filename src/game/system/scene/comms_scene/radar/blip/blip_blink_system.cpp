@@ -54,7 +54,7 @@ bool System::Blip::Blink::BlipShouldAppear(
 
 	const float pathHeight = path.position.y + path.offset.y;
 	const float blipHeight = Nc::Math::Remap(WORLD_Y_RANGE, RADAR_Y_RANGE, blip.position.y);
-	const float distance = std::fabsf(pathHeight - blipHeight);
+	const float distance = std::abs(pathHeight - blipHeight);
 
 #ifdef DEBUG_BUILD
 	const entt::entity debugEntity = entt::get_single<Component::Debug::RuntimeReadouts>(registry);
@@ -62,8 +62,7 @@ bool System::Blip::Blink::BlipShouldAppear(
 
 	const float threshold = DIFFERENCE_THRESHOLD * readouts.timeScale;
 	if (distance > threshold) return false;
-
-#elif
+#else
 	if (distance < DIFFERENCE_THRESHOLD) return false;
 #endif
 	if (tween.isPlaying) return false;
