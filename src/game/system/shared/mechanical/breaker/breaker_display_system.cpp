@@ -8,10 +8,12 @@
 
 void System::Logic::Breaker::Display::Update(const SystemContext& context) noexcept
 {
-    const auto view = context.registry.view<Component::Rectangle, Component::Logic::Breaker>();
-    for (auto [entity, rectangle, breaker] : view.each())
+    const auto view = context.registry.view<Component::Logic::Breaker>();
+    for (const auto& [entity, breaker] : view.each())
     {
         // TODO: Replace placeholder visuals.
+        auto& rectangle = context.registry.get<Component::Rectangle>(breaker.indicator);
+
         switch (breaker.status)
         {
         case Component::Logic::Breaker::Operational: rectangle.fillColor = Nc::RGBa(GREEN);

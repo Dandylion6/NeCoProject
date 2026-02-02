@@ -357,6 +357,9 @@ void Game::UpdateRegistries(float deltaTime)
 	case Nc::Cursor::Clickable:
 		cursor = MOUSE_CURSOR_POINTING_HAND;
 		break;
+	case Nc::Cursor::Grab:
+		cursor = MOUSE_CURSOR_POINTING_HAND;
+		break;
 	default: break;
 	}
 	SetMouseCursor(cursor);

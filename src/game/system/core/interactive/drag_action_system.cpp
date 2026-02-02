@@ -24,7 +24,7 @@ void System::Action::Drag::Update(const SystemContext& context, const Nc::Render
 		if (drag.isTarget)
 		{
 			// TODO: Separate for UI.
-			const Nc::Vector2f mousePosition = Renderer::GetWorldPosition(renderContext, drag.startPosition);
+			const Nc::Vector2f mousePosition = Renderer::GetWorldPosition(renderContext, GetMousePosition());
 			drag.draggedDelta = mousePosition - drag.startPosition;
 
 			if (clickReleased) drag.isTarget = false;
@@ -52,10 +52,10 @@ System::Action::Drag::Result System::Action::Drag::UpdateSceneDrag(
 	const auto& transform = context.registry.get<const Component::Transform>(entity);
 	if (context.game.currentScene != transform.boundScene) return NotHovering;
 
-	const Nc::Vector2f mousePosition = Renderer::GetWorldPosition(renderContext, transform.position);
+	const Nc::Vector2f mousePosition = Renderer::GetWorldPosition(renderContext, GetMousePosition());
 
 	const auto bounds = Nc::Bounds(transform);
-	if (!Nc::Bounds::PointInBounds(bounds, mousePosition)) return NotHovering;
+	if (!Nc::Bounds::PointInBounds(bounds, mousePosition - renderContext.cameraPosition)) return NotHovering;
 	if (clickPressed)
 	{
 		drag.isTarget = true;
