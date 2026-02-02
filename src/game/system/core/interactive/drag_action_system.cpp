@@ -10,30 +10,31 @@
 #include "game/component/core/interactive/drag_action_component.hpp"
 #include "game/contexts/system_context.hpp"
 #include "game/state/game_state.hpp"
+#include "game/utility/rendering.hpp"
 
 
 void System::Action::Drag::Update(const SystemContext& context, const Nc::RenderContext& renderContext)
 {
+	const bool clickPressed = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
 	const bool clickReleased = IsMouseButtonReleased(MOUSE_BUTTON_LEFT);
+
 	const auto view = context.registry.view<Component::Action::Drag>();
 	for (auto [entity, drag] : view.each())
 	{
 		if (drag.isTarget)
 		{
-			auto mousePosition = Nc::Vector2f(GetMousePosition());
-			mousePosition -= Nc::Vector2f(renderContext.renderRectangle.x, renderContext.renderRectangle.y);
-			mousePosition /= renderContext.renderScale;
-
+			// TODO: Separate for UI.
+			const Nc::Vector2f mousePosition = Renderer::GetWorldPosition(renderContext, drag.startPosition);
 			drag.draggedDelta = mousePosition - drag.startPosition;
 
 			if (clickReleased) drag.isTarget = false;
 			return;
 		}
 
-		switch (UpdateSceneDrag(context, renderContext, entity, drag))
+		switch (UpdateSceneDrag(context, renderContext, entity, drag, clickPressed))
 		{
 		case Hovering: return Nc::Cursor::AssignIfHigherPriority(context.game.cursor, Nc::Cursor::Grab);
-		case NotHovering: return UpdateUiDrag(context, renderContext.windowSize);
+		case NotHovering: return UpdateUiDrag(context, renderContext.windowSize, clickPressed);
 		case Pressed: return;
 		}
 	}
@@ -44,19 +45,18 @@ System::Action::Drag::Result System::Action::Drag::UpdateSceneDrag(
 	const SystemContext& context,
 	const Nc::RenderContext& renderContext,
 	const entt::entity entity,
-	Component::Action::Drag& drag
+	Component::Action::Drag& drag,
+	const bool clickPressed
 )
 {
 	const auto& transform = context.registry.get<const Component::Transform>(entity);
 	if (context.game.currentScene != transform.boundScene) return NotHovering;
 
-	auto mousePosition = Nc::Vector2f(GetMousePosition());
-	mousePosition -= Nc::Vector2f(renderContext.renderRectangle.x, renderContext.renderRectangle.y);
-	mousePosition /= renderContext.renderScale;
+	const Nc::Vector2f mousePosition = Renderer::GetWorldPosition(renderContext, transform.position);
 
 	const auto bounds = Nc::Bounds(transform);
 	if (!Nc::Bounds::PointInBounds(bounds, mousePosition)) return NotHovering;
-	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+	if (clickPressed)
 	{
 		drag.isTarget = true;
 		drag.startPosition = mousePosition;
@@ -66,7 +66,7 @@ System::Action::Drag::Result System::Action::Drag::UpdateSceneDrag(
 }
 
 
-void System::Action::Drag::UpdateUiDrag(const SystemContext& context, Nc::Vector2i windowSize)
+void System::Action::Drag::UpdateUiDrag(const SystemContext& context, Nc::Vector2i windowSize, const bool clickPressed)
 {
 	// TODO: Add UI functionality.
 }

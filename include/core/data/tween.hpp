@@ -1,6 +1,5 @@
 #pragma once
 #include <cstdint>
-#include <functional>
 
 #include "core/math/interpolation.hpp"
 
@@ -22,10 +21,15 @@ namespace Nc
 {
 struct Tween final
 {
+	// ------ Types ------
+	enum State : uint8_t
+	{
+		Stopped, Playing, Completed
+	};
+
+
 	// ------ Members ------
 
-	// TODO: Use entt delegates instead.
-	std::function<void()> onComplete { };
 	float* value = nullptr;
 	float start = 0.0f;
 	float end = 1.0f;
@@ -42,7 +46,8 @@ struct Tween final
 	 */
 	float delayComplete = 0.0f;
 	Easing easing = Linear;
-	bool isPlaying = false;
+	State state = Stopped;
+	bool justCompleted = false;
 
 
 	// ------ Constructors ------
@@ -101,8 +106,8 @@ struct Tween final
 	}
 
 	
-	static constexpr void Play(Tween& tween) noexcept { tween.isPlaying = true; };
-	static constexpr void Stop(Tween& tween) noexcept { tween.isPlaying = false; };
+	static constexpr void Play(Tween& tween) noexcept { tween.state = Playing; }
+	static constexpr void Stop(Tween& tween) noexcept { tween.state = Stopped; }
 	static constexpr void Replay(Tween& tween) noexcept
 	{
 		tween.elapsed = 0.0f;

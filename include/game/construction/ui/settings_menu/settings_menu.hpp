@@ -11,7 +11,16 @@ namespace Structure
 class SettingsMenu final
 {
 public:
+	// ------ Types ------
+	enum ButtonId : uint16_t
+	{
+		ToMainMenu,
+		ApplySettings,
+	};
+
+
 	// ------ Functions ------
+
 	static void Build(
 		const SceneContext& context,
 		Nc::Vector2f windowSize,

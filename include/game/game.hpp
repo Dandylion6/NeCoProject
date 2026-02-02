@@ -8,6 +8,7 @@
 #include "game/state/game_state.hpp"
 #include "game/state/settings.hpp"
 #include "state/anomaly_state.hpp"
+#include "state/game_events.hpp"
 
 
 class Game
@@ -35,6 +36,7 @@ public:
 	void Update(float deltaTime);
 	void UpdateRegistries(float deltaTime);
 	void DrawGame(float deltaTime);
+	void HandleEvents();
 
 	static void Death(const SceneContext& context);
 
@@ -47,6 +49,7 @@ private:
 	GameState gameState{ };
 	Settings settings{ };
 	Settings pendingSettings{ };
+	GameEvents gameEvents{ };
 
 
 	// ------ Functions ------

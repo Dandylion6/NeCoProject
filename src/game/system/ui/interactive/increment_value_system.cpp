@@ -14,6 +14,10 @@ void System::UI::IncrementValue::Update(entt::registry& registry)
     const auto view = registry.view<Component::UI::Increment, Component::Text>();
     for (auto [entity, increment, text] : view.each())
     {
+        if (!increment.hasChanged) continue;
+        increment.hasChanged = false;
+
+        text.text.clear();
         const float value = *increment.value;
 
         std::array<char, 16u> buffer{ };

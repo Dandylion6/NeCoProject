@@ -51,7 +51,6 @@ struct GameState final
 	Scene movingToScene = NullScene;
 	Nc::Cursor::Type cursor = Nc::Cursor::Standard;
 	bool isPaused = false;
-	bool shouldExit = false;
 
 	/**
 	 * @brief Indicates whether the player completed the night phase.

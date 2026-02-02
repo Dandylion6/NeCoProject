@@ -36,7 +36,13 @@ entt::entity Entity::Blip::Create(const SceneContext& context, Nc::Vector2f posi
 	Nc::Vector2f size = Nc::Vector2f(texture.width, texture.height);
 	context.registry.emplace<Component::Transform>(entity, RadarScene, position, size, size * 0.5f);
 
-	context.registry.emplace<Component::Text>(entity, "( , )", Palette::RADAR_COLOR, Nc::Font::WDXL, Nc::Font::Size::Tiny);
+	context.registry.emplace<Component::Text>(
+		entity,
+		"( , )",
+		Palette::RADAR_COLOR,
+		Nc::Font::WDXL,
+		Nc::Font::Size::Tiny
+	);
 
 	auto& collection = context.registry.emplace<Component::TweenCollection>(entity);
 
@@ -45,7 +51,5 @@ entt::entity Entity::Blip::Create(const SceneContext& context, Nc::Vector2f posi
 
 	Nc::Tween& fadeInTween = collection.tweens.at(Component::Blip::BlipFadeIn);
 	Nc::Tween::Build(fadeInTween, &sprite.alpha, sprite.alpha, 1.0f, FADE_IN_TIME, CubicOut, FADE_OUT_DELAY);
-	fadeInTween.onComplete = fadeInTween.onComplete = [&fadeOutTween] { Nc::Tween::Replay(fadeOutTween); };
-
 	return entity;
 }

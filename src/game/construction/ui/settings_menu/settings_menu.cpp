@@ -30,8 +30,8 @@ void Structure::SettingsMenu::Build(
     Entity::SettingsHeader::Create(context.registry);
     Entity::GameplaySettingsHeader::Create(context.registry);
 
-    Object::SettingsToMainButton::Create(context, live, pending);
-    Object::ApplySettingsButton::Create(context, live, pending);
+    Object::SettingsToMainButton::Create(context);
+    Object::ApplySettingsButton::Create(context);
 
     float* dotTimeValue = &pending.morseSettings.dotTime;
     const Object::IncrementSetting::Data data = Object::IncrementSetting::Create(
@@ -73,7 +73,7 @@ void Structure::SettingsMenu::Close(const SceneContext& context, const Settings&
 {
     // TODO: Add warning for unsaved changes.
     Close(context);
-    pending = live;
+    pending = live; // Reverts back.
 }
 
 

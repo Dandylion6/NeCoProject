@@ -19,16 +19,17 @@ void Structure::DoorwayScene::Build(const BuildContext& context) noexcept
 {
 	constexpr char FILE_PATH[] = "assets/environment/backgrounds/doorway.png";
 	constexpr auto LIGHT_COLOR = Nc::Hex(0xfee8c8ff);
+	constexpr Nc::Vector2f LIGHT_POSITION = Nc::Vector::Modulate(
+		Nc::Vector2f(0.5f, 1.3f),
+		Nc::Vector2f(Nc::RENDER_RESOLUTION)
+	);
+	constexpr float LIGHT_RADIUS = 940.0f;
 
 	const Texture2D& backgroundText = context.store.GetTexture(FILE_PATH);
 	Entity::SceneBackground::Create(context.registry, backgroundText, Doorway);
 
 	const SceneContext sceneContext = SceneContext(context.registry, context.store, context.game);
+
 	Entity::MoveRegion::Create(sceneContext, Left, Doorway, CommsRoom, 0.4f);
-
-	const auto windowSize = Nc::Vector2f(context.renderContext.windowSize);
-	const Nc::Vector2f lightPosition = Nc::Vector::Modulate(windowSize, Nc::Vector2f(0.5f, 1.3f));
-	const float lightRadius = 940.0f * context.renderContext.renderScale;
-
-	Entity::LightPoint::Create(context.registry, Doorway, lightPosition, Nc::RGBa(LIGHT_COLOR), 1.6f, lightRadius);
+	Entity::LightPoint::Create(context.registry, Doorway, LIGHT_POSITION, Nc::RGBa(LIGHT_COLOR), 1.6f, LIGHT_RADIUS);
 }

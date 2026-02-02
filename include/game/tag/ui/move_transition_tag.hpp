@@ -3,5 +3,12 @@
 
 namespace Tag
 {
-	struct MoveTransition { };
+	struct MoveTransition
+	{
+		enum Tweens
+		{
+			TransitionDown = 0u,
+			TransitionUp = 1u,
+		};
+	};
 }

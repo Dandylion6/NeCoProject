@@ -46,8 +46,8 @@ const ::Font& ResourceStore::GetFont(const Font::Style style, Font::Size fontSiz
 		std::string filePath{ };
 		switch (style)
 		{
-		case Nc::Font::WDXL:
-			filePath = "assets/fonts/Nc::Font::WDXLLubrifontSC-Regular.ttf";
+		case Font::WDXL:
+			filePath = "assets/fonts/WDXLLubrifontSC-Regular.ttf";
 			break;
 		default:
 			break;

@@ -20,6 +20,11 @@ void Structure::DeskScene::Build(const BuildContext& context) noexcept
 {
 	constexpr char SCENE_TEXTURE_PATH[] = "assets/environment/backgrounds/comms_desk.png";
 	constexpr auto LIGHT_COLOR = Nc::Hex(0xfee8c8ff);
+	constexpr Nc::Vector2f LIGHT_POSITION = Nc::Vector::Modulate(
+		Nc::Vector2f(0.5f, 0.34f),
+		Nc::Vector2f(Nc::RENDER_RESOLUTION)
+	);
+	constexpr float LIGHT_RADIUS = 620.0f;
 	constexpr float MOVE_TIME = 0.16f;
 
 	const SceneContext sceneContext = SceneContext(context.registry, context.store, context.game);
@@ -30,10 +35,5 @@ void Structure::DeskScene::Build(const BuildContext& context) noexcept
 	Entity::SceneBackground::Create(context.registry, texture, CommsDesk);
 
 	Entity::MoveRegion::Create(sceneContext, Up, CommsDesk, CommsRoom, MOVE_TIME);
-
-	const Nc::Vector2f windowSize = Nc::Vector2f(context.renderContext.windowSize);
-	const Nc::Vector2f lightPosition = Nc::Vector::Modulate(windowSize, Nc::Vector2f(0.5f, 0.34f));
-	const float lightRadius = 620.0f * context.renderContext.renderScale;
-
-	Entity::LightPoint::Create(context.registry, CommsDesk, lightPosition, Nc::RGBa(LIGHT_COLOR), 0.9f, lightRadius);
+	Entity::LightPoint::Create(context.registry, CommsDesk, LIGHT_POSITION, Nc::RGBa(LIGHT_COLOR), 0.9f, LIGHT_RADIUS);
 }

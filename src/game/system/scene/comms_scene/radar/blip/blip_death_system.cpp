@@ -21,8 +21,7 @@ void System::Blip::Death::Update(entt::registry& registry)
 
         const Nc::Tween& fadeIn = collection.tweens.at(Component::Blip::BlipFadeIn);
         const Nc::Tween& fadeOut = collection.tweens.at(Component::Blip::BlipFadeOut);
-
-        if (!fadeIn.isPlaying && !fadeOut.isPlaying)
+        if (fadeIn.state != Nc::Tween::Completed && fadeOut.state != Nc::Tween::Completed)
             toKill.push_back(entity);
     }
 

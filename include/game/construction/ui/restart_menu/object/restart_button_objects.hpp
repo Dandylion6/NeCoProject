@@ -10,7 +10,7 @@ namespace Object
 class RestartButton final
 {
 public:
-    static void Create(SceneContext context, Game& game) noexcept;
+    static void Create(const SceneContext& context) noexcept;
 
 };
 
@@ -18,7 +18,7 @@ public:
 class RestartToMainButton final
 {
 public:
-    static void Create(SceneContext context) noexcept;
+    static void Create(const SceneContext& context) noexcept;
 
 };
 

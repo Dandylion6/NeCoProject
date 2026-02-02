@@ -21,9 +21,14 @@
 
 void System::Blip::Blink::Update(entt::registry& registry)
 {
-	const auto view = registry.view<const Tag::Radar::Path, const Component::Transform>();
-	for (auto [entity, transform] : view.each())
+	const auto view = registry.view<const Tag::Radar::Path, const Component::Transform, Component::TweenCollection>();
+	for (auto [entity, transform, collection] : view.each())
+	{
+		Nc::Tween& moveTween = collection.tweens.at(Tag::Radar::Path::MOVE);
+		if (moveTween.justCompleted)
+			Nc::Tween::Replay(moveTween);
 		UpdateBlips(registry, transform);
+	}
 }
 
 
@@ -35,6 +40,12 @@ void System::Blip::Blink::UpdateBlips(entt::registry& registry, const Component:
 		if (!blip.isActive) continue;
 
 		Nc::Tween& fadeInTween = collection.tweens.at(Component::Blip::BlipFadeIn);
+		if (fadeInTween.justCompleted)
+		{
+			Nc::Tween& fadeOutTween = collection.tweens.at(Component::Blip::BlipFadeOut);
+			Nc::Tween::Replay(fadeOutTween);
+		}
+
 		if (!BlipShouldAppear(registry, transform, pathTransform, fadeInTween)) continue;
 		Nc::Tween::Replay(fadeInTween);
 	}
@@ -65,6 +76,6 @@ bool System::Blip::Blink::BlipShouldAppear(
 #else
 	if (distance < DIFFERENCE_THRESHOLD) return false;
 #endif
-	if (tween.isPlaying) return false;
+	if (tween.state == Nc::Tween::Playing) return false;
 	return true;
 }

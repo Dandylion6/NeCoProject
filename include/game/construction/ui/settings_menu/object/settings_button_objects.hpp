@@ -11,7 +11,7 @@ namespace Object
 class SettingsToMainButton final
 {
 public:
-    static void Create(SceneContext context, Settings& settings, Settings& pendingSettings) noexcept;
+    static void Create(const SceneContext& context) noexcept;
 
 };
 
@@ -19,7 +19,7 @@ public:
 class ApplySettingsButton final
 {
 public:
-    static void Create(const SceneContext& context, Settings& settings, Settings& pendingSettings) noexcept;
+    static void Create(const SceneContext& context) noexcept;
 
 };
 

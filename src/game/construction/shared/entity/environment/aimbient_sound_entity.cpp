@@ -2,11 +2,12 @@
 #include "core/runtime/render_context.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "game/component/core/audio/sound_emitter_component.hpp"
 #include "game/component/core/transform_component.hpp"
+#include "game/component/core/audio/sound_emitter_component.hpp"
 #include "game/construction/shared/entity/environment/ambient_sound_entity.hpp"
 #include "game/state/scene.hpp"
 #include "game/tag/core/ambient_sound_tag.hpp"
+#include "game/tag/core/life_cycle/dont_destroy_on_load_tag.hpp"
 
 
 entt::entity Entity::AmbientSound::Create(entt::registry& registry) noexcept
@@ -16,6 +17,7 @@ entt::entity Entity::AmbientSound::Create(entt::registry& registry) noexcept
 	const entt::entity entity = registry.create();
 
 	registry.emplace<Tag::AmbientSound>(entity);
+	registry.emplace<Tag::DontDestroyOnLoad>(entity);
 
 	registry.emplace<Component::Transform>(entity, NullScene, POSITION);
 	registry.emplace<Component::LoopedAudio>(entity);

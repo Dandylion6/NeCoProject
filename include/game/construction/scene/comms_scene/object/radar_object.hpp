@@ -83,9 +83,7 @@ private:
 	public:
 		// ------ Functions ------
 		static entt::entity Create(
-			entt::registry& registry,
-			Component::Radar& radar,
-			Component::Action::Toggle& toggle
+			entt::registry& registry
 		) noexcept;
 
 	};

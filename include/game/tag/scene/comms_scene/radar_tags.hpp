@@ -3,7 +3,10 @@
 
 namespace Tag::Radar
 {
-	struct Path { };
+	struct Path
+	{
+		enum Tween : uint8_t { MOVE };
+	};
 
 	struct Artillery { };
 

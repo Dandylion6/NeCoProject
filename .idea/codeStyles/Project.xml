@@ -32,6 +32,7 @@
       <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/INDENT_EXPORT_DECLARATION_MEMBERS/@EntryValue" value="false" type="bool" />
       <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/BLANK_LINES_AROUND_FUNCTION_DEFINITION/@EntryValue" value="2" type="long" />
       <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/BLANK_LINES_AROUND_NAMESPACE/@EntryValue" value="2" type="long" />
+      <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/INDENT_CLASS_MEMBERS_FROM_ACCESS_SPECIFIERS/@EntryValue" value="true" type="bool" />
     </RiderCodeStyleSettings>
     <files>
       <extensions>

@@ -48,24 +48,21 @@ private:
     struct IncrementContext final
     {
         entt::registry& registry;
-        Component::UI::Increment& increment;
-        Component::Text& valueDisplay;
         Nc::Vector2f position;
         Nc::Vector2f offset;
+        entt::entity increment;
 
 
         IncrementContext(
             entt::registry& registry,
-            Component::UI::Increment& increment,
-            Component::Text& valueDisplay,
             const Nc::Vector2f position,
-            const Nc::Vector2f offset
+            const Nc::Vector2f offset,
+            const entt::entity increment
         ) noexcept
             : registry(registry),
-              increment(increment),
-              valueDisplay(valueDisplay),
               position(position),
-              offset(offset) { };
+              offset(offset),
+              increment(increment) { }
     };
 
 

@@ -26,7 +26,8 @@ void System::Tween::UpdateTweenCollection(Component::TweenCollection& collection
 {
 	for (Nc::Tween& tween : collection.tweens)
 	{
-		if (!tween.isPlaying) continue;
+		tween.justCompleted = false;
+		if (tween.state != Nc::Tween::Playing) continue;
 		if (tween.value == nullptr) continue;
 
 		const float totalTime = tween.duration + tween.delayComplete;
@@ -49,7 +50,10 @@ void System::Tween::UpdateTweenCollection(Component::TweenCollection& collection
 
 void System::Tween::TweenEnded(Nc::Tween& tween)
 {
-	tween.isPlaying = false;
+	if (tween.state == Nc::Tween::Playing)
+	{
+		tween.state = Nc::Tween::Completed;
+		tween.justCompleted = true;
+	}
 	tween.elapsed = 0.0f;
-	if (tween.onComplete != nullptr) tween.onComplete();
 }

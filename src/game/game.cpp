@@ -35,6 +35,7 @@
 #include "game/system/scene/comms_scene/morse_code/morse_tone_system.hpp"
 #include "game/system/scene/comms_scene/morse_code/morse_transceiver_system.hpp"
 #include "game/system/scene/comms_scene/radar/radar_artillery_system.hpp"
+#include "game/system/scene/comms_scene/radar/radar_buttons_system.hpp"
 #include "game/system/scene/comms_scene/radar/radar_render_system.hpp"
 #include "game/system/scene/comms_scene/radar/radar_stability_system.hpp"
 #include "game/system/scene/comms_scene/radar/blip/blip_blink_system.hpp"
@@ -54,11 +55,17 @@
 #include "game/system/shared/anomaly/roamer/behaviour/phantom_behaviour_system.hpp"
 #include "game/system/shared/anomaly/roamer/behaviour/phaser_behaviour_system.hpp"
 #include "game/system/shared/anomaly/roamer/behaviour/strider_behaviour_system.hpp"
+#include "game/system/shared/input/move_region_system.hpp"
 #include "game/system/shared/mechanical/lever_system.hpp"
 #include "game/system/shared/mechanical/machine_power_system.hpp"
 #include "game/system/shared/mechanical/breaker/breaker_display_system.hpp"
 #include "game/system/shared/mechanical/breaker/breaker_operation_system.hpp"
 #include "game/system/shared/mechanical/breaker/breaker_restart_system.hpp"
+#include "game/system/ui/move_transition_system.hpp"
+#include "game/system/ui/buttons/increment_buttons_system.hpp"
+#include "game/system/ui/buttons/menu_buttons_system.hpp"
+#include "game/system/ui/buttons/restart_buttons_system.hpp"
+#include "game/system/ui/buttons/settings_buttons_system.hpp"
 #include "game/system/ui/interactive/increment_value_system.hpp"
 #include "game/tag/core/life_cycle/dont_destroy_on_load_tag.hpp"
 #include "game/utility/color_palette.hpp"
@@ -260,7 +267,7 @@ void Game::Shutdown()
 bool Game::ShouldRun() const
 {
 	if (WindowShouldClose()) return false;
-	if (gameState.shouldExit) return false;
+	if (gameEvents.shouldExit) return false;
 	return true;
 }
 
@@ -275,7 +282,7 @@ void Game::Update(float deltaTime)
 		auto& randomService = registry.ctx().get<Nc::Random>();
 		const Nc::Vector2f spawnPoint = System::Anomaly::Roamer::Spawning::GenerateRandomSpawnPoint(randomService);
 		System::Anomaly::Roamer::Spawning::SpawnRoamer(
-			{registry, resourceStore, gameState, deltaTime},
+			{registry, resourceStore, gameState, gameEvents, deltaTime},
 			spawnPoint,
 			anomalyState
 		);
@@ -326,15 +333,22 @@ void Game::UpdateRegistries(float deltaTime)
 	deltaTime *= readouts.timeScale;
 #endif
 
-	const auto context = SystemContext(registry, resourceStore, gameState, deltaTime);
+	const auto context = SystemContext(registry, resourceStore, gameState, gameEvents, deltaTime);
 
+	System::Tween::Update(context);
 	System::Action::Input::Update(context);
 	System::Action::Click::Update(context, renderContext);
 	System::Action::Drag::Update(context, renderContext);
 	System::UI::IncrementValue::Update(registry);
+	System::UI::MoveTransition::Update(context);
 	System::Audio::MainAmbience::Update(context);
-	System::Tween::Update(context);
 	System::Audio::Emitter::Update(context);
+
+	System::Restart::Buttons::Update(context);
+	System::Menu::Buttons::Update(context);
+	System::Settings::Buttons::Update(context, settings, pendingSettings);
+	System::Input::MoveRegion::Update(context);
+	System::UI::IncrementButtons::Update(context);
 
 	MouseCursor cursor = MOUSE_CURSOR_DEFAULT;
 	switch (gameState.cursor)
@@ -353,6 +367,7 @@ void Game::UpdateRegistries(float deltaTime)
 	System::Morse::Tone::Update(context);
 	System::Receiver::Interpret::Recalibration::Update(registry, deltaTime);
 	System::Machine::PowerUsage::Update(context, anomalyState);
+	System::Radar::Buttons::Update(context);
 	System::Radar::Stability::Update(context, anomalyState);
 	System::Radar::Artillery::Update(context);
 	System::Blip::Death::Update(registry);
@@ -390,7 +405,7 @@ void Game::DrawGame(float deltaTime)
 	deltaTime *= readouts.timeScale;
 #endif
 
-	const auto context = SystemContext(registry, resourceStore, gameState, deltaTime);
+	const auto context = SystemContext(registry, resourceStore, gameState, gameEvents, deltaTime);
 	System::Render::Radar::DrawRenderTexture(context, renderContext.radarRenderTexture);
 
 	auto cameraPosition = Nc::Vector2f::Zero();
@@ -402,16 +417,14 @@ void Game::DrawGame(float deltaTime)
 	BeginTextureMode(renderContext.renderTexture);
 	ClearBackground(BLANK);
 
-	// TODO: Render light at same game size.
-
 	const Shader& shader = System::Render::Lighting::Update(context, renderContext.lightingContext, cameraPosition);
 	BeginShaderMode(shader);
 
 	RenderingSystem::DrawScreen(registry, gameState, cameraPosition);
 	System::Render::Radar::DrawRadar(context, renderContext.radarRenderTexture, cameraPosition);
 
-	EndTextureMode();
 	EndShaderMode();
+	EndTextureMode();
 
 	BeginDrawing();
 	ClearBackground(Color(Palette::BACKGROUND_COLOR));
@@ -425,6 +438,17 @@ void Game::DrawGame(float deltaTime)
 #endif
 
 	EndDrawing();
+}
+
+
+void Game::HandleEvents()
+{
+	if (gameEvents.shouldLoad || gameEvents.shouldRestart)
+		Load();
+
+	const bool shouldExit = gameEvents.shouldExit;
+	gameEvents = { }; // Resets the event bus.
+	gameEvents.shouldExit = shouldExit;
 }
 
 

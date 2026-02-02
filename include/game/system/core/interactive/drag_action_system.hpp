@@ -23,11 +23,12 @@ class Drag final
 {
 public:
     // ------ Functions ------
+    // TODO: Separate UI with world-space.
     static void Update(const SystemContext& context, const Nc::RenderContext& renderContext);
 
 private:
     // ------ Types ------
-    enum Result
+    enum Result : uint8_t
     {
         Hovering,
         NotHovering,
@@ -41,10 +42,11 @@ private:
         const SystemContext& context,
         const Nc::RenderContext& renderContext,
         entt::entity entity,
-        Component::Action::Drag& drag
+        Component::Action::Drag& drag,
+        bool clickPressed
     );
 
-    static void UpdateUiDrag(const SystemContext& context, Nc::Vector2i windowSize);
+    static void UpdateUiDrag(const SystemContext& context, Nc::Vector2i windowSize, bool clickPressed);
 
 };
 

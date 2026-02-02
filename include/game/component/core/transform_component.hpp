@@ -90,8 +90,8 @@ namespace Component::UI
  * - <b>origin</b>: normalized (0-1) pivot point within the UI element itself.
  * - <b>size</b>: the raw pixel dimensions of the element (unscaled).
  * - <b>offset</b>: an absolute offset in pixels, applied after anchoring.
- * - <b>rotation</b>: clockwise rotation in radians.
  * - <b>index</b>: sort order for layered rendering.
+ * - <b>rotation</b>: clockwise rotation in radians.
  * - <b>isVisible</b>: determines whether the element is drawn at all.
  *
  * Usage example:

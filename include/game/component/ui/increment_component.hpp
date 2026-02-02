@@ -29,6 +29,7 @@ struct Increment final
     Nc::Vector2f range = Nc::Vector2f(0.0f, 1.0f);
     float increment = 0.1f;
     uint8_t decimals = 1u;
+    bool hasChanged = true;
 
 
     // ------ Constructors ------

@@ -1,10 +1,11 @@
 #pragma once
-#include "core/data/color.hpp"
-#include "core/data/font.hpp"
-#include "raylib.h"
 #include <cstdint>
 #include <string>
 #include <utility>
+
+#include "raylib.h"
+#include "core/data/color.hpp"
+#include "core/data/font.hpp"
 
 
 enum class Alignment: uint8_t

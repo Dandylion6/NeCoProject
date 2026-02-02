@@ -1,5 +1,6 @@
 #pragma once
 #include "entt/entity/fwd.hpp"
+struct GameEvents;
 struct GameState;
 
 
@@ -15,11 +16,18 @@ struct SystemContext final
     entt::registry& registry;
     Nc::ResourceStore& store;
     GameState& game;
+    GameEvents& gameEvents;
     float deltaTime;
 
 
     // ------ Constructors ------
 
-    SystemContext(entt::registry& registry, Nc::ResourceStore& store, GameState& game, const float deltaTime) noexcept
-        : registry(registry), store(store), game{ game }, deltaTime{ deltaTime } { };
+    SystemContext(
+        entt::registry& registry,
+        Nc::ResourceStore& store,
+        GameState& game,
+        GameEvents& gameEvents,
+        const float deltaTime
+    ) noexcept
+        : registry(registry), store(store), game{game}, gameEvents{gameEvents}, deltaTime{deltaTime} {}
 };

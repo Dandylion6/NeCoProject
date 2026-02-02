@@ -3,6 +3,8 @@
 #include "raylib.h"
 #include "core/data/color.hpp"
 #include "core/data/vector2.hpp"
+#include "core/math/vector_math.hpp"
+#include "core/runtime/render_context.hpp"
 #include "core/runtime/resource_store.hpp"
 #include "game/component/core/rendering/sprite_component.hpp"
 #include "game/component/core/rendering/text_component.hpp"
@@ -14,6 +16,21 @@ bool Renderer::IsRenderableToScreen(const Scene boundScene, const Scene currentS
 	const bool ignoresSceneBounds = boundScene == NullScene;
 	const bool isShowingBoundScene = boundScene == currentScene;
 	return isShowingBoundScene || ignoresSceneBounds;
+}
+
+
+Nc::Vector2f Renderer::GetWorldPosition(const Nc::RenderContext& context, const Nc::Vector2f position)
+{
+	auto worldPosition = position;
+	worldPosition -= Nc::Vector2f(context.renderRectangle.x, context.renderRectangle.y);
+	worldPosition /= context.renderScale;
+	return worldPosition;
+}
+
+
+Nc::Vector2f Renderer::GetWorldPosition(const Nc::RenderContext& context, const Vector2 screenPosition)
+{
+	return GetWorldPosition(context, Nc::Vector2f(screenPosition));
 }
 
 
@@ -33,13 +50,16 @@ void Renderer::DrawSprite(
 	const auto width = static_cast<float>(sprite.texture.width);
 	const auto height = static_cast<float>(sprite.texture.height);
 
+	const Nc::Vector2f pixelPosition = Nc::Vector::Round(position);
+	const Nc::Vector2f pixelOrigin = Nc::Vector::Round(origin);
+
 	::DrawTexturePro(
 		sprite.texture,
 		Rectangle{0.0f, 0.0f, width, height},
-		Rectangle{position.x, position.y, width * scale, height * scale},
-		Vector2(origin),
+		Rectangle{pixelPosition.x, pixelPosition.y, width * scale, height * scale},
+		Vector2(pixelOrigin),
 		rotation,
-		WHITE
+		Color(tintColor)
 	);
 }
 
@@ -54,11 +74,14 @@ void Renderer::DrawRectangle(
 {
 	if (fillColor.alpha == 0u) return;
 
+	const Nc::Vector2f pixelPosition = Nc::Vector::Round(position);
+	const Nc::Vector2f pixelOrigin = Nc::Vector::Round(origin);
+
 	::DrawRectanglePro(
-		Rectangle{position.x, position.y, size.x, size.y},
-		Vector2(origin),
+		Rectangle{pixelPosition.x, pixelPosition.y, size.x, size.y},
+		Vector2(pixelOrigin),
 		rotation,
-		WHITE
+		Color(fillColor)
 	);
 }
 
@@ -76,15 +99,18 @@ void Renderer::DrawText(
 	const auto fontSize = static_cast<float>(text.fontSize);
 	const float spacing = text.spacing;
 
+	const Nc::Vector2f pixelPosition = Nc::Vector::Round(position);
+	const Nc::Vector2f pixelOrigin = Nc::Vector::Round(offset);
+
 	::DrawTextPro(
 		font,
 		text.text.c_str(),
-		Vector2(position),
-		Vector2(offset),
+		Vector2(pixelPosition),
+		Vector2(pixelOrigin),
 		0.0f,
 		fontSize,
 		spacing,
-		WHITE
+		Color(text.color)
 	);
 }
 

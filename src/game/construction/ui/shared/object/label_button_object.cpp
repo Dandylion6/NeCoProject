@@ -1,6 +1,5 @@
 #include "game/construction/ui/shared/object/label_button_object.hpp"
 
-#include <functional>
 #include <string>
 #include <utility>
 
@@ -18,18 +17,18 @@ Object::LabelButton::Data Object::LabelButton::Create(
     const SceneContext& context,
     Component::UI::Transform& transform,
     std::string&& display,
-    std::function<void()>&& onClick
+    const uint16_t id
 ) noexcept
 {
     constexpr Nc::Vector2f DEFAULT_SIZE = Nc::Vector2f(420.0f, 68.0f);
 
     if (transform.size == Nc::Vector2f::Zero()) transform.size = DEFAULT_SIZE;
 
-    const entt::entity button = Button::Create(context.registry, transform, std::move(onClick));
+    const entt::entity button = Button::Create(context.registry, transform, id);
     const auto& entityTransform = context.registry.get<Component::UI::Transform>(button);
     const entt::entity label = Label::Create(context.registry, std::move(display), entityTransform);
 
-    return { label, button };
+    return {label, button};
 }
 
 
@@ -41,15 +40,8 @@ entt::entity Object::LabelButton::Label::Create(
 {
     const entt::entity entity = registry.create();
 
-    registry.emplace<Component::UI::Transform>(
-        entity,
-        transform.anchor,
-        transform.origin,
-        transform.size,
-        transform.offset,
-        transform.index + 1,
-        transform.rotation
-    );
+    auto& labelTransform = registry.emplace<Component::UI::Transform>(entity, transform);
+    ++labelTransform.index;
 
     registry.emplace<Component::Text>(
         entity,
@@ -68,14 +60,14 @@ entt::entity Object::LabelButton::Label::Create(
 entt::entity Object::LabelButton::Button::Create(
     entt::registry& registry,
     Component::UI::Transform transform,
-    std::function<void()>&& onClick
+    uint16_t id
 ) noexcept
 {
     const entt::entity entity = registry.create();
 
     registry.emplace<Component::UI::Transform>(entity, transform);
     registry.emplace<Component::Rectangle>(entity, Palette::BACKGROUND_COLOR);
-    registry.emplace<Component::Action::Click>(entity, std::move(onClick));
+    registry.emplace<Component::Action::Click>(entity, id);
 
     return entity;
 }

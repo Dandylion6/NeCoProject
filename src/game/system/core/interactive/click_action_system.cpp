@@ -10,59 +10,99 @@
 #include "game/component/core/interactive/click_action_component.hpp"
 #include "game/contexts/system_context.hpp"
 #include "game/state/game_state.hpp"
+#include "game/utility/rendering.hpp"
 
 
 void System::Action::Click::Update(const SystemContext& context, const Nc::RenderContext& renderContext)
 {
-	UpdateUiButtons(context, renderContext.windowSize);
+	const auto view = context.registry.view<Component::Action::Click>();
+	for (auto [entity, click] : view.each())
+		click.justClicked = false;
+
+	const bool isClicked = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
+	UpdateUiButtons(context, renderContext.windowSize, isClicked);
+
+	// Still has no target.
 	if (context.game.cursor == Nc::Cursor::Standard)
-		UpdateSceneButtons(context, renderContext);
+		UpdateSceneButtons(context, renderContext, isClicked);
 }
 
 
-void System::Action::Click::UpdateSceneButtons(const SystemContext& context, const Nc::RenderContext& renderContext)
+void System::Action::Click::UpdateSceneButtons(
+	const SystemContext& context,
+	const Nc::RenderContext& renderContext,
+	const bool clickInput
+)
 {
 	if (context.game.isPaused) return;
 
 	const auto view = context.registry.view<const Component::Transform, Component::Action::Click>();
 	for (auto [entity, transform, button] : view.each())
 	{
-		if (!button.isActive) continue;
+		if (button.state != Component::Action::Click::Active) continue;
 		if (context.game.currentScene != transform.boundScene) continue;
 
-		auto mousePosition = Nc::Vector2f(GetMousePosition());
-		mousePosition -= Nc::Vector2f(renderContext.renderRectangle.x, renderContext.renderRectangle.y);
-		mousePosition /= renderContext.renderScale;
+		const Nc::Vector2f mousePosition = Renderer::GetWorldPosition(renderContext, GetMousePosition());
 
 		const auto bounds = Nc::Bounds(transform);
 		if (!Nc::Bounds::PointInBounds(bounds, mousePosition)) continue;
-		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+		if (clickInput)
 		{
-			button.isActive = false;
-			button.onClick();
-		} else Nc::Cursor::AssignIfHigherPriority(context.game.cursor, Nc::Cursor::Clickable);
+			button.state = Component::Action::Click::Inactive;
+			button.justClicked = true;
+		}
+		else
+		{
+			Nc::Cursor::AssignIfHigherPriority(context.game.cursor, Nc::Cursor::Clickable);
+		}
 		break; // Already a target, no need to check further.
 	}
 }
 
 
-void System::Action::Click::UpdateUiButtons(const SystemContext& context, const Nc::Vector2i windowSize)
+void System::Action::Click::UpdateUiButtons(
+	const SystemContext& context,
+	const Nc::Vector2i windowSize,
+	const bool clickInput
+)
 {
 	const auto view = context.registry.view<const Component::UI::Transform, Component::Action::Click>();
 	for (auto [entity, transform, button] : view.each())
 	{
-		button.isActive = transform.isVisible;
-		if (!button.isActive) continue;
+		UpdateUiButtonState(button, transform.isVisible);
+		if (button.state != Component::Action::Click::Active) continue;
 
 		const auto mousePosition = Nc::Vector2f(GetMousePosition());
 		const auto bounds = Nc::Bounds(transform, windowSize);
 
 		if (!Nc::Bounds::PointInBounds(bounds, mousePosition)) continue;
-		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+		if (clickInput)
 		{
-			button.isActive = false;
-			button.onClick();
-		} else Nc::Cursor::AssignIfHigherPriority(context.game.cursor, Nc::Cursor::Clickable);
+			button.state = Component::Action::Click::Inactive;
+			button.justClicked = true;
+		}
+		else
+		{
+			Nc::Cursor::AssignIfHigherPriority(context.game.cursor, Nc::Cursor::Clickable);
+		}
 		break; // Already a target, no need to check further.
+	}
+}
+
+
+void System::Action::Click::UpdateUiButtonState(Component::Action::Click& button, const bool isVisible)
+{
+	switch (button.state)
+	{
+	case Component::Action::Click::Disabled:
+		break;
+	case Component::Action::Click::Active:
+		if (!isVisible)
+			button.state = Component::Action::Click::Inactive;
+		break;
+	case Component::Action::Click::Inactive:
+		if (isVisible)
+			button.state = Component::Action::Click::Active;
+		break;
 	}
 }

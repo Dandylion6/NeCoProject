@@ -14,7 +14,7 @@
 void Structure::RestartMenu::Build(const SceneContext& context, Game &game, const Nc::Vector2f windowSize) noexcept
 {
 	Object::RestartMenuBackground::Create(context, windowSize);
-	Object::RestartButton::Create(context, game);
+	Object::RestartButton::Create(context);
 	Object::RestartToMainButton::Create(context);
 	Close(context);
 }

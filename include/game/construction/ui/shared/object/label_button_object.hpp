@@ -7,15 +7,18 @@
 #include "game/contexts/scene_context.hpp"
 
 
-namespace Component::UI { struct Transform; };
+namespace Component::UI
+{
+struct Transform;
+};
 
 
 namespace Object
 {
-
 class LabelButton final
 {
 public:
+    // ------ Types ------
     struct Data final
     {
         entt::entity label;
@@ -24,19 +27,22 @@ public:
 
         [[nodiscard]] std::array<entt::entity, 2u> All() const
         {
-            return { label, button };
+            return {label, button};
         };
     };
 
+
+    // ------ Functions ------
 
     static Data Create(
         const SceneContext& context,
         Component::UI::Transform& transform,
         std::string&& display,
-        std::function<void()>&& onClick
+        uint16_t id = 0
     ) noexcept;
 
 private:
+    // ------ Types ------
     class Label final
     {
     public:
@@ -45,7 +51,6 @@ private:
             std::string&& label,
             const Component::UI::Transform& transform
         ) noexcept;
-
     };
 
 
@@ -55,11 +60,8 @@ private:
         static entt::entity Create(
             entt::registry& registry,
             Component::UI::Transform transform,
-            std::function<void()>&& onClick
+            uint16_t id = 0
         ) noexcept;
-
     };
-
 };
-
 }

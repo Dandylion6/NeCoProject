@@ -46,16 +46,14 @@ void System::Render::Radar::DrawRenderTexture(const SystemContext& context, cons
 	if (toggle.state != On)
 	{
 		ClearBackground(BLACK);
-		return;
-	}
-
-	if (radar.recalibrationTimeLeft > 0.0f)
+	} else if (radar.recalibrationTimeLeft > 0.0f)
 	{
 		DrawRecalibratingScreen(radarContext);
-		return;
 	}
-
-	DrawActiveScreen(radarContext);
+	else
+	{
+		DrawActiveScreen(radarContext);
+	}
 
 	EndTextureMode();
 	EndBlendMode();

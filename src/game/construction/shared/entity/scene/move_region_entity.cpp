@@ -1,20 +1,14 @@
 #include "game/construction/shared/entity/scene/move_region_entity.hpp"
 
-#include <functional>
-#include <utility>
-
-#include "raylib.h"
 #include "core/data/vector2.hpp"
 #include "core/runtime/render_context.hpp"
-#include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
 #include "game/component/core/interactive/click_action_component.hpp"
+#include "game/component/shared/input/move_region_component.hpp"
 #include "game/construction/ui/shared/entity/move_transition_entity.hpp"
-#include "game/state/game_state.hpp"
 #include "game/state/scene.hpp"
-#include "game/tag/shared/move_region_tag.hpp"
 
 
 entt::entity Entity::MoveRegion::Create(
@@ -26,23 +20,9 @@ entt::entity Entity::MoveRegion::Create(
 {
 	const entt::entity entity = context.registry.create();
 
-	context.registry.emplace<Tag::MoveRegion>(entity);
+	context.registry.emplace<Component::MoveRegion>(entity, nextScene, moveTime);
 	context.registry.emplace<Component::Transform>(entity, transform);
-
-	std::function onClick = [context, nextScene, moveTime]()
-	{
-		constexpr char TRANSITION_SOUND_PATH[] = "assets/audio/effects/scene_transition.wav";
-
-		if (context.game.movingToScene != NullScene) return;
-		context.game.movingToScene = nextScene;
-
-		MoveTransition::StartMoveScene(context, nextScene, moveTime);
-
-		const Sound& transitionSound = context.store.CreateSoundHandle(TRANSITION_SOUND_PATH);
-		PlaySound(transitionSound);
-	};
-
-	context.registry.emplace<Component::Action::Click>(entity, std::move(onClick));
+	context.registry.emplace<Component::Action::Click>(entity);
 	return entity;
 }
 
