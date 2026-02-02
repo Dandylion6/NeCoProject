@@ -75,7 +75,7 @@ void System::Morse::Transceiver::TryEndCharacter(
 )
 {
 	const float longestTime = MorseCode::ExitTime(settings.dotTime);
-	const bool shouldEndCharacter = transceiver.intervalSeconds > longestTime;
+	const bool shouldEndCharacter = transceiver.intervalSeconds >= longestTime;
 
 	if (!shouldEndCharacter) return;
 	if (transceiver.pulseCount == 0u) return;
@@ -93,15 +93,14 @@ void System::Morse::Transceiver::TransmitCharacter(
 	const char character
 )
 {
-	const auto receiverView = registry.view<Component::Receiver>();
-	for (auto [entity, receiver] : receiverView.each())
-	{
-		constexpr float ATTRACTION_INCREASE = 0.42f;
+	constexpr float ATTRACTION_INCREASE = 0.42f;
 
-		// Transmission increases attraction level
-		anomalyState.attractionPercentage += ATTRACTION_INCREASE;
-		receiver.incomingCharacter = character;
-	}
+	const entt::entity entity = entt::get_single<Component::Receiver>(registry);
+	auto& receiver = registry.get<Component::Receiver>(entity);
+
+	// Transmission increases attraction level
+	anomalyState.attractionPercentage += ATTRACTION_INCREASE;
+	receiver.incomingCharacter = character;
 }
 
 

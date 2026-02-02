@@ -27,7 +27,6 @@ void System::Receiver::CodeResponse::Update(const SystemContext& context) noexce
 	case MorseCode::BACK_CODE:
 	case MorseCode::CANCEL_CODE:
 		return;
-
 	default:
 		ConfirmCodeReceived(context, receiver);
 		receiver.incomingCharacter = MorseCode::NULL_CODE;

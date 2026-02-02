@@ -18,7 +18,7 @@ void System::Radio::Emitter::Update(const SystemContext& context)
 
 	if (!radio.isSendingBroadcast)
 	{
-		if (!IsSoundPlaying(emitter.sound))
+		if (!IsSoundPlaying(emitter.sound) && radio.priority != BroadcastPriority::Idle)
 		{
 			radio.priority = BroadcastPriority::Idle;
 			UnloadSoundAlias(emitter.sound); // TODO: Add audio pooling system.
