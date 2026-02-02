@@ -25,7 +25,7 @@ Nc::Bounds::Bounds(const Component::UI::Transform& transform, const Vector2i scr
 
 bool Nc::Bounds::PointInBounds(const Bounds bounds, const Vector2f point) noexcept
 {
-	if (point.x < bounds.min.x || point.y < bounds.min.y) return false;
-	if (point.x > bounds.max.x || point.y > bounds.max.y) return false;
+	if (point.x <= bounds.min.x || point.y <= bounds.min.y) return false;
+	if (point.x >= bounds.max.x || point.y >= bounds.max.y) return false;
 	return true;
 }

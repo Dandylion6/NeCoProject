@@ -12,7 +12,7 @@ entity get_single(registry& registry) {
     auto it = view.begin();
 
 #ifdef DEBUG_BUILD
-    assert(it != view.end() && "Single entity is missing!");
+   assert(it != view.end() && "Single entity is missing!");
 #endif
 
     return (it == view.end()) ? null : *it;

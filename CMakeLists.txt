@@ -120,7 +120,9 @@ add_executable(NeCoProject
 		src/game/construction/scene/outside_scene/entity/projectile_entity.cpp
 		src/game/construction/scene/outside_scene/outside_scene.cpp
 		src/core/data/bounds.cpp
-		src/core/runtime/resource_store.cpp)
+		src/core/runtime/resource_store.cpp
+		include/game/system/core/rendering/lighting/light_flickering_system.hpp
+		src/game/system/core/rendering/lighting/light_flickering_system.cpp)
 
 target_sources(NeCoProject PRIVATE
 		src/main.cpp

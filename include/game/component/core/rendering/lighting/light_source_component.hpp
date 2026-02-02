@@ -34,13 +34,16 @@ struct Point final
     float range = 32.0f;
     float strength = 1.0f;
     float currentStrength = strength;
+    float targetStrength = strength;
+    float flickerSecondsLeft = 0.0f;
+    bool flickers = true;
 
 
     // ------ Constructors ------
 
     constexpr Point() noexcept = default;
-    constexpr Point(const Nc::RGBa color, const float range, const float strength) noexcept :
-        color(color), range(range), strength(strength), currentStrength(strength) { }
+    constexpr Point(const Nc::RGBa color, const float range, const float strength, const bool flickers = true) noexcept :
+        color(color), range(range), strength(strength), currentStrength(strength), flickers(flickers) { }
 };
 
 }

@@ -39,7 +39,7 @@ inline Vector2f Remap(
 ) noexcept
 {
 	return {
-		Math::Remap(fromMin.x, fromMax.x, toMin.x, toMax.y, value.x),
+		Math::Remap(fromMin.x, fromMax.x, toMin.x, toMax.x, value.x),
 		Math::Remap(fromMin.y, fromMax.y, toMin.y, toMax.y, value.y)
 	};
 }

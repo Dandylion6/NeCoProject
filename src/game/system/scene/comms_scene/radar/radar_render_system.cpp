@@ -24,6 +24,7 @@
 
 #include "core/math/nc_math.hpp"
 #include "core/runtime/entity_helpers.hpp"
+#include "core/runtime/render_context.hpp"
 #include "game/component/core/interactive/drag_action_component.hpp"
 #include "game/contexts/system_context.hpp"
 
@@ -60,17 +61,17 @@ void System::Render::Radar::DrawRenderTexture(const SystemContext& context, cons
 }
 
 
-void System::Render::Radar::DrawRadar(const SystemContext& context,	const RenderTexture2D& radarRenderTexture, const Nc::Vector2f cameraPosition)
+void System::Render::Radar::DrawRadar(const SystemContext& context,	const Nc::RenderContext& renderContext)
 {
 	constexpr Nc::Vector2f RADAR_SIZE = RADAR_BOUNDS.max;
 	constexpr Rectangle SOURCE { 0, 0, RADAR_SIZE.x, -RADAR_SIZE.y };
 
 	if (context.game.currentScene != CommsRoom) return;
 
-	const Nc::Vector2f position = RADAR_POSITION + cameraPosition;
+	const Nc::Vector2f position = RADAR_POSITION + renderContext.cameraPosition;
 	const Rectangle destination { position.x, position.y, RADAR_SIZE.x, RADAR_SIZE.y };
 
-	DrawTexturePro(radarRenderTexture.texture, SOURCE, destination,Vector2(), 0.0f, WHITE);
+	DrawTexturePro(renderContext.radarRenderTexture.texture, SOURCE, destination,Vector2(), 0.0f, WHITE);
 }
 
 

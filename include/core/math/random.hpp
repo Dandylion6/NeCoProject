@@ -26,9 +26,9 @@ public:
 	{
 		if (min > max)
 		{
-			const float temporaryMin = min;
+			const float temporaryMax = max;
 			max = min;
-			min = temporaryMin;
+			min = temporaryMax;
 		}
 		std::uniform_real_distribution distribution(min, max);
 		return distribution(engine);
@@ -46,9 +46,9 @@ public:
 	{
 		if (min > max)
 		{
-			const int temporaryMin = min;
+			const int temporaryMax = max;
 			max = min;
-			min = temporaryMin;
+			min = temporaryMax;
 		}
 		std::uniform_int_distribution distribution(min, max);
 		return distribution(engine);
@@ -66,9 +66,9 @@ public:
 	{
 		if (min > max)
 		{
-			const uint8_t temporaryMin = min;
+			const uint8_t temporaryMax = max;
 			max = min;
-			min = temporaryMin;
+			min = temporaryMax;
 		}
 		std::uniform_int_distribution distribution(static_cast<int>(min), static_cast<int>(max));
 		return static_cast<uint8_t>(distribution(engine));

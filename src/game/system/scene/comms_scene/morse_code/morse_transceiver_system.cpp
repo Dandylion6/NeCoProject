@@ -23,7 +23,7 @@
 #endif
 
 
-void System::Morse::Transceiver::Update(const SystemContext& context, AnomalyState& anomaly, Settings::Morse settings)
+void System::Morse::Transceiver::Update(const SystemContext& context, AnomalyState& anomaly, const Settings::Morse settings)
 {
 	const entt::entity entity = entt::get_single<Component::Morse::Transceiver>(context.registry);
 	const auto& transform = context.registry.get<Component::Transform>(entity);

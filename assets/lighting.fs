@@ -23,8 +23,8 @@ uniform float lightAngles[MAX_LIGHT_SOURCES];
 
 void main()
 {
-    vec4 textureColor = texture(texture0, fragTexCoord);
-    vec3 finalColor = vec3(0.2, 0.2, 0.2);
+    vec4 albedo = texture(texture0, fragTexCoord) * fragColor;
+    vec3 litColor = vec3(0.2, 0.2, 0.2);
     vec2 pixelPosition = gl_FragCoord.xy;
 
     for (int i = 0; i < lightPointCount; i++)
@@ -34,8 +34,8 @@ void main()
         float lightIntensity = 1.0 - smoothstep(0.0, 1.0, falloff * falloff);
         vec4 finalLightColor = lightColor[i] * lightIntensity * lightStrength[i];
 
-        finalColor.rgb += finalLightColor.rgb;
+        litColor.rgb += finalLightColor.rgb;
     }
 
-    outColor = vec4(textureColor.rgb * finalColor.rgb, textureColor.a);
+    outColor = vec4(albedo.rgb * litColor.rgb, albedo.a);
 }

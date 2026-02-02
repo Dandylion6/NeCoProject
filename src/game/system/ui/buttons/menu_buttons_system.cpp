@@ -12,7 +12,7 @@
 void System::Menu::Buttons::Update(const SystemContext& context)
 {
     const auto view = context.registry.view<Tag::MainMenu, Component::Action::Click>();
-    for (auto [entity, click] : view.each())
+    for (const auto& [entity, click] : view.each())
     {
         if (!click.justClicked) continue;
 

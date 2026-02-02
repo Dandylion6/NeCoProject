@@ -45,7 +45,7 @@ void System::Action::Click::UpdateSceneButtons(
 		const Nc::Vector2f mousePosition = Renderer::GetWorldPosition(renderContext, GetMousePosition());
 
 		const auto bounds = Nc::Bounds(transform);
-		if (!Nc::Bounds::PointInBounds(bounds, mousePosition)) continue;
+		if (!Nc::Bounds::PointInBounds(bounds, mousePosition - renderContext.cameraPosition)) continue;
 		if (clickInput)
 		{
 			button.state = Component::Action::Click::Inactive;

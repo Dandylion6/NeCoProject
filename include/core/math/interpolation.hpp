@@ -46,7 +46,7 @@ inline float InverseLerp(const float start, const float end, const float value) 
 		const bool atMinimumPoint = value <= start;
 		return atMinimumPoint ? 0.0f : 1.0f;
 	}
-	return (value - end) / (end - start);
+	return (value - start) / (end - start);
 }
 
 

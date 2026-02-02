@@ -3,8 +3,9 @@
 #include "raylib.h"
 #include "core/data/color.hpp"
 #include "core/data/vector2.hpp"
-#include "core/math/interpolation.hpp"
+#include "core/math/random.hpp"
 #include "core/runtime/lighting_context.hpp"
+#include "core/runtime/render_context.hpp"
 #include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -27,7 +28,7 @@ void System::Render::Lighting::Initialize(Nc::LightingContext& context, Nc::Reso
 }
 
 
-const Shader& System::Render::Lighting::Update(const SystemContext& systemContext, const Nc::LightingContext& context, const Nc::Vector2f cameraPosition)
+const Shader& System::Render::Lighting::Update(const SystemContext& systemContext, const Nc::RenderContext& context)
 {
     const Shader& shader = systemContext.store.GetShader("assets/lighting.fs");
 
@@ -37,19 +38,16 @@ const Shader& System::Render::Lighting::Update(const SystemContext& systemContex
     {
         if (transform.boundScene != systemContext.game.currentScene) continue;
 
-        Nc::Vector2f position = transform.position - cameraPosition;
-        SetShaderValue(shader, context.lightPositionLocation + index, &position, SHADER_UNIFORM_VEC3);
-        SetShaderValue(shader, context.lightRangeLocation + index, &source.range, SHADER_UNIFORM_FLOAT);
+        Nc::Vector2f position = transform.position - context.cameraPosition;
+        SetShaderValue(shader, context.lightingContext.lightPositionLocation + index, &position, SHADER_UNIFORM_VEC3);
+        SetShaderValue(shader, context.lightingContext.lightRangeLocation + index, &source.range, SHADER_UNIFORM_FLOAT);
 
         Vector4 color = Nc::RGBa::FloatFrom(source.color);
-        const float strength = source.strength + (source.strength * GetRandomValue(-8, 8) * 0.1f);
-        source.currentStrength = Nc::Math::SmoothApproach(source.currentStrength, strength, systemContext.deltaTime, 1.6f);
-        
-        SetShaderValue(shader, context.lightColorLocation + index, &color, SHADER_UNIFORM_VEC4);
-        SetShaderValue(shader, context.lightStrengthLocation + index, &source.currentStrength, SHADER_UNIFORM_FLOAT);
+        SetShaderValue(shader, context.lightingContext.lightColorLocation + index, &color, SHADER_UNIFORM_VEC4);
+        SetShaderValue(shader, context.lightingContext.lightStrengthLocation + index, &source.currentStrength, SHADER_UNIFORM_FLOAT);
         ++index;
     }
 
-    SetShaderValue(shader, context.lightPointCount, &index, SHADER_UNIFORM_INT);
+    SetShaderValue(shader, context.lightingContext.lightPointCount, &index, SHADER_UNIFORM_INT);
     return shader;
 }

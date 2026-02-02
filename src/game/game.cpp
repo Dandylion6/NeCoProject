@@ -31,6 +31,7 @@
 #include "game/system/core/interactive/input_action_system.hpp"
 #include "game/system/core/rendering/rendering_system.hpp"
 #include "game/system/core/rendering/lighting/lighting_system.hpp"
+#include "game/system/core/rendering/lighting/light_flickering_system.hpp"
 #include "game/system/scene/comms_scene/morse_code/morse_monitor_display_system.hpp"
 #include "game/system/scene/comms_scene/morse_code/morse_tone_system.hpp"
 #include "game/system/scene/comms_scene/morse_code/morse_transceiver_system.hpp"
@@ -130,8 +131,6 @@ void Game::SetupDebug(const int args, char* argv[])
 	auto& [ignoreMainMenu, isMaximizedWindowed, isRadarActiveOnStart] =
 		registry.emplace<Component::Debug::DevSettings>(entity);
 
-	isMaximizedWindowed = true;
-	ignoreMainMenu = true;
 	for (int i = 0; i < args; ++i)
 	{
 		if (strcmp(argv[i], "--ignore-main-menu") == 0)
@@ -190,6 +189,7 @@ void Game::BuildMenuUI()
 	const auto windowSize = Nc::Vector2f(renderContext.windowSize);
 
 	Entity::AmbientSound::Create(registry);
+	Entity::MoveTransition::Create(context, renderContext);
 
 	Structure::MainMenu::Build(context, *this);
 	Structure::SettingsMenu::Build(context, windowSize, settings, pendingSettings);
@@ -215,10 +215,6 @@ void Game::BuildMenuUI()
 
 void Game::BuildRuntimeScenes()
 {
-	const SceneContext sceneContext = SceneContext(registry, resourceStore, gameState);
-
-	Entity::MoveTransition::Create(sceneContext, renderContext);
-
 	const BuildContext buildContext = BuildContext(registry, resourceStore, renderContext, gameState);
 
 	Structure::CommsScene::Build(buildContext);
@@ -230,7 +226,18 @@ void Game::BuildRuntimeScenes()
 
 void Game::SetupWindow()
 {
-	SetConfigFlags(FLAG_VSYNC_HINT);
+#ifdef DEBUG_BUILD
+	const entt::entity entity = entt::get_single<Component::Debug::DevSettings>(registry);
+	const auto& devSettings = registry.get<Component::Debug::DevSettings>(entity);
+
+	if (!devSettings.isMaximizedWindowed)
+	{
+		SetConfigFlags(FLAG_VSYNC_HINT | FLAG_FULLSCREEN_MODE);
+	}
+
+#else
+	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_FULLSCREEN_MODE);
+#endif
 
 	const auto monitorSize = Nc::Vector2i(GetMonitorWidth(0), GetMonitorHeight(0));
 	InitWindow(monitorSize.x, monitorSize.y, "Negative Contact");
@@ -238,12 +245,7 @@ void Game::SetupWindow()
 #ifdef DEBUG_BUILD
 	SetExitKey(KEY_BACKSPACE);
 
-	const entt::entity entity = entt::get_single<Component::Debug::DevSettings>(registry);
-	const auto& devSettings = registry.get<Component::Debug::DevSettings>(entity);
-
-	if (!devSettings.isMaximizedWindowed)
-		SetWindowState(FLAG_FULLSCREEN_MODE);
-	else
+	if (devSettings.isMaximizedWindowed)
 	{
 		SetWindowState(FLAG_WINDOW_RESIZABLE);
 		MaximizeWindow();
@@ -251,7 +253,6 @@ void Game::SetupWindow()
 
 #else
 	SetExitKey(KEY_NULL);
-	SetWindowState(FLAG_FULLSCREEN_MODE);
 #endif
 }
 
@@ -360,6 +361,7 @@ void Game::UpdateRegistries(float deltaTime)
 	}
 	SetMouseCursor(cursor);
 
+	if (gameState.currentScene == NullScene) return;
 	if (gameState.isPaused) return;
 
 	System::Morse::Transceiver::Update(context, anomalyState, settings.morseSettings);
@@ -390,6 +392,7 @@ void Game::UpdateRegistries(float deltaTime)
 	System::Anomaly::Roamer::Behaviour::Update(context, anomalyState);
 	System::Anomaly::Roamer::Kill::Update(context);
 	System::Anomaly::Attraction::Update(context, anomalyState);
+	System::Render::LightFlickering::Update(context);
 }
 
 
@@ -413,15 +416,16 @@ void Game::DrawGame(float deltaTime)
 
 	cameraPosition.x = std::cos(swayTime.x) * CAMERA_SWAY_STRENGTH.x;
 	cameraPosition.y = std::sin(swayTime.y - HEIGHT_SWAY_PHASE) * CAMERA_SWAY_STRENGTH.y;
+	renderContext.cameraPosition = cameraPosition;
 
 	BeginTextureMode(renderContext.renderTexture);
 	ClearBackground(BLANK);
 
-	const Shader& shader = System::Render::Lighting::Update(context, renderContext.lightingContext, cameraPosition);
+	const Shader& shader = System::Render::Lighting::Update(context, renderContext);
 	BeginShaderMode(shader);
 
 	RenderingSystem::DrawScreen(registry, gameState, cameraPosition);
-	System::Render::Radar::DrawRadar(context, renderContext.radarRenderTexture, cameraPosition);
+	System::Render::Radar::DrawRadar(context, renderContext);
 
 	EndShaderMode();
 	EndTextureMode();

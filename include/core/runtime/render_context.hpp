@@ -32,6 +32,7 @@ struct RenderContext final
 	Rectangle renderRectangle{ };
 	ResourceStore& resourceStore;
 	Vector2i windowSize = Vector2i::Zero();
+	Vector2f cameraPosition = Vector2f::Zero();
 	float renderScale = 1.0f;
 
 
