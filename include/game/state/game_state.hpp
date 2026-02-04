@@ -26,7 +26,7 @@ struct GameState final
 	/**
 	 * @brief How many minutes an in-game hour is.
 	 */
-	static constexpr float HOUR_MINUTES = 2.2f;
+	static constexpr float HOUR_MINUTES = 1.8f;
 
 	/**
 	 * @brief The hour the player wakes up at.
@@ -39,7 +39,7 @@ struct GameState final
 	 * Represents a circular time frame on a 24-hour clock.
 	 * The range wraps around past midnight.
 	 */
-	static constexpr auto NIGHT_RANGE = Nc::Vector2f(18.0f, 1.0f);
+	static constexpr auto NIGHT_RANGE = Nc::Vector2f(18.0f, 2.0f);
 
 	/**
 	 * @brief Current clock `hour` value, from `0.0f` to `23.999...`.

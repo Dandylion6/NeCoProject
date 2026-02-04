@@ -24,7 +24,7 @@ void System::Anomaly::Roamer::Phantom::Spawn(
 	constexpr Nc::Vector2f MOVE_SPEED_RANGE = Nc::Vector2f(0.13f, 0.17f);
 
 	// Phantom doesn't spawn unless other roamers exist
-	if (anomalyState.roamerThreatCount > 0u)
+	if (anomalyState.roamerThreatCount == 0u)
 	{
 		roamer.behaviour = RoamerBehaviour::Strider;
 		Strider::Spawn(registry, entity);
@@ -45,6 +45,8 @@ void System::Anomaly::Roamer::Phantom::Update(const SystemContext& context) noex
 	for (auto [entity, transform, sprite, roamer, strider] : view.each())
 	{
 		constexpr float HIDDEN_SPEED_MULTIPLIER = 13.0f;
+
+	    if (roamer.behaviour != RoamerBehaviour::Phantom) continue;
 
 		const Nc::Vector2f targetPosition = Behaviour::GetTargetPosition(roamer.target);
 

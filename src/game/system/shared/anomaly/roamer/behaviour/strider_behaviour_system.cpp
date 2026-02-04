@@ -27,6 +27,8 @@ void System::Anomaly::Roamer::Strider::Update(const SystemContext& context) noex
 	const auto view = context.registry.view<Component::Transform, Component::Anomaly::Roamer, Component::Anomaly::Strider>();
 	for (auto [entity, transform, roamer, strider] : view.each())
 	{
+	    if (roamer.behaviour != RoamerBehaviour::Strider) continue;
+
 		const Nc::Vector2f targetPosition = Behaviour::GetTargetPosition(roamer.target);
 		const Nc::Vector2f difference = targetPosition - transform.position;
 		const Nc::Vector2f direction = Nc::Vector::Normalized(difference);

@@ -370,7 +370,7 @@ void Game::UpdateSystems(float deltaTime)
 	if (gameState.currentScene == NullScene) return;
 	if (gameState.isPaused) return;
 
-    System::Morse::Input::Update(context);
+    System::Morse::Input::Update(context, anomalyState);
 	System::Morse::Recording::Update(context, settings.morseSettings);
 	System::Morse::MonitorDisplay::Update(context, settings.morseSettings);
 	System::Morse::Tone::Update(context);

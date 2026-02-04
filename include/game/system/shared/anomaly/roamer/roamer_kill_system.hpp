@@ -17,6 +17,7 @@ struct GameState;
 namespace System::Anomaly::Roamer
 {
 
+// TODO: Refactor this.
 class Kill final
 {
 public:

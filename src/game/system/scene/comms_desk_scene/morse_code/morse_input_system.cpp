@@ -5,11 +5,15 @@
 #include "game/component/core/interactive/input_component.hpp"
 #include "game/component/scene/comms_desk_scene/morse_components.hpp"
 #include "game/contexts/system_context.hpp"
+#include "game/state/anomaly_state.hpp"
 #include "game/state/game_state.hpp"
 
 
-void System::Morse::Input::Update(const SystemContext& context) noexcept
+void System::Morse::Input::Update(const SystemContext& context, AnomalyState& anomaly) noexcept
 {
+    // The percentage amount increased per second of the input being held.
+    constexpr float ATTRACTION_PER_SECOND = 0.8f;
+
     bool canUseButton = false;
     switch (context.game.currentScene)
     {
@@ -41,4 +45,7 @@ void System::Morse::Input::Update(const SystemContext& context) noexcept
     const bool isPushed = pushWeight > 0;
     transceiver.inputJustChanged = isPushed != wasPushed;
     transceiver.isPushed = isPushed;
+
+    if (transceiver.isPushed)
+        anomaly.attractionPercentage += ATTRACTION_PER_SECOND * context.deltaTime;
 }

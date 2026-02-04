@@ -13,7 +13,7 @@ class Random;
 
 namespace System::Anomaly::Roamer
 {
-
+// TODO: Rework spawning.
 class Spawning final
 {
 public:

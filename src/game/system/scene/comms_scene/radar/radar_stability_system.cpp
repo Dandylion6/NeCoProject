@@ -175,14 +175,10 @@ bool System::Radar::Stability::ShouldBlipGlitch(entt::registry& registry, const 
 
 float System::Radar::Stability::GetDegradationValue(const float attractionPercentage)
 {
-	/**
-	 * @brief The maximum duration going from 100% to 0% stability in minutes.
-	 */
+	// The maximum duration going from 100% to 0% stability in minutes.
 	constexpr float MAX_DECAY_DURATION_MINUTES = 29.0f;
 
-	/**
-	 * @brief The minimum duration going from 100% to 0% stability in minutes.
-	 */
+	// The minimum duration going from 100% to 0% stability in minutes.
 	constexpr float MIN_DECAY_DURATION_MINUTES = 5.6f;
 
 	constexpr float MAX_DECAY_RATE = 100.0f / MAX_DECAY_DURATION_MINUTES;
@@ -225,14 +221,10 @@ void System::Radar::Stability::GlitchBlip(
 
 void System::Radar::Stability::SetRandomGlitchSpawnInterval(entt::registry& registry, Component::Radar& radar)
 {
-	/**
-	 * @brief The base interval range for new glitches to appear. Measured in minutes.
-	 */
+	// The base interval range for new glitches to appear. Measured in minutes.
 	constexpr Nc::Vector2f BASE_GLITCH_SPAWN_RANGE = Nc::Vector2f(0.8f, 1.6f);
 
-	/**
-	 * @brief How much the degradation affects the spawn interval.
-	 */
+	// How much the degradation affects the spawn interval.
 	constexpr float DEGRADATION_AFFECT_SCALE = 0.7f;
 
 	auto& randomService = registry.ctx().get<Nc::Random>();

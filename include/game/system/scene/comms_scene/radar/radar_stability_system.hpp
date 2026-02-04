@@ -13,7 +13,7 @@ struct Radar;
 
 namespace System::Radar
 {
-
+// TODO: Refactor this.
 class Stability final
 {
 public:
