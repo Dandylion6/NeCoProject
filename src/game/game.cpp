@@ -32,9 +32,10 @@
 #include "game/system/core/rendering/rendering_system.hpp"
 #include "game/system/core/rendering/lighting/lighting_system.hpp"
 #include "game/system/core/rendering/lighting/light_flickering_system.hpp"
-#include "game/system/scene/comms_scene/morse_code/morse_monitor_display_system.hpp"
-#include "game/system/scene/comms_scene/morse_code/morse_tone_system.hpp"
-#include "game/system/scene/comms_scene/morse_code/morse_transceiver_system.hpp"
+#include "game/system/scene/comms_desk_scene/morse_code/morse_input_system.hpp"
+#include "game/system/scene/comms_desk_scene/morse_code/morse_monitor_display_system.hpp"
+#include "game/system/scene/comms_desk_scene/morse_code/morse_tone_system.hpp"
+#include "game/system/scene/comms_desk_scene/morse_code/morse_recording_system.hpp"
 #include "game/system/scene/comms_scene/radar/radar_artillery_system.hpp"
 #include "game/system/scene/comms_scene/radar/radar_buttons_system.hpp"
 #include "game/system/scene/comms_scene/radar/radar_render_system.hpp"
@@ -68,6 +69,7 @@
 #include "game/system/ui/buttons/restart_buttons_system.hpp"
 #include "game/system/ui/buttons/settings_buttons_system.hpp"
 #include "game/system/ui/interactive/increment_value_system.hpp"
+#include "game/system/ui/interactive/settings_input_system.hpp"
 #include "game/tag/core/life_cycle/dont_destroy_on_load_tag.hpp"
 #include "game/utility/color_palette.hpp"
 
@@ -348,6 +350,7 @@ void Game::UpdateRegistries(float deltaTime)
 	System::Restart::Buttons::Update(context);
 	System::Menu::Buttons::Update(context);
 	System::Settings::Buttons::Update(context, settings, pendingSettings);
+    System::Settings::Input::Update(context);
 	System::Input::MoveRegion::Update(context);
 	System::UI::IncrementButtons::Update(context);
 
@@ -367,7 +370,8 @@ void Game::UpdateRegistries(float deltaTime)
 	if (gameState.currentScene == NullScene) return;
 	if (gameState.isPaused) return;
 
-	System::Morse::Transceiver::Update(context, anomalyState, settings.morseSettings);
+    System::Morse::Input::Update(context);
+	System::Morse::Recording::Update(context, settings.morseSettings);
 	System::Morse::MonitorDisplay::Update(context, settings.morseSettings);
 	System::Morse::Tone::Update(context);
 	System::Receiver::Interpret::Recalibration::Update(registry, deltaTime);
@@ -485,7 +489,7 @@ void Game::DrawRenderTexture() const
 void Game::DrawDebugUi()
 {
 	const entt::entity debugEntity = entt::get_single<Component::Debug::RuntimeReadouts>(registry);
-	auto& [fpsHistory, receiverMessage, radarStabilityPercentage, timeScale, pulse] = registry.get<
+	auto& [fpsHistory, receiverMessage, radarStabilityPercentage, timeScale] = registry.get<
 		Component::Debug::RuntimeReadouts>(debugEntity);
 
 	fpsHistory.pop_back();
@@ -501,20 +505,6 @@ void Game::DrawDebugUi()
 
 	text = "MSG: " + receiverMessage;
 	DrawText(text.c_str(), 32, 70, 32, GREEN);
-
-	text = "PULSE: ";
-	switch (pulse)
-	{
-	case MorseCode::Invalid:
-		break;
-	case MorseCode::Short:
-		text += ".";
-		break;
-	case MorseCode::Long:
-		text += "-";
-		break;
-	}
-	DrawText(text.c_str(), 32, 110, 32, GREEN);
 
 	text = "DNGER LVL: " + std::to_string(anomalyState.intensityLevel);
 	DrawText(text.c_str(), 32, 148, 32, GREEN);

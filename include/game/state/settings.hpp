@@ -5,7 +5,7 @@ struct Settings final
 {
 	struct Morse final
 	{
-		float dotTime = 0.16f;
+		float dotSeconds = 0.16f;
 	};
 
 
@@ -18,7 +18,7 @@ struct Settings final
 
 	static bool Matches(const Settings& settings, const Settings& pending)
 	{
-		if (settings.morseSettings.dotTime != pending.morseSettings.dotTime) return false;
+		if (settings.morseSettings.dotSeconds != pending.morseSettings.dotSeconds) return false;
 		return true;
 	}
 };

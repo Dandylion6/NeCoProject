@@ -1,4 +1,4 @@
-#include "game/system/scene/comms_scene/morse_code/morse_monitor_display_system.hpp"
+#include "game/system/scene/comms_desk_scene/morse_code/morse_monitor_display_system.hpp"
 
 #include <cmath>
 
@@ -7,16 +7,17 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
-#include "game/component/scene/comms_scene/morse_components.hpp"
-#include "game/construction/scene/comms_scene/object/morse_monitor_object.hpp"
+#include "game/component/scene/comms_desk_scene/morse_components.hpp"
+#include "game/construction/scene/comms_desk_scene/object/morse_monitor_object.hpp"
 #include "game/contexts/system_context.hpp"
 #include "game/state/settings.hpp"
 #include "game/tag/scene/comms_scene/morse_monitor_tag.hpp"
+#include "game/utility/morse_code.hpp"
 
 
 void System::Morse::MonitorDisplay::Update(const SystemContext& context, const Settings::Morse settings)
 {
-	const float monitorScale = Object::MorseMonitor::GAUGE_SIZE.x / MorseCode::ExitTime(settings.dotTime);
+	const float monitorScale = Object::MorseMonitor::GAUGE_SIZE.x / MorseCode::ExitTime(settings.dotSeconds);
 	UpdatePointer(context, monitorScale);
 	SetRegions(context.registry, settings, monitorScale);
 }
@@ -33,7 +34,7 @@ void System::Morse::MonitorDisplay::UpdatePointer(const SystemContext& context, 
 	if (result == nullptr) return;
 
 	const Component::Morse::Transceiver& transceiver = *result;
-	if (!transceiver.isInputActive)
+	if (!transceiver.isPushed)
 	{
 		constexpr float SMOOTH_SPEED = 32.0f;
 
@@ -63,7 +64,7 @@ void System::Morse::MonitorDisplay::SetRegions(
 	const float monitorScale
 )
 {
-	const float marginWidth = MorseCode::ErrorMargin(settings.dotTime) * monitorScale;
+	const float marginWidth = MorseCode::ErrorMargin(settings.dotSeconds) * monitorScale;
 
 	const auto view = registry.view<Component::Morse::MonitorRegion, Component::Transform>();
 	for (auto [entity, region, transform] : view.each())
@@ -72,10 +73,10 @@ void System::Morse::MonitorDisplay::SetRegions(
 		switch (region.region)
 		{
 		case Component::Morse::MonitorRegion::Dot:
-			pulseTime = settings.dotTime;
+			pulseTime = settings.dotSeconds;
 			break;
 		case Component::Morse::MonitorRegion::Dash:
-			pulseTime = MorseCode::DashTime(settings.dotTime);
+			pulseTime = MorseCode::DashTime(settings.dotSeconds);
 			break;
 		}
 

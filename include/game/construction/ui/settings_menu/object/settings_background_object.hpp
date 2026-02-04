@@ -11,13 +11,13 @@ namespace Object
 class SettingsBackground final
 {
 public:
-    static void Create(SceneContext context, Nc::Vector2f windowSize) noexcept;
+    static void Create(const SceneContext& context, Nc::Vector2f windowSize) noexcept;
 
 private:
     class FrontTexture final
     {
     public:
-        static entt::entity Create(SceneContext context) noexcept;
+        static entt::entity Create(const SceneContext& context) noexcept;
 
     };
 

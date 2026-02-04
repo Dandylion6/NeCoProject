@@ -4,7 +4,7 @@
 #include "core/data/vector2.hpp"
 #include "entt/entity/entity.hpp"
 #include "entt/entity/fwd.hpp"
-#include "game/component/scene/comms_scene/morse_components.hpp"
+#include "../../../../component/scene/comms_desk_scene/morse_components.hpp"
 #include  "game/contexts/scene_context.hpp"
 
 
@@ -31,8 +31,8 @@ public:
 
 	// ------ Members ------
 
-	static constexpr Nc::Vector2f GAUGE_SIZE = Nc::Vector2f(98.0f, 8.0f);
-	static constexpr Nc::Vector2f POSITION = Nc::Vector2f(280.0f, 440.0f);
+	static constexpr Nc::Vector2f GAUGE_SIZE = Nc::Vector2f(128.0f, 10.0f);
+	static constexpr Nc::Vector2f POSITION = Nc::Vector2f(360.0f, 100.0f);
 
 
 	// ------ Functions ------

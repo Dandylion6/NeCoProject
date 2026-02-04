@@ -1,5 +1,5 @@
 #pragma once
-#include "game/component/scene/comms_scene/morse_components.hpp"
+#include "../../../../component/scene/comms_desk_scene/morse_components.hpp"
 #include "game/state/settings.hpp"
 #include "entt/entity/fwd.hpp"
 

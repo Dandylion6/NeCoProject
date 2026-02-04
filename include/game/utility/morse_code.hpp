@@ -1,7 +1,7 @@
 #pragma once
-#include <cstdint>
+#include <array>
 #include <string>
-#include <unordered_map>
+#include <string_view>
 
 
 namespace MorseCode
@@ -13,42 +13,94 @@ constexpr char BACK_CODE = '\x8';
 constexpr float ERROR_MARGIN = 0.48f;
 
 
-enum Pulse: uint8_t
+constexpr size_t MORSE_TABLE_SIZE = 512u;
+using MorseTable = std::array<char, MORSE_TABLE_SIZE>;
+
+
+/**
+ * Returns an index for the specified morse code sequence.
+ * @param morseString Morse code sequence in string form "-..-" for example.
+ * @return The index for look-up.
+ */
+constexpr int GetMorseIndex(const std::string_view morseString)
 {
-    Invalid,
-	Short,
-	Long,
-};
-
-
-const std::unordered_map<std::string_view, char> TABLE {
-    { ".-", 'A' },  { "-...", 'B' },  { "-.-.", 'C' },
-      { "-..", 'D' },     { ".", 'E' },  { "..-.", 'F' },
-      { "--.", 'G' },  { "....", 'H' },    { "..", 'I' },
-     { ".---", 'J' },   { "-.-", 'K' },  { ".-..", 'L' },
-       { "--", 'M' },    { "-.", 'N' },   { "---", 'O' },
-     { ".--.", 'P' },  { "--.-", 'Q' },   { ".-.", 'R' },
-      { "...", 'S' },     { "-", 'T' },   { "..-", 'U' },
-     { "...-", 'V' },   { ".--", 'W' },  { "-..-", 'X' },
-     { "-.--", 'Y' },  { "--..", 'Z' },
-    { "-----", '0' }, { ".----", '1' }, { "..---", '2' },
-    { "...--", '3' }, { "....-", '4' }, { ".....", '5' },
-    { "-....", '6' }, { "--...", '7' }, { "---..", '8' },
-    { "----.", '9' },
-    { "........", MorseCode::BACK_CODE }, { "-.-.-.-",  MorseCode::CANCEL_CODE }
-};
-
-
-inline float DashTime(const float dotTime) noexcept { return dotTime * 3.0f; };
-inline float ErrorMargin(const float dotTime) noexcept { return dotTime * ERROR_MARGIN; };
-inline float ExitTime(const float dotTime) noexcept { return dotTime * (4.0f + ERROR_MARGIN); };
-
-
-inline char GetChar(const std::string& code) noexcept
-{
-    if (!TABLE.contains(code)) return NULL_CODE;
-    return TABLE.at(code);
+    int morseIndex = 1;
+    for (const char character : morseString)
+    {
+        switch (character)
+        {
+        case '.': morseIndex *= 2;
+            break;
+        case '-': morseIndex = morseIndex * 2 + 1;
+            break;
+        default: break;
+        }
+    }
+    return morseIndex;
 }
+
+
+consteval MorseTable BuildMorseTable()
+{
+    MorseTable morseTable{ };
+
+    auto Assign = [&](const std::string_view morseString, const char character)
+    {
+        const int morseIndex = GetMorseIndex(morseString);
+        morseTable[morseIndex] = character;
+    };
+
+    Assign(".-", 'A');
+    Assign("-...", 'B');
+    Assign("-.-.", 'C');
+    Assign("-..", 'D');
+    Assign(".", 'E');
+    Assign("..-.", 'F');
+    Assign("--.", 'G');
+    Assign("....", 'H');
+    Assign("..", 'I');
+    Assign(".---", 'J');
+    Assign("-.-", 'K');
+    Assign(".-..", 'L');
+    Assign("--", 'M');
+    Assign("-.", 'N');
+    Assign("---", 'O');
+    Assign(".--.", 'P');
+    Assign("--.-", 'Q');
+    Assign(".-.", 'R');
+    Assign("...", 'S');
+    Assign("-", 'T');
+    Assign("..-",  'U');
+    Assign("...-", 'V');
+    Assign(".--",  'W');
+    Assign("-..-", 'X');
+    Assign("-.--", 'Y');
+    Assign("--..", 'Z');
+
+    Assign("-----", '0');
+    Assign(".----", '1');
+    Assign("..---", '2');
+    Assign("...--", '3');
+    Assign("....-", '4');
+    Assign(".....", '5');
+    Assign("-....", '6');
+    Assign("--...", '7');
+    Assign("---..", '8');
+    Assign("----.", '9');
+
+    Assign("........", BACK_CODE);
+    Assign("...-.-",  CANCEL_CODE);
+
+    return morseTable;
+}
+
+
+constexpr MorseTable TABLE = BuildMorseTable();
+
+
+inline float DashTime(const float dotTime) noexcept { return dotTime * 3.0f; }
+inline float ErrorMargin(const float dotTime) noexcept { return dotTime * ERROR_MARGIN; }
+inline float ExitTime(const float dotTime) noexcept { return dotTime * (4.0f + ERROR_MARGIN); }
 
 
 constexpr bool IsAsciiDigit(const char character) noexcept

@@ -1,4 +1,4 @@
-#include "game/construction/scene/comms_scene/object/morse_monitor_object.hpp"
+#include "game/construction/scene/comms_desk_scene/object/morse_monitor_object.hpp"
 
 #include "core/data/color.hpp"
 #include "core/data/vector2.hpp"
@@ -6,7 +6,7 @@
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
 #include "game/component/core/rendering/rectangle_component.hpp"
-#include "game/component/scene/comms_scene/morse_components.hpp"
+#include "../../../../../../include/game/component/scene/comms_desk_scene/morse_components.hpp"
 #include "game/state/scene.hpp"
 #include "game/tag/scene/comms_scene/morse_monitor_tag.hpp"
 
@@ -28,7 +28,7 @@ entt::entity Object::MorseMonitor::Gauge::Create(const SceneContext& context) no
 
 	const entt::entity entity = context.registry.create();
 
-	context.registry.emplace<Component::Transform>(entity, CommsRoom, POSITION, GAUGE_SIZE, OFFSET);
+	context.registry.emplace<Component::Transform>(entity, CommsDesk, POSITION, GAUGE_SIZE, OFFSET);
 	context.registry.emplace<Component::Rectangle>(entity, COLOR);
 
 	return entity;
@@ -45,7 +45,7 @@ entt::entity Object::MorseMonitor::Pointer::Create(const SceneContext& context) 
 
 	context.registry.emplace<Tag::Morse::Monitor>(entity);
 
-	context.registry.emplace<Component::Transform>(entity, CommsRoom, POSITION, POINTER_SIZE, OFFSET);
+	context.registry.emplace<Component::Transform>(entity, CommsDesk, POSITION, POINTER_SIZE, OFFSET);
 	context.registry.emplace<Component::Rectangle>(entity, COLOR);
 
 	return entity;
@@ -64,7 +64,7 @@ entt::entity Object::MorseMonitor::Region::Create(
 
 	context.registry.emplace<Component::Transform>(
 		entity,
-		CommsRoom,
+		CommsDesk,
 		POSITION,
 		REGION_SIZE,
 		REGION_SIZE * 0.5f

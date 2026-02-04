@@ -33,7 +33,7 @@ void Structure::SettingsMenu::Build(
     Object::SettingsToMainButton::Create(context);
     Object::ApplySettingsButton::Create(context);
 
-    float* dotTimeValue = &pending.morseSettings.dotTime;
+    float* dotTimeValue = &pending.morseSettings.dotSeconds;
     const Object::IncrementSetting::Data data = Object::IncrementSetting::Create(
         context,
         "Morse code DOT duration",

@@ -1,8 +1,7 @@
 #pragma once
-#include "game/utility/morse_code.hpp"
-#include "raylib.h"
-#include <array>
 #include <cstdint>
+
+#include "raylib.h"
 
 
 namespace Component::Morse
@@ -10,16 +9,10 @@ namespace Component::Morse
 /**
  * @brief Represents a morse transceiver entity.
  * 
- * Handles the timing and internal morse code values as `pulses`.
+ * Handles the timing and internal morse code values as <c>pulses</c>.
  */
 struct Transceiver
 {
-	// TODO: Use input component instead of hard coding.
-	static constexpr KeyboardKey INPUT_KEY = KeyboardKey::KEY_SPACE;
-	static constexpr uint8_t MAX_PULSES = 8u;
-
-	using PulseArray = std::array<MorseCode::Pulse, MAX_PULSES>;
-
 	enum Tweens
 	{
 		ToneFadeIn,
@@ -29,10 +22,14 @@ struct Transceiver
 
 	// ------ Members ------
 
-	PulseArray pulses { };
 	float intervalSeconds = 0.0f;
-	bool isInputActive = false;
-	uint8_t pulseCount = 0u;
+
+	/**
+	 * The index to search for a character based on the morse code binary tree.
+	 */
+	uint16_t decodingIndex = 1;
+    bool isPushed = false;
+    bool inputJustChanged = false;
 
 
 	// ------ Constructors ------
@@ -58,9 +55,7 @@ struct MonitorRegion
 	// ------ Constructors ------
 
 	constexpr MonitorRegion() noexcept = default;
-	constexpr MonitorRegion(Region region) noexcept : 
-		region(region) 
-	{ };
+	explicit constexpr MonitorRegion(const Region region) noexcept : region(region) { }
 };
 
 }

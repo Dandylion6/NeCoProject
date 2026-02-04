@@ -18,7 +18,7 @@ Save::Result Save::SettingsToDisk(const Settings& settings)
 
     nlohmann::json data;
 
-    data["morse_dot_duration"] = settings.morseSettings.dotTime;
+    data["morse_dot_duration"] = settings.morseSettings.dotSeconds;
 
     stream << data.dump(4) << std::endl;
     stream.close();
@@ -37,7 +37,7 @@ Load::Result Load::SettingsFromDisk(Settings& settings)
 
     nlohmann::json data = nlohmann::json::parse(stream);
 
-    settings.morseSettings.dotTime = data.at("morse_dot_duration");
+    settings.morseSettings.dotSeconds = data.at("morse_dot_duration");
 
     stream.close();
     return Result::Success;

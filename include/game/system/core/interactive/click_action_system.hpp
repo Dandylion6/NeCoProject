@@ -13,7 +13,7 @@ struct RenderContext;
 
 namespace System::Action
 {
-
+// TODO: Separate target with click logic.
 class Click final
 {
 public:
@@ -22,8 +22,8 @@ public:
 
 private:
 	// ------ Functions ------
-	static void UpdateSceneButtons(const SystemContext& context, const Nc::RenderContext& renderContext, bool clickInput);
-	static void UpdateUiButtons(const SystemContext& context, Nc::Vector2i windowSize, bool clickInput);
+	static void UpdateSceneButtons(const SystemContext& context, const Nc::RenderContext& renderContext, bool clickInput, bool isHeld);
+	static void UpdateUiButtons(const SystemContext& context, Nc::Vector2i windowSize, bool clickInput, bool isHeld);
 	static void UpdateUiButtonState(Component::Action::Click& button, bool isVisible);
 
 };

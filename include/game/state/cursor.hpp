@@ -10,6 +10,7 @@ enum Type : uint8_t
 {
     Standard,
     Clickable,
+    Clicked,
     Grab,
     Move,
 };
@@ -20,8 +21,9 @@ constexpr uint8_t GetCursorPriority(const Type type) noexcept
     switch (type)
     {
     case Clickable: return 1;
-    case Grab: return 2;
-    case Move: return 3;
+    case Clicked: return 2;
+    case Grab: return 3;
+    case Move: return 4;
     default: return 0;
     }
 }

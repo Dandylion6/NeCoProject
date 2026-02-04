@@ -14,7 +14,7 @@
 void System::Settings::Buttons::Update(const SystemContext& context, ::Settings& live, ::Settings& pending) noexcept
 {
     const auto view = context.registry.view<Tag::Settings, Component::Action::Click>();
-    for (auto [entity, click] : view.each())
+    for (const auto& [entity, click] : view.each())
     {
         if (context.registry.any_of<Component::UI::IncrementButton>(entity)) continue;
         if (!click.justClicked) continue;

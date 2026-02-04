@@ -13,14 +13,23 @@
 void System::Action::Input::Update(const SystemContext& context)
 {
     const auto view = context.registry.view<Component::Action::Input>();
-    for (auto [entity, input] : view.each())
+    for (const auto& [entity, input] : view.each())
     {
-        if (context.registry.all_of<Component::Transform>(entity))
+        input.state = Component::Action::Input::Idle;
+
+        if (input.isSceneBound && context.registry.all_of<Component::Transform>(entity))
         {
             const auto& transform = context.registry.get<Component::Transform>(entity);
             if (transform.boundScene != context.game.currentScene && transform.boundScene == NullScene) continue;
         }
         
-        if (IsKeyPressed(input.key)) input.onPressed();
+        if (IsKeyPressed(input.key))
+            input.state = Component::Action::Input::Pressed;
+
+        if (IsKeyDown(input.key))
+            input.state = Component::Action::Input::Held;
+
+        if (IsKeyReleased(input.key))
+            input.state = Component::Action::Input::Released;
     }
 };

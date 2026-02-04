@@ -20,18 +20,21 @@ void System::Action::Click::Update(const SystemContext& context, const Nc::Rende
 		click.justClicked = false;
 
 	const bool isClicked = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
-	UpdateUiButtons(context, renderContext.windowSize, isClicked);
+    const bool isHeld = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
+
+	UpdateUiButtons(context, renderContext.windowSize, isClicked, isHeld);
 
 	// Still has no target.
 	if (context.game.cursor == Nc::Cursor::Standard)
-		UpdateSceneButtons(context, renderContext, isClicked);
+		UpdateSceneButtons(context, renderContext, isClicked, isHeld);
 }
 
 
 void System::Action::Click::UpdateSceneButtons(
 	const SystemContext& context,
 	const Nc::RenderContext& renderContext,
-	const bool clickInput
+	const bool clickInput,
+	const bool isHeld
 )
 {
 	if (context.game.isPaused) return;
@@ -53,7 +56,9 @@ void System::Action::Click::UpdateSceneButtons(
 		}
 		else
 		{
-			Nc::Cursor::AssignIfHigherPriority(context.game.cursor, Nc::Cursor::Clickable);
+		    const Nc::Cursor::Type type = isHeld ? Nc::Cursor::Clicked : Nc::Cursor::Clickable;
+		    button.isHeld = isHeld;
+			Nc::Cursor::AssignIfHigherPriority(context.game.cursor, type);
 		}
 		break; // Already a target, no need to check further.
 	}
@@ -63,7 +68,8 @@ void System::Action::Click::UpdateSceneButtons(
 void System::Action::Click::UpdateUiButtons(
 	const SystemContext& context,
 	const Nc::Vector2i windowSize,
-	const bool clickInput
+	const bool clickInput,
+	const bool isHeld
 )
 {
 	const auto view = context.registry.view<const Component::UI::Transform, Component::Action::Click>();
@@ -83,7 +89,9 @@ void System::Action::Click::UpdateUiButtons(
 		}
 		else
 		{
-			Nc::Cursor::AssignIfHigherPriority(context.game.cursor, Nc::Cursor::Clickable);
+		    const Nc::Cursor::Type type = isHeld ? Nc::Cursor::Clicked : Nc::Cursor::Clickable;
+		    button.isHeld = isHeld;
+			Nc::Cursor::AssignIfHigherPriority(context.game.cursor, type);
 		}
 		break; // Already a target, no need to check further.
 	}

@@ -32,7 +32,6 @@ struct RuntimeReadouts final
 	std::string receiverMessage{ };
 	float radarStabilityPercentage = 0.0f;
 	float timeScale = 1.0f;
-	MorseCode::Pulse pulse = MorseCode::Invalid;
 };
 
 }

@@ -64,9 +64,9 @@ add_executable(NeCoProject
 		src/game/system/scene/comms_scene/radar/radar_buttons_system.cpp
 		src/game/system/scene/comms_scene/radar/radar_render_system.cpp
 		src/game/system/scene/comms_scene/radar/radar_stability_system.cpp
-		src/game/system/scene/comms_scene/morse_code/morse_transceiver_system.cpp
-		src/game/system/scene/comms_scene/morse_code/morse_tone_system.cpp
-		src/game/system/scene/comms_scene/morse_code/morse_monitor_display_system.cpp
+        src/game/system/scene/comms_desk_scene/morse_code/morse_recording_system.cpp
+        src/game/system/scene/comms_desk_scene/morse_code/morse_tone_system.cpp
+        src/game/system/scene/comms_desk_scene/morse_code/morse_monitor_display_system.cpp
 		src/game/system/scene/comms_scene/radio/radio_emitter_system.cpp
 		src/game/system/scene/comms_scene/radar/blip/blip_blink_system.cpp
 		src/game/system/scene/comms_scene/radar/blip/blip_death_system.cpp
@@ -109,9 +109,9 @@ add_executable(NeCoProject
 		src/game/construction/scene/comms_desk_scene/entity/note_entity.cpp
 		src/game/construction/scene/comms_desk_scene/comms_desk_scene.cpp
 		src/game/construction/scene/comms_scene/entity/blip_entity.cpp
-		src/game/construction/scene/comms_scene/entity/morse_transceiver_entity.cpp
+		src/game/construction/scene/comms_desk_scene/entity/morse_transceiver_entity.cpp
 		src/game/construction/scene/comms_scene/entity/radio_entity.cpp
-		src/game/construction/scene/comms_scene/object/morse_monitor_object.cpp
+		src/game/construction/scene/comms_desk_scene/object/morse_monitor_object.cpp
 		src/game/construction/scene/comms_scene/object/radar_object.cpp
 		src/game/construction/scene/comms_scene/comms_scene.cpp
 		src/game/construction/scene/doorway_scene/object/radar_breaker_object.cpp
@@ -122,7 +122,11 @@ add_executable(NeCoProject
 		src/core/data/bounds.cpp
 		src/core/runtime/resource_store.cpp
 		include/game/system/core/rendering/lighting/light_flickering_system.hpp
-		src/game/system/core/rendering/lighting/light_flickering_system.cpp)
+		src/game/system/core/rendering/lighting/light_flickering_system.cpp
+		include/game/system/scene/comms_desk_scene/morse_code/morse_input_system.hpp
+		src/game/system/scene/comms_desk_scene/morse_code/morse_input_system.cpp
+        include/game/system/ui/interactive/settings_input_system.hpp
+        src/game/system/ui/interactive/settings_input_system.cpp)
 
 target_sources(NeCoProject PRIVATE
 		src/main.cpp
