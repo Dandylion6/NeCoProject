@@ -20,7 +20,7 @@ int main(const int args, char* argv[])
 		const float deltaTime = GetFrameTime();
 
 		game->Update(deltaTime);
-		game->UpdateRegistries(deltaTime);
+		game->UpdateSystems(deltaTime);
 		game->DrawGame(deltaTime);
 		game->HandleEvents();
 	}

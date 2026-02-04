@@ -328,7 +328,7 @@ void Game::Update(float deltaTime)
 }
 
 
-void Game::UpdateRegistries(float deltaTime)
+void Game::UpdateSystems(float deltaTime)
 {
 #ifdef DEBUG_BUILD
 	const entt::entity debugEntity = entt::get_single<Component::Debug::RuntimeReadouts>(registry);
@@ -374,30 +374,39 @@ void Game::UpdateRegistries(float deltaTime)
 	System::Morse::Recording::Update(context, settings.morseSettings);
 	System::Morse::MonitorDisplay::Update(context, settings.morseSettings);
 	System::Morse::Tone::Update(context);
+
 	System::Receiver::Interpret::Recalibration::Update(registry, deltaTime);
 	System::Machine::PowerUsage::Update(context, anomalyState);
+
 	System::Radar::Buttons::Update(context);
 	System::Radar::Stability::Update(context, anomalyState);
 	System::Radar::Artillery::Update(context);
+
 	System::Blip::Death::Update(registry);
 	System::Blip::Blink::Update(registry);
 	System::Blip::Glitch::Update(context);
+
 	System::Receiver::CommandProcessor::Update(context);
 	System::Receiver::Interpret::Fire::Update(context);
 	System::Receiver::CodeResponse::Update(context);
+
 	System::Radio::Emitter::Update(context);
+
 	System::Logic::Lever::Update(context);
 	System::Logic::Breaker::Restart::Update(context, anomalyState);
 	System::Logic::Breaker::Operation::Update(context);
 	System::Logic::Breaker::Display::Update(context);
+
 	System::Artillery::Aiming::Update(context);
 	System::Projectile::Hit::Update(context);
+
 	System::Anomaly::Roamer::Spawning::Update(context, anomalyState);
 	System::Anomaly::Roamer::Strider::Update(context);
 	System::Anomaly::Roamer::Phaser::Update(context);
 	System::Anomaly::Roamer::Phantom::Update(context);
 	System::Anomaly::Roamer::Behaviour::Update(context, anomalyState);
 	System::Anomaly::Roamer::Kill::Update(context);
+
 	System::Anomaly::Attraction::Update(context, anomalyState);
 	System::Render::LightFlickering::Update(context);
 }

@@ -34,7 +34,7 @@ public:
 	static void Shutdown();
 
 	void Update(float deltaTime);
-	void UpdateRegistries(float deltaTime);
+	void UpdateSystems(float deltaTime);
 	void DrawGame(float deltaTime);
 	void HandleEvents();
 
