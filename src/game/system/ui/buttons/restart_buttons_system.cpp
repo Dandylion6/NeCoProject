@@ -12,7 +12,7 @@
 void System::Restart::Buttons::Update(const SystemContext& context) noexcept
 {
     const auto view = context.registry.view<Tag::RestartMenu, Component::Action::Click>();
-    for (auto [entity, click] : view.each())
+    for (const auto& [entity, click] : view.each())
     {
         if (!click.justClicked) continue;
 

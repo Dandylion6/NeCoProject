@@ -25,8 +25,6 @@ void Structure::RestartMenu::Close(const SceneContext& context) noexcept { Toggl
 
 void Structure::RestartMenu::Toggle(const SceneContext& context, const bool active) noexcept
 {
-	context.game.isPaused = active;
-
 	const auto view = context.registry.view<const Tag::RestartMenu, Component::UI::Transform>();
 	for (auto [entity, transform] : view.each())
 		transform.isVisible = active;

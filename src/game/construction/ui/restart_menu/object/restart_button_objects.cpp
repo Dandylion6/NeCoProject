@@ -6,6 +6,7 @@
 #include "game/component/core/transform_component.hpp"
 #include "game/construction/ui/restart_menu/restart_menu.hpp"
 #include "game/construction/ui/shared/object/label_button_object.hpp"
+#include "game/tag/core/life_cycle/dont_destroy_on_load_tag.hpp"
 #include "game/tag/ui/restart_menu_tag.hpp"
 
 
@@ -23,7 +24,10 @@ void Object::RestartButton::Create(const SceneContext& context) noexcept
     );
 
     for (const entt::entity entity : data.All())
+    {
         context.registry.emplace<Tag::RestartMenu>(entity);
+        context.registry.emplace<Tag::DontDestroyOnLoad>(entity);
+    }
 }
 
 
@@ -41,5 +45,8 @@ void Object::RestartToMainButton::Create(const SceneContext& context) noexcept
     );
 
     for (const entt::entity entity : data.All())
+    {
         context.registry.emplace<Tag::RestartMenu>(entity);
+        context.registry.emplace<Tag::DontDestroyOnLoad>(entity);
+    }
 }

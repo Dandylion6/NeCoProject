@@ -26,7 +26,7 @@ struct GameState final
 	/**
 	 * @brief How many minutes an in-game hour is.
 	 */
-	static constexpr float HOUR_MINUTES = 1.8f;
+	static constexpr float HOUR_MINUTES = 2.2f;
 
 	/**
 	 * @brief The hour the player wakes up at.

@@ -182,6 +182,7 @@ void Game::Load()
 	BuildRuntimeScenes();
 
 	Load::GameFromDisk(registry, StatesContext(anomalyState, gameState));
+    gameState.isPaused = false;
 }
 
 
@@ -277,7 +278,7 @@ bool Game::ShouldRun() const
 
 void Game::Update(float deltaTime)
 {
-	constexpr float NIGHT_END_HOUR = GameState::NIGHT_RANGE.x + 1.0f;
+	constexpr float NIGHT_END_HOUR = GameState::NIGHT_RANGE.y + 1.0f;
 
 #ifdef DEBUG_BUILD
 	if (IsKeyPressed(KEY_PERIOD))
@@ -474,6 +475,7 @@ void Game::HandleEvents()
 
 void Game::Death(const SceneContext& context)
 {
+    context.game.isPaused = true;
 	Structure::RestartMenu::Open(context);
 }
 
