@@ -21,10 +21,22 @@ public:
 	static void Update(const SystemContext& context, const Nc::RenderContext& renderContext);
 
 private:
+    // ------ Types ------
+    enum State
+    {
+        None,
+        JustClicked,
+        IsHeld,
+        JustReleased,
+    };
+
+
 	// ------ Functions ------
-	static void UpdateSceneButtons(const SystemContext& context, const Nc::RenderContext& renderContext, bool clickInput, bool isHeld);
-	static void UpdateUiButtons(const SystemContext& context, Nc::Vector2i windowSize, bool clickInput, bool isHeld);
+
+    static void UpdateSceneButtons(const SystemContext& context, const Nc::RenderContext& renderContext, State state);
+	static void UpdateUiButtons(const SystemContext& context, Nc::Vector2i windowSize, State state);
 	static void UpdateUiButtonState(Component::Action::Click& button, bool isVisible);
+    static State GetClickState();
 
 };
 

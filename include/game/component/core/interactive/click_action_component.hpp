@@ -39,6 +39,7 @@ struct Click final
 	uint16_t id = 0;
 	State state = Active;
 	bool justClicked = false;
+    bool justReleased = false;
     bool isHeld = false;
 
 

@@ -82,11 +82,17 @@ private:
 	{
 	public:
 		// ------ Functions ------
-		static entt::entity Create(
-			entt::registry& registry
-		) noexcept;
+		static entt::entity Create(const SceneContext& context) noexcept;
 
 	};
+
+    class Screen final
+    {
+        public:
+        // ------ Functions ------
+        static entt::entity Create(const SceneContext& context) noexcept;
+
+    };
 
 };
 

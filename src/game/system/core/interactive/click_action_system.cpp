@@ -15,102 +15,128 @@
 
 void System::Action::Click::Update(const SystemContext& context, const Nc::RenderContext& renderContext)
 {
-	const auto view = context.registry.view<Component::Action::Click>();
-	for (auto [entity, click] : view.each())
-		click.justClicked = false;
+    const auto view = context.registry.view<Component::Action::Click>();
+    for (auto [entity, click] : view.each())
+    {
+        click.justClicked = false;
+        click.isHeld = false;
+        click.justReleased = false;
+    }
 
-	const bool isClicked = IsMouseButtonPressed(MOUSE_BUTTON_LEFT);
-    const bool isHeld = IsMouseButtonDown(MOUSE_BUTTON_LEFT);
+    const State state = GetClickState();
+    UpdateUiButtons(context, renderContext.windowSize, state);
 
-	UpdateUiButtons(context, renderContext.windowSize, isClicked, isHeld);
-
-	// Still has no target.
-	if (context.game.cursor == Nc::Cursor::Standard)
-		UpdateSceneButtons(context, renderContext, isClicked, isHeld);
+    // Still has no target.
+    if (context.game.cursor == Nc::Cursor::Standard)
+        UpdateSceneButtons(context, renderContext, state);
 }
 
 
 void System::Action::Click::UpdateSceneButtons(
-	const SystemContext& context,
-	const Nc::RenderContext& renderContext,
-	const bool clickInput,
-	const bool isHeld
+    const SystemContext& context,
+    const Nc::RenderContext& renderContext,
+    const State state
 )
 {
-	if (context.game.isPaused) return;
+    if (context.game.isPaused) return;
 
-	const auto view = context.registry.view<const Component::Transform, Component::Action::Click>();
-	for (auto [entity, transform, button] : view.each())
-	{
-		if (button.state != Component::Action::Click::Active) continue;
-		if (context.game.currentScene != transform.boundScene) continue;
+    const auto view = context.registry.view<const Component::Transform, Component::Action::Click>();
+    for (auto [entity, transform, button] : view.each())
+    {
+        constexpr auto MARGIN = Nc::Vector2f::Scale(4.0f);
 
-		const Nc::Vector2f mousePosition = Renderer::GetWorldPosition(renderContext, GetMousePosition());
+        if (button.state != Component::Action::Click::Active) continue;
+        if (context.game.currentScene != transform.boundScene) continue;
 
-		const auto bounds = Nc::Bounds(transform);
-		if (!Nc::Bounds::PointInBounds(bounds, mousePosition - renderContext.cameraPosition)) continue;
-		if (clickInput)
-		{
-			button.state = Component::Action::Click::Inactive;
-			button.justClicked = true;
-		}
-		else
-		{
-		    const Nc::Cursor::Type type = isHeld ? Nc::Cursor::Clicked : Nc::Cursor::Clickable;
-		    button.isHeld = isHeld;
-			Nc::Cursor::AssignIfHigherPriority(context.game.cursor, type);
-		}
-		break; // Already a target, no need to check further.
-	}
+        const Nc::Vector2f mousePosition = Renderer::GetWorldPosition(renderContext, GetMousePosition());
+
+        auto bounds = Nc::Bounds(transform);
+        bounds.min -= MARGIN;
+        bounds.max += MARGIN;
+
+        if (!Nc::Bounds::PointInBounds(bounds, mousePosition - renderContext.cameraPosition)) continue;
+
+        switch (state)
+        {
+        case None: break;
+        case JustClicked:
+            button.state = Component::Action::Click::Inactive;
+            button.justClicked = true;
+            break;
+        case IsHeld:
+            Nc::Cursor::AssignIfHigherPriority(context.game.cursor, Nc::Cursor::Clicked);
+            button.isHeld = true;
+            break;
+        case JustReleased: button.justReleased = true;
+            break;
+        }
+
+        Nc::Cursor::AssignIfHigherPriority(context.game.cursor, Nc::Cursor::Clickable);
+        break; // Already a target, no need to check further.
+    }
 }
 
 
 void System::Action::Click::UpdateUiButtons(
-	const SystemContext& context,
-	const Nc::Vector2i windowSize,
-	const bool clickInput,
-	const bool isHeld
+    const SystemContext& context,
+    const Nc::Vector2i windowSize,
+    const State state
 )
 {
-	const auto view = context.registry.view<const Component::UI::Transform, Component::Action::Click>();
-	for (auto [entity, transform, button] : view.each())
-	{
-		UpdateUiButtonState(button, transform.isVisible);
-		if (button.state != Component::Action::Click::Active) continue;
+    const auto view = context.registry.view<const Component::UI::Transform, Component::Action::Click>();
+    for (auto [entity, transform, button] : view.each())
+    {
+        UpdateUiButtonState(button, transform.isVisible);
+        if (button.state != Component::Action::Click::Active) continue;
 
-		const auto mousePosition = Nc::Vector2f(GetMousePosition());
-		const auto bounds = Nc::Bounds(transform, windowSize);
+        const auto mousePosition = Nc::Vector2f(GetMousePosition());
+        const auto bounds = Nc::Bounds(transform, windowSize);
 
-		if (!Nc::Bounds::PointInBounds(bounds, mousePosition)) continue;
-		if (clickInput)
-		{
-			button.state = Component::Action::Click::Inactive;
-			button.justClicked = true;
-		}
-		else
-		{
-		    const Nc::Cursor::Type type = isHeld ? Nc::Cursor::Clicked : Nc::Cursor::Clickable;
-		    button.isHeld = isHeld;
-			Nc::Cursor::AssignIfHigherPriority(context.game.cursor, type);
-		}
-		break; // Already a target, no need to check further.
-	}
+        if (!Nc::Bounds::PointInBounds(bounds, mousePosition)) continue;
+
+        switch (state)
+        {
+        case None: break;
+        case JustClicked:
+            button.state = Component::Action::Click::Inactive;
+            button.justClicked = true;
+            break;
+        case IsHeld:
+            Nc::Cursor::AssignIfHigherPriority(context.game.cursor, Nc::Cursor::Clicked);
+            button.isHeld = true;
+            break;
+        case JustReleased: button.justReleased = true;
+            break;
+        }
+
+        Nc::Cursor::AssignIfHigherPriority(context.game.cursor, Nc::Cursor::Clickable);
+        break; // Already a target, no need to check further.
+    }
 }
 
 
 void System::Action::Click::UpdateUiButtonState(Component::Action::Click& button, const bool isVisible)
 {
-	switch (button.state)
-	{
-	case Component::Action::Click::Disabled:
-		break;
-	case Component::Action::Click::Active:
-		if (!isVisible)
-			button.state = Component::Action::Click::Inactive;
-		break;
-	case Component::Action::Click::Inactive:
-		if (isVisible)
-			button.state = Component::Action::Click::Active;
-		break;
-	}
+    switch (button.state)
+    {
+    case Component::Action::Click::Disabled:
+        break;
+    case Component::Action::Click::Active:
+        if (!isVisible)
+            button.state = Component::Action::Click::Inactive;
+        break;
+    case Component::Action::Click::Inactive:
+        if (isVisible)
+            button.state = Component::Action::Click::Active;
+        break;
+    }
+}
+
+
+System::Action::Click::State System::Action::Click::GetClickState()
+{
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) return JustClicked;
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) return IsHeld;
+    if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) return JustReleased;
+    return None;
 }

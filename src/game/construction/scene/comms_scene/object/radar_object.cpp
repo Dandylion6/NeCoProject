@@ -45,7 +45,7 @@ Object::Radar::Data Object::Radar::Create(const SceneContext& context) noexcept
 
 	context.registry.emplace<Component::Address>(entity, ENTITY_ADDRESS);
 	context.registry.emplace<Component::Machine>(entity, ATTRACTION_REDUCTION_PER_SECOND, POWER_USAGE);
-	auto& radar = context.registry.emplace<Component::Radar>(entity);
+	context.registry.emplace<Component::Radar>(entity);
 
 	RadarBreaker::Create(context, entity);
 
@@ -63,7 +63,8 @@ Object::Radar::Data Object::Radar::Create(const SceneContext& context) noexcept
 	const entt::entity artillery = Artillery::Create(context);
 	const entt::entity errorWarning = ErrorWarning::Create(context.registry);
 	const entt::entity recalibrationText = RecalibrationText::Create(context.registry);
-	const entt::entity powerButton = PowerButton::Create(context.registry);
+	const entt::entity powerButton = PowerButton::Create(context);
+    Screen::Create(context);
 
 	return {entity, path, artillery, errorWarning, recalibrationText, powerButton};
 }
@@ -172,18 +173,47 @@ entt::entity Object::Radar::RecalibrationText::Create(entt::registry& registry) 
 }
 
 
-entt::entity Object::Radar::PowerButton::Create(entt::registry& registry) noexcept
+entt::entity Object::Radar::PowerButton::Create(const SceneContext& context) noexcept
 {
-	// TODO: Replace with proper button graphics and size.
-	constexpr Nc::Vector2f POSITION = RADAR_POSITION + Nc::Vector2f(280.0f, 340.0f);
-	constexpr Nc::Vector2f SIZE = Nc::Vector2f(20.0f, 20.0f);
+    constexpr char SCREEN_ALBEDO_PATH[] = "assets/environment/objects/radar/crt_power_button_albedo.png";
+    constexpr char SCREEN_NORMAL_PATH[] = "assets/environment/objects/radar/crt_power_button_normal.png";
+    constexpr char SCREEN_AO_PATH[] = "assets/environment/objects/radar/crt_power_button_ao.png";
+    constexpr auto POSITION = Nc::Vector2f(401.0f, 438.0f);
 
-	const entt::entity entity = registry.create();
+	const entt::entity entity = context.registry.create();
 
-	registry.emplace<Tag::Radar::Button>(entity);
+	context.registry.emplace<Tag::Radar::Button>(entity);
 
-	registry.emplace<Component::Transform>(entity, CommsRoom, POSITION, SIZE, SIZE * 0.5f);
-	registry.emplace<Component::Rectangle>(entity, Nc::RGBa(RED));
-	registry.emplace<Component::Action::Click>(entity);
+    const Texture2D& albedoTexture = context.store.GetTexture(SCREEN_ALBEDO_PATH);
+    const Texture2D& normalTexture = context.store.GetTexture(SCREEN_NORMAL_PATH);
+    const Texture2D& aoTexture = context.store.GetTexture(SCREEN_AO_PATH);
+
+	context.registry.emplace<Component::Sprite>(entity, albedoTexture, normalTexture, aoTexture);
+
+    auto size = Nc::Vector2f(albedoTexture.width, albedoTexture.height);
+	context.registry.emplace<Component::Transform>(entity, CommsRoom, POSITION, size, size * 0.5f);
+	context.registry.emplace<Component::Action::Click>(entity);
 	return entity;
+}
+
+
+entt::entity Object::Radar::Screen::Create(const SceneContext& context) noexcept
+{
+    constexpr char SCREEN_ALBEDO_PATH[] = "assets/environment/objects/radar/radar_crt_screen_albedo.png";
+    constexpr char SCREEN_NORMAL_PATH[] = "assets/environment/objects/radar/radar_crt_screen_normal.png";
+    constexpr char SCREEN_AO_PATH[] = "assets/environment/objects/radar/radar_crt_screen_ao.png";
+    constexpr auto POSITION = Nc::Vector2f(589.0f, 269.0f);
+
+    const entt::entity entity = context.registry.create();
+
+    const Texture2D& albedoTexture = context.store.GetTexture(SCREEN_ALBEDO_PATH);
+    const Texture2D& normalTexture = context.store.GetTexture(SCREEN_NORMAL_PATH);
+    const Texture2D& aoTexture = context.store.GetTexture(SCREEN_AO_PATH);
+
+    context.registry.emplace<Component::Sprite>(entity, albedoTexture, normalTexture, aoTexture, 0.4f);
+
+    auto size = Nc::Vector2f(albedoTexture.width, albedoTexture.height);
+    context.registry.emplace<Component::Transform>(entity, CommsRoom, POSITION, size, size * 0.5f, -1);
+
+    return entity;
 }

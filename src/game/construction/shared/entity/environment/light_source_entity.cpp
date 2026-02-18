@@ -12,7 +12,8 @@
 entt::entity Entity::LightPoint::Create(
     entt::registry& registry, 
     Scene boundScene, 
-    Nc::Vector2f position, 
+    Nc::Vector2f position,
+    const float zPosition,
     Nc::RGBa color, 
     float strength, 
     float range
@@ -21,7 +22,7 @@ entt::entity Entity::LightPoint::Create(
     const entt::entity entity = registry.create();
 
     registry.emplace<Component::Transform>(entity, boundScene, position);
-    registry.emplace<Component::Light::Point>(entity, color, range, strength);
+    registry.emplace<Component::Light::Point>(entity, color, zPosition, range, strength);
 
     return entity;
 }

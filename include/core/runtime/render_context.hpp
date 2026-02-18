@@ -28,7 +28,7 @@ struct RenderContext final
 
 	RenderTexture2D renderTexture{ };
 	RenderTexture2D radarRenderTexture{ };
-	LightingContext lightingContext{ };
+    LightingContext lightingContext{ };
 	Rectangle renderRectangle{ };
 	ResourceStore& resourceStore;
 	Vector2i windowSize = Vector2i::Zero();

@@ -4,6 +4,7 @@
 #include "core/data/color.hpp"
 #include "core/data/vector2.hpp"
 #include "core/math/random.hpp"
+#include "core/math/vector_math.hpp"
 #include "core/runtime/lighting_context.hpp"
 #include "core/runtime/render_context.hpp"
 #include "core/runtime/resource_store.hpp"
@@ -19,7 +20,6 @@ void System::Render::Lighting::Initialize(Nc::LightingContext& context, Nc::Reso
 {
     const Shader& shader = resourceStore.GetShader("assets/lighting.fs");
 
-    context.textureLocation = GetShaderLocation(shader, "texture0");
     context.lightPointCount = GetShaderLocation(shader, "lightPointCount");
     context.lightPositionLocation = GetShaderLocation(shader, "lightPosition[0]");
     context.lightColorLocation = GetShaderLocation(shader, "lightColor[0]");
@@ -38,8 +38,10 @@ const Shader& System::Render::Lighting::Update(const SystemContext& systemContex
     {
         if (transform.boundScene != systemContext.game.currentScene) continue;
 
-        Nc::Vector2f position = transform.position - context.cameraPosition;
-        SetShaderValue(shader, context.lightingContext.lightPositionLocation + index, &position, SHADER_UNIFORM_VEC3);
+        const Nc::Vector2f position = transform.position - context.cameraPosition;
+        Vector3 position3D = {position.x, position.y, source.zPosition};
+
+        SetShaderValue(shader, context.lightingContext.lightPositionLocation + index, &position3D, SHADER_UNIFORM_VEC3);
         SetShaderValue(shader, context.lightingContext.lightRangeLocation + index, &source.range, SHADER_UNIFORM_FLOAT);
 
         Vector4 color = Nc::RGBa::FloatFrom(source.color);

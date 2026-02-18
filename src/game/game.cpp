@@ -5,6 +5,7 @@
 #include "raylib.h"
 #include "core/data/vector2.hpp"
 #include "core/math/nc_math.hpp"
+#include "core/math/random.hpp"
 #include "core/runtime/entity_helpers.hpp"
 #include "core/runtime/render_context.hpp"
 #include "entt/entity/fwd.hpp"
@@ -34,8 +35,8 @@
 #include "game/system/core/rendering/lighting/light_flickering_system.hpp"
 #include "game/system/scene/comms_desk_scene/morse_code/morse_input_system.hpp"
 #include "game/system/scene/comms_desk_scene/morse_code/morse_monitor_display_system.hpp"
-#include "game/system/scene/comms_desk_scene/morse_code/morse_tone_system.hpp"
 #include "game/system/scene/comms_desk_scene/morse_code/morse_recording_system.hpp"
+#include "game/system/scene/comms_desk_scene/morse_code/morse_tone_system.hpp"
 #include "game/system/scene/comms_scene/radar/radar_artillery_system.hpp"
 #include "game/system/scene/comms_scene/radar/radar_buttons_system.hpp"
 #include "game/system/scene/comms_scene/radar/radar_render_system.hpp"
@@ -415,8 +416,8 @@ void Game::UpdateSystems(float deltaTime)
 
 void Game::DrawGame(float deltaTime)
 {
-	constexpr auto CAMERA_SWAY_STRENGTH = Nc::Vector2f(5.0f, 4.0f);
-	constexpr auto CAMERA_SWAY_SPEED = Nc::Vector2f(0.08f, 0.6f) * Nc::Math::TWO_PI;
+	constexpr auto CAMERA_SWAY_STRENGTH = Nc::Vector2f(5.0f, 3.0f);
+	constexpr auto CAMERA_SWAY_SPEED = Nc::Vector2f(0.08f, 0.5f) * Nc::Math::TWO_PI;
 	constexpr auto HEIGHT_SWAY_PHASE = 0.2f;
 
 #ifdef DEBUG_BUILD
@@ -438,11 +439,12 @@ void Game::DrawGame(float deltaTime)
 	BeginTextureMode(renderContext.renderTexture);
 	ClearBackground(BLANK);
 
+	System::Render::Radar::DrawRadar(context, renderContext);
+
 	const Shader& shader = System::Render::Lighting::Update(context, renderContext);
 	BeginShaderMode(shader);
 
-	RenderingSystem::DrawScreen(registry, gameState, cameraPosition);
-	System::Render::Radar::DrawRadar(context, renderContext);
+    RenderingSystem::DrawScreen(shader, registry, gameState, cameraPosition);
 
 	EndShaderMode();
 	EndTextureMode();

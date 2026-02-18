@@ -1,6 +1,7 @@
 #include "game/utility/rendering.hpp"
 
 #include "raylib.h"
+#include "rlgl.h"
 #include "core/data/color.hpp"
 #include "core/data/vector2.hpp"
 #include "core/math/vector_math.hpp"
@@ -34,7 +35,8 @@ Nc::Vector2f Renderer::GetWorldPosition(const Nc::RenderContext& context, const 
 }
 
 
-void Renderer::DrawSprite(
+void Renderer::DrawSpriteLit(
+    const Shader& lightShader,
 	const Component::Sprite& sprite,
 	const Nc::Vector2f position,
 	const Nc::Vector2f origin,
@@ -44,23 +46,38 @@ void Renderer::DrawSprite(
 {
 	if (sprite.alpha == 0.0f) return;
 
-	auto tintColor = Nc::RGBa(WHITE);
-	Nc::RGBa::SetAlphaFor(tintColor, sprite.alpha);
+    rlDrawRenderBatchActive();
 
-	const auto width = static_cast<float>(sprite.texture.width);
-	const auto height = static_cast<float>(sprite.texture.height);
+    SetShaderValueTexture(lightShader, GetShaderLocation(lightShader, "normals"), sprite.normals);
+    SetShaderValueTexture(lightShader, GetShaderLocation(lightShader, "ao"), sprite.ambientOcclusion);
 
-	const Nc::Vector2f pixelPosition = Nc::Vector::Round(position);
-	const Nc::Vector2f pixelOrigin = Nc::Vector::Round(origin);
+	DrawSprite(sprite, position, origin, rotation, scale);
 
-	::DrawTexturePro(
-		sprite.texture,
-		Rectangle{0.0f, 0.0f, width, height},
-		Rectangle{pixelPosition.x, pixelPosition.y, width * scale, height * scale},
-		Vector2(pixelOrigin),
-		rotation,
-		Color(tintColor)
-	);
+    rlDrawRenderBatchActive();
+}
+
+
+void Renderer::DrawSprite(const Component::Sprite& sprite, const Nc::Vector2f position, const Nc::Vector2f origin, const float rotation, const float scale)
+{
+    if (sprite.alpha == 0.0f) return;
+
+    auto tintColor = Nc::RGBa(WHITE);
+    Nc::RGBa::SetAlphaFor(tintColor, sprite.alpha);
+
+    const auto width = static_cast<float>(sprite.albedo.width);
+    const auto height = static_cast<float>(sprite.albedo.height);
+
+    const Nc::Vector2f pixelPosition = Nc::Vector::Round(position);
+    const Nc::Vector2f pixelOrigin = Nc::Vector::Round(origin);
+
+    ::DrawTexturePro(
+        sprite.albedo,
+        Rectangle{0.0f, 0.0f, width, height},
+        Rectangle{pixelPosition.x, pixelPosition.y, width * scale, height * scale},
+        Vector2(pixelOrigin),
+        rotation,
+        Color(tintColor)
+    );
 }
 
 

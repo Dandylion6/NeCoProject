@@ -4,6 +4,7 @@
 #include "entt/entity/registry.hpp"
 #include "game/component/core/interactive/click_action_component.hpp"
 #include "game/component/core/interactive/toggle_component.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
 #include "game/component/scene/comms_scene/radar_components.hpp"
 #include "game/contexts/system_context.hpp"
 #include "game/tag/scene/comms_scene/radar_tags.hpp"
@@ -14,6 +15,13 @@ void System::Radar::Buttons::Update(const SystemContext& context)
     const entt::entity powerButton = entt::get_single<Tag::Radar::Button>(context.registry);
 
     auto& click = context.registry.get<Component::Action::Click>(powerButton);
+
+    if (click.justReleased)
+    {
+
+        return;
+    }
+
     if (!click.justClicked) return;
 
     // TODO: Add active/inactive visual state change and prevent spamming.

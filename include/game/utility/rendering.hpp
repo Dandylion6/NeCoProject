@@ -1,4 +1,5 @@
 #pragma once
+#include "raylib.h"
 #include "core/data/color.hpp"
 #include "core/data/vector2.hpp"
 #include "game/component/core/rendering/sprite_component.hpp"
@@ -35,6 +36,15 @@ Nc::Vector2f GetWorldPosition(const Nc::RenderContext& context, Nc::Vector2f scr
 Nc::Vector2f GetWorldPosition(const Nc::RenderContext& context, Vector2 screenPosition);
 
 void DrawSprite(
+    const Component::Sprite& sprite,
+    Nc::Vector2f position,
+    Nc::Vector2f origin = Nc::Vector2f::Zero(),
+    float rotation = 0.0f,
+    float scale = 1.0f
+);
+
+void DrawSpriteLit(
+    const Shader& lightShader,
 	const Component::Sprite& sprite,
 	Nc::Vector2f position,
 	Nc::Vector2f origin = Nc::Vector2f::Zero(),

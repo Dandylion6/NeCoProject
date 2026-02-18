@@ -13,6 +13,7 @@ class RenderingSystem
 {
 public:
 	static void DrawScreen(
+	    const Shader& lightShader,
 		entt::registry& registry,
 		const GameState& gameState,
 		Nc::Vector2f cameraPosition

@@ -12,6 +12,7 @@
 
 
 void SpriteRenderSystem::DrawScreen(
+    const Shader& lightShader,
 	const entt::entity entity,
 	entt::registry& registry,
 	const Nc::Vector2f cameraPosition
@@ -21,7 +22,7 @@ void SpriteRenderSystem::DrawScreen(
 	const Component::Sprite& sprite = registry.get<const Component::Sprite>(entity);
 
 	const Nc::Vector2f position = transform.position + cameraPosition;
-	Renderer::DrawSprite(sprite, position, transform.offset, transform.rotation);
+	Renderer::DrawSpriteLit(lightShader, sprite, position, transform.offset, transform.rotation);
 }
 
 

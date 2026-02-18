@@ -1,32 +1,30 @@
-#include "core/data/color.hpp"
-#include "core/data/vector2.hpp"
-#include "core/math/vector_math.hpp"
-#include "core/runtime/resource_store.hpp"
-#include "entt/entity/fwd.hpp"
-#include "entt/entity/registry.hpp"
-#include "game/component/core/interactive/toggle_component.hpp"
-#include "game/component/core/rendering/sprite_component.hpp"
-#include "game/component/core/rendering/text_component.hpp"
-#include "game/component/core/transform_component.hpp"
-#include "game/component/scene/comms_scene/blip_components.hpp"
-#include "game/component/scene/comms_scene/radar_components.hpp"
-#include "game/state/game_state.hpp"
-#include "game/state/scene.hpp"
 #include "game/system/scene/comms_scene/radar/radar_render_system.hpp"
-#include "game/tag/scene/comms_scene/radar_tags.hpp"
-#include "game/utility/rendering.hpp"
-#include "raylib.h"
-#include <array>
+
 #include <cmath>
-#include <cstdint>
 #include <sstream>
 #include <string>
 
+#include "raylib.h"
+#include "core/data/color.hpp"
+#include "core/data/vector2.hpp"
 #include "core/math/nc_math.hpp"
+#include "core/math/vector_math.hpp"
 #include "core/runtime/entity_helpers.hpp"
 #include "core/runtime/render_context.hpp"
-#include "game/component/core/interactive/drag_action_component.hpp"
+#include "core/runtime/resource_store.hpp"
+#include "entt/entity/fwd.hpp"
+#include "entt/entity/registry.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/component/core/interactive/toggle_component.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
+#include "game/component/core/rendering/text_component.hpp"
+#include "game/component/scene/comms_scene/blip_components.hpp"
+#include "game/component/scene/comms_scene/radar_components.hpp"
 #include "game/contexts/system_context.hpp"
+#include "game/state/game_state.hpp"
+#include "game/state/scene.hpp"
+#include "game/tag/scene/comms_scene/radar_tags.hpp"
+#include "game/utility/rendering.hpp"
 
 
 void System::Render::Radar::DrawRenderTexture(const SystemContext& context, const RenderTexture2D& radarRenderTexture)
@@ -61,7 +59,7 @@ void System::Render::Radar::DrawRenderTexture(const SystemContext& context, cons
 }
 
 
-void System::Render::Radar::DrawRadar(const SystemContext& context,	const Nc::RenderContext& renderContext)
+void System::Render::Radar::DrawRadar(const SystemContext& context, const Nc::RenderContext& renderContext)
 {
 	constexpr Nc::Vector2f RADAR_SIZE = RADAR_BOUNDS.max;
 	constexpr Rectangle SOURCE { 0, 0, RADAR_SIZE.x, -RADAR_SIZE.y };
@@ -71,7 +69,7 @@ void System::Render::Radar::DrawRadar(const SystemContext& context,	const Nc::Re
 	const Nc::Vector2f position = RADAR_POSITION + renderContext.cameraPosition;
 	const Rectangle destination { position.x, position.y, RADAR_SIZE.x, RADAR_SIZE.y };
 
-	DrawTexturePro(renderContext.radarRenderTexture.texture, SOURCE, destination,Vector2(), 0.0f, WHITE);
+    DrawTexturePro(renderContext.radarRenderTexture.texture, SOURCE, destination,Vector2(), 0.0f, WHITE);
 }
 
 
@@ -81,7 +79,7 @@ void System::Render::Radar::DrawActiveScreen(const Context& context)
 
 	ClearBackground(BLANK);
 	
-	context.sprite.texture = context.systemContext.store.GetTexture(BACKGROUND_FILE);
+	context.sprite.albedo = context.systemContext.store.GetTexture(BACKGROUND_FILE);
 	Renderer::DrawSprite(context.sprite, Nc::Vector2f::Zero());
 
 	DrawPath(context.systemContext.registry);

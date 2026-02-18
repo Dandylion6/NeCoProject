@@ -15,6 +15,7 @@ public:
         entt::registry& registry,
         Scene boundScene,
         Nc::Vector2f position,
+        float zPosition,
         Nc::RGBa color,
         float strength,
         float range

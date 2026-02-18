@@ -19,6 +19,7 @@
 
 
 void RenderingSystem::DrawScreen(
+    const Shader& lightShader,
     entt::registry& registry,
     const GameState& gameState,
     const Nc::Vector2f cameraPosition
@@ -27,7 +28,7 @@ void RenderingSystem::DrawScreen(
     std::vector<Renderable> entities{ };
 
     const auto view = registry.view<Component::Transform>();
-    for (auto [entity, transform] : view.each())
+    for (const auto& [entity, transform] : view.each())
     {
         RenderType type = GetRenderType(registry, entity);
         if (type == RenderType::Invalid) continue;
@@ -42,7 +43,7 @@ void RenderingSystem::DrawScreen(
         switch (renderable.type)
         {
         case RenderType::Sprite:
-            SpriteRenderSystem::DrawScreen(renderable.entity, registry, cameraPosition);
+            SpriteRenderSystem::DrawScreen(lightShader, renderable.entity, registry, cameraPosition);
             break;
         case RenderType::Rectangle:
             RectangleRenderSystem::DrawScreen(renderable.entity, registry, cameraPosition);
@@ -64,7 +65,7 @@ void RenderingSystem::DrawUi(
     std::vector<Renderable> entities{ };
 
     const auto viewUi = registry.view<Component::UI::Transform>();
-    for (auto [entity, transform] : viewUi.each())
+    for (const auto& [entity, transform] : viewUi.each())
     {
         RenderType type = GetRenderType(registry, entity);
         if (type == RenderType::Invalid) continue;

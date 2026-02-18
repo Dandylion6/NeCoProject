@@ -31,5 +31,5 @@ void Structure::DoorwayScene::Build(const BuildContext& context) noexcept
 	const SceneContext sceneContext = SceneContext(context.registry, context.store, context.game);
 
 	Entity::MoveRegion::Create(sceneContext, Left, Doorway, CommsRoom, 0.4f);
-	Entity::LightPoint::Create(context.registry, Doorway, LIGHT_POSITION, Nc::RGBa(LIGHT_COLOR), 1.6f, LIGHT_RADIUS);
+	Entity::LightPoint::Create(context.registry, Doorway, LIGHT_POSITION, 300.0f, Nc::RGBa(LIGHT_COLOR), 2.6f, LIGHT_RADIUS);
 }

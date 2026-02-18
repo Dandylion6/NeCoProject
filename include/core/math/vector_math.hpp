@@ -45,6 +45,15 @@ inline Vector2f Remap(
 }
 
 
+inline Vector2f Remap(const Vector2f from, const Vector2f to, const Vector2f position) noexcept
+{
+    return {
+        Math::Remap(0.0f, from.x, 0.0f, to.x, position.x),
+        Math::Remap(0.0f, from.y, 0.0f, to.y, position.y)
+    };
+}
+
+
 /** 
  * @brief Linearly interpolates between two vectors.
  * 
@@ -187,4 +196,6 @@ inline float Dot(const Nc::Vector2f a, const Nc::Vector2f b) noexcept
 {
 	return a.x * b.x + a.y * b.y;
 }
+
+
 }

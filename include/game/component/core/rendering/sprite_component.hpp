@@ -17,16 +17,35 @@ namespace Component
  */
 struct Sprite final
 {
-	// ------ Members ------
+    // ------ Members ------
 
-	Texture2D texture{ };
-	float alpha = 1.0f;
+    Texture2D albedo{ };
+    Texture2D normals{ };
+    Texture2D ambientOcclusion{ };
+    float alpha = 1.0f;
 
 
-	// ------ Constructors ------
+    // ------ Constructors ------
 
-	explicit constexpr Sprite(const Texture2D& texture, const float alpha = 1.0f) noexcept
-		: texture(texture), alpha(alpha) { };
+    explicit Sprite(const Texture2D& albedo, const float alpha = 1.0f) noexcept
+        : albedo(albedo), alpha(alpha)
+    {
+        constexpr Color BASE_NORMAL_COLOR = {128,128,255, 255};
+        constexpr Color BASE_AMBIENT_COLOR = {255,255,255,255};
+
+        const Image baseNormals = GenImageColor(albedo.width, albedo.height, BASE_NORMAL_COLOR);
+        normals = LoadTextureFromImage(baseNormals);
+
+        const Image baseAO = GenImageColor(albedo.width, albedo.height, BASE_AMBIENT_COLOR);
+        ambientOcclusion = LoadTextureFromImage(baseAO);
+    }
+
+    explicit constexpr Sprite(
+        const Texture2D& albedo,
+        const Texture2D& normals,
+        const Texture2D& ao,
+        const float alpha = 1.0f
+    ) noexcept
+        : albedo(albedo), normals(normals), ambientOcclusion(ao), alpha(alpha) {}
 };
-
 }

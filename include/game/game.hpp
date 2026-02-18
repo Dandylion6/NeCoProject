@@ -1,10 +1,9 @@
 #pragma once
-#include "core/math/random.hpp"
 #include "core/runtime/render_context.hpp"
 #include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include  "game/contexts/scene_context.hpp"
+#include "game/contexts/scene_context.hpp"
 #include "game/state/game_state.hpp"
 #include "game/state/settings.hpp"
 #include "state/anomaly_state.hpp"
@@ -17,11 +16,11 @@ public:
 	// ------ Functions ------
 	Game();
 
-	bool ShouldRun() const;
+	[[nodiscard]] bool ShouldRun() const;
 
 	void BuildMenuUI();
 	void BuildRuntimeScenes();
-	void SetupWindow();
+    void SetupWindow();
 	void SetupRenderContext();
 
 #ifdef DEBUG_BUILD
