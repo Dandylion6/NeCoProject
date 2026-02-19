@@ -22,7 +22,7 @@ void SpriteRenderSystem::DrawScreen(
 	const Component::Sprite& sprite = registry.get<const Component::Sprite>(entity);
 
 	const Nc::Vector2f position = transform.position + cameraPosition;
-	Renderer::DrawSpriteLit(lightShader, sprite, position, transform.offset, transform.rotation);
+	Renderer::DrawSpriteLit(lightShader, sprite, position, transform.offset, transform.rotation, sprite.scale);
 }
 
 

@@ -23,6 +23,7 @@ struct Sprite final
     Texture2D normals{ };
     Texture2D ambientOcclusion{ };
     float alpha = 1.0f;
+    float scale = 1.0f;
 
 
     // ------ Constructors ------
