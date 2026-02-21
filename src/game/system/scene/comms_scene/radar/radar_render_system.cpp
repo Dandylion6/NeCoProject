@@ -15,6 +15,7 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
+#include "game/component/core/tween_component.hpp"
 #include "game/component/core/interactive/toggle_component.hpp"
 #include "game/component/core/rendering/sprite_component.hpp"
 #include "game/component/core/rendering/text_component.hpp"
@@ -165,8 +166,14 @@ void System::Render::Radar::DrawErrorWarning(const Context& context)
 	const entt::entity entity = entt::get_single<Component::RadarErrorWarning>(context.systemContext.registry);
 	const auto& errorWarning = context.systemContext.registry.get<Component::RadarErrorWarning>(entity);
 	const auto& transform = context.systemContext.registry.get<Component::Transform>(entity);
-	auto& text = context.systemContext.registry.get<Component::Text>(entity);
 
+    auto& collection = context.systemContext.registry.get<Component::TweenCollection>(entity);
+    Nc::Tween& blink = collection.tweens.at(Component::RadarErrorWarning::BlinkFade);
+
+    if (blink.state != Nc::Tween::Playing)
+        Nc::Tween::Play(blink);
+
+	auto& text = context.systemContext.registry.get<Component::Text>(entity);
 	text.text = "ERRORS ( " + std::to_string(context.radar.glitchCount) + " )";
 	Nc::RGBa::SetAlphaFor(text.color, errorWarning.alpha);
 

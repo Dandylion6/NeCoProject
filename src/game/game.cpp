@@ -45,6 +45,8 @@
 #include "game/system/scene/comms_scene/radar/blip/blip_blink_system.hpp"
 #include "game/system/scene/comms_scene/radar/blip/blip_death_system.hpp"
 #include "game/system/scene/comms_scene/radar/blip/blip_glitch_system.hpp"
+#include "game/system/scene/comms_scene/radar/blip/glitch/blip_contact_failure_system.hpp"
+#include "game/system/scene/comms_scene/radar/blip/glitch/blip_signal_noise_system.hpp"
 #include "game/system/scene/comms_scene/radio/radio_emitter_system.hpp"
 #include "game/system/scene/outside_scene/artillery/artillery_aiming_system.hpp"
 #include "game/system/scene/outside_scene/artillery/projectile_hit_system.hpp"
@@ -389,6 +391,9 @@ void Game::UpdateSystems(float deltaTime)
 	System::Blip::Death::Update(registry);
 	System::Blip::Blink::Update(registry);
 	System::Blip::Glitch::Update(context);
+    System::Blip::Jumble::Update(context);
+    System::Blip::TextError::Update(context);
+    System::Blip::ContactFailure::Update(context);
 
 	System::Receiver::CommandProcessor::Update(context);
 	System::Receiver::Interpret::Fire::Update(context);

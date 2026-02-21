@@ -4,6 +4,7 @@
 #include "core/data/font.hpp"
 #include "core/data/tween.hpp"
 #include "core/data/vector2.hpp"
+#include "core/math/vector_math.hpp"
 #include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -123,7 +124,7 @@ entt::entity Object::Radar::Artillery::Create(const SceneContext& context) noexc
 
 entt::entity Object::Radar::ErrorWarning::Create(entt::registry& registry) noexcept
 {
-	constexpr Nc::Vector2f POSITION = Nc::Vector2f(8.0f, RADAR_BOUNDS.max.y - 8.0f);
+	constexpr auto POSITION = Nc::Vector2f(RADAR_BOUNDS.max.x * 0.5f, RADAR_BOUNDS.max.y - 24.0f);
 	constexpr float BLINK_FADE_SECONDS = 0.4f;
 	constexpr float BLINK_DELAY_SECONDS = 0.18f;
 
@@ -136,7 +137,7 @@ entt::entity Object::Radar::ErrorWarning::Create(entt::registry& registry) noexc
 		Palette::RADAR_COLOR,
 		Nc::Font::WDXL,
 		Nc::Font::Size::Tiny,
-		Alignment::BottomLeft
+		Alignment::Center
 	);
 
 	auto& errorWarning = registry.emplace<Component::RadarErrorWarning>(entity);
@@ -145,7 +146,6 @@ entt::entity Object::Radar::ErrorWarning::Create(entt::registry& registry) noexc
 	// Basic blink animation
 	Nc::Tween& blinkFade = collection.tweens.at(Component::RadarErrorWarning::BlinkFade);
 	Nc::Tween::Build(blinkFade, &errorWarning.alpha, 1.0f, 0.0f, BLINK_FADE_SECONDS, QuadIn, BLINK_DELAY_SECONDS);
-	Nc::Tween::Play(blinkFade);
 
 	return entity;
 }

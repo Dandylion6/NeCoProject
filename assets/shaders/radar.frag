@@ -31,8 +31,8 @@ void main()
 
     vec3 textureColor = (texture(texture0, vec2(u, v)) * fragColor).rgb;
 
-    int pixelSmear = 16;
-    float distanceBleed = 0.8;
+    int pixelSmear = 14;
+    float distanceBleed = 0.5;
 
     for (int i = -pixelSmear; i < 0; ++i)
     {

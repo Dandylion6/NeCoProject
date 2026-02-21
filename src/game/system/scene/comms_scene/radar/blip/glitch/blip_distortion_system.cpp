@@ -44,7 +44,7 @@ void System::Blip::Jumble::Update(const SystemContext& context)
 		{
 			blip.state = Component::Blip::Stable;
 			context.registry.remove<Component::Glitch::Distortion>(entity);
-			return;
+			continue;
 		}
 
 		const Nc::Vector2i displayedPosition = GetDisplayPosition(transform, jumble);

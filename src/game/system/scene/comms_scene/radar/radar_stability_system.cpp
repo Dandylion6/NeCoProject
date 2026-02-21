@@ -15,6 +15,7 @@
 #include "game/contexts/system_context.hpp"
 #include "game/state/anomaly_state.hpp"
 #include "game/state/game_state.hpp"
+#include "game/system/scene/comms_scene/radar/blip/blip_glitch_system.hpp"
 #include "game/system/scene/comms_scene/radar/blip/glitch/blip_contact_failure_system.hpp"
 #include "game/system/scene/comms_scene/radar/blip/glitch/blip_distortion_system.hpp"
 #include "game/system/scene/comms_scene/radar/blip/glitch/blip_signal_noise_system.hpp"
@@ -198,6 +199,8 @@ void System::Radar::Stability::GlitchBlip(
 )
 {
 	auto& randomService = context.registry.ctx().get<Nc::Random>();
+
+    blip.remainingGlitchSeconds = Blip::Glitch::GenerateGlitchDuration(context.registry, radar.stability);
 
 	const int deterministicValue = randomService.RangeInt(0, 100);
 	if (radar.stability > Component::Radar::HEALTHY_LEVEL)

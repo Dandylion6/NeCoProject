@@ -1,5 +1,7 @@
 #include "game/system/scene/comms_scene/radar/blip/glitch/blip_signal_noise_system.hpp"
 
+#include <format>
+
 #include "core/math/interpolation.hpp"
 #include "core/math/random.hpp"
 #include "game/component/core/rendering/text_component.hpp"
@@ -29,9 +31,7 @@ void System::Blip::TextError::Update(const SystemContext& context)
         UpdateCharacters(context, error);
 
         // Construct the display string.
-        std::string coordDisplayX = std::to_string(error.glitchSecondsLeft[0u]) + std::to_string(error.glitchSecondsLeft[1u]);
-        std::string coordDisplayY = std::to_string(error.glitchSecondsLeft[2u]) + std::to_string(error.glitchSecondsLeft[3u]);
-        text.text = "(" + coordDisplayX + " , " + coordDisplayY + ")";
+        text.text = std::format("({}{} , {}{})", error.glitchedCharacters[0], error.glitchedCharacters[1], error.glitchedCharacters[2], error.glitchedCharacters[3]);
     }
 }
 
@@ -47,7 +47,7 @@ void System::Blip::TextError::UpdateCharacters(const SystemContext& context, Com
         error.glitchSecondsLeft[i] -= context.deltaTime;;
         if (error.glitchSecondsLeft[i] > 0.0f) continue;
 
-        const char randomCharacter = randomService.RangeInt(32, 126);
+        const char randomCharacter = static_cast<char>(randomService.RangeInt(32, 126));
         error.glitchedCharacters[i] = randomCharacter;
 
         const float randomValue = randomService.RangeFloat(0.0f, 1.0f);

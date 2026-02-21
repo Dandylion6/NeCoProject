@@ -12,9 +12,9 @@ namespace Component
 struct Radar final
 {
 	// The time it takes to recalibrate the radar machine in seconds.
-	static constexpr float RECALIBRATION_TIME = 16.0f;
+	static constexpr float RECALIBRATION_TIME = 18.0f;
 	static constexpr float STABLE_LEVEL = 70.0f;
-	static constexpr float HEALTHY_LEVEL = 40.0f;
+	static constexpr float HEALTHY_LEVEL = 45.0f;
 	static constexpr float UNSTABLE_LEVEL = 15.0f;
 
 
