@@ -18,7 +18,7 @@
 
 void System::Render::Lighting::Initialize(Nc::LightingContext& context, Nc::ResourceStore& resourceStore)
 {
-    const Shader& shader = resourceStore.GetShader("assets/lighting.fs");
+    const Shader& shader = resourceStore.GetShader("assets/shaders/lighting.frag");
 
     context.lightPointCount = GetShaderLocation(shader, "lightPointCount");
     context.lightPositionLocation = GetShaderLocation(shader, "lightPosition[0]");
@@ -30,7 +30,7 @@ void System::Render::Lighting::Initialize(Nc::LightingContext& context, Nc::Reso
 
 const Shader& System::Render::Lighting::Update(const SystemContext& systemContext, const Nc::RenderContext& context)
 {
-    const Shader& shader = systemContext.store.GetShader("assets/lighting.fs");
+    const Shader& shader = systemContext.store.GetShader("assets/shaders/lighting.frag");
 
     int index = 0;
     const auto view = systemContext.registry.view<Component::Transform, Component::Light::Point>();

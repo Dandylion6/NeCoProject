@@ -14,7 +14,7 @@ enum Style : uint8_t
 
 enum class Size : uint8_t
 {
-    Tiny = 16u,
+    Tiny = 14u,
     Small = 24u,
     Medium = 32u,
     Large = 48u,
@@ -29,18 +29,18 @@ inline float SizeToFloat(const Size size) noexcept
     switch (size)
     {
     case Size::Small:
-        return static_cast<float>(Nc::Font::Size::Small);
+        return static_cast<float>(Size::Small);
     case Size::Medium:
-        return static_cast<float>(Nc::Font::Size::Medium);
+        return static_cast<float>(Size::Medium);
     case Size::Large:
-        return static_cast<float>(Nc::Font::Size::Large);
+        return static_cast<float>(Size::Large);
     case Size::Huge:
-        return static_cast<float>(Nc::Font::Size::Huge);
+        return static_cast<float>(Size::Huge);
     case Size::Giant:
-        return static_cast<float>(Nc::Font::Size::Giant);
+        return static_cast<float>(Size::Giant);
     case Size::Massive:
-        return static_cast<float>(Nc::Font::Size::Massive);
-    default: return static_cast<float>(Nc::Font::Size::Small);
+        return static_cast<float>(Size::Massive);
+    default: return static_cast<float>(Size::Small);
     }
 }
 
@@ -57,9 +57,8 @@ struct FontKey final
 
     // ------ Constructors ------
 
-    constexpr FontKey(Nc::Font::Style style, Nc::Font::Size fontSize) noexcept
-        : style(style), fontSize(fontSize)
-    { };
+    constexpr FontKey(const Nc::Font::Style style, const Nc::Font::Size fontSize) noexcept
+        : style(style), fontSize(fontSize) { }
 
 
     // ------ Operations ------

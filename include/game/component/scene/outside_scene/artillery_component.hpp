@@ -15,7 +15,7 @@ struct Artillery final
 {
 	// ------ Members ------
 
-	Nc::Vector2f targetPosition = Nc::Vector2f::Zero();
+	Nc::Vector2f targetPosition = Nc::Vector2f(18.0f, 42.0f);
 	Nc::Vector2f aimPosition = targetPosition;
 	float aimStartupSeconds = 0.0f;
 	float fireDelaySeconds = 0.0f;

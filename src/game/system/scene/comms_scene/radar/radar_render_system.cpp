@@ -27,11 +27,11 @@
 #include "game/utility/rendering.hpp"
 
 
-void System::Render::Radar::DrawRenderTexture(const SystemContext& context, const RenderTexture2D& radarRenderTexture)
+void System::Render::Radar::DrawRenderTexture(const SystemContext& context, const Nc::RenderContext& renderContext)
 {
 	if (context.game.currentScene != CommsRoom) return;
 
-	BeginTextureMode(radarRenderTexture);
+	BeginTextureMode(renderContext.radarRenderTexture);
 	BeginBlendMode(BLEND_ADDITIVE);
 
 	const entt::entity entity = entt::get_single<Component::Radar>(context.registry);
@@ -41,18 +41,12 @@ void System::Render::Radar::DrawRenderTexture(const SystemContext& context, cons
 
 	const Context radarContext = {context, radar, sprite};
 
-	// TODO: Add different visual states for on, off, and disabled (broken).
-	if (toggle.state != On)
-	{
-		ClearBackground(BLACK);
-	} else if (radar.recalibrationTimeLeft > 0.0f)
+	if (toggle.state != On) ClearBackground(BLACK);
+	else if (radar.recalibrationTimeLeft > 0.0f)
 	{
 		DrawRecalibratingScreen(radarContext);
 	}
-	else
-	{
-		DrawActiveScreen(radarContext);
-	}
+	else DrawActiveScreen(radarContext);
 
 	EndTextureMode();
 	EndBlendMode();
@@ -69,13 +63,27 @@ void System::Render::Radar::DrawRadar(const SystemContext& context, const Nc::Re
 	const Nc::Vector2f position = RADAR_POSITION + renderContext.cameraPosition;
 	const Rectangle destination { position.x, position.y, RADAR_SIZE.x, RADAR_SIZE.y };
 
-    DrawTexturePro(renderContext.radarRenderTexture.texture, SOURCE, destination,Vector2(), 0.0f, WHITE);
+    const Shader& radarShader = context.store.GetShader("assets/shaders/radar.frag");
+
+    const entt::entity entity = entt::get_single<Component::Radar>(context.registry);
+    const auto& radar = context.registry.get<Component::Radar>(entity);
+
+    const float timeScale = radar.screenGlitchReversed ? -context.game.time : context.game.time;
+    SetShaderValue(radarShader, GetShaderLocation(radarShader, "time"), &timeScale, SHADER_UNIFORM_FLOAT);
+
+    const float glitchTime = radar.screenGlitchSecondsLeft / radar.screenGlitchSeconds;
+    const float strength = Nc::Math::SineIn(glitchTime) * radar.screenGlitchStrength;
+    SetShaderValue(radarShader, GetShaderLocation(radarShader, "glitchStrength"), &strength, SHADER_UNIFORM_FLOAT);
+
+    BeginShaderMode(radarShader);
+    DrawTexturePro(renderContext.radarRenderTexture.texture, SOURCE, destination, Vector2(), 0.0f, WHITE);
+    EndShaderMode();
 }
 
 
 void System::Render::Radar::DrawActiveScreen(const Context& context)
 {
-	constexpr char BACKGROUND_FILE[] = "assets/environment/objects/radar/radar_screen.png";
+	constexpr char BACKGROUND_FILE[] = "assets/environment/objects/radar/display/radar_crt_background.png";
 
 	ClearBackground(BLANK);
 	
@@ -169,8 +177,12 @@ void System::Render::Radar::DrawErrorWarning(const Context& context)
 
 void System::Render::Radar::DrawRecalibratingScreen(const Context& context)
 {
-	// TODO: Add custom recalibration background
+    constexpr char BACKGROUND_FILE[] = "assets/environment/objects/radar/display/radar_blank_background.png";
+
 	ClearBackground(BLACK);
+
+    context.sprite.albedo = context.systemContext.store.GetTexture(BACKGROUND_FILE);
+    Renderer::DrawSprite(context.sprite, Nc::Vector2f::Zero());
 
 	const entt::entity entity = entt::get_single<Tag::Radar::Recalibration>(context.systemContext.registry);
 	const auto& transform = context.systemContext.registry.get<Component::Transform>(entity);

@@ -40,6 +40,7 @@ void System::Radar::Stability::Update(const SystemContext& context, AnomalyState
 #endif
 
 	if (toggle.state != On) return;;
+
 	if (!GameState::IsNight(context.game.hour)) return;
 
 	const float degradationValue = GetDegradationValue(anomaly.attractionPercentage);
@@ -71,9 +72,7 @@ void System::Radar::Stability::Restart(entt::registry& registry, const entt::ent
 
 void System::Radar::Stability::CheckBreakdown(entt::registry& registry, Component::Radar& radar)
 {
-	/**
-	 * @brief The probability of spontaneous breakdown of the radar every minute.
-	 */
+	// The probability of spontaneous breakdown of the radar every minute.
 	constexpr Nc::Vector2f BREAKDOWN_CHANCE_PER_MINUTE_RANGE = Nc::Vector2f(3.0f, 64.0f);
 	constexpr Nc::Vector2f BREAKDOWN_STABILITY_RANGE = Nc::Vector2f(
 		Component::Radar::STABLE_LEVEL,

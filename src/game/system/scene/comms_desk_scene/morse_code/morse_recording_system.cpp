@@ -18,19 +18,21 @@ void System::Morse::Recording::Update(const SystemContext& context, const Settin
     auto& transceiver = context.registry.get<Component::Morse::Transceiver>(entity);
 
     transceiver.intervalSeconds += context.deltaTime;
+    const float exitSeconds = MorseCode::ExitTime(settings.dotSeconds);
 
     if (!transceiver.isPushed)
     {
         if (transceiver.inputJustChanged)
             TryRecordPulse(transceiver, settings.dotSeconds);
 
-        const float exitSeconds = MorseCode::ExitTime(settings.dotSeconds);
         if (transceiver.intervalSeconds >= exitSeconds)
         {
             TryTransmitCharacter(context, transceiver.decodingIndex);
             transceiver.decodingIndex = 1;
         }
     }
+
+    transceiver.intervalSeconds = std::min(transceiver.intervalSeconds, exitSeconds);
 
     if (transceiver.inputJustChanged)
         transceiver.intervalSeconds = 0.0f;
@@ -41,7 +43,9 @@ void System::Morse::Recording::TryRecordPulse(Component::Morse::Transceiver& tra
 {
     switch (GetType(transceiver.intervalSeconds, dotSeconds))
     {
-    case Invalid: break;
+    case Invalid:
+        transceiver.decodingIndex = 1;
+        break;
     case Short: transceiver.decodingIndex *= 2;
         break;
     case Long: transceiver.decodingIndex = transceiver.decodingIndex * 2 + 1;

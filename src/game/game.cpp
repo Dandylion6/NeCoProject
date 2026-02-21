@@ -40,6 +40,7 @@
 #include "game/system/scene/comms_scene/radar/radar_artillery_system.hpp"
 #include "game/system/scene/comms_scene/radar/radar_buttons_system.hpp"
 #include "game/system/scene/comms_scene/radar/radar_render_system.hpp"
+#include "game/system/scene/comms_scene/radar/radar_screen_glitch_system.hpp"
 #include "game/system/scene/comms_scene/radar/radar_stability_system.hpp"
 #include "game/system/scene/comms_scene/radar/blip/blip_blink_system.hpp"
 #include "game/system/scene/comms_scene/radar/blip/blip_death_system.hpp"
@@ -377,11 +378,12 @@ void Game::UpdateSystems(float deltaTime)
 	System::Morse::MonitorDisplay::Update(context, settings.morseSettings);
 	System::Morse::Tone::Update(context);
 
-	System::Receiver::Interpret::Recalibration::Update(registry, deltaTime);
+	System::Receiver::Interpret::Recalibration::Update(context);
 	System::Machine::PowerUsage::Update(context, anomalyState);
 
 	System::Radar::Buttons::Update(context);
 	System::Radar::Stability::Update(context, anomalyState);
+    System::Radar::ScreenGlitch::Update(context);
 	System::Radar::Artillery::Update(context);
 
 	System::Blip::Death::Update(registry);
@@ -427,7 +429,7 @@ void Game::DrawGame(float deltaTime)
 #endif
 
 	const auto context = SystemContext(registry, resourceStore, gameState, gameEvents, deltaTime);
-	System::Render::Radar::DrawRenderTexture(context, renderContext.radarRenderTexture);
+	System::Render::Radar::DrawRenderTexture(context, renderContext);
 
 	auto cameraPosition = Nc::Vector2f::Zero();
 	const Nc::Vector2f swayTime = CAMERA_SWAY_SPEED * gameState.time;

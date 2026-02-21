@@ -20,7 +20,7 @@
 
 entt::entity Entity::Blip::Create(const SceneContext& context, Nc::Vector2f position, int16_t health) noexcept
 {
-	constexpr char FILE_PATH[] = "assets/environment/objects/radar/radar_blip.png";
+	constexpr char FILE_PATH[] = "assets/environment/objects/radar/display/radar_blip.png";
 	constexpr float FADE_IN_TIME = 0.3f, FADE_OUT_TIME = 6.5f;
 	constexpr float FADE_OUT_DELAY = 1.8f;
 
@@ -29,9 +29,8 @@ entt::entity Entity::Blip::Create(const SceneContext& context, Nc::Vector2f posi
 	context.registry.emplace<Component::Blip>(entity);
 	context.registry.emplace<Component::Health>(entity, health);
 
-	Texture2D texture = context.store.GetTexture(FILE_PATH);
-	auto& sprite = context.registry.emplace<Component::Sprite>(entity, texture);
-	sprite.alpha = 0.0f;
+	const Texture2D& texture = context.store.GetTexture(FILE_PATH);
+	auto& sprite = context.registry.emplace<Component::Sprite>(entity, texture, 0.0f);
 
 	Nc::Vector2f size = Nc::Vector2f(texture.width, texture.height);
 	context.registry.emplace<Component::Transform>(entity, RadarScene, position, size, size * 0.5f);

@@ -14,11 +14,11 @@
 using Day = uint8_t;
 
 
-constexpr auto BUNKER_POSITION = Nc::Vector2f(48.0f, -57.0f);
-constexpr auto ARTILLERY_POSITION = Nc::Vector2f(-62.5f, 2.0f);
-constexpr auto RADAR_POSITION = Nc::Vector2f(426.0f, 108.0f);
+constexpr auto BUNKER_POSITION = Nc::Vector2f(-0.4f, -5.9f);
+constexpr auto ARTILLERY_POSITION = Nc::Vector2f(-60.8f, 31.8f);
+constexpr auto RADAR_POSITION = Nc::Vector2f(460.0f, 142.0f);
 constexpr auto WORLD_BOUNDS = Nc::Bounds(-100.0f, 100.0f, 100.0f, -100.0f); // Y-axis is flipped.
-constexpr auto RADAR_BOUNDS = Nc::Bounds(0.0f, 0.0f, 320.0f, 320.0f);
+constexpr auto RADAR_BOUNDS = Nc::Bounds(0.0f, 0.0f, 255.0f, 255.0f);
 
 
 struct GameState final

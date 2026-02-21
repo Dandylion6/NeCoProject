@@ -8,6 +8,7 @@
 #include "game/component/core/rendering/sprite_component.hpp"
 #include "game/component/scene/comms_scene/radar_components.hpp"
 #include "game/contexts/system_context.hpp"
+#include "game/system/scene/comms_scene/radar/radar_screen_glitch_system.hpp"
 #include "game/tag/scene/comms_scene/radar_tags.hpp"
 
 
@@ -30,11 +31,9 @@ void System::Radar::Buttons::Update(const SystemContext& context)
 
     if (!click.justClicked) return;
 
-    // TODO: Add active/inactive visual state change and prevent spamming.
     click.state = Component::Action::Click::Active;
     sprite.scale = 0.9f;
     transform.position += OFFSET;
-
 
     const entt::entity radarEntity = entt::get_single<Component::Radar>(context.registry);
     const auto& radar = context.registry.get<Component::Radar>(radarEntity);
@@ -42,4 +41,7 @@ void System::Radar::Buttons::Update(const SystemContext& context)
 
     auto& toggle = context.registry.get<Component::Action::Toggle>(radarEntity);
     toggle.state = Component::Action::Toggle::Next(toggle.state);
+
+    if (toggle.state == On)
+        ScreenGlitch::StartGlitch(context, 0.6f);
 }

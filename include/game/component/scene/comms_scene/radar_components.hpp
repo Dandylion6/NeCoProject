@@ -11,7 +11,7 @@ namespace Component
  */
 struct Radar final
 {
-	// @brief The time it takes to recalibrate the radar machine in seconds.
+	// The time it takes to recalibrate the radar machine in seconds.
 	static constexpr float RECALIBRATION_TIME = 16.0f;
 	static constexpr float STABLE_LEVEL = 70.0f;
 	static constexpr float HEALTHY_LEVEL = 40.0f;
@@ -21,13 +21,18 @@ struct Radar final
 	// ------ Members ------
 	
 	float stability = 100.0f;
-	// @brief Remaining seconds of recalibration.
+	// Remaining seconds of recalibration.
 	float recalibrationTimeLeft = 0.0f;
+    float screenGlitchSecondsLeft = 0.0f;
+    float screenGlitchSeconds = 0.2f;
+    float screenGlitchWaitSecondsLeft = 0.0f;
+    float screenGlitchStrength = 0.0f;
 	float nextGlitchSpawnSeconds = 0.0f;
 	float lastGlitchTime = 0.0f;
 	float breakdownCheckTimer = 0.0f;
 	uint8_t glitchCount = 0u;
 	bool isRecalibrating = false;
+    bool screenGlitchReversed = false;
 
 
 	// ------ Constructors ------

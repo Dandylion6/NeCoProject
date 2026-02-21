@@ -35,12 +35,12 @@ public:
 	// ------ Functions ------
 
 	static void HandleMessage(const SystemContext& context, Component::Receiver& receiver);
-	static void Update(entt::registry& registry, float deltaTime);
+	static void Update(const SystemContext& context);
 
 private:
 	// ------ Functions ------
 	static void ConfirmCommand(const SystemContext& context, Component::Receiver& receiver);
-	static void Completed(Component::Radar& radar, Component::Action::Toggle& toggle);
+	static void Completed(const SystemContext& context, Component::Radar& radar, Component::Action::Toggle& toggle);
 
 };
 

@@ -11,7 +11,6 @@
 #include "game/component/core/tween_component.hpp"
 #include "game/component/core/interactive/click_action_component.hpp"
 #include "game/component/core/interactive/toggle_component.hpp"
-#include "game/component/core/rendering/rectangle_component.hpp"
 #include "game/component/core/rendering/sprite_component.hpp"
 #include "game/component/core/rendering/text_component.hpp"
 #include "game/component/core/serialization/address_component.hpp"
@@ -31,7 +30,7 @@
 
 Object::Radar::Data Object::Radar::Create(const SceneContext& context) noexcept
 {
-	constexpr char FILE_PATH[] = "assets/environment/objects/radar/radar_screen.png";
+	constexpr char FILE_PATH[] = "assets/environment/objects/radar/display/radar_crt_background.png";
 	constexpr char ENTITY_ADDRESS[] = "radar";
 	constexpr float ATTRACTION_REDUCTION_PER_SECOND = 0.09f;
 	constexpr uint16_t POWER_USAGE = 500u;
@@ -72,8 +71,8 @@ Object::Radar::Data Object::Radar::Create(const SceneContext& context) noexcept
 
 entt::entity Object::Radar::Path::Create(const SceneContext& context) noexcept
 {
-	constexpr char FILE_PATH[] = "assets/environment/objects/radar/radar_path.png";
-	constexpr Nc::Vector2f TRAVEL_RANGE = Nc::Vector2f(320.0f, -128.0f);
+	constexpr char FILE_PATH[] = "assets/environment/objects/radar/display/radar_path.png";
+	constexpr Nc::Vector2f TRAVEL_RANGE = Nc::Vector2f(256.0f, -72.0f);
 	constexpr float RADAR_TRAVEL_SECONDS = 10.0f;
 	constexpr float RADAR_DELAY_SECONDS = 0.8f;
 
@@ -85,7 +84,7 @@ entt::entity Object::Radar::Path::Create(const SceneContext& context) noexcept
 	context.registry.emplace<Component::Sprite>(entity, texture);
 
 	Nc::Vector2f size = Nc::Vector2f(texture.width, texture.height);
-	auto& transform = context.registry.emplace<Component::Transform>(entity, RadarScene, Nc::Vector2f::Zero(), size);
+	auto& transform = context.registry.emplace<Component::Transform>(entity, RadarScene, Nc::Vector2f::Zero(), size, Nc::Vector2f::Up(4.0f));
 	auto& collection = context.registry.emplace<Component::TweenCollection>(entity);
 
 	// Linear radar path travel animation
@@ -106,7 +105,7 @@ entt::entity Object::Radar::Path::Create(const SceneContext& context) noexcept
 
 entt::entity Object::Radar::Artillery::Create(const SceneContext& context) noexcept
 {
-	constexpr char FILE_PATH[] = "assets/environment/objects/radar/artillery_target.png";
+	constexpr char FILE_PATH[] = "assets/environment/objects/radar/display/radar_artillery_marker.png";
 
 	const entt::entity entity = context.registry.create();
 
@@ -175,18 +174,18 @@ entt::entity Object::Radar::RecalibrationText::Create(entt::registry& registry) 
 
 entt::entity Object::Radar::PowerButton::Create(const SceneContext& context) noexcept
 {
-    constexpr char SCREEN_ALBEDO_PATH[] = "assets/environment/objects/radar/crt_power_button_albedo.png";
-    constexpr char SCREEN_NORMAL_PATH[] = "assets/environment/objects/radar/crt_power_button_normal.png";
-    constexpr char SCREEN_AO_PATH[] = "assets/environment/objects/radar/crt_power_button_ao.png";
+    constexpr char BUTTON_ALBEDO_PATH[] = "assets/environment/objects/radar/crt_power_button_albedo.png";
+    constexpr char BUTTON_NORMAL_PATH[] = "assets/environment/objects/radar/crt_power_button_normal.png";
+    constexpr char BUTTON_AO_PATH[] = "assets/environment/objects/radar/crt_power_button_ao.png";
     constexpr auto POSITION = Nc::Vector2f(401.0f, 438.0f);
 
 	const entt::entity entity = context.registry.create();
 
 	context.registry.emplace<Tag::Radar::Button>(entity);
 
-    const Texture2D& albedoTexture = context.store.GetTexture(SCREEN_ALBEDO_PATH);
-    const Texture2D& normalTexture = context.store.GetTexture(SCREEN_NORMAL_PATH);
-    const Texture2D& aoTexture = context.store.GetTexture(SCREEN_AO_PATH);
+    const Texture2D& albedoTexture = context.store.GetTexture(BUTTON_ALBEDO_PATH);
+    const Texture2D& normalTexture = context.store.GetTexture(BUTTON_NORMAL_PATH);
+    const Texture2D& aoTexture = context.store.GetTexture(BUTTON_AO_PATH);
 
 	context.registry.emplace<Component::Sprite>(entity, albedoTexture, normalTexture, aoTexture);
 

@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 
-#include "raylib.h"
 #include "entt/entity/fwd.hpp"
 #include "game/component/core/rendering/sprite_component.hpp"
 #include "game/component/scene/comms_scene/radar_components.hpp"
@@ -21,7 +20,7 @@ class Radar final
 {
 public:
 	// ------ Functions ------
-    static void DrawRenderTexture(const SystemContext& context, const RenderTexture2D& radarRenderTexture);
+    static void DrawRenderTexture(const SystemContext& context, const Nc::RenderContext& renderContext);
 	static void DrawRadar(const SystemContext& context, const Nc::RenderContext& renderContext);
 
 private:
