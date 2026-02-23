@@ -14,8 +14,6 @@
 
 void System::Radar::Buttons::Update(const SystemContext& context)
 {
-    constexpr auto OFFSET = Nc::Vector2f::Scale(1.0f);
-
     const entt::entity powerButton = entt::get_single<Tag::Radar::Button>(context.registry);
 
     auto& click = context.registry.get<Component::Action::Click>(powerButton);
@@ -25,23 +23,42 @@ void System::Radar::Buttons::Update(const SystemContext& context)
     if (click.justReleased)
     {
         sprite.scale = 1.0f;
-        transform.position -= OFFSET;
+        transform.position -= BUTTON_OFFSET;
         return;
     }
 
-    if (!click.justClicked) return;
+    if (click.justClicked)
+    {
+        click.state = Component::Action::Click::Active;
+        sprite.scale = 0.9f;
+        transform.position += BUTTON_OFFSET;
+        Toggle(context);
+    }
+}
 
-    click.state = Component::Action::Click::Active;
-    sprite.scale = 0.9f;
-    transform.position += OFFSET;
 
+void System::Radar::Buttons::Toggle(const SystemContext& context)
+{
     const entt::entity radarEntity = entt::get_single<Component::Radar>(context.registry);
-    const auto& radar = context.registry.get<Component::Radar>(radarEntity);
+    auto& radar = context.registry.get<Component::Radar>(radarEntity);
     if (radar.isRecalibrating) return;
 
     auto& toggle = context.registry.get<Component::Action::Toggle>(radarEntity);
-    toggle.state = Component::Action::Toggle::Next(toggle.state);
+    if (toggle.state == On && radar.isTurningOff)
+        toggle.state = Off;
 
-    if (toggle.state == On)
+    switch (toggle.state)
+    {
+    case Disabled: break;
+    case Off:
+        radar.isTurningOff = false;
         ScreenGlitch::StartGlitch(context, 0.6f);
+        toggle.state = On;
+        break;
+    case On:
+        ScreenGlitch::StartGlitch(context, 0.4f);
+        radar.isTurningOff = true;
+        radar.turningOffSecondsLeft = 0.16f;
+        break;
+    }
 }
