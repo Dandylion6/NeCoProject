@@ -24,6 +24,7 @@ void System::Radar::Buttons::Update(const SystemContext& context)
     {
         sprite.scale = 1.0f;
         sprite.tint = Nc::RGBa(WHITE);
+        transform.position -= OFFSET;
         transform.position -= BUTTON_OFFSET;
         return;
     }

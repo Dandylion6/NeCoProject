@@ -60,6 +60,4 @@ void Structure::CommsScene::Build(const BuildContext& context) noexcept
         3.2f,
         LIGHT_RADIUS
     );
-
-    Entity::SceneAmbience::Create(sceneContext, "assets/audio/ambient/comms_ambience.wav", CommsRoom);
 }
