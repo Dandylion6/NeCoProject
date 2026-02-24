@@ -1,5 +1,6 @@
 #pragma once
 #include "entt/entity/fwd.hpp"
+#include "game/component/core/audio/audio_modifier_component.hpp"
 #include "game/state/scene.hpp"
 struct SystemContext;
 
@@ -29,30 +30,18 @@ private:
 	// ------ Types ------
 	struct Context final
 	{
+	    entt::registry& registry;
 		Component::Transform& transform;
 		float deltaTime;
 		entt::entity entity;
 	};
 
 
-    struct Modifier final
-    {
-        // ------ Members ------
-        float volumeScale = 1.0f;
-        float pan = 0.5f;
-
-
-        // ------ Constructors ------
-
-        constexpr Modifier() noexcept = default;
-    };
-
-
 	// ------ Functions ------
 
 	static void UpdateEmitter(Scene currentScene, const Context& context, const Component::Audio& emitter);
 	static void UpdateLoopedEmitter(Scene currentScene, const Context& context, const Component::LoopedAudio& emitter);
-	static Modifier GetAudioModifier(Scene currentScene, const Context& context);
+	static Component::AudioModifier GetAudioModifier(Scene currentScene, const Context& context);
 
 };
 

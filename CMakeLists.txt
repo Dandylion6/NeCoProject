@@ -129,7 +129,8 @@ add_executable(NeCoProject
         src/game/system/ui/interactive/settings_input_system.cpp
         src/game/system/scene/comms_scene/radar/radar_screen_glitch_system.cpp
         include/game/construction/shared/entity/scene/scene_ambience_entity.hpp
-        src/game/construction/shared/entity/scene/scene_ambience_entity.cpp)
+        src/game/construction/shared/entity/scene/scene_ambience_entity.cpp
+        include/game/component/core/audio/audio_modifier_component.hpp)
 
 target_sources(NeCoProject PRIVATE
 		src/main.cpp

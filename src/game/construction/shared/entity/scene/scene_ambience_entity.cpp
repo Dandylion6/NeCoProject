@@ -14,6 +14,7 @@ entt::entity Entity::SceneAmbience::Create(const SceneContext& context, const st
     const entt::entity entity = context.registry.create();
 
     context.registry.emplace<Component::Transform>(entity, boundScene, Nc::Vector2f(Nc::RENDER_RESOLUTION * 0.5f));
+    context.registry.emplace<Component::AudioModifier>(entity);
 
     const Music& music = context.store.GetMusic(audioPath);
     const auto& audio = context.registry.emplace<Component::LoopedAudio>(entity, music);
