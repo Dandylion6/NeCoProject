@@ -4,10 +4,13 @@
 
 enum Direction
 {
+    None,
 	Up,
 	Down,
 	Left,
 	Right,
+    Front,
+    Back,
 };
 
 
