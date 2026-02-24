@@ -195,7 +195,7 @@ void Game::BuildMenuUI()
 	const auto context = SceneContext(registry, resourceStore, gameState);
 	const auto windowSize = Nc::Vector2f(renderContext.windowSize);
 
-	Entity::AmbientSound::Create(registry);
+	//Entity::AmbientSound::Create(registry);
 	Entity::MoveTransition::Create(context, renderContext);
 
 	Structure::MainMenu::Build(context, *this);
@@ -349,7 +349,7 @@ void Game::UpdateSystems(float deltaTime)
 	System::Action::Drag::Update(context, renderContext);
 	System::UI::IncrementValue::Update(registry);
 	System::UI::MoveTransition::Update(context);
-	System::Audio::MainAmbience::Update(context);
+	//System::Audio::MainAmbience::Update(context);
 	System::Audio::Emitter::Update(context);
 
 	System::Restart::Buttons::Update(context);

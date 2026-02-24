@@ -19,7 +19,6 @@ enum Scene: uint8_t
 
 struct ConnectionData final
 {
-    Scene scene = NullScene;
     std::array<Scene, 6u> adjacent{ };
     bool isTraversable = false;
 };
@@ -32,7 +31,7 @@ consteval Connections BuildConnections()
 {
     Connections connections{ };
 
-    const auto AddConnection = [&](
+    auto AddConnection = [&](
         const Scene current,
         const Scene up,
         const Scene down,
@@ -43,14 +42,14 @@ consteval Connections BuildConnections()
     )
     {
         if (connections.size() <= current) return;
-        ConnectionData& data = connections.at(current);
-        data.adjacent[0u] = up;
-        data.adjacent[1u] = down;
-        data.adjacent[2u] = left;
-        data.adjacent[3u] = right;
-        data.adjacent[4u] = front;
-        data.adjacent[5u] = back;
-        data.isTraversable = true;
+        auto& [adjacent, isTraversable] = connections.at(current);
+        adjacent[0u] = up;
+        adjacent[1u] = down;
+        adjacent[2u] = left;
+        adjacent[3u] = right;
+        adjacent[4u] = front;
+        adjacent[5u] = back;
+        isTraversable = true;
     };
 
     AddConnection(CommsRoom, NullScene, CommsDesk, NullScene, Doorway, NullScene, NullScene);
@@ -71,16 +70,18 @@ inline Scene GetConnectedScene(const Scene current, const Direction direction)
 {
     if (current >= scenes.size()) return NullScene;
 
-    const ConnectionData& data = scenes.at(current);
+    const auto& [adjacent, isTraversable] = scenes.at(current);
+    if (!isTraversable) return NullScene;
+
     switch (direction)
     {
     case None: return NullScene;
-    case Up: return data.adjacent[0u];
-    case Down: return data.adjacent[1u];
-    case Left: return data.adjacent[2u];
-    case Right: return data.adjacent[3u];
-    case Front: return data.adjacent[4u];
-    case Back: return data.adjacent[5u];
+    case Up: return adjacent[0u];
+    case Down: return adjacent[1u];
+    case Left: return adjacent[2u];
+    case Right: return adjacent[3u];
+    case Front: return adjacent[4u];
+    case Back: return adjacent[5u];
     }
     return NullScene;
 }
@@ -90,11 +91,13 @@ inline Direction GetConnectionDirection(const Scene current, const Scene target)
 {
     if (current >= scenes.size()) return None;
 
-    const ConnectionData& data = scenes.at(current);
+    const auto& [adjacent, isTraversable] = scenes.at(current);
+    if (!isTraversable) return None;
+
     for (int i = 0; i < 6; ++i)
     {
-        const Scene adjacent = data.adjacent[i];
-        if (adjacent == target)
+        const Scene adjacentScene = adjacent.at(i);
+        if (adjacentScene == target)
             return static_cast<Direction>(i);
     }
 

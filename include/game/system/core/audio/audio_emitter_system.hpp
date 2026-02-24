@@ -1,13 +1,13 @@
 #pragma once
-#include "core/data/vector2.hpp"
 #include "entt/entity/fwd.hpp"
+#include "game/state/scene.hpp"
 struct SystemContext;
 
 
 namespace Component
 {
-struct Audio;
 struct LoopedAudio;
+struct Audio;
 struct Transform;
 }
 
@@ -35,11 +35,24 @@ private:
 	};
 
 
+    struct Modifier final
+    {
+        // ------ Members ------
+        float volumeScale = 1.0f;
+        float pan = 0.5f;
+
+
+        // ------ Constructors ------
+
+        constexpr Modifier() noexcept = default;
+    };
+
+
 	// ------ Functions ------
 
-	static void UpdateEmitter(const Context& context, const Component::Audio& emitter);
-	static void UpdateLoopedEmitter(const Context& context, const Component::LoopedAudio& emitter);
-	static float GetPan(Nc::Vector2f position);
+	static void UpdateEmitter(Scene currentScene, const Context& context, const Component::Audio& emitter);
+	static void UpdateLoopedEmitter(Scene currentScene, const Context& context, const Component::LoopedAudio& emitter);
+	static Modifier GetAudioModifier(Scene currentScene, const Context& context);
 
 };
 

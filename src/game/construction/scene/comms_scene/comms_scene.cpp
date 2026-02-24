@@ -11,6 +11,7 @@
 #include "game/construction/scene/comms_scene/object/radar_object.hpp"
 #include "game/construction/shared/entity/environment/light_source_entity.hpp"
 #include "game/construction/shared/entity/scene/move_region_entity.hpp"
+#include "game/construction/shared/entity/scene/scene_ambience_entity.hpp"
 #include "game/construction/shared/entity/scene/scene_background_entity.hpp"
 #include "game/state/scene.hpp"
 
@@ -59,4 +60,6 @@ void Structure::CommsScene::Build(const BuildContext& context) noexcept
         3.2f,
         LIGHT_RADIUS
     );
+
+    Entity::SceneAmbience::Create(sceneContext, "assets/audio/ambient/comms_ambience.wav", CommsRoom);
 }

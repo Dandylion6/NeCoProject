@@ -15,13 +15,18 @@ void System::Morse::Input::Update(const SystemContext& context, AnomalyState& an
     constexpr float ATTRACTION_PER_SECOND = 0.8f;
 
     bool canUseButton = false;
+    bool canUseMorse = false;
     switch (context.game.currentScene)
     {
-    case CommsDesk: canUseButton = false; // TODO: Add transceiver + button.
+    case CommsDesk:
+        canUseButton = false; // TODO: Add transceiver + button.
+        canUseMorse = true;
         break;
-    case CommsRoom: canUseButton = false;
+    case CommsRoom:
+        canUseButton = false;
+        canUseMorse = true;
         break;
-    default: return;
+    default: break;
     }
 
     const entt::entity entity = entt::get_single<Component::Morse::Transceiver>(context.registry);
@@ -42,7 +47,7 @@ void System::Morse::Input::Update(const SystemContext& context, AnomalyState& an
         if (click.isHeld) ++pushWeight;
     }
 
-    const bool isPushed = pushWeight > 0;
+    const bool isPushed = pushWeight > 0 && canUseMorse;
     transceiver.inputJustChanged = isPushed != wasPushed;
     transceiver.isPushed = isPushed;
 

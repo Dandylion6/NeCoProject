@@ -127,7 +127,9 @@ add_executable(NeCoProject
 		src/game/system/scene/comms_desk_scene/morse_code/morse_input_system.cpp
         include/game/system/ui/interactive/settings_input_system.hpp
         src/game/system/ui/interactive/settings_input_system.cpp
-        src/game/system/scene/comms_scene/radar/radar_screen_glitch_system.cpp)
+        src/game/system/scene/comms_scene/radar/radar_screen_glitch_system.cpp
+        include/game/construction/shared/entity/scene/scene_ambience_entity.hpp
+        src/game/construction/shared/entity/scene/scene_ambience_entity.cpp)
 
 target_sources(NeCoProject PRIVATE
 		src/main.cpp
