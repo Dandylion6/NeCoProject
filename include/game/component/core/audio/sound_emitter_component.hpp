@@ -26,6 +26,7 @@ struct Audio final
 
 	Sound sound{ };
 	float volume = 1.0f;
+    bool isPlaying = false;
 
 	
 	// ------ Constructors ------
@@ -57,6 +58,7 @@ struct LoopedAudio final
 
 	Music sound{ };
 	float volume = 1.0f;
+    bool isPlaying = false;
 
 
 	// ------ Constructors ------

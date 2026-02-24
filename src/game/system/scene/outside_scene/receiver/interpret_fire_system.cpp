@@ -42,7 +42,7 @@ void System::Receiver::Interpret::Fire::Update(const SystemContext& context)
 {
 	const entt::entity entity = entt::get_single<Component::Artillery>(context.registry);
 	auto& artillery = context.registry.get<Component::Artillery>(entity);
-	const auto& emitter = context.registry.get<Component::Audio>(entity);
+	auto& emitter = context.registry.get<Component::Audio>(entity);
 
 	if (!artillery.receivedFireRequest) return;
 	if (!artillery.isReadyToFire) return;

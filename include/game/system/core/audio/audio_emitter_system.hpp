@@ -22,10 +22,10 @@ class Emitter final
 public:
 	// ------ Functions ------
 	static void Update(const SystemContext& context);
-	static void PlayEmitter(const Component::Audio& emitter);
-	static void PlayEmitter(const Component::LoopedAudio& emitter);
-	static void StopEmitter(const Component::Audio& emitter);
-	static void StopEmitter(const Component::LoopedAudio& emitter);
+	static void PlayEmitter(Component::Audio& emitter);
+	static void PlayEmitter(Component::LoopedAudio& emitter);
+	static void StopEmitter(Component::Audio& emitter);
+	static void StopEmitter(Component::LoopedAudio& emitter);
 
 private:
 	// ------ Types ------

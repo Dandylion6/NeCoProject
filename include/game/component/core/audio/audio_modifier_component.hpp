@@ -22,9 +22,11 @@ struct AudioModifier final
 
     static constexpr float PAN_SPEED = 3.0f;
     static constexpr float VOLUME_SPEED = 2.5f;
+    static constexpr float PITCH_SPEED = 2.8f;
 
     float stereoPan = 0.5f;
     float volume = 1.0f;
+    float pitch = 1.0f;
 
 
     // ------ Constructors ------

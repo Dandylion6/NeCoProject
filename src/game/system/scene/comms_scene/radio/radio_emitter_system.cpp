@@ -14,7 +14,7 @@ void System::Radio::Emitter::Update(const SystemContext& context)
 {
 	const entt::entity entity = entt::get_single<Component::Radio>(context.registry);
 	auto& radio = context.registry.get<Component::Radio>(entity);
-	const auto& emitter = context.registry.get<Component::Audio>(entity);
+	auto& emitter = context.registry.get<Component::Audio>(entity);
 
 	if (!radio.isSendingBroadcast)
 	{

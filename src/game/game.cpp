@@ -349,8 +349,8 @@ void Game::UpdateSystems(float deltaTime)
 	System::Action::Drag::Update(context, renderContext);
 	System::UI::IncrementValue::Update(registry);
 	System::UI::MoveTransition::Update(context);
+    System::Audio::Emitter::Update(context);
 	//System::Audio::MainAmbience::Update(context);
-	System::Audio::Emitter::Update(context);
 
 	System::Restart::Buttons::Update(context);
 	System::Menu::Buttons::Update(context);

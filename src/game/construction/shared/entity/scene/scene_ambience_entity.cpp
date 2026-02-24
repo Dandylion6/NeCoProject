@@ -17,7 +17,7 @@ entt::entity Entity::SceneAmbience::Create(const SceneContext& context, const st
     context.registry.emplace<Component::AudioModifier>(entity);
 
     const Music& music = context.store.GetMusic(audioPath);
-    const auto& audio = context.registry.emplace<Component::LoopedAudio>(entity, music);
+    auto& audio = context.registry.emplace<Component::LoopedAudio>(entity, music);
     System::Audio::Emitter::PlayEmitter(audio);
 
     return entity;

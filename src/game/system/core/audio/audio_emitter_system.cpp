@@ -26,29 +26,37 @@ void System::Audio::Emitter::Update(const SystemContext& context)
 }
 
 
-void System::Audio::Emitter::PlayEmitter(const Component::Audio& emitter)
+void System::Audio::Emitter::PlayEmitter(Component::Audio& emitter)
 {
     PlaySound(emitter.sound);
+    emitter.isPlaying = true;
 }
 
 
-void System::Audio::Emitter::PlayEmitter(const Component::LoopedAudio& emitter)
+void System::Audio::Emitter::PlayEmitter(Component::LoopedAudio& emitter)
 {
     if (IsMusicValid(emitter.sound))
+    {
         PlayMusicStream(emitter.sound);
+        emitter.isPlaying = true;
+    }
 }
 
 
-void System::Audio::Emitter::StopEmitter(const Component::Audio& emitter)
+void System::Audio::Emitter::StopEmitter(Component::Audio& emitter)
 {
     StopSound(emitter.sound);
+    emitter.isPlaying = false;
 }
 
 
-void System::Audio::Emitter::StopEmitter(const Component::LoopedAudio& emitter)
+void System::Audio::Emitter::StopEmitter(Component::LoopedAudio& emitter)
 {
     if (IsMusicValid(emitter.sound))
+    {
         StopMusicStream(emitter.sound);
+        emitter.isPlaying = false;
+    }
 }
 
 
@@ -58,7 +66,16 @@ void System::Audio::Emitter::UpdateEmitter(
     const Component::Audio& emitter
 )
 {
-    if (!IsSoundPlaying(emitter.sound)) return;
+    const bool sceneBound = context.transform.boundScene != NullScene;
+    if (game.isPaused && sceneBound && IsSoundPlaying(emitter.sound) && emitter.isPlaying)
+    {
+        StopSound(emitter.sound);
+    } else if (!game.isPaused && !IsSoundPlaying(emitter.sound) && emitter.isPlaying)
+    {
+        PlaySound(emitter.sound);
+    }
+
+    if (!emitter.isPlaying) return;
 
     if (!context.registry.any_of<Component::AudioModifier>(context.entity))
     {
@@ -81,8 +98,15 @@ void System::Audio::Emitter::UpdateEmitter(
         context.deltaTime,
         Component::AudioModifier::VOLUME_SPEED
     );
+    modifier.pitch = Nc::Math::SmoothApproach(
+        modifier.pitch,
+        modifierTarget.pitch,
+        context.deltaTime,
+        Component::AudioModifier::PITCH_SPEED
+    );
 
     SetSoundVolume(emitter.sound, emitter.volume * modifier.volume);
+    SetSoundPitch(emitter.sound, modifier.pitch);
     SetSoundPan(emitter.sound, modifier.stereoPan);
 }
 
@@ -93,7 +117,17 @@ void System::Audio::Emitter::UpdateLoopedEmitter(
     const Component::LoopedAudio& emitter
 )
 {
-    if (!IsMusicStreamPlaying(emitter.sound)) return;
+    const bool sceneBound = context.transform.boundScene != NullScene;
+    if (game.isPaused && sceneBound && IsMusicStreamPlaying(emitter.sound) && emitter.isPlaying)
+    {
+        StopMusicStream(emitter.sound);
+    } else if (!game.isPaused && !IsMusicStreamPlaying(emitter.sound) && emitter.isPlaying)
+    {
+        PlayMusicStream(emitter.sound);
+    }
+
+    if (!emitter.isPlaying) return;
+
     UpdateMusicStream(emitter.sound);
 
     if (!context.registry.any_of<Component::AudioModifier>(context.entity))
@@ -117,8 +151,15 @@ void System::Audio::Emitter::UpdateLoopedEmitter(
         context.deltaTime,
         Component::AudioModifier::VOLUME_SPEED
     );
+    modifier.pitch = Nc::Math::SmoothApproach(
+        modifier.pitch,
+        modifierTarget.pitch,
+        context.deltaTime,
+        Component::AudioModifier::PITCH_SPEED
+    );
 
     SetMusicVolume(emitter.sound, emitter.volume * modifier.volume);
+    SetMusicPitch(emitter.sound, modifier.pitch);
     SetMusicPan(emitter.sound, modifier.stereoPan);
 }
 
@@ -135,9 +176,10 @@ Component::AudioModifier System::Audio::Emitter::GetAudioModifier(const GameStat
     if (currentScene == context.transform.boundScene)
     {
         const float normalizedX = context.transform.position.x / WIDTH;
-        const float stereoPan = Nc::Math::Lerp(1.0f, 0.0f, normalizedX);
+        const float stereoPan =  1.0f - normalizedX;
 
         modifier.stereoPan = stereoPan;
+        modifier.pitch = 1.0f;
         return modifier;
     }
 
@@ -152,9 +194,13 @@ Component::AudioModifier System::Audio::Emitter::GetAudioModifier(const GameStat
         break;
     case Left:
         modifier.stereoPan = 1.0f;
+        modifier.volume = 0.6f;
+        modifier.pitch = 0.98f;
         break;
     case Right:
         modifier.stereoPan = 0.0f;
+        modifier.volume = 0.6f;
+        modifier.pitch = 0.98f;
         break;
     case Front:
         modifier.stereoPan = 0.5f;
@@ -163,6 +209,7 @@ Component::AudioModifier System::Audio::Emitter::GetAudioModifier(const GameStat
     case Back:
         modifier.stereoPan = 0.5f;
         modifier.volume = 0.4f;
+        modifier.pitch = 0.95f;
         break;
     }
 
