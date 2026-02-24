@@ -2,6 +2,7 @@
 #include "entt/entity/fwd.hpp"
 #include "game/component/core/audio/audio_modifier_component.hpp"
 #include "game/state/scene.hpp"
+struct GameState;
 struct SystemContext;
 
 
@@ -39,9 +40,9 @@ private:
 
 	// ------ Functions ------
 
-	static void UpdateEmitter(Scene currentScene, const Context& context, const Component::Audio& emitter);
-	static void UpdateLoopedEmitter(Scene currentScene, const Context& context, const Component::LoopedAudio& emitter);
-	static Component::AudioModifier GetAudioModifier(Scene currentScene, const Context& context);
+	static void UpdateEmitter(const GameState& game, const Context& context, const Component::Audio& emitter);
+	static void UpdateLoopedEmitter(const GameState& game, const Context& context, const Component::LoopedAudio& emitter);
+	static Component::AudioModifier GetAudioModifier(const GameState& game, const Context& context);
 
 };
 

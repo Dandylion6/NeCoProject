@@ -18,11 +18,11 @@ void System::Audio::Emitter::Update(const SystemContext& context)
     // TODO: Apply dynamic audio that blends between rooms.
     const auto view = context.registry.view<Component::Transform, Component::Audio>();
     for (auto [entity, transform, emitter] : view.each())
-        UpdateEmitter(context.game.currentScene, {context.registry, transform, context.deltaTime, entity}, emitter);
+        UpdateEmitter(context.game, {context.registry, transform, context.deltaTime, entity}, emitter);
 
     const auto viewLooped = context.registry.view<Component::Transform, Component::LoopedAudio>();
     for (auto [entity, transform, emitter] : viewLooped.each())
-        UpdateLoopedEmitter(context.game.currentScene, {context.registry, transform, context.deltaTime, entity}, emitter);
+        UpdateLoopedEmitter(context.game, {context.registry, transform, context.deltaTime, entity}, emitter);
 }
 
 
@@ -53,7 +53,7 @@ void System::Audio::Emitter::StopEmitter(const Component::LoopedAudio& emitter)
 
 
 void System::Audio::Emitter::UpdateEmitter(
-    const Scene currentScene,
+    const GameState& game,
     const Context& context,
     const Component::Audio& emitter
 )
@@ -67,7 +67,7 @@ void System::Audio::Emitter::UpdateEmitter(
     }
 
     auto& modifier = context.registry.get<Component::AudioModifier>(context.entity);
-    const Component::AudioModifier modifierTarget = GetAudioModifier(currentScene, context);
+    const Component::AudioModifier modifierTarget = GetAudioModifier(game, context);
 
     modifier.stereoPan = Nc::Math::SmoothApproach(
         modifier.stereoPan,
@@ -88,7 +88,7 @@ void System::Audio::Emitter::UpdateEmitter(
 
 
 void System::Audio::Emitter::UpdateLoopedEmitter(
-    const Scene currentScene,
+    const GameState& game,
     const Context& context,
     const Component::LoopedAudio& emitter
 )
@@ -103,7 +103,7 @@ void System::Audio::Emitter::UpdateLoopedEmitter(
     }
 
     auto& modifier = context.registry.get<Component::AudioModifier>(context.entity);
-    const Component::AudioModifier modifierTarget = GetAudioModifier(currentScene, context);
+    const Component::AudioModifier modifierTarget = GetAudioModifier(game, context);
 
     modifier.stereoPan = Nc::Math::SmoothApproach(
         modifier.stereoPan,
@@ -123,11 +123,14 @@ void System::Audio::Emitter::UpdateLoopedEmitter(
 }
 
 
-Component::AudioModifier System::Audio::Emitter::GetAudioModifier(const Scene currentScene, const Context& context)
+Component::AudioModifier System::Audio::Emitter::GetAudioModifier(const GameState& game, const Context& context)
 {
     constexpr auto WIDTH = static_cast<float>(Nc::RENDER_RESOLUTION.x);
 
     auto modifier = Component::AudioModifier();
+
+    Scene currentScene = game.currentScene;
+    if (game.movingToScene != NullScene) currentScene = game.movingToScene;
 
     if (currentScene == context.transform.boundScene)
     {

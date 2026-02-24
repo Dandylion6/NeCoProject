@@ -20,8 +20,8 @@ struct AudioModifier final
 {
     // ------ Members ------
 
-    static constexpr float PAN_SPEED = 4.0f;
-    static constexpr float VOLUME_SPEED = 3.0f;
+    static constexpr float PAN_SPEED = 3.0f;
+    static constexpr float VOLUME_SPEED = 2.5f;
 
     float stereoPan = 0.5f;
     float volume = 1.0f;
