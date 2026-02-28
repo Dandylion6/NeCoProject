@@ -13,7 +13,6 @@
 #include "game/construction/scene/comms_scene/comms_scene.hpp"
 #include "game/construction/scene/doorway_scene/doorway_scene.hpp"
 #include "game/construction/scene/outside_scene/outside_scene.hpp"
-#include "game/construction/shared/entity/environment/ambient_sound_entity.hpp"
 #include "game/construction/ui/main_menu/main_menu.hpp"
 #include "game/construction/ui/restart_menu/restart_menu.hpp"
 #include "game/construction/ui/settings_menu/settings_menu.hpp"
@@ -26,7 +25,8 @@
 #include "game/state/game_state.hpp"
 #include "game/system/core/tween_system.hpp"
 #include "game/system/core/audio/audio_emitter_system.hpp"
-#include "game/system/core/audio/main_ambience_system.hpp"
+#include "game/system/core/audio/looped_audio_emitter_system.hpp"
+#include "game/system/core/audio/shot_audio_emitter_system.hpp"
 #include "game/system/core/interactive/click_action_system.hpp"
 #include "game/system/core/interactive/drag_action_system.hpp"
 #include "game/system/core/interactive/input_action_system.hpp"
@@ -195,7 +195,6 @@ void Game::BuildMenuUI()
 	const auto context = SceneContext(registry, resourceStore, gameState);
 	const auto windowSize = Nc::Vector2f(renderContext.windowSize);
 
-	//Entity::AmbientSound::Create(registry);
 	Entity::MoveTransition::Create(context, renderContext);
 
 	Structure::MainMenu::Build(context, *this);
@@ -349,8 +348,8 @@ void Game::UpdateSystems(float deltaTime)
 	System::Action::Drag::Update(context, renderContext);
 	System::UI::IncrementValue::Update(registry);
 	System::UI::MoveTransition::Update(context);
-    System::Audio::Emitter::Update(context);
-	//System::Audio::MainAmbience::Update(context);
+    System::Audio::ShotEmitter::Update(context);
+    System::Audio::LoopedEmitter::Update(context);
 
 	System::Restart::Buttons::Update(context);
 	System::Menu::Buttons::Update(context);
@@ -374,6 +373,8 @@ void Game::UpdateSystems(float deltaTime)
 
 	if (gameState.currentScene == NullScene) return;
 	if (gameState.isPaused) return;
+
+    System::Audio::Emitter::Update(context);
 
     System::Morse::Input::Update(context, anomalyState);
 	System::Morse::Recording::Update(context, settings.morseSettings);

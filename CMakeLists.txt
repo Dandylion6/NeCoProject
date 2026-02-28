@@ -83,9 +83,8 @@ add_executable(NeCoProject
 		src/game/system/core/interactive/click_action_system.cpp
 		src/game/system/core/interactive/drag_action_system.cpp
 		src/game/system/core/interactive/input_action_system.cpp
-		src/game/system/core/audio/audio_emitter_system.cpp
-		src/game/system/core/audio/main_ambience_system.cpp
-		src/game/save/save_game.cpp
+        src/game/system/core/audio/audio_emitter_system.cpp
+        src/game/save/save_game.cpp
 		src/game/save/save_settings.cpp
 		src/game/construction/ui/main_menu/entity/menu_background_entity.cpp
 		src/game/construction/ui/main_menu/object/menu_button_objects.cpp
@@ -100,8 +99,7 @@ add_executable(NeCoProject
 		src/game/construction/ui/settings_menu/settings_menu.cpp
 		src/game/construction/ui/shared/entity/move_transition_entity.cpp
 		src/game/construction/ui/shared/object/label_button_object.cpp
-		src/game/construction/shared/entity/environment/aimbient_sound_entity.cpp
-		src/game/construction/shared/entity/environment/light_source_entity.cpp
+        src/game/construction/shared/entity/environment/light_source_entity.cpp
 		src/game/construction/shared/entity/interactive/lever_entity.cpp
 		src/game/construction/shared/entity/scene/move_region_entity.cpp
 		src/game/construction/shared/entity/scene/scene_background_entity.cpp
@@ -121,16 +119,13 @@ add_executable(NeCoProject
 		src/game/construction/scene/outside_scene/outside_scene.cpp
 		src/core/data/bounds.cpp
 		src/core/runtime/resource_store.cpp
-		include/game/system/core/rendering/lighting/light_flickering_system.hpp
 		src/game/system/core/rendering/lighting/light_flickering_system.cpp
-		include/game/system/scene/comms_desk_scene/morse_code/morse_input_system.hpp
 		src/game/system/scene/comms_desk_scene/morse_code/morse_input_system.cpp
-        include/game/system/ui/interactive/settings_input_system.hpp
         src/game/system/ui/interactive/settings_input_system.cpp
         src/game/system/scene/comms_scene/radar/radar_screen_glitch_system.cpp
-        include/game/construction/shared/entity/scene/scene_ambience_entity.hpp
-        src/game/construction/shared/entity/scene/scene_ambience_entity.cpp
-        include/game/component/core/audio/audio_modifier_component.hpp)
+        src/game/system/core/audio/looped_audio_emitter_system.cpp
+        src/game/system/core/audio/shot_audio_emitter_system.cpp
+        src/game/construction/shared/entity/scene/scene_ambience_entity.cpp)
 
 target_sources(NeCoProject PRIVATE
 		src/main.cpp

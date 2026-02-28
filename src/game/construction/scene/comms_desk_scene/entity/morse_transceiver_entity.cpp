@@ -7,7 +7,8 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
-#include "game/component/core/audio/sound_emitter_component.hpp"
+#include "game/component/core/audio/audio_component.hpp"
+#include "game/component/core/audio/audio_emitter_component.hpp"
 #include "game/component/core/interactive/input_component.hpp"
 #include "game/component/scene/comms_desk_scene/morse_components.hpp"
 #include "game/contexts/scene_context.hpp"
@@ -25,10 +26,11 @@ entt::entity Entity::MorseTransceiver::Create(const SceneContext& context) noexc
 	context.registry.emplace<Component::Morse::Transceiver>(entity);
 	context.registry.emplace<Component::Transform>(entity, CommsDesk, POSITION);
     context.registry.emplace<Component::Action::Input>(entity, KEY_SPACE);
-    context.registry.emplace<Component::AudioModifier>(entity);
 
 	const Music& morseTone = context.store.GetMusic(MORSE_TONE_PATH);
-	auto& emitter = context.registry.emplace<Component::LoopedAudio>(entity, morseTone, 0.0f);
+	context.registry.emplace<Component::LoopedAudio>(entity, morseTone);
+
+    auto& emitter = context.registry.emplace<Component::AudioEmitter>(entity, 0.0f);
 	System::Audio::Emitter::PlayEmitter(emitter);
 
 	return entity;

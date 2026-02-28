@@ -6,7 +6,7 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
-#include "game/component/core/audio/sound_emitter_component.hpp"
+#include "game/component/core/audio/audio_component.hpp"
 #include "game/component/scene/outside_scene/projectile_component.hpp"
 #include "game/contexts/scene_context.hpp"
 #include "game/state/scene.hpp"
@@ -23,7 +23,7 @@ entt::entity Entity::Projectile::Create(const SceneContext& context, Nc::Vector2
 	context.registry.emplace<Component::Projectile>(entity, TRAVEL_TIME);
 
 	const Sound& sound = context.store.CreateSoundHandle(HIT_SOUND_PATH);
-	context.registry.emplace<Component::Audio>(entity, sound);
+	context.registry.emplace<Component::ShotAudio>(entity, sound);
 
 	return entity;
 }

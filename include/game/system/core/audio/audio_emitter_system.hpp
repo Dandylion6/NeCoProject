@@ -1,6 +1,5 @@
 #pragma once
-#include "entt/entity/fwd.hpp"
-#include "game/component/core/audio/audio_modifier_component.hpp"
+#include "game/component/core/transform_component.hpp"
 #include "game/state/scene.hpp"
 struct GameState;
 struct SystemContext;
@@ -8,9 +7,7 @@ struct SystemContext;
 
 namespace Component
 {
-struct LoopedAudio;
-struct Audio;
-struct Transform;
+struct AudioEmitter;
 }
 
 
@@ -20,30 +17,18 @@ namespace System::Audio
 class Emitter final
 {
 public:
-	// ------ Functions ------
-	static void Update(const SystemContext& context);
-	static void PlayEmitter(Component::Audio& emitter);
-	static void PlayEmitter(Component::LoopedAudio& emitter);
-	static void StopEmitter(Component::Audio& emitter);
-	static void StopEmitter(Component::LoopedAudio& emitter);
+    // ------ Functions ------
+    static void Update(const SystemContext& context);
+    static void PlayEmitter(Component::AudioEmitter& emitter);
+    static void StopEmitter(Component::AudioEmitter& emitter);
 
 private:
-	// ------ Types ------
-	struct Context final
-	{
-	    entt::registry& registry;
-		Component::Transform& transform;
-		float deltaTime;
-		entt::entity entity;
-	};
-
-
-	// ------ Functions ------
-
-	static void UpdateEmitter(const GameState& game, const Context& context, const Component::Audio& emitter);
-	static void UpdateLoopedEmitter(const GameState& game, const Context& context, const Component::LoopedAudio& emitter);
-	static Component::AudioModifier GetAudioModifier(const GameState& game, const Context& context);
-
+    // ------ Functions ------
+    static void UpdateEmitter(
+        Scene currentScene,
+        Component::AudioEmitter& emitter,
+        const Component::Transform& transform
+    ) noexcept;
 };
 
 }

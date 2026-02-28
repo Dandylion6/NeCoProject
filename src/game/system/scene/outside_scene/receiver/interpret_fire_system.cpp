@@ -7,7 +7,7 @@
 #include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "game/component/core/audio/sound_emitter_component.hpp"
+#include "game/component/core/audio/audio_emitter_component.hpp"
 #include "game/component/scene/comms_scene/radio_component.hpp"
 #include "game/component/scene/outside_scene/artillery_component.hpp"
 #include "game/component/scene/outside_scene/receiver_component.hpp"
@@ -42,7 +42,7 @@ void System::Receiver::Interpret::Fire::Update(const SystemContext& context)
 {
 	const entt::entity entity = entt::get_single<Component::Artillery>(context.registry);
 	auto& artillery = context.registry.get<Component::Artillery>(entity);
-	auto& emitter = context.registry.get<Component::Audio>(entity);
+	auto& emitter = context.registry.get<Component::AudioEmitter>(entity);
 
 	if (!artillery.receivedFireRequest) return;
 	if (!artillery.isReadyToFire) return;
