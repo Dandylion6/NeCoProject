@@ -25,7 +25,7 @@ int main(const int args, char* argv[])
 		game->HandleEvents();
 	}
 
-	Game::Shutdown();
+	game->Shutdown();
 
 	return 0;
 }
