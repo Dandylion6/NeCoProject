@@ -263,6 +263,8 @@ void Game::SetupWindow()
 void Game::Shutdown()
 {
 	// TODO: Add safety features
+    resourceStore.OnShutdown();
+
 	CloseAudioDevice();
 	CloseWindow();
 }

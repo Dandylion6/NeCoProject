@@ -1,5 +1,6 @@
 #include "core/runtime/resource_store.hpp"
 
+#include <ranges>
 #include <string>
 #include <utility>
 
@@ -73,6 +74,31 @@ const Music& ResourceStore::GetMusic(const std::string& filePath) noexcept(false
 		musicStore.emplace(filePath, music);
 	}
 	return musicStore.at(filePath);
+}
+
+
+void ResourceStore::OnShutdown() noexcept(false)
+{
+    for (const Texture2D& texture : textureStore | std::views::values)
+        UnloadTexture(texture);
+
+    for (const Shader& shader : shaderStore | std::views::values)
+        UnloadShader(shader);
+
+    for (const ::Font& font : fontStore | std::views::values)
+        UnloadFont(font);
+
+    for (const Sound& sound : soundStore | std::views::values)
+        UnloadSound(sound);
+
+    for (const Music& music : musicStore | std::views::values)
+        UnloadMusicStream(music);
+
+    textureStore.clear();
+    shaderStore.clear();
+    fontStore.clear();
+    soundStore.clear();
+    musicStore.clear();
 }
 
 

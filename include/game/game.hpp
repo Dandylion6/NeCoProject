@@ -31,7 +31,7 @@ public:
 	void Save();
 	void Load();
 
-	static void Shutdown();
+	void Shutdown();
 
 	void Update(float deltaTime);
 	void UpdateSystems(float deltaTime);
