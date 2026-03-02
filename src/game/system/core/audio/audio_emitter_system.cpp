@@ -13,6 +13,7 @@
 
 void System::Audio::Emitter::Update(const SystemContext& context)
 {
+    // TODO: Add audio mixing like low-gate for more immersive propagation of sound.
     const auto view = context.registry.view<Component::Transform, Component::AudioEmitter>();
     for (auto [entity, transform, emitter] : view.each())
     {
@@ -45,10 +46,9 @@ void System::Audio::Emitter::UpdateEmitter(
     const Component::Transform& transform
 ) noexcept
 {
-    constexpr float SCENE_WIDTH = Nc::RENDER_RESOLUTION.x;
+    constexpr auto SCENE_WIDTH = static_cast<float>(Nc::RENDER_RESOLUTION.x);
 
     const float positionPan = 1.0f - transform.position.x / SCENE_WIDTH;
-
     if (transform.boundScene == currentScene || !emitter.isSpacial)
     {
         emitter.attenuation = 0.0f;

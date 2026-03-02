@@ -14,29 +14,28 @@ void System::Morse::Input::Update(const SystemContext& context, AnomalyState& an
     // The percentage amount increased per second of the input being held.
     constexpr float ATTRACTION_PER_SECOND = 0.8f;
 
-    bool canUseButton = false;
-    bool canUseMorse = false;
-    switch (context.game.currentScene)
-    {
-    case CommsDesk:
-        canUseButton = false; // TODO: Add transceiver + button.
-        canUseMorse = true;
-        break;
-    case CommsRoom:
-        canUseButton = false;
-        canUseMorse = true;
-        break;
-    default: break;
-    }
-
     const entt::entity entity = entt::get_single<Component::Morse::Transceiver>(context.registry);
     const auto& input = context.registry.get<Component::Action::Input>(entity);
     auto& transceiver = context.registry.get<Component::Morse::Transceiver>(entity);
 
-    const bool wasPushed = transceiver.isPushed;
+    bool canUseButton = false;
+    bool canUseMorse = true;
 
     // Since multiple inputs can be used for morse, it must be weighed.
     int pushWeight = 0;
+
+    switch (context.game.currentScene)
+    {
+    case CommsDesk:
+        canUseButton = true;
+        break;
+    case CommsRoom:
+        break;
+    default:
+        canUseMorse = false;
+        pushWeight = -2; // Any input will be force ignored.
+        break;
+    }
 
     if (input.state == Component::Action::Input::Held)
         ++pushWeight;
@@ -47,7 +46,9 @@ void System::Morse::Input::Update(const SystemContext& context, AnomalyState& an
         if (click.isHeld) ++pushWeight;
     }
 
+    const bool wasPushed = transceiver.isPushed;
     const bool isPushed = pushWeight > 0 && canUseMorse;
+
     transceiver.inputJustChanged = isPushed != wasPushed;
     transceiver.isPushed = isPushed;
 
