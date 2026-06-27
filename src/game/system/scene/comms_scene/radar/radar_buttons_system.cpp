@@ -24,24 +24,17 @@ void System::Radar::Buttons::Update(const SystemContext& context)
     {
         sprite.scale = 1.0f;
         sprite.tint = Nc::RGBa(WHITE);
-        transform.position -= OFFSET;
         transform.position -= BUTTON_OFFSET;
         return;
     }
 
-    if (click.justClicked)
-    {
-        click.state = Component::Action::Click::Active;
-        sprite.scale = 0.9f;
-        transform.position += BUTTON_OFFSET;
-        Toggle(context);
-    }
-}
+    if (!click.justClicked) return;
 
     click.state = Component::Action::Click::Active;
     sprite.scale = 0.9f;
     sprite.tint = Nc::RGBa(220, 220, 220);
-    transform.position += OFFSET;
+    transform.position += BUTTON_OFFSET;
+}
 
 void System::Radar::Buttons::Toggle(const SystemContext& context)
 {
