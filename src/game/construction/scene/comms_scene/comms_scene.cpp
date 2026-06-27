@@ -11,6 +11,7 @@
 #include "game/construction/scene/comms_scene/object/radar_object.hpp"
 #include "game/construction/shared/entity/environment/light_source_entity.hpp"
 #include "game/construction/shared/entity/scene/move_region_entity.hpp"
+#include "game/construction/shared/entity/scene/scene_ambience_entity.hpp"
 #include "game/construction/shared/entity/scene/scene_background_entity.hpp"
 #include "game/state/scene.hpp"
 
@@ -21,11 +22,12 @@ void Structure::CommsScene::Build(const BuildContext& context) noexcept
     constexpr char SCENE_NORMAL_PATH[] = "assets/environment/backgrounds/comms_room/comms_scene_normal.png";
     constexpr char SCENE_AO_PATH[] = "assets/environment/backgrounds/comms_room/comms_scene_ao.png";
 
-    constexpr auto LIGHT_COLOR = Nc::Hex(0xfee8c8ff);
+    constexpr auto LIGHT_COLOR = Nc::Hex(0xfff3c9ff);
     constexpr Nc::Vector2f LIGHT_POSITION = Nc::Vector::Modulate(
         Nc::Vector2f(0.5f, 1.2f),
         Nc::Vector2f(Nc::RENDER_RESOLUTION)
     );
+    constexpr float LIGHT_DISTANCE = 150.0f;
     constexpr float LIGHT_RADIUS = 1400.0f;
 
     const auto sceneContext = SceneContext(context.registry, context.store, context.game);
@@ -49,5 +51,15 @@ void Structure::CommsScene::Build(const BuildContext& context) noexcept
 
     Entity::MoveRegion::Create(sceneContext, Down, CommsRoom, CommsDesk, 0.15f);
     Entity::MoveRegion::Create(sceneContext, Right, CommsRoom, Doorway, 0.35f);
-    Entity::LightPoint::Create(context.registry, CommsRoom, LIGHT_POSITION, 200.0f, Nc::RGBa(LIGHT_COLOR), 3.2f, LIGHT_RADIUS);
+    Entity::LightPoint::Create(
+        context.registry,
+        CommsRoom,
+        LIGHT_POSITION,
+        LIGHT_DISTANCE,
+        Nc::RGBa(LIGHT_COLOR),
+        3.2f,
+        LIGHT_RADIUS
+    );
+
+    Entity::SceneAmbience::Create(sceneContext, "assets/audio/ambient/comms_ambience.wav", CommsRoom);
 }

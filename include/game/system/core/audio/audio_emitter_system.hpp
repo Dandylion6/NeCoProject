@@ -1,14 +1,13 @@
 #pragma once
-#include "core/data/vector2.hpp"
-#include "entt/entity/fwd.hpp"
+#include "game/component/core/transform_component.hpp"
+#include "game/state/scene.hpp"
+struct GameState;
 struct SystemContext;
 
 
 namespace Component
 {
-struct Audio;
-struct LoopedAudio;
-struct Transform;
+struct AudioEmitter;
 }
 
 
@@ -18,29 +17,18 @@ namespace System::Audio
 class Emitter final
 {
 public:
-	// ------ Functions ------
-	static void Update(const SystemContext& context);
-	static void PlayEmitter(const Component::Audio& emitter);
-	static void PlayEmitter(const Component::LoopedAudio& emitter);
-	static void StopEmitter(const Component::Audio& emitter);
-	static void StopEmitter(const Component::LoopedAudio& emitter);
+    // ------ Functions ------
+    static void Update(const SystemContext& context);
+    static void PlayEmitter(Component::AudioEmitter& emitter);
+    static void StopEmitter(Component::AudioEmitter& emitter);
 
 private:
-	// ------ Types ------
-	struct Context final
-	{
-		Component::Transform& transform;
-		float deltaTime;
-		entt::entity entity;
-	};
-
-
-	// ------ Functions ------
-
-	static void UpdateEmitter(const Context& context, const Component::Audio& emitter);
-	static void UpdateLoopedEmitter(const Context& context, const Component::LoopedAudio& emitter);
-	static float GetPan(Nc::Vector2f position);
-
+    // ------ Functions ------
+    static void UpdateEmitter(
+        Scene currentScene,
+        Component::AudioEmitter& emitter,
+        const Component::Transform& transform
+    ) noexcept;
 };
 
 }

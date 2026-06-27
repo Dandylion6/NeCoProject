@@ -2,7 +2,7 @@
 #include "core/math/vector_math.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "game/component/core/audio/sound_emitter_component.hpp"
+#include "game/component/core/audio/audio_component.hpp"
 #include "game/component/core/transform_component.hpp"
 #include "game/component/scene/comms_scene/blip_components.hpp"
 #include "game/component/scene/outside_scene/projectile_component.hpp"
@@ -13,18 +13,20 @@
 #include <cstdint>
 #include <vector>
 
+#include "game/component/core/audio/audio_emitter_component.hpp"
+
 
 void System::Projectile::Hit::Update(const SystemContext& context) noexcept
 {
 	size_t hitCount = 0u;
 	Nc::Vector2f hitPositions[MAX_HITS] = { };
 
-	const auto view = context.registry.view<const Component::Transform, Component::Projectile, Component::Audio>();
+	const auto view = context.registry.view<const Component::Transform, Component::Projectile, Component::AudioEmitter>();
 	for (auto [entity, transform, projectile, emitter] : view.each())
 	{
 		if (!projectile.isActive)
 		{
-			if (!IsSoundPlaying(emitter.sound))
+			if (emitter.state == Component::AudioEmitter::Playing)
 				context.registry.destroy(entity);
 			continue;
 		}

@@ -4,12 +4,11 @@
 
 #include "raylib.h"
 #include "core/data/vector2.hpp"
-#include "core/math/vector_math.hpp"
-#include "core/runtime/render_context.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
-#include "game/component/core/audio/sound_emitter_component.hpp"
+#include "game/component/core/audio/audio_component.hpp"
+#include "game/component/core/audio/audio_emitter_component.hpp"
 #include "game/component/scene/outside_scene/artillery_component.hpp"
 #include "game/component/scene/outside_scene/receiver_component.hpp"
 #include "game/component/shared/stat/health_component.hpp"
@@ -31,7 +30,8 @@ entt::entity Entity::Artillery::Create(entt::registry& registry) noexcept
 	registry.emplace<Component::Health>(entity, SQUAD_COUNT);
 
 	const Sound& sound = LoadSound(FIRE_SOUND_PATH);
-	registry.emplace<Component::Audio>(entity, sound);
+	registry.emplace<Component::ShotAudio>(entity, sound);
+    registry.emplace<Component::AudioEmitter>(entity, false);
 
 	return entity;
 }

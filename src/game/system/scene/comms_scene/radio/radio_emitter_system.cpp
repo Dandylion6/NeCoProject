@@ -4,7 +4,8 @@
 #include "core/runtime/entity_helpers.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "game/component/core/audio/sound_emitter_component.hpp"
+#include "game/component/core/audio/audio_component.hpp"
+#include "game/component/core/audio/audio_emitter_component.hpp"
 #include "game/component/scene/comms_scene/radio_component.hpp"
 #include "game/contexts/system_context.hpp"
 #include "game/system/core/audio/audio_emitter_system.hpp"
@@ -14,14 +15,15 @@ void System::Radio::Emitter::Update(const SystemContext& context)
 {
 	const entt::entity entity = entt::get_single<Component::Radio>(context.registry);
 	auto& radio = context.registry.get<Component::Radio>(entity);
-	const auto& emitter = context.registry.get<Component::Audio>(entity);
+	auto& emitter = context.registry.get<Component::AudioEmitter>(entity);
+    const auto& audio = context.registry.get<Component::ShotAudio>(entity);
 
 	if (!radio.isSendingBroadcast)
 	{
-		if (!IsSoundPlaying(emitter.sound) && radio.priority != BroadcastPriority::Idle)
+		if (!IsSoundPlaying(audio.sound) && radio.priority != BroadcastPriority::Idle)
 		{
 			radio.priority = BroadcastPriority::Idle;
-			UnloadSoundAlias(emitter.sound); // TODO: Add audio pooling system.
+			UnloadSoundAlias(audio.sound); // TODO: Add audio pooling system.
 		}
 		return;
 	}
@@ -30,7 +32,6 @@ void System::Radio::Emitter::Update(const SystemContext& context)
 	{
 		// Starts the broadcast
 		radio.isSendingBroadcast = false;
-		if (IsSoundPlaying(emitter.sound)) Audio::Emitter::StopEmitter(emitter);
 		Audio::Emitter::PlayEmitter(emitter);
 		return;
 	}
@@ -44,13 +45,13 @@ void System::Radio::Emitter::Broadcast(entt::registry& registry, const Sound& so
 
 	const entt::entity entity = entt::get_single<Component::Radio>(registry);
 	auto& radio = registry.get<Component::Radio>(entity);
-	auto& emitter = registry.get<Component::Audio>(entity);
+	auto& audio = registry.get<Component::ShotAudio>(entity);
 
 	//TODO: Add audio effects for broadcast interruptions.
 	if (radio.priority >= priority) return;
 	radio.priority = priority;
 
-	emitter.sound = sound;
+	audio.sound = sound;
 	radio.broadcastDelay = DELAY_SECONDS;
 	radio.isSendingBroadcast = true;
 }

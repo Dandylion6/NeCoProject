@@ -4,6 +4,7 @@
 #include "core/math/interpolation.hpp"
 #include "core/math/random.hpp"
 #include "core/runtime/entity_helpers.hpp"
+#include "game/component/core/interactive/toggle_component.hpp"
 #include "game/component/scene/comms_scene/radar_components.hpp"
 #include "game/contexts/system_context.hpp"
 
@@ -12,6 +13,17 @@ void System::Radar::ScreenGlitch::Update(const SystemContext& context)
 {
     const entt::entity entity = entt::get_single<Component::Radar>(context.registry);
     auto& radar = context.registry.get<Component::Radar>(entity);
+
+    if (radar.isTurningOff)
+    {
+        radar.turningOffSecondsLeft -= context.deltaTime;
+        if (radar.turningOffSecondsLeft <= 0.0f)
+        {
+            radar.isTurningOff = false;
+            auto& toggle = context.registry.get<Component::Action::Toggle>(entity);
+            toggle.state = Off;
+        }
+    }
 
     radar.screenGlitchWaitSecondsLeft -= context.deltaTime;
     radar.screenGlitchSecondsLeft = std::max(radar.screenGlitchSecondsLeft - context.deltaTime, 0.0f);

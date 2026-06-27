@@ -19,7 +19,7 @@ void System::Render::LightFlickering::Update(const SystemContext& context)
     for (auto [entity, source] : view.each())
     {
         constexpr auto FLICKER_DELAY_RANGE = Nc::Vector2f(0.1f, 0.18f);
-        constexpr float SMOOTH_SPEED = 2.9;
+        constexpr float SMOOTH_SPEED = 2.9f;
         constexpr float AMBIENT_RANGE = 0.12f;
 
         if (!source.flickers) continue;

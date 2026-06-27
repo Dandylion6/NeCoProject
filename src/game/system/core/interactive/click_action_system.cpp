@@ -59,9 +59,7 @@ void System::Action::Click::UpdateSceneButtons(
         switch (state)
         {
         case None: break;
-        case JustClicked:
-            button.state = Component::Action::Click::Inactive;
-            button.justClicked = true;
+        case JustClicked: button.justClicked = true;
             break;
         case IsHeld:
             Nc::Cursor::AssignIfHigherPriority(context.game.cursor, Nc::Cursor::Clicked);

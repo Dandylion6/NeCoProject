@@ -29,7 +29,7 @@ entt::entity Entity::MoveTransition::Create(const SceneContext& sceneContext, co
 
 	//Transition down
 	Nc::Tween& tweenDown = collection.tweens.at(Tag::MoveTransition::TransitionDown);
-	Nc::Tween::Build(tweenDown, &transform.origin.y, 1.0f, 0.0f, 0.4, SineInOut, 0.2f);
+	Nc::Tween::Build(tweenDown, &transform.origin.y, 1.0f, 0.0f, 0.4f, SineInOut, 0.2f);
 
 	//Transition up
 	Nc::Tween& tweenUp = collection.tweens.at(Tag::MoveTransition::TransitionUp);

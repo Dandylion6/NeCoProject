@@ -66,6 +66,11 @@ public:
 	 */
 	const Music& GetMusic(const std::string& filePath) noexcept(false);
 
+    /**
+     * @brief Unloads everything that has been stored.
+     */
+    void OnShutdown() noexcept(false);
+
 private:
 	// ------ Members ------
 	std::unordered_map<std::string, Texture2D> textureStore { };

@@ -30,9 +30,11 @@ struct Radar final
 	float nextGlitchSpawnSeconds = 0.0f;
 	float lastGlitchTime = 0.0f;
 	float breakdownCheckTimer = 0.0f;
+    float turningOffSecondsLeft = 0.0f;
 	uint8_t glitchCount = 0u;
 	bool isRecalibrating = false;
     bool screenGlitchReversed = false;
+    bool isTurningOff = false;
 
 
 	// ------ Constructors ------
