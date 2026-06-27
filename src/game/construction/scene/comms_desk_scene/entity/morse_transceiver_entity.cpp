@@ -2,8 +2,6 @@
 
 #include "raylib.h"
 #include "core/data/vector2.hpp"
-#include "core/math/vector_math.hpp"
-#include "core/runtime/render_context.hpp"
 #include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"

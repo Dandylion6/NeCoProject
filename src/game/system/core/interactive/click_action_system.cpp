@@ -43,16 +43,14 @@ void System::Action::Click::UpdateSceneButtons(
     const auto view = context.registry.view<const Component::Transform, Component::Action::Click>();
     for (auto [entity, transform, button] : view.each())
     {
-        constexpr auto MARGIN = Nc::Vector2f::Scale(4.0f);
-
         if (button.state != Component::Action::Click::Active) continue;
         if (context.game.currentScene != transform.boundScene) continue;
 
         const Nc::Vector2f mousePosition = Renderer::GetWorldPosition(renderContext, GetMousePosition());
 
         auto bounds = Nc::Bounds(transform);
-        bounds.min += button.offset - MARGIN;
-        bounds.max += button.offset + MARGIN;
+        bounds.min += button.offset;
+        bounds.max += button.offset;
 
         if (!Nc::Bounds::PointInBounds(bounds, mousePosition - renderContext.cameraPosition)) continue;
 
