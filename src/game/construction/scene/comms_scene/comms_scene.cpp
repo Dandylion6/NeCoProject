@@ -18,6 +18,7 @@
 
 void Structure::CommsScene::Build(const BuildContext& context) noexcept
 {
+    constexpr char SCENE_AMBIENCE_PATH[] = "assets/audio/ambient/comms_ambience.wav";
     constexpr char SCENE_ALBEDO_PATH[] = "assets/environment/backgrounds/comms_room/comms_scene_albedo.png";
     constexpr char SCENE_NORMAL_PATH[] = "assets/environment/backgrounds/comms_room/comms_scene_normal.png";
     constexpr char SCENE_AO_PATH[] = "assets/environment/backgrounds/comms_room/comms_scene_ao.png";
@@ -60,4 +61,6 @@ void Structure::CommsScene::Build(const BuildContext& context) noexcept
         3.2f,
         LIGHT_RADIUS
     );
+
+    Entity::SceneAmbience::Create(sceneContext, SCENE_AMBIENCE_PATH, CommsRoom);
 }
