@@ -177,7 +177,7 @@ entt::entity Object::Radar::PowerButton::Create(const SceneContext& context) noe
     constexpr char BUTTON_ALBEDO_PATH[] = "assets/environment/objects/radar/crt_power_button_albedo.png";
     constexpr char BUTTON_NORMAL_PATH[] = "assets/environment/objects/radar/crt_power_button_normal.png";
     constexpr char BUTTON_AO_PATH[] = "assets/environment/objects/radar/crt_power_button_ao.png";
-    constexpr auto POSITION = Nc::Vector2f(401.0f, 438.0f);
+    constexpr auto POSITION = Nc::Vector2f(401.0f, 435.0f);
 
 	const entt::entity entity = context.registry.create();
 

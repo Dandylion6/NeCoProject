@@ -40,7 +40,8 @@ void DrawSprite(
     Nc::Vector2f position,
     Nc::Vector2f origin = Nc::Vector2f::Zero(),
     float rotation = 0.0f,
-    float scale = 1.0f
+    float scale = 1.0f,
+    Nc::RGBa tint = Nc::RGBa(WHITE)
 );
 
 void DrawSpriteLit(
@@ -49,7 +50,8 @@ void DrawSpriteLit(
 	Nc::Vector2f position,
 	Nc::Vector2f origin = Nc::Vector2f::Zero(),
 	float rotation = 0.0f,
-	float scale = 1.0f
+	float scale = 1.0f,
+	Nc::RGBa tint = Nc::RGBa(WHITE)
 );
 
 void DrawRectangle(

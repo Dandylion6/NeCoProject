@@ -25,6 +25,7 @@ void System::Radar::Buttons::Update(const SystemContext& context)
     if (click.justReleased)
     {
         sprite.scale = 1.0f;
+        sprite.tint = Nc::RGBa(WHITE);
         transform.position -= OFFSET;
         return;
     }
@@ -33,6 +34,7 @@ void System::Radar::Buttons::Update(const SystemContext& context)
 
     click.state = Component::Action::Click::Active;
     sprite.scale = 0.9f;
+    sprite.tint = Nc::RGBa(220, 220, 220);
     transform.position += OFFSET;
 
     const entt::entity radarEntity = entt::get_single<Component::Radar>(context.registry);
