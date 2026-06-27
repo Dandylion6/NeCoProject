@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-#include "core/math/interpolation.hpp"
+#include "core/math/vector_math.hpp"
 #include "core/runtime/entity_helpers.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
@@ -17,71 +17,97 @@
 
 void System::Morse::MonitorDisplay::Update(const SystemContext& context, const Settings::Morse settings)
 {
-	const float monitorScale = Object::MorseMonitor::GAUGE_SIZE.x / MorseCode::ExitTime(settings.dotSeconds);
-	UpdatePointer(context, monitorScale);
-	SetRegions(context.registry, settings, monitorScale);
+    const float monitorScale = Object::MorseMonitor::GAUGE_SIZE.y / MorseCode::ExitTime(settings.dotSeconds);
+    UpdatePointer(context, MorseCode::ExitTime(settings.dotSeconds));
+    SetRegions(context.registry, settings, monitorScale);
 }
 
 
-void System::Morse::MonitorDisplay::UpdatePointer(const SystemContext& context, const float monitorScale)
+void System::Morse::MonitorDisplay::UpdatePointer(const SystemContext& context, const float exitTime)
 {
-	constexpr float END_POSITION = Object::MorseMonitor::POSITION.x;
+    constexpr Nc::Vector2f MAX_POSITION = Object::MorseMonitor::POSITION;
+    constexpr float DOWN_ROTATION = Object::MorseMonitor::ROTATION + 90.0f;
 
-	const entt::entity entity = entt::get_single<Tag::Morse::Monitor>(context.registry);
-	auto& transform = context.registry.get<Component::Transform>(entity);
+    const entt::entity entity = entt::get_single<Tag::Morse::Monitor>(context.registry);
+    auto& transform = context.registry.get<Component::Transform>(entity);
 
-	const Component::Morse::Transceiver* result = GetTransceiver(context.registry);
-	if (result == nullptr) return;
+    const Component::Morse::Transceiver* result = GetTransceiver(context.registry);
+    if (result == nullptr) return;
 
-	const Component::Morse::Transceiver& transceiver = *result;
-	if (!transceiver.isPushed)
-	{
-		constexpr float SMOOTH_SPEED = 32.0f;
+    const Nc::Vector2f direction = Nc::Vector2f(
+        std::cos(DOWN_ROTATION * Nc::Math::DEG_TO_RAD),
+        std::sin(DOWN_ROTATION * Nc::Math::DEG_TO_RAD)
+    );
 
-		transform.position.x = Nc::Math::SmoothApproach(
-			transform.position.x,
-			END_POSITION,
-			context.deltaTime,
-			SMOOTH_SPEED
-		);
-		return;
-	}
-	transform.position.x = END_POSITION + monitorScale * transceiver.intervalSeconds;
+    const Nc::Vector2f originPosition = Nc::Vector::Round(MAX_POSITION + direction * Object::MorseMonitor::GAUGE_SIZE.y);
+
+    const Component::Morse::Transceiver& transceiver = *result;
+    if (!transceiver.isPushed)
+    {
+        constexpr float SMOOTH_SPEED = 48.0f;
+
+        transform.position = Nc::Vector::SmoothApproach(
+            transform.position,
+            originPosition,
+            context.deltaTime,
+            SMOOTH_SPEED
+        );
+        return;
+    }
+
+    const float time = transceiver.intervalSeconds / exitTime;
+    transform.position = Nc::Vector::Lerp(originPosition, MAX_POSITION, time);
 }
 
 
 const Component::Morse::Transceiver* System::Morse::MonitorDisplay::GetTransceiver(entt::registry& registry)
 {
-	const entt::entity entity = entt::get_single<Component::Morse::Transceiver>(registry);
-	if (entity == entt::null) return nullptr;
-	return &registry.get<Component::Morse::Transceiver>(entity);
+    const entt::entity entity = entt::get_single<Component::Morse::Transceiver>(registry);
+    if (entity == entt::null) return nullptr;
+    return &registry.get<Component::Morse::Transceiver>(entity);
 }
 
 
 void System::Morse::MonitorDisplay::SetRegions(
-	entt::registry& registry,
-	const Settings::Morse settings,
-	const float monitorScale
+    entt::registry& registry,
+    const Settings::Morse settings,
+    const float monitorScale
 )
 {
-	const float marginWidth = MorseCode::ErrorMargin(settings.dotSeconds) * monitorScale;
+    constexpr float DOWN_ROTATION = Object::MorseMonitor::ROTATION + 90.0f;
+    constexpr Nc::Vector2f ORIGIN = Object::MorseMonitor::POSITION;
+    constexpr float X_OFFSET = Object::MorseMonitor::GAUGE_SIZE.x * 0.5f;
 
-	const auto view = registry.view<Component::Morse::MonitorRegion, Component::Transform>();
-	for (auto [entity, region, transform] : view.each())
-	{
-		float pulseTime = 0.0f;
-		switch (region.region)
-		{
-		case Component::Morse::MonitorRegion::Dot:
-			pulseTime = settings.dotSeconds;
-			break;
-		case Component::Morse::MonitorRegion::Dash:
-			pulseTime = MorseCode::DashTime(settings.dotSeconds);
-			break;
-		}
+    const float marginWidth = MorseCode::ErrorMargin(settings.dotSeconds) * monitorScale;
+    const Nc::Vector2f downDirection = Nc::Vector2f(
+        std::cos(DOWN_ROTATION * Nc::Math::DEG_TO_RAD),
+        std::sin(DOWN_ROTATION * Nc::Math::DEG_TO_RAD)
+    );
+    const Nc::Vector2f rightDirection = Nc::Vector2f(
+        std::cos(Object::MorseMonitor::ROTATION * Nc::Math::DEG_TO_RAD),
+        std::sin(Object::MorseMonitor::ROTATION * Nc::Math::DEG_TO_RAD)
+    );
 
-		transform.offset.x = std::roundf(marginWidth);
-		transform.position.x = std::roundf(Object::MorseMonitor::POSITION.x + pulseTime * monitorScale);
-		transform.size.x = std::roundf(marginWidth * 2.0f);
-	}
+
+    const auto view = registry.view<Component::Morse::MonitorRegion, Component::Transform>();
+    for (auto [entity, region, transform] : view.each())
+    {
+        float pulseTime = 0.0f;
+        switch (region.region)
+        {
+        case Component::Morse::MonitorRegion::Dot:
+            pulseTime = settings.dotSeconds;
+            break;
+        case Component::Morse::MonitorRegion::Dash:
+            pulseTime = MorseCode::DashTime(settings.dotSeconds);
+            break;
+        }
+
+        Nc::Vector2f position = ORIGIN + downDirection * monitorScale * pulseTime;
+        position += rightDirection * X_OFFSET;
+
+        transform.offset.y = std::roundf(marginWidth);
+        transform.size.y = std::roundf(marginWidth * 2.0f);
+        transform.position = Nc::Vector::Round(position);
+    }
 }

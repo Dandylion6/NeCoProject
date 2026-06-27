@@ -2,11 +2,12 @@
 
 #include "core/data/color.hpp"
 #include "core/data/vector2.hpp"
+#include "core/math/vector_math.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
 #include "game/component/core/rendering/rectangle_component.hpp"
-#include "../../../../../../include/game/component/scene/comms_desk_scene/morse_components.hpp"
+#include "game/component/scene/comms_desk_scene/morse_components.hpp"
 #include "game/state/scene.hpp"
 #include "game/tag/scene/comms_scene/morse_monitor_tag.hpp"
 
@@ -24,11 +25,10 @@ void Object::MorseMonitor::Create(const SceneContext& context) noexcept
 entt::entity Object::MorseMonitor::Gauge::Create(const SceneContext& context) noexcept
 {
 	constexpr auto COLOR = Nc::Hex(0xbbc4bbff);
-	constexpr Nc::Vector2f OFFSET = Nc::Vector2f::Up(GAUGE_SIZE.y * 0.5f);
 
 	const entt::entity entity = context.registry.create();
 
-	context.registry.emplace<Component::Transform>(entity, CommsDesk, POSITION, GAUGE_SIZE, OFFSET);
+	context.registry.emplace<Component::Transform>(entity, CommsDesk, POSITION, GAUGE_SIZE, Nc::Vector2f::Zero(), 1, ROTATION);
 	context.registry.emplace<Component::Rectangle>(entity, COLOR);
 
 	return entity;
@@ -37,15 +37,15 @@ entt::entity Object::MorseMonitor::Gauge::Create(const SceneContext& context) no
 
 entt::entity Object::MorseMonitor::Pointer::Create(const SceneContext& context) noexcept
 {
-	constexpr Nc::Vector2f POINTER_SIZE = Nc::Vector2f(4.0f, 8.0f);
-	constexpr Nc::Vector2f OFFSET = Nc::Vector2f::Up(4.0f) + POINTER_SIZE * 0.5f;
+	constexpr Nc::Vector2f POINTER_SIZE = Nc::Vector2f(8.0f, 2.0f);
+	constexpr Nc::Vector2f OFFSET = POINTER_SIZE * 0.5f;
 	constexpr auto COLOR = Nc::Hex(0xeb4f44ff);
 
 	const entt::entity entity = context.registry.create();
 
 	context.registry.emplace<Tag::Morse::Monitor>(entity);
 
-	context.registry.emplace<Component::Transform>(entity, CommsDesk, POSITION, POINTER_SIZE, OFFSET);
+	context.registry.emplace<Component::Transform>(entity, CommsDesk, POSITION, POINTER_SIZE, OFFSET, 3, ROTATION);
 	context.registry.emplace<Component::Rectangle>(entity, COLOR);
 
 	return entity;
@@ -57,8 +57,9 @@ entt::entity Object::MorseMonitor::Region::Create(
 	Component::Morse::MonitorRegion::Region region
 ) noexcept
 {
-	constexpr Nc::Vector2f REGION_SIZE = Nc::Vector2f::Up(GAUGE_SIZE.y - 2.0f);
-	constexpr auto COLOR = Nc::Hex(0x18232eff);
+	constexpr Nc::Vector2f REGION_SIZE = Nc::Vector2f::Right(GAUGE_SIZE.x - MARGIN_WIDTH * 2.0f);
+    //Nc::Hex(0x18232eff)
+	constexpr auto COLOR = Nc::Hex(WHITE);
 
 	const entt::entity entity = context.registry.create();
 
@@ -67,7 +68,9 @@ entt::entity Object::MorseMonitor::Region::Create(
 		CommsDesk,
 		POSITION,
 		REGION_SIZE,
-		REGION_SIZE * 0.5f
+		REGION_SIZE * 0.5f,
+		2,
+		ROTATION
 	);
 
 	context.registry.emplace<Component::Rectangle>(entity, COLOR);

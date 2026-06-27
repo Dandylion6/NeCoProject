@@ -16,7 +16,7 @@
 entt::entity Entity::Note::Create(const SceneContext& context) noexcept
 {
 	constexpr char NOTE_TEXTURE_PATH[] = "assets/environment/objects/note/page_0.png";
-	constexpr Nc::Vector2f POSITION = Nc::Vector2f(Nc::RENDER_RESOLUTION) * 0.5f;
+	constexpr Nc::Vector2f POSITION = Nc::Vector2f(695.0f, 520.0f);
 
 	const entt::entity entity = context.registry.create();
 
@@ -26,7 +26,7 @@ entt::entity Entity::Note::Create(const SceneContext& context) noexcept
 	context.registry.emplace<Component::Sprite>(entity, texture);
 
 	auto size = Nc::Vector2f(texture.width, texture.height);
-	context.registry.emplace<Component::Transform>(entity, CommsDesk, POSITION, size, size * 0.5f);
+	context.registry.emplace<Component::Transform>(entity, CommsDesk, POSITION, size, size * 0.5f, 1, 3.0f);
 
 	return entity;
 }

@@ -1,10 +1,12 @@
 #pragma once
 #include <array>
+#include <cmath>
 
 #include "core/data/vector2.hpp"
 #include "entt/entity/entity.hpp"
 #include "entt/entity/fwd.hpp"
 #include "../../../../component/scene/comms_desk_scene/morse_components.hpp"
+#include "core/math/nc_math.hpp"
 #include  "game/contexts/scene_context.hpp"
 
 
@@ -31,8 +33,10 @@ public:
 
 	// ------ Members ------
 
-	static constexpr Nc::Vector2f GAUGE_SIZE = Nc::Vector2f(128.0f, 10.0f);
-	static constexpr Nc::Vector2f POSITION = Nc::Vector2f(360.0f, 100.0f);
+	static constexpr Nc::Vector2f GAUGE_SIZE = Nc::Vector2f(8.0f, 74.0f);
+	static constexpr Nc::Vector2f POSITION = Nc::Vector2f(440.0f, 60.0f);
+    static constexpr float MARGIN_WIDTH = 1.0f;
+    static constexpr float ROTATION = -8.0f;
 
 
 	// ------ Functions ------
