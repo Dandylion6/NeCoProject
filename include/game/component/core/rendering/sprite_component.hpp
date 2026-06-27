@@ -31,6 +31,9 @@ struct Sprite final
     // ------ Constructors ------
 
 
+    explicit Sprite() = default;
+
+
     explicit Sprite(const Texture2D& albedo, const float alpha = 1.0f) noexcept
         : albedo(albedo), alpha(alpha)
     {

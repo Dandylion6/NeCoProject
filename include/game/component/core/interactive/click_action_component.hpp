@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <cstdint>
 
+#include "core/data/vector2.hpp"
+
 
 namespace Component::Action
 {
@@ -25,28 +27,34 @@ namespace Component::Action
  */
 struct Click final
 {
-	// ------ Types ------
-	enum State : uint8_t
-	{
-		Active,
-		Inactive,
-		Disabled,
-	};
+    // ------ Types ------
+    enum State : uint8_t
+    {
+        Active,
+        Inactive,
+        Disabled,
+    };
 
 
-	// ------ Members ------
+    // ------ Members ------
 
-	uint16_t id = 0;
-	State state = Active;
-	bool justClicked = false;
+    Nc::Vector2f offset = Nc::Vector2f::Zero();
+    uint16_t id = 0;
+    State state = Active;
+    bool justClicked = false;
     bool justReleased = false;
     bool isHeld = false;
 
 
-	// ------ Constructors ------
+    // ------ Constructors ------
 
-	constexpr Click() noexcept = default;
-	constexpr explicit Click(const int16_t id) noexcept : id(id) {}
+    constexpr Click() noexcept = default;
+    constexpr explicit Click(const Nc::Vector2f offset) noexcept : offset(offset) {}
+
+
+    constexpr explicit Click(
+        const int16_t id,
+        const Nc::Vector2f offset = Nc::Vector2f::Zero()
+    ) noexcept : offset(offset), id(id) {}
 };
-
 }

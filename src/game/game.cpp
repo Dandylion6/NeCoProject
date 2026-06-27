@@ -33,6 +33,7 @@
 #include "game/system/core/rendering/rendering_system.hpp"
 #include "game/system/core/rendering/lighting/lighting_system.hpp"
 #include "game/system/core/rendering/lighting/light_flickering_system.hpp"
+#include "game/system/scene/comms_desk_scene/morse_code/morse_handle_system.hpp"
 #include "game/system/scene/comms_desk_scene/morse_code/morse_input_system.hpp"
 #include "game/system/scene/comms_desk_scene/morse_code/morse_monitor_display_system.hpp"
 #include "game/system/scene/comms_desk_scene/morse_code/morse_recording_system.hpp"
@@ -379,6 +380,7 @@ void Game::UpdateSystems(float deltaTime)
     System::Audio::Emitter::Update(context);
 
     System::Morse::Input::Update(context, anomalyState);
+    System::Morse::Handle::Update(context);
 	System::Morse::Recording::Update(context, settings.morseSettings);
 	System::Morse::MonitorDisplay::Update(context, settings.morseSettings);
 	System::Morse::Tone::Update(context);

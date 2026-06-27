@@ -51,8 +51,8 @@ void System::Action::Click::UpdateSceneButtons(
         const Nc::Vector2f mousePosition = Renderer::GetWorldPosition(renderContext, GetMousePosition());
 
         auto bounds = Nc::Bounds(transform);
-        bounds.min -= MARGIN;
-        bounds.max += MARGIN;
+        bounds.min += button.offset - MARGIN;
+        bounds.max += button.offset + MARGIN;
 
         if (!Nc::Bounds::PointInBounds(bounds, mousePosition - renderContext.cameraPosition)) continue;
 

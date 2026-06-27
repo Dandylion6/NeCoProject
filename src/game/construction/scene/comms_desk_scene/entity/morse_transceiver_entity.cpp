@@ -12,7 +12,7 @@
 #include "game/component/core/audio/audio_emitter_component.hpp"
 #include "game/component/core/interactive/click_action_component.hpp"
 #include "game/component/core/interactive/input_component.hpp"
-#include "game/component/core/rendering/rectangle_component.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
 #include "game/component/scene/comms_desk_scene/morse_components.hpp"
 #include "game/contexts/scene_context.hpp"
 #include "game/state/scene.hpp"
@@ -21,21 +21,26 @@
 
 entt::entity Entity::MorseTransceiver::Create(const SceneContext& context) noexcept
 {
-    constexpr Nc::Vector2f POSITION = Nc::Vector::Modulate(
-        Nc::Vector2f(0.2f, 0.4f),
-        Nc::Vector2f(Nc::RENDER_RESOLUTION)
-    );
     constexpr char MORSE_TONE_PATH[] = "assets/audio/object/morse_tone.wav";
-    constexpr Nc::Vector2f SIZE = Nc::Vector2f::Scale(16.0f);
+    constexpr char HANDLE_ALBEDO_PATH[] = "assets/environment/objects/morse_transmitter/morse_handle/morse_handle_albedo.png";
+    constexpr char HANDLE_NORMAL_PATH[] = "assets/environment/objects/morse_transmitter/morse_handle/morse_handle_normal.png";
+    constexpr char HANDLE_AO_PATH[] = "assets/environment/objects/morse_transmitter/morse_handle/morse_handle_ao.png";
+    constexpr auto SIZE = Nc::Vector2f::Scale(48.0f);
+    constexpr auto OFFSET = Nc::Vector2f(0.0f, 143.0f);
 
     const entt::entity entity = context.registry.create();
 
     context.registry.emplace<Component::Morse::Transceiver>(entity);
+
+    const Texture2D& albedoTexture = context.store.GetTexture(HANDLE_ALBEDO_PATH);
+    const Texture2D& normalTexture = context.store.GetTexture(HANDLE_NORMAL_PATH);
+    const Texture2D& aoTexture = context.store.GetTexture(HANDLE_AO_PATH);
+
+    context.registry.emplace<Component::Sprite>(entity, albedoTexture, normalTexture, aoTexture);
+
     context.registry.emplace<Component::Transform>(entity, CommsDesk, POSITION, SIZE);
     context.registry.emplace<Component::Action::Input>(entity, KEY_SPACE);
-
-    context.registry.emplace<Component::Action::Click>(entity);
-    context.registry.emplace<Component::Rectangle>(entity, Nc::RGBa(BLUE));
+    context.registry.emplace<Component::Action::Click>(entity, OFFSET);
 
     const Music& morseTone = context.store.GetMusic(MORSE_TONE_PATH);
     context.registry.emplace<Component::LoopedAudio>(entity, morseTone);
