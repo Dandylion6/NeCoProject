@@ -1,12 +1,10 @@
 #pragma once
 #include <array>
-#include <cmath>
 
 #include "core/data/vector2.hpp"
 #include "entt/entity/entity.hpp"
 #include "entt/entity/fwd.hpp"
-#include "../../../../component/scene/comms_desk_scene/morse_components.hpp"
-#include "core/math/nc_math.hpp"
+#include "game/component/scene/comms_desk_scene/morse_components.hpp"
 #include  "game/contexts/scene_context.hpp"
 
 

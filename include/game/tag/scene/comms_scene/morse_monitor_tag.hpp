@@ -3,5 +3,5 @@
 
 namespace Tag::Morse
 {
-	struct Monitor { };
+	struct Gauge { };
 }

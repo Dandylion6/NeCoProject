@@ -2,79 +2,32 @@
 
 #include "core/data/color.hpp"
 #include "core/data/vector2.hpp"
-#include "core/math/vector_math.hpp"
+#include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
-#include "game/component/core/rendering/rectangle_component.hpp"
-#include "game/component/scene/comms_desk_scene/morse_components.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
 #include "game/state/scene.hpp"
 #include "game/tag/scene/comms_scene/morse_monitor_tag.hpp"
 
 
 void Object::MorseMonitor::Create(const SceneContext& context) noexcept
 {
-	// TODO: Add visuals.
-	Pointer::Create(context);
-	Region::Create(context, Component::Morse::MonitorRegion::Dot);
-	Region::Create(context, Component::Morse::MonitorRegion::Dash);
-	Gauge::Create(context);
-}
+    constexpr auto POSITION = Nc::Vector2f(284.0f, 135.0f);
+    constexpr auto OFFSET = Nc::Vector2f(25.0f, 68.0f);
+    constexpr char GAUGE_ALBEDO_PATH[] = "assets/environment/objects/morse_transmitter/morse_timing_knob/morse_transmission_gauge_albedo.png";
+    constexpr char GAUGE_NORMAL_PATH[] = "assets/environment/objects/morse_transmitter/morse_timing_knob/morse_transmission_gauge_normal.png";
+    constexpr char GAUGE_AO_PATH[] = "assets/environment/objects/morse_transmitter/morse_timing_knob/morse_transmission_gauge_ao.png";
 
+    const entt::entity entity = context.registry.create();
 
-entt::entity Object::MorseMonitor::Gauge::Create(const SceneContext& context) noexcept
-{
-	constexpr auto COLOR = Nc::Hex(0xbbc4bbff);
+    context.registry.emplace<Tag::Morse::Gauge>(entity);
 
-	const entt::entity entity = context.registry.create();
+    const Texture2D& albedoTexture = context.store.GetTexture(GAUGE_ALBEDO_PATH);
+    const Texture2D& normalTexture = context.store.GetTexture(GAUGE_NORMAL_PATH);
+    const Texture2D& aoTexture = context.store.GetTexture(GAUGE_AO_PATH);
+    context.registry.emplace<Component::Sprite>(entity, albedoTexture, normalTexture, aoTexture);
 
-	context.registry.emplace<Component::Transform>(entity, CommsDesk, POSITION, GAUGE_SIZE, Nc::Vector2f::Zero(), 1, ROTATION);
-	context.registry.emplace<Component::Rectangle>(entity, COLOR);
-
-	return entity;
-}
-
-
-entt::entity Object::MorseMonitor::Pointer::Create(const SceneContext& context) noexcept
-{
-	constexpr Nc::Vector2f POINTER_SIZE = Nc::Vector2f(8.0f, 2.0f);
-	constexpr Nc::Vector2f OFFSET = POINTER_SIZE * 0.5f;
-	constexpr auto COLOR = Nc::Hex(0xeb4f44ff);
-
-	const entt::entity entity = context.registry.create();
-
-	context.registry.emplace<Tag::Morse::Monitor>(entity);
-
-	context.registry.emplace<Component::Transform>(entity, CommsDesk, POSITION, POINTER_SIZE, OFFSET, 3, ROTATION);
-	context.registry.emplace<Component::Rectangle>(entity, COLOR);
-
-	return entity;
-}
-
-
-entt::entity Object::MorseMonitor::Region::Create(
-	const SceneContext& context,
-	Component::Morse::MonitorRegion::Region region
-) noexcept
-{
-	constexpr Nc::Vector2f REGION_SIZE = Nc::Vector2f::Right(GAUGE_SIZE.x - MARGIN_WIDTH * 2.0f);
-    //Nc::Hex(0x18232eff)
-	constexpr auto COLOR = Nc::Hex(WHITE);
-
-	const entt::entity entity = context.registry.create();
-
-	context.registry.emplace<Component::Transform>(
-		entity,
-		CommsDesk,
-		POSITION,
-		REGION_SIZE,
-		REGION_SIZE * 0.5f,
-		2,
-		ROTATION
-	);
-
-	context.registry.emplace<Component::Rectangle>(entity, COLOR);
-	context.registry.emplace<Component::Morse::MonitorRegion>(entity, region);
-
-	return entity;
+    const auto size = Nc::Vector2f(albedoTexture.width, normalTexture.height);
+    context.registry.emplace<Component::Transform>(entity, CommsDesk, POSITION, size, OFFSET);
 }
