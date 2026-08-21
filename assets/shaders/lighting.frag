@@ -14,13 +14,51 @@ uniform sampler2D ao;
 
 #define MAX_LIGHT_SOURCES 8
 uniform int lightPointCount;
-uniform vec3 lightPosition[MAX_LIGHT_SOURCES];
-uniform vec4 lightColor[MAX_LIGHT_SOURCES];
-uniform float lightRange[MAX_LIGHT_SOURCES];
-uniform float lightStrength[MAX_LIGHT_SOURCES];
+uniform vec3 lightPositions[MAX_LIGHT_SOURCES];
+uniform vec4 lightColors[MAX_LIGHT_SOURCES];
+uniform float lightRanges[MAX_LIGHT_SOURCES];
+uniform float lightStrengths[MAX_LIGHT_SOURCES];
 uniform int lightTypes[MAX_LIGHT_SOURCES];
 uniform vec2 lightDirections[MAX_LIGHT_SOURCES];
 uniform float lightAngles[MAX_LIGHT_SOURCES];
+
+
+vec3 convertNormalMap(vec4 normalColor)
+{
+    return normalize(normalColor.rgb * 2.0 - 1.0);
+}
+
+
+float calculateAttentuation(float distance, float radius)
+{
+    float factor = distance / radius;
+    float attenuation = clamp(1.0 - factor * factor, 0.0, 1.0);
+    return attenuation * attenuation;
+}
+
+
+vec3 calculatePointLight(int light, vec3 pixelPosition, vec3 normalVector)
+{
+    vec3 lightPosition = vec3(lightPositions[light]);
+    vec3 lightColor = lightColors[light].rgb;
+    float lightStrength = lightStrengths[light];
+    float lightRange = lightRanges[light];
+
+    vec3 toLightDirection = normalize(lightPosition - pixelPosition);
+    float diffuseReflectance = dot(normalVector, toLightDirection);
+
+    float distance = length(lightPosition - pixelPosition);
+    float attenuation = calculateAttentuation(distance, lightRange);
+
+    float intensity = lightStrength * attenuation;
+    return lightColor * diffuseReflectance * intensity;
+}
+
+
+float calculateBrightness(vec3 color)
+{
+    return (max(max(color.r, color.g), color.b) + min(min(color.r, color.g), color.b)) * 0.5;
+}
 
 
 void main()
@@ -29,34 +67,25 @@ void main()
     vec4 normalsColor = texture(normals, fragTexCoord);
     vec4 aoColor = texture(ao, fragTexCoord);
 
-    vec3 normalVector = normalize(normalsColor.rgb * 2.0 - 1.0);
+    vec3 normalVector = convertNormalMap(normalsColor);
 
-    vec3 diffuse = vec3(0.3);
     vec2 pixelPosition = gl_FragCoord.xy;
+    vec3 pixelPos3D = vec3(pixelPosition, 0.0);
+
+    vec3 ambient = vec3(0.02, 0.13, 0.19);
+    vec3 diffuse = ambient;
 
     for (int i = 0; i < lightPointCount; i++)
     {
-        vec3 lightPos3D = vec3(lightPosition[i]);
-        vec3 pixelPos3D = vec3(pixelPosition, 0.0);
-        vec3 dirToLight = normalize(lightPos3D - pixelPos3D);
-
-        // Standard Lambertian Lighting
-        float diffuseReflectance = dot(normalVector, dirToLight);
-
-        // Attenuation: Smoother, more realistic decay
-        float distance = length(lightPos3D - pixelPos3D);
-        float d = distance / lightRange[i];
-        float attenuation = 1.0 / (1.0 + 2.0*d + 10.0*d*d);
-
-        // Mask the attenuation so it hits 0 at the light's range
-        attenuation *= smoothstep(1.0, 0.8, d);
-
-        vec3 intensity = lightColor[i].rgb * lightStrength[i] * attenuation;
-        diffuse += intensity * diffuseReflectance;
+        diffuse += calculatePointLight(i, pixelPos3D, normalVector);
     }
 
-    // Final composition
-    vec3 occlusion = aoColor.rgb * 0.6 + 0.4;
-    vec3 finalColor = albedoColor.rgb * diffuse * occlusion;
+    float occlusion = 1.0 - calculateBrightness(aoColor.rgb);
+    occlusion = 1.0 - pow(occlusion, 1.6);
+
+    diffuse *= occlusion;
+    diffuse = mix(ambient, diffuse, calculateBrightness(diffuse));
+
+    vec3 finalColor = albedoColor.rgb * diffuse;
     outColor = vec4(finalColor, albedoColor.a);
 }

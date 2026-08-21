@@ -15,7 +15,7 @@ namespace Component::UI
  * registry.emplace<Component::UI::IncrementButton>(entity, Component::UI::IncrementButton::Increase);
  * @endcode
  */
-struct IncrementButton
+struct IncrementButton final
 {
     // ------ Types ------
     enum Type : uint8_t

@@ -5,7 +5,7 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
-#include "game/component/core/rendering/lighting/light_source_component.hpp"
+#include "game/component/core/rendering/lighting/point_light_component.hpp"
 #include "game/state/scene.hpp"
 
 

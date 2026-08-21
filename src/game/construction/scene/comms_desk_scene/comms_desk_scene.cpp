@@ -24,10 +24,10 @@ void Structure::DeskScene::Build(const BuildContext& context) noexcept
 
     constexpr auto LIGHT_COLOR = Nc::Hex(0xfee8c8ff);
     constexpr Nc::Vector2f LIGHT_POSITION = Nc::Vector::Modulate(
-        Nc::Vector2f(0.5f, 0.48f),
+        Nc::Vector2f(0.5f, 0.6f),
         Nc::Vector2f(Nc::RENDER_RESOLUTION)
     );
-    constexpr float LIGHT_RADIUS = 800.0f;
+    constexpr float LIGHT_RADIUS = 1100.0f;
     constexpr float MOVE_TIME = 0.16f;
 
     const SceneContext sceneContext = SceneContext(context.registry, context.store, context.game);
@@ -51,9 +51,9 @@ void Structure::DeskScene::Build(const BuildContext& context) noexcept
         context.registry,
         CommsDesk,
         LIGHT_POSITION,
-        400.0f,
+        430.0f,
         Nc::RGBa(LIGHT_COLOR),
-        3.2f,
+        1.8f,
         LIGHT_RADIUS
     );
 }

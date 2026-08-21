@@ -25,11 +25,11 @@ void Structure::CommsScene::Build(const BuildContext& context) noexcept
 
     constexpr auto LIGHT_COLOR = Nc::Hex(0xfff3c9ff);
     constexpr Nc::Vector2f LIGHT_POSITION = Nc::Vector::Modulate(
-        Nc::Vector2f(0.5f, 1.2f),
+        Nc::Vector2f(0.6f, 1.3f),
         Nc::Vector2f(Nc::RENDER_RESOLUTION)
     );
-    constexpr float LIGHT_DISTANCE = 150.0f;
-    constexpr float LIGHT_RADIUS = 1400.0f;
+    constexpr float LIGHT_DISTANCE = 280.0f;
+    constexpr float LIGHT_RADIUS = 1320.0f;
 
     const auto sceneContext = SceneContext(context.registry, context.store, context.game);
 
@@ -58,7 +58,7 @@ void Structure::CommsScene::Build(const BuildContext& context) noexcept
         LIGHT_POSITION,
         LIGHT_DISTANCE,
         Nc::RGBa(LIGHT_COLOR),
-        3.2f,
+        2.1f,
         LIGHT_RADIUS
     );
 

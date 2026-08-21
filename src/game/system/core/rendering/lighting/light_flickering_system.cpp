@@ -3,7 +3,7 @@
 #include "core/math/interpolation.hpp"
 #include "core/math/random.hpp"
 #include "entt/entity/registry.hpp"
-#include "game/component/core/rendering/lighting/light_source_component.hpp"
+#include "game/component/core/rendering/lighting/point_light_component.hpp"
 #include "game/contexts/system_context.hpp"
 
 

@@ -11,7 +11,7 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
-#include "game/component/core/rendering/lighting/light_source_component.hpp"
+#include "game/component/core/rendering/lighting/point_light_component.hpp"
 #include "game/contexts/system_context.hpp"
 #include "game/state/game_state.hpp"
 
@@ -21,10 +21,10 @@ void System::Render::Lighting::Initialize(Nc::LightingContext& context, Nc::Reso
     const Shader& shader = resourceStore.GetShader("assets/shaders/lighting.frag");
 
     context.lightPointCount = GetShaderLocation(shader, "lightPointCount");
-    context.lightPositionLocation = GetShaderLocation(shader, "lightPosition[0]");
-    context.lightColorLocation = GetShaderLocation(shader, "lightColor[0]");
-    context.lightRangeLocation = GetShaderLocation(shader, "lightRange[0]");
-    context.lightStrengthLocation = GetShaderLocation(shader, "lightStrength[0]");
+    context.lightPositionLocation = GetShaderLocation(shader, "lightPositions[0]");
+    context.lightColorLocation = GetShaderLocation(shader, "lightColors[0]");
+    context.lightRangeLocation = GetShaderLocation(shader, "lightRanges[0]");
+    context.lightStrengthLocation = GetShaderLocation(shader, "lightStrengths[0]");
 }
 
 
