@@ -54,9 +54,37 @@ inline Vector2f Remap(const Vector2f from, const Vector2f to, const Vector2f pos
 }
 
 
-/** 
+/**
+ * @brief Computes the component-wise inverse linear interpolation of a position between two points.
+ *
+ * For each axis (x and y) independently, calculates how far @p position lies between
+ * @p from and @p to, expressed as a fraction. This is the inverse of Lerp: given a value
+ * produced by lerping between @p from and @p to, this recovers the original interpolation factor.
+ *
+ * @param from     The reference point corresponding to a result of 0.0 on each axis.
+ * @param to       The reference point corresponding to a result of 1.0 on each axis.
+ * @param position The point to evaluate against the [from, to] range on each axis.
+ *
+ * @return A Vector2f where each component is the interpolation factor for that axis.
+ *         Values outside [0, 1] mean @p position lies outside the [from, to] range on that axis.
+ *
+ * @note If @c from.x == @c to.x (or likewise for y), that component's result depends on how
+ *       Math::InverseLerp handles division by zero.
+ *
+ * @see Math::InverseLerp
+ */
+inline Vector2f InverseLerp(const Vector2f from, const Vector2f to, const Vector2f position) noexcept
+{
+    return {
+        Math::InverseLerp(from.x, to.x, position.x),
+        Math::InverseLerp(from.y, to.y, position.y)
+    };
+}
+
+
+/**
  * @brief Linearly interpolates between two vectors.
- * 
+ *
  * @param start Start vector.
  * @param end End vector.
  * @param time Interpolation factor in range [0, 1].

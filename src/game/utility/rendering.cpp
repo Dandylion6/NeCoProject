@@ -4,6 +4,7 @@
 #include "rlgl.h"
 #include "core/data/color.hpp"
 #include "core/data/vector2.hpp"
+#include "core/math/nc_math.hpp"
 #include "core/math/vector_math.hpp"
 #include "core/runtime/render_context.hpp"
 #include "core/runtime/resource_store.hpp"
@@ -51,6 +52,9 @@ void Renderer::DrawSpriteLit(
 
     SetShaderValueTexture(lightShader, GetShaderLocation(lightShader, "normals"), sprite.normals);
     SetShaderValueTexture(lightShader, GetShaderLocation(lightShader, "ao"), sprite.ambientOcclusion);
+
+    const float rotationAngle = rotation * Nc::Math::DEG_TO_RAD;
+    SetShaderValue(lightShader, GetShaderLocation(lightShader, "uRotation"), &rotationAngle, RL_SHADER_UNIFORM_FLOAT);
 
     DrawSprite(sprite, position, origin, rotation, scale, tint);
 

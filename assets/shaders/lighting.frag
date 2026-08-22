@@ -10,6 +10,7 @@ out vec4 outColor;
 uniform sampler2D albedo;
 uniform sampler2D normals;
 uniform sampler2D ao;
+uniform float uRotation;
 
 
 #define MAX_LIGHT_SOURCES 8
@@ -45,7 +46,7 @@ vec3 calculatePointLight(int light, vec3 pixelPosition, vec3 normalVector)
     float lightRange = lightRanges[light];
 
     vec3 toLightDirection = normalize(lightPosition - pixelPosition);
-    float diffuseReflectance = dot(normalVector, toLightDirection);
+    float diffuseReflectance = max(dot(normalVector, toLightDirection), 0.0);
 
     float distance = length(lightPosition - pixelPosition);
     float attenuation = calculateAttentuation(distance, lightRange);
@@ -58,6 +59,20 @@ vec3 calculatePointLight(int light, vec3 pixelPosition, vec3 normalVector)
 float calculateBrightness(vec3 color)
 {
     return (max(max(color.r, color.g), color.b) + min(min(color.r, color.g), color.b)) * 0.5;
+}
+
+
+vec3 calculateWorldSpaceNormals(vec3 normal)
+{
+    float s = sin(uRotation);
+    float c = cos(uRotation);
+
+    vec2 rotatedXY = vec2(
+            normal.x * c + normal.y * s,
+            -normal.x * s + normal.y * c
+    );
+
+    return normalize(vec3(rotatedXY, normal.z));
 }
 
 

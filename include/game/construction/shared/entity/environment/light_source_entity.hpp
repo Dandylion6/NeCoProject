@@ -18,7 +18,8 @@ public:
         float zPosition,
         Nc::RGBa color,
         float strength,
-        float range
+        float range,
+        float flickerStrength = 0.1f
     ) noexcept;
 };
 

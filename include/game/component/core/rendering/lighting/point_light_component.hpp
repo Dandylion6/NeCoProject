@@ -37,7 +37,11 @@ struct Point final
     float currentStrength = strength;
     float targetStrength = strength;
     float flickerSecondsLeft = 0.0f;
-    bool flickers = true;
+
+    /**
+     * Determines the aggressiveness of the flickering; a value of <c>0.0f</c> will disable the effect.
+     */
+    float flickerStrength = 0.1f;
 
 
     // ------ Constructors ------
@@ -48,10 +52,10 @@ struct Point final
         const float zPosition,
         const float range,
         const float strength,
-        const bool flickers = true
+        const float flickerStrength = 0.1f
     ) noexcept :
         color(color), zPosition(zPosition), range(range), strength(strength), currentStrength(strength),
-        flickers(flickers) {}
+        flickerStrength(flickerStrength) {}
 };
 
 }

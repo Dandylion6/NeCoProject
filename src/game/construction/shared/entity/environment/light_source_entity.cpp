@@ -16,13 +16,14 @@ entt::entity Entity::LightPoint::Create(
     const float zPosition,
     Nc::RGBa color, 
     float strength, 
-    float range
+    float range,
+    float flickerStrength
 ) noexcept
 {
     const entt::entity entity = registry.create();
 
     registry.emplace<Component::Transform>(entity, boundScene, position);
-    registry.emplace<Component::Light::Point>(entity, color, zPosition, range, strength);
+    registry.emplace<Component::Light::Point>(entity, color, zPosition, range, strength, flickerStrength);
 
     return entity;
 }
