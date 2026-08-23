@@ -56,6 +56,9 @@ void System::Morse::Recording::TryRecordPulse(Component::Morse::Transceiver& tra
 
 void System::Morse::Recording::TryTransmitCharacter(const SystemContext& context, const uint16_t decodingIndex) noexcept
 {
+    // Ignore invalid length transmission.
+    if (MorseCode::TABLE.size() <= decodingIndex) return;
+
     const char character = MorseCode::TABLE[decodingIndex];
     if (character == MorseCode::NULL_CODE) return;
 

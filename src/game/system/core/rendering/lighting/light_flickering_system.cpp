@@ -20,10 +20,10 @@ void System::Render::LightFlickering::Update(const SystemContext& context)
     const auto view = context.registry.view<Component::Light::Point>();
     for (auto [entity, source] : view.each())
     {
-        constexpr auto FLICKER_DELAY_MIN_STRENGTH_RANGE = Nc::Vector2f(0.12f, 0.32f);
-        constexpr auto FLICKER_DELAY_MAX_STRENGTH_RANGE = Nc::Vector2f(0.04f, 0.06f);
-        constexpr auto SMOOTH_SPEED_RANGE = Nc::Vector2f(1.2f, 4.8f);
-        constexpr auto LIGHT_STRENGTH_RANGE = Nc::Vector2f(0.04f, 1.2f);
+        constexpr auto FLICKER_DELAY_MIN_STRENGTH_RANGE = Nc::Vector2f(0.14f, 0.69f);
+        constexpr auto FLICKER_DELAY_MAX_STRENGTH_RANGE = Nc::Vector2f(0.04f, 0.08f);
+        constexpr auto SMOOTH_SPEED_RANGE = Nc::Vector2f(0.2f, 3.6f);
+        constexpr auto LIGHT_STRENGTH_RANGE = Nc::Vector2f(0.0f, 1.16f);
 
         source.currentStrength = Nc::Math::SmoothApproach(
             source.currentStrength,

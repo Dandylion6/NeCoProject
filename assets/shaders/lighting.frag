@@ -10,8 +10,6 @@ out vec4 outColor;
 uniform sampler2D albedo;
 uniform sampler2D normals;
 uniform sampler2D ao;
-uniform float uRotation;
-
 
 #define MAX_LIGHT_SOURCES 8
 uniform int lightPointCount;
@@ -19,9 +17,7 @@ uniform vec3 lightPositions[MAX_LIGHT_SOURCES];
 uniform vec4 lightColors[MAX_LIGHT_SOURCES];
 uniform float lightRanges[MAX_LIGHT_SOURCES];
 uniform float lightStrengths[MAX_LIGHT_SOURCES];
-uniform int lightTypes[MAX_LIGHT_SOURCES];
-uniform vec2 lightDirections[MAX_LIGHT_SOURCES];
-uniform float lightAngles[MAX_LIGHT_SOURCES];
+uniform float ambientTint;
 
 
 vec3 convertNormalMap(vec4 normalColor)
@@ -62,17 +58,15 @@ float calculateBrightness(vec3 color)
 }
 
 
-vec3 calculateWorldSpaceNormals(vec3 normal)
+float bayerDither2x2(vec2 texelCoord)
 {
-    float s = sin(uRotation);
-    float c = cos(uRotation);
+    int x = int(mod(texelCoord.x, 2.0));
+    int y = int(mod(texelCoord.y, 2.0));
+    int index = x + y * 2;
 
-    vec2 rotatedXY = vec2(
-            normal.x * c + normal.y * s,
-            -normal.x * s + normal.y * c
-    );
-
-    return normalize(vec3(rotatedXY, normal.z));
+    // thresholds 0, 2, 3, 1 normalized to 0..1
+    float bayer[4] = float[4](0.0, 0.5, 0.75, 0.25);
+    return bayer[index];
 }
 
 
@@ -87,7 +81,7 @@ void main()
     vec2 pixelPosition = gl_FragCoord.xy;
     vec3 pixelPos3D = vec3(pixelPosition, 0.0);
 
-    vec3 ambient = vec3(0.02, 0.13, 0.19);
+    vec3 ambient = vec3(0.02, 0.16, 0.21);
     vec3 diffuse = ambient;
 
     for (int i = 0; i < lightPointCount; i++)
@@ -96,10 +90,17 @@ void main()
     }
 
     float occlusion = 1.0 - calculateBrightness(aoColor.rgb);
-    occlusion = 1.0 - pow(occlusion, 1.6);
+    occlusion = 1.0 - pow(occlusion, 1.7);
 
     diffuse *= occlusion;
-    diffuse = mix(ambient, diffuse, calculateBrightness(diffuse));
+    float diffuseBrightness = calculateBrightness(diffuse);
+
+    vec2 textureSize = vec2(textureSize(albedo, 0));
+    vec2 texelCoord = floor(fragTexCoord * textureSize);
+    float ditherThreshold = bayerDither2x2(texelCoord);
+
+    diffuseBrightness = floor(diffuseBrightness * 5.0 + ditherThreshold) / 5.0;
+    diffuse = mix(ambient, diffuse, diffuseBrightness);
 
     vec3 finalColor = albedoColor.rgb * diffuse;
     outColor = vec4(finalColor, albedoColor.a);
