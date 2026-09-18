@@ -2,14 +2,12 @@
 struct SystemContext;
 
 
-namespace System::Morse
+namespace System
 {
 
-class Handle final
+class JournalTurn final
 {
 public:
-    // ------ Functions ------
-
     static void Update(const SystemContext& context) noexcept;
 
 };

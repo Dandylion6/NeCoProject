@@ -10,6 +10,7 @@ out vec4 outColor;
 uniform sampler2D albedo;
 uniform sampler2D normals;
 uniform sampler2D ao;
+uniform float uRotation;
 
 #define MAX_LIGHT_SOURCES 8
 uniform int lightPointCount;
@@ -20,9 +21,15 @@ uniform float lightStrengths[MAX_LIGHT_SOURCES];
 uniform float ambientTint;
 
 
-vec3 convertNormalMap(vec4 normalColor)
+vec3 convertNormalMap(vec4 normalColor, float rotation)
 {
-    return normalize(normalColor.rgb * 2.0 - 1.0);
+    vec3 n = normalize(normalColor.rgb * 2.0 - 1.0);
+
+    float s = sin(rotation);
+    float c = cos(rotation);
+    n.xy = mat2(c, -s, s, c) * n.xy;
+
+    return normalize(n);
 }
 
 
@@ -76,7 +83,7 @@ void main()
     vec4 normalsColor = texture(normals, fragTexCoord);
     vec4 aoColor = texture(ao, fragTexCoord);
 
-    vec3 normalVector = convertNormalMap(normalsColor);
+    vec3 normalVector = convertNormalMap(normalsColor, uRotation);
 
     vec2 pixelPosition = gl_FragCoord.xy;
     vec3 pixelPos3D = vec3(pixelPosition, 0.0);
@@ -99,7 +106,7 @@ void main()
     vec2 texelCoord = floor(fragTexCoord * textureSize);
     float ditherThreshold = bayerDither2x2(texelCoord);
 
-    diffuseBrightness = floor(diffuseBrightness * 5.0 + ditherThreshold) / 5.0;
+    diffuseBrightness = floor(diffuseBrightness * 4.0 + ditherThreshold) / 4.0;
     diffuse = mix(ambient, diffuse, diffuseBrightness);
 
     vec3 finalColor = albedoColor.rgb * diffuse;

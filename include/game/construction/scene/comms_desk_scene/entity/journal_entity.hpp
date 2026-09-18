@@ -8,7 +8,7 @@ struct SceneContext;
 namespace Entity
 {
 
-class Note final
+class Journal final
 {
 public:
 	// ------ Functions ------

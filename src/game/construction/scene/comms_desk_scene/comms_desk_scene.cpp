@@ -7,7 +7,7 @@
 #include "core/runtime/render_context.hpp"
 #include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
-#include "game/construction/scene/comms_desk_scene/entity/note_entity.hpp"
+#include "game/construction/scene/comms_desk_scene/entity/journal_entity.hpp"
 #include "game/construction/shared/entity/environment/light_source_entity.hpp"
 #include "game/construction/shared/entity/scene/move_region_entity.hpp"
 #include "game/construction/shared/entity/scene/scene_background_entity.hpp"
@@ -32,7 +32,7 @@ void Structure::DeskScene::Build(const BuildContext& context) noexcept
 
     const SceneContext sceneContext = SceneContext(context.registry, context.store, context.game);
 
-    Entity::Note::Create(sceneContext);
+    Entity::Journal::Create(sceneContext);
 
     const Texture2D& sceneAlbedoTexture = context.store.GetTexture(SCENE_ALBEDO_PATH);
     const Texture2D& sceneNormalTexture = context.store.GetTexture(SCENE_NORMAL_PATH);

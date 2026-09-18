@@ -13,10 +13,10 @@ namespace Component::Action
  * 
  * Usage example:
  * 
- * ```cpp
+ * @code
  * registry.emplace<Component::Action::Drag>(entity);
  * registry.emplace<Component::Lever>(entity, ...);
- * ```
+ * @endcode
  */
 struct Drag final
 {

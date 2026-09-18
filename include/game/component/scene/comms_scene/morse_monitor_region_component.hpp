@@ -25,9 +25,7 @@ struct MorseMonitorRegion
 
 	// ------ Constructors ------
 
-	constexpr MorseMonitorRegion(Region region) noexcept : 
-		region(region) 
-	{ };
+    explicit constexpr MorseMonitorRegion(const Region region) noexcept : region(region) { }
 };
 
 }

@@ -36,7 +36,7 @@ entt::entity Entity::MoveRegion::Create(
 ) noexcept
 {
 	constexpr Nc::Vector2f displaySize = Nc::Vector2f(Nc::RENDER_RESOLUTION);
-	constexpr float WIDTH_MULTIPLIER = 0.1f, HEIGHT_MULTIPLIER = 0.2f;
+	constexpr float WIDTH_MULTIPLIER = 0.08f, HEIGHT_MULTIPLIER = 0.14f;
 
 	auto transform = Component::Transform(currentScene);
 
@@ -79,7 +79,9 @@ entt::entity Entity::MoveRegion::Create(
 		transform.offset.x = regionSize.x;
 		break;
 	}
-	}
+	default:
+	    break;
+    }
 
 	return Create(context, transform, nextScene, moveTime);
 }

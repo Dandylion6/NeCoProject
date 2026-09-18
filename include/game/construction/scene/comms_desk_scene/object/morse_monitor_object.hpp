@@ -15,6 +15,7 @@ class MorseMonitor final
 {
 public:
 	// ------ Types ------
+
 	struct Data final
 	{
 		entt::entity monitor = entt::null;

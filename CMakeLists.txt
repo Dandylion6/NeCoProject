@@ -104,7 +104,7 @@ add_executable(NeCoProject
 		src/game/construction/shared/entity/scene/move_region_entity.cpp
 		src/game/construction/shared/entity/scene/scene_background_entity.cpp
 		src/game/construction/shared/object/interactive/circuit_breaker_object.cpp
-		src/game/construction/scene/comms_desk_scene/entity/note_entity.cpp
+        src/game/construction/scene/comms_desk_scene/entity/journal_entity.cpp
 		src/game/construction/scene/comms_desk_scene/comms_desk_scene.cpp
 		src/game/construction/scene/comms_scene/entity/blip_entity.cpp
 		src/game/construction/scene/comms_desk_scene/entity/morse_transceiver_entity.cpp
@@ -127,7 +127,9 @@ add_executable(NeCoProject
         src/game/system/core/audio/shot_audio_emitter_system.cpp
         src/game/construction/shared/entity/scene/scene_ambience_entity.cpp
         src/game/system/scene/comms_desk_scene/morse_code/morse_handle_system.cpp
-        include/game/system/scene/comms_desk_scene/morse_code/morse_handle_system.hpp)
+        include/game/system/scene/comms_desk_scene/morse_code/morse_handle_system.hpp
+        src/game/system/scene/comms_desk_scene/journal/journal_turn_system.cpp
+        src/game/system/scene/comms_desk_scene/journal/journal_page_system.cpp)
 
 target_sources(NeCoProject PRIVATE
 		src/main.cpp

@@ -5,6 +5,7 @@
 #include "core/data/vector2.hpp"
 #include "core/math/vector_math.hpp"
 #include "core/runtime/render_context.hpp"
+#include "entt/entity/registry.hpp"
 #include "game/construction/scene/comms_desk_scene/entity/morse_transceiver_entity.hpp"
 #include "game/construction/scene/comms_desk_scene/object/morse_monitor_object.hpp"
 #include "game/construction/scene/comms_scene/entity/radio_entity.hpp"
@@ -28,8 +29,8 @@ void Structure::CommsScene::Build(const BuildContext& context) noexcept
         Nc::Vector2f(0.6f, 1.4f),
         Nc::Vector2f(Nc::RENDER_RESOLUTION)
     );
-    constexpr float LIGHT_DISTANCE = 280.0f;
-    constexpr float LIGHT_RADIUS = 1440.0f;
+    constexpr float LIGHT_DISTANCE = 440.0f;
+    constexpr float LIGHT_RADIUS = 1720.0f;
 
     const auto sceneContext = SceneContext(context.registry, context.store, context.game);
 
@@ -58,7 +59,7 @@ void Structure::CommsScene::Build(const BuildContext& context) noexcept
         LIGHT_POSITION,
         LIGHT_DISTANCE,
         Nc::RGBa(LIGHT_COLOR),
-        1.9f,
+        1.6f,
         LIGHT_RADIUS
     );
 
