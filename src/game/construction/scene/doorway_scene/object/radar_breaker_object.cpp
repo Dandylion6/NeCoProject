@@ -5,6 +5,7 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
+#include "game/component/core/interactive/drag_action_component.hpp"
 #include "game/component/core/rendering/rectangle_component.hpp"
 #include  "game/component/shared/mechanical/breaker_component.hpp"
 #include "game/construction/shared/object/mechanical/circuit_breaker_object.hpp"
@@ -38,9 +39,9 @@ entt::entity Object::RadarBreaker::LeverHandle::Create(const SceneContext& conte
 {
 	constexpr Nc::Vector2f POSITION = Nc::Vector2f(200.0f, 100.0f);
 	constexpr Nc::Vector2f SIZE = Nc::Vector2f(55.0f, 20.0f);
-	constexpr auto transform = Component::Transform(Doorway, POSITION, SIZE, SIZE * 0.5f);
+	constexpr auto TRANSFORM = Component::Transform(Doorway, POSITION, SIZE, SIZE * 0.5f);
 
-	const CircuitBreaker::Data breakerData = CircuitBreaker::Create(context.registry, transform, radar);
+	const CircuitBreaker::Data breakerData = CircuitBreaker::Create(context.registry, TRANSFORM, radar);
 	breakerData.breaker.onRestart.connect<&System::Radar::Stability::Restart>();
 
 	// TODO: Add visuals

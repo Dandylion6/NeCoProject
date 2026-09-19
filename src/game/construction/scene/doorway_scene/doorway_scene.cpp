@@ -7,9 +7,11 @@
 #include "core/runtime/render_context.hpp"
 #include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
+#include "game/construction/scene/doorway_scene/object/radar_breaker_object.hpp"
 #include "game/construction/shared/entity/environment/light_source_entity.hpp"
 #include "game/construction/shared/entity/scene/move_region_entity.hpp"
 #include "game/construction/shared/entity/scene/scene_background_entity.hpp"
+#include "game/construction/shared/object/mechanical/circuit_breaker_object.hpp"
 #include "game/contexts/build_context.hpp"
 #include "game/contexts/scene_context.hpp"
 #include "game/state/scene.hpp"
@@ -17,19 +19,27 @@
 
 void Structure::DoorwayScene::Build(const BuildContext& context) noexcept
 {
-	constexpr char FILE_PATH[] = "assets/environment/backgrounds/doorway.png";
-	constexpr auto LIGHT_COLOR = Nc::Hex(0xfee8c8ff);
-	constexpr Nc::Vector2f LIGHT_POSITION = Nc::Vector::Modulate(
-		Nc::Vector2f(0.5f, 1.3f),
-		Nc::Vector2f(Nc::RENDER_RESOLUTION)
-	);
-	constexpr float LIGHT_RADIUS = 940.0f;
+    constexpr char FILE_PATH[] = "assets/environment/backgrounds/doorway.png";
+    constexpr auto LIGHT_COLOR = Nc::Hex(0xfee8c8ff);
+    constexpr Nc::Vector2f LIGHT_POSITION = Nc::Vector::Modulate(
+        Nc::Vector2f(0.5f, 1.3f),
+        Nc::Vector2f(Nc::RENDER_RESOLUTION)
+    );
+    constexpr float LIGHT_RADIUS = 940.0f;
 
-	const Texture2D& backgroundText = context.store.GetTexture(FILE_PATH);
-	Entity::SceneBackground::Create(context.registry, backgroundText, Doorway);
+    const Texture2D& backgroundText = context.store.GetTexture(FILE_PATH);
+    Entity::SceneBackground::Create(context.registry, backgroundText, Doorway);
 
-	const SceneContext sceneContext = SceneContext(context.registry, context.store, context.game);
+    const SceneContext sceneContext = SceneContext(context.registry, context.store, context.game);
 
-	Entity::MoveRegion::Create(sceneContext, Left, Doorway, CommsRoom, 0.4f);
-	Entity::LightPoint::Create(context.registry, Doorway, LIGHT_POSITION, 300.0f, Nc::RGBa(LIGHT_COLOR), 2.6f, LIGHT_RADIUS);
+    Entity::MoveRegion::Create(sceneContext, Left, Doorway, CommsRoom, 0.4f);
+    Entity::LightPoint::Create(
+        context.registry,
+        Doorway,
+        LIGHT_POSITION,
+        300.0f,
+        Nc::RGBa(LIGHT_COLOR),
+        2.6f,
+        LIGHT_RADIUS
+    );
 }

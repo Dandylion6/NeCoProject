@@ -48,7 +48,7 @@ static Result SaveState(const StatesContext& context, nlohmann::json& data)
 static Result SaveToggleComponents(entt::registry& registry, nlohmann::json& data)
 {
     const auto view = registry.view<const Component::Address, const Component::Action::Toggle>();
-    for (auto [entity, address, toggle] : view.each())
+    for (const auto& [entity, address, toggle] : view.each())
     {
         if (address.address.empty()) return Result::EmptyAddressComponent;
 

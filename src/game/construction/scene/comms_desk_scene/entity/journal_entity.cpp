@@ -42,7 +42,7 @@ entt::entity Entity::Journal::Create(const SceneContext& context) noexcept
 	context.registry.emplace<Component::Sprite>(entity, noteAlbedoTexture, noteNormalTexture, noteAoTexture);
 
 	auto size = Nc::Vector2f(noteAlbedoTexture.width, noteAlbedoTexture.height);
-	context.registry.emplace<Component::Transform>(entity, CommsDesk, POSITION, size, size * 0.5f, 1, 3.0f);
+	context.registry.emplace<Component::Transform>(entity, CommsDesk, POSITION, size, size * 0.5f, 1);
 
     System::Journal::Page::Update(context.registry, context.store);
 

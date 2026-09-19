@@ -33,7 +33,6 @@
 #include "game/system/core/rendering/rendering_system.hpp"
 #include "game/system/core/rendering/lighting/lighting_system.hpp"
 #include "game/system/core/rendering/lighting/light_flickering_system.hpp"
-#include "game/system/scene/comms_desk_scene/journal/journal_page_system.hpp"
 #include "game/system/scene/comms_desk_scene/journal/journal_turn_system.hpp"
 #include "game/system/scene/comms_desk_scene/morse_code/morse_handle_system.hpp"
 #include "game/system/scene/comms_desk_scene/morse_code/morse_input_system.hpp"
@@ -361,7 +360,7 @@ void Game::UpdateSystems(float deltaTime)
 		cursor = MOUSE_CURSOR_POINTING_HAND;
 		break;
 	case Nc::Cursor::Grab:
-		cursor = MOUSE_CURSOR_POINTING_HAND;
+		cursor = MOUSE_CURSOR_CROSSHAIR;
 		break;
 	default: break;
 	}

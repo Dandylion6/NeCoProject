@@ -8,6 +8,7 @@
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
 #include "game/component/core/interactive/drag_action_component.hpp"
+#include "game/component/shared/mechanical/lever_component.hpp"
 #include "game/contexts/system_context.hpp"
 #include "game/state/game_state.hpp"
 #include "game/utility/rendering.hpp"
@@ -19,6 +20,7 @@ void System::Action::Drag::Update(const SystemContext& context, const Nc::Render
 	const bool clickReleased = IsMouseButtonReleased(MOUSE_BUTTON_LEFT);
 
 	const auto view = context.registry.view<Component::Action::Drag>();
+
 	for (auto [entity, drag] : view.each())
 	{
 		if (drag.isTarget)
@@ -36,10 +38,13 @@ void System::Action::Drag::Update(const SystemContext& context, const Nc::Render
 			return;
 		}
 
+	    // TODO: Improve logic & readability.
 		switch (UpdateSceneDrag(context, renderContext, entity, drag, clickPressed))
 		{
 		case Hovering: return Nc::Cursor::AssignIfHigherPriority(context.game.cursor, Nc::Cursor::Grab);
-		case NotHovering: return UpdateUiDrag(context, renderContext.windowSize, clickPressed);
+		case NotHovering:
+		    UpdateUiDrag(context, renderContext.windowSize, clickPressed);
+            break;
 		case Pressed: return;
 		}
 	}
