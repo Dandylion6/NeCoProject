@@ -27,7 +27,12 @@ void System::Action::Drag::Update(const SystemContext& context, const Nc::Render
 			const Nc::Vector2f mousePosition = Renderer::GetWorldPosition(renderContext, GetMousePosition());
 			drag.draggedDelta = mousePosition - drag.startPosition;
 
-			if (clickReleased) drag.isTarget = false;
+			if (clickReleased)
+			{
+			    drag.isTarget = false;
+			    drag.startPosition = Nc::Vector2f::Zero();
+			    drag.draggedDelta = Nc::Vector2f::Zero();
+			}
 			return;
 		}
 

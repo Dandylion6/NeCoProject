@@ -54,6 +54,7 @@ private:
 	// ------ Functions ------
 
 	void DrawRenderTexture() const;
+    void UpdateRenderRectangle();
 
 #ifdef DEBUG_BUILD
 	void DrawDebugUi();

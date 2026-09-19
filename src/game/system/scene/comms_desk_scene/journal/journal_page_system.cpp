@@ -10,29 +10,29 @@
 #include "game/system/core/audio/audio_emitter_system.hpp"
 
 
-void System::JournalPage::Update(const SystemContext& context) noexcept
+void System::Journal::Page::Update(entt::registry& registry, Nc::ResourceStore& store) noexcept
 {
-    const entt::entity entity = entt::get_single<Component::Journal>(context.registry);
-    auto& sprite = context.registry.get<Component::Sprite>(entity);
-    const auto& journal = context.registry.get<Component::Journal>(entity);
+    const entt::entity entity = entt::get_single<Component::Journal>(registry);
+    auto& sprite = registry.get<Component::Sprite>(entity);
+    const auto& journal = registry.get<Component::Journal>(entity);
 
     const Component::Journal::Page page = journal.pages.at(journal.index);
     const std::string path = PAGE_DIRECTORY + GetPagePath(page, journal.index);
 
-    const Texture2D& pageAlbedoTexture = context.store.GetTexture(path);
+    const Texture2D& pageAlbedoTexture = store.GetTexture(path);
     sprite.albedo = pageAlbedoTexture;
 }
 
 
-void System::JournalPage::OnDayChange(const SystemContext& context) noexcept
+void System::Journal::Page::OnDayChange(const SystemContext& context) noexcept
 {
 
 }
 
 
-std::string System::JournalPage::GetPagePath(const Component::Journal::Page page, uint8_t index) noexcept
+std::string System::Journal::Page::GetPagePath(const Component::Journal::Page page, uint8_t index) noexcept
 {
-    switch (page.type)
+    switch (page.state)
     {
     case Component::Journal::Page::NotFound:
         break;

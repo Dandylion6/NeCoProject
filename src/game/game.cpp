@@ -33,6 +33,8 @@
 #include "game/system/core/rendering/rendering_system.hpp"
 #include "game/system/core/rendering/lighting/lighting_system.hpp"
 #include "game/system/core/rendering/lighting/light_flickering_system.hpp"
+#include "game/system/scene/comms_desk_scene/journal/journal_page_system.hpp"
+#include "game/system/scene/comms_desk_scene/journal/journal_turn_system.hpp"
 #include "game/system/scene/comms_desk_scene/morse_code/morse_handle_system.hpp"
 #include "game/system/scene/comms_desk_scene/morse_code/morse_input_system.hpp"
 #include "game/system/scene/comms_desk_scene/morse_code/morse_monitor_display_system.hpp"
@@ -102,28 +104,15 @@ Game::Game() : renderContext(resourceStore)
 
 void Game::SetupRenderContext()
 {
-	constexpr Nc::Vector2i displaySize = Nc::RENDER_RESOLUTION;
-	constexpr Nc::Vector2i radarSize = Nc::Vector2i(RADAR_BOUNDS.max);
+	constexpr Nc::Vector2i DISPLAY_SIZE = Nc::RENDER_RESOLUTION;
+	constexpr Nc::Vector2i RADAR_SIZE = Nc::Vector2i(RADAR_BOUNDS.max);
 
-	renderContext.renderTexture = LoadRenderTexture(displaySize.x, displaySize.y);
-	renderContext.radarRenderTexture = LoadRenderTexture(radarSize.x, radarSize.y);
+    UpdateRenderRectangle();
 
-	const int monitor = GetCurrentMonitor();
-	const Nc::Vector2i monitorSize = Nc::Vector2i(GetMonitorWidth(monitor), GetMonitorHeight(monitor));
-	renderContext.windowSize = monitorSize;
+	renderContext.renderTexture = LoadRenderTexture(DISPLAY_SIZE.x, DISPLAY_SIZE.y);
+	renderContext.radarRenderTexture = LoadRenderTexture(RADAR_SIZE.x, RADAR_SIZE.y);
 
-	// Calculate render scale (preserve aspect ratio, clamp to nearest 0.1)
-	const float scaleX = static_cast<float>(monitorSize.x) / static_cast<float>(displaySize.x);
-	const float scaleY = static_cast<float>(monitorSize.y) / static_cast<float>(displaySize.y);
-	const float scale = std::floor(std::fminf(scaleX, scaleY) * 10.0f) * 0.1f;
-	renderContext.renderScale = scale;
-
-	// Compute scaled display size and centered position
-	const Nc::Vector2f scaledDisplay = Nc::Vector2f(displaySize) * scale;
-	const Nc::Vector2f origin = (Nc::Vector2f(monitorSize) - scaledDisplay) * 0.5f;
-	renderContext.renderRectangle = {origin.x, origin.y, scaledDisplay.x, scaledDisplay.y};
-
-	System::Render::Lighting::Initialize(renderContext.lightingContext, resourceStore);
+    System::Render::Lighting::Initialize(renderContext.lightingContext, resourceStore);
 }
 
 
@@ -233,6 +222,8 @@ void Game::BuildRuntimeScenes()
 
 void Game::SetupWindow()
 {
+    constexpr Nc::Vector2i DISPLAY_SIZE = Nc::RENDER_RESOLUTION;
+
 #ifdef DEBUG_BUILD
 	const entt::entity entity = entt::get_single<Component::Debug::DevSettings>(registry);
 	const auto& devSettings = registry.get<Component::Debug::DevSettings>(entity);
@@ -246,19 +237,21 @@ void Game::SetupWindow()
 	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_FULLSCREEN_MODE);
 #endif
 
-	const auto monitorSize = Nc::Vector2i(GetMonitorWidth(0), GetMonitorHeight(0));
-	InitWindow(monitorSize.x, monitorSize.y, "Negative Contact");
-
 #ifdef DEBUG_BUILD
-	SetExitKey(KEY_BACKSPACE);
-
 	if (devSettings.isMaximizedWindowed)
 	{
+	    InitWindow(DISPLAY_SIZE.x, DISPLAY_SIZE.y, "Negative Contact");
+
 		SetWindowState(FLAG_WINDOW_RESIZABLE);
 		MaximizeWindow();
+	} else
+	{
+	    InitWindow(0, 0, "Negative Contact");
 	}
 
+    SetExitKey(KEY_BACKSPACE);
 #else
+    InitWindow(0, 0, "Negative Contact");
 	SetExitKey(KEY_NULL);
 #endif
 }
@@ -385,6 +378,8 @@ void Game::UpdateSystems(float deltaTime)
 	System::Morse::MonitorDisplay::Update(context, settings.morseSettings);
 	System::Morse::Tone::Update(context);
 
+    System::Journal::Turn::Update(context);
+
 	System::Receiver::Interpret::Recalibration::Update(context);
 	System::Machine::PowerUsage::Update(context, anomalyState);
 
@@ -478,6 +473,9 @@ void Game::DrawGame(float deltaTime)
 
 void Game::HandleEvents()
 {
+    if (IsWindowResized())
+        UpdateRenderRectangle();
+
 	if (gameEvents.shouldLoad || gameEvents.shouldRestart)
 		Load();
 
@@ -507,6 +505,30 @@ void Game::DrawRenderTexture() const
 		0.0f,
 		WHITE
 	);
+}
+
+
+void Game::UpdateRenderRectangle()
+{
+    constexpr Nc::Vector2i DISPLAY_SIZE = Nc::RENDER_RESOLUTION;
+    const auto windowSize = Nc::Vector2i(GetScreenWidth(), GetScreenHeight());
+
+    // Window too small.
+    if (static_cast<float>(windowSize.x) <= Nc::Math::EPSILON) return;
+    if (static_cast<float>(windowSize.y) <= Nc::Math::EPSILON) return;
+
+    // Calculate render scale (preserve aspect ratio, clamp to nearest 0.1)
+    const float scaleX = static_cast<float>(windowSize.x) / static_cast<float>(DISPLAY_SIZE.x);
+    const float scaleY = static_cast<float>(windowSize.y) / static_cast<float>(DISPLAY_SIZE.y);
+    const float scale = std::floor(std::fminf(scaleX, scaleY) * 10.0f) * 0.1f;
+
+    // Compute scaled display size and centered position
+    const Nc::Vector2f scaledDisplay = Nc::Vector2f(DISPLAY_SIZE) * scale;
+    const Nc::Vector2f origin = (Nc::Vector2f(windowSize) - scaledDisplay) * 0.5f;
+
+    renderContext.windowSize = windowSize;
+    renderContext.renderScale = scale;
+    renderContext.renderRectangle = {origin.x, origin.y, scaledDisplay.x, scaledDisplay.y};
 }
 
 

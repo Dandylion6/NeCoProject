@@ -2,10 +2,10 @@
 struct SystemContext;
 
 
-namespace System
+namespace System::Journal
 {
 
-class JournalTurn final
+class Turn final
 {
 public:
     static void Update(const SystemContext& context) noexcept;

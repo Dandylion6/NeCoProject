@@ -1,5 +1,4 @@
 #include "game/system/scene/outside_scene/receiver/adjust_interpreting_system.hpp"
-
 #include "core/runtime/entity_helpers.hpp"
 #include "core/runtime/resource_store.hpp"
 #include "entt/entity/registry.hpp"
@@ -35,7 +34,7 @@ void System::Receiver::Interpret::Adjust::ConfirmCommand(const SystemContext& co
 	constexpr char RESPONSE[] = "assets/audio/voicelines/receiver/commands/aim_request.wav";
 
 	const Sound& response = context.store.CreateSoundHandle(RESPONSE);
-	Radio::Emitter::Broadcast(context.registry, std::move(response), BroadcastPriority::Medium);
+	Radio::Emitter::Broadcast(context.registry, response, BroadcastPriority::Medium);
 
 	receiver.message.clear();
 }
@@ -55,10 +54,10 @@ void System::Receiver::Interpret::Adjust::AdjustArtillery(entt::registry& regist
 	{
 	case CoordResult::Invalid: break;
 	case CoordResult::Horizontal:
-		artillery.targetPosition.x = artillery.targetPosition.x + result.coordinateLength;
+		artillery.targetPosition.x = artillery.targetPosition.x + static_cast<float>(result.coordinateLength);
 		break;
 	case CoordResult::Vertical:
-		artillery.targetPosition.y = artillery.targetPosition.y + result.coordinateLength;
+		artillery.targetPosition.y = artillery.targetPosition.y + static_cast<float>(result.coordinateLength);
 		break;
 	}
 }

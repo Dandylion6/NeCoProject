@@ -10,7 +10,10 @@
 #include "game/component/core/rendering/sprite_component.hpp"
 #include "game/component/scene/comms_desk_scene/journal_component.hpp"
 #include "game/contexts/scene_context.hpp"
+#include "game/contexts/system_context.hpp"
 #include "game/state/scene.hpp"
+#include "game/system/scene/comms_desk_scene/journal/journal_page_system.hpp"
+#include "game/system/scene/outside_scene/receiver/interpret_aiming_system.hpp"
 
 
 entt::entity Entity::Journal::Create(const SceneContext& context) noexcept
@@ -22,9 +25,16 @@ entt::entity Entity::Journal::Create(const SceneContext& context) noexcept
 
 	const entt::entity entity = context.registry.create();
 
-	context.registry.emplace<Component::Journal>(entity);
     context.registry.emplace<Component::Action::Drag>(entity);
-	
+
+    auto& journal = context.registry.emplace<Component::Journal>(entity);
+    journal.index = 2;
+
+#ifdef DEBUG_BUILD
+    journal.pages[2].state = Component::Journal::Page::Found;
+    journal.pages[3].state = Component::Journal::Page::Found;
+#endif
+
 	const Texture2D& noteAlbedoTexture = context.store.GetTexture(JOURNAL_ALBEDO_PATH);
     const Texture2D& noteNormalTexture = context.store.GetTexture(JOURNAL_NORMAL_PATH);
     const Texture2D& noteAoTexture = context.store.GetTexture(JOURNAL_AO_PATH);
@@ -33,6 +43,8 @@ entt::entity Entity::Journal::Create(const SceneContext& context) noexcept
 
 	auto size = Nc::Vector2f(noteAlbedoTexture.width, noteAlbedoTexture.height);
 	context.registry.emplace<Component::Transform>(entity, CommsDesk, POSITION, size, size * 0.5f, 1, 3.0f);
+
+    System::Journal::Page::Update(context.registry, context.store);
 
 	return entity;
 }

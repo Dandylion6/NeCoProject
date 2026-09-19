@@ -8,9 +8,9 @@
 #include "game/system/scene/comms_desk_scene/journal/journal_page_system.hpp"
 
 
-void System::JournalTurn::Update(const SystemContext& context) noexcept
+void System::Journal::Turn::Update(const SystemContext& context) noexcept
 {
-    constexpr auto TURN_THRESHOLD = 20.0f;
+    constexpr auto TURN_THRESHOLD = 100.0f;
     constexpr auto MAX_INDEX = static_cast<int>(Component::Journal::MAX_PAGES) - 1;
 
     const entt::entity entity = entt::get_single<Component::Journal>(context.registry);
@@ -22,13 +22,15 @@ void System::JournalTurn::Update(const SystemContext& context) noexcept
         journal.pageTurned = false;
         return;
     }
+
     if (journal.pageTurned) return;
     if (std::fabsf(drag.draggedDelta.x) < TURN_THRESHOLD) return;
 
-    journal.pageTurned = true;
-    JournalPage::Update(context);
-
     const int sign = drag.draggedDelta.x > Nc::Math::EPSILON ? 1 : -1;
-    const int nextPage = std::clamp(journal.index + sign, 0, MAX_INDEX);
+    const int nextPage = std::clamp(journal.index - sign, 0, MAX_INDEX);
+
     journal.index = nextPage;
+    journal.pageTurned = true;
+
+    Page::Update(context.registry, context.store);
 }

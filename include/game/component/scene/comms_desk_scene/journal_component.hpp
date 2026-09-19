@@ -12,15 +12,15 @@ struct Journal final
 
     struct Page final
     {
-        enum PageType : uint8_t
+        enum State : uint8_t
         {
             NotFound, Found, Partial
         };
 
-        PageType type = NotFound;
+        State state = NotFound;
 
         Page() = default;
-        explicit Page(const PageType type) : type(type) {}
+        explicit Page(const State type) : state(type) {}
     };
 
 
