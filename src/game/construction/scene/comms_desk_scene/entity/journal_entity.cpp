@@ -15,19 +15,19 @@
 
 entt::entity Entity::Journal::Create(const SceneContext& context) noexcept
 {
-	constexpr char NOTE_ALBEDO_PATH[] = "assets/environment/objects/note/page_n.png";
-    constexpr char NOTE_NORMAL_PATH[] = "assets/environment/objects/note/journal_normal.png";
-    constexpr char NOTE_AO_PATH[] = "assets/environment/objects/note/journal_ao.png";
-	constexpr auto POSITION = Nc::Vector2f(695.0f, 520.0f);
+	constexpr char JOURNAL_ALBEDO_PATH[] = "assets/environment/objects/journal/page_n.png";
+    constexpr char JOURNAL_NORMAL_PATH[] = "assets/environment/objects/journal/journal_normal.png";
+    constexpr char JOURNAL_AO_PATH[] = "assets/environment/objects/journal/journal_ao.png";
+	constexpr auto POSITION = Nc::Vector2f(623.0f, 540.0f);
 
 	const entt::entity entity = context.registry.create();
 
 	context.registry.emplace<Component::Journal>(entity);
     context.registry.emplace<Component::Action::Drag>(entity);
 	
-	const Texture2D& noteAlbedoTexture = context.store.GetTexture(NOTE_ALBEDO_PATH);
-    const Texture2D& noteNormalTexture = context.store.GetTexture(NOTE_NORMAL_PATH);
-    const Texture2D& noteAoTexture = context.store.GetTexture(NOTE_AO_PATH);
+	const Texture2D& noteAlbedoTexture = context.store.GetTexture(JOURNAL_ALBEDO_PATH);
+    const Texture2D& noteNormalTexture = context.store.GetTexture(JOURNAL_NORMAL_PATH);
+    const Texture2D& noteAoTexture = context.store.GetTexture(JOURNAL_AO_PATH);
 
 	context.registry.emplace<Component::Sprite>(entity, noteAlbedoTexture, noteNormalTexture, noteAoTexture);
 

@@ -24,13 +24,13 @@ void Structure::CommsScene::Build(const BuildContext& context) noexcept
     constexpr char SCENE_NORMAL_PATH[] = "assets/environment/backgrounds/comms_room/comms_scene_normal.png";
     constexpr char SCENE_AO_PATH[] = "assets/environment/backgrounds/comms_room/comms_scene_ao.png";
 
-    constexpr auto LIGHT_COLOR = Nc::Hex(0xfff3c9ff);
+    constexpr auto LIGHT_COLOR = Nc::Hex(0xfeffbdff);
     constexpr Nc::Vector2f LIGHT_POSITION = Nc::Vector::Modulate(
-        Nc::Vector2f(0.6f, 1.4f),
+        Nc::Vector2f(0.4f, 1.2f),
         Nc::Vector2f(Nc::RENDER_RESOLUTION)
     );
-    constexpr float LIGHT_DISTANCE = 440.0f;
-    constexpr float LIGHT_RADIUS = 1720.0f;
+    constexpr float LIGHT_DISTANCE = 450.0f;
+    constexpr float LIGHT_RADIUS = 1520.0f;
 
     const auto sceneContext = SceneContext(context.registry, context.store, context.game);
 
@@ -59,7 +59,7 @@ void Structure::CommsScene::Build(const BuildContext& context) noexcept
         LIGHT_POSITION,
         LIGHT_DISTANCE,
         Nc::RGBa(LIGHT_COLOR),
-        1.6f,
+        1.76f,
         LIGHT_RADIUS
     );
 

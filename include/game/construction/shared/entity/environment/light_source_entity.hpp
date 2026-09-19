@@ -19,7 +19,7 @@ public:
         Nc::RGBa color,
         float strength,
         float range,
-        float flickerStrength = 0.05f
+        float flickerStrength = 0.08f
     ) noexcept;
 };
 
