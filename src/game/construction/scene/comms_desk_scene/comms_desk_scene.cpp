@@ -25,7 +25,11 @@ void Structure::DeskScene::Build(const BuildContext& context) noexcept
     constexpr auto LIGHT_COLOR = Nc::Hex(0xfff3c9ff);
     constexpr auto LIGHT_POSITION = Nc::Vector2f(600.0f, 540.0f);
     constexpr float LIGHT_RADIUS = 1580.0f;
+<<<<<<< Updated upstream
     constexpr float MOVE_TIME = 0.14f;
+=======
+    constexpr float MOVE_TIME = 0.16f;
+>>>>>>> Stashed changes
 
     const SceneContext sceneContext = SceneContext(context.registry, context.store, context.game);
 
