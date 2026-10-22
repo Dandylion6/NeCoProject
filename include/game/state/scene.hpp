@@ -11,6 +11,7 @@ enum Scene: uint8_t
     CommsRoom,
     RadarScene,
     CommsDesk,
+    BreakerWall,
     Doorway,
     Outside,
     SCENE_COUNT,

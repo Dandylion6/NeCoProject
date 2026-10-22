@@ -37,12 +37,34 @@ Nc::Vector2f GetWorldPosition(const Nc::RenderContext& context, Vector2 screenPo
 
 void DrawSprite(
     const Component::Sprite& sprite,
+    Rectangle slice,
     Nc::Vector2f position,
     Nc::Vector2f origin = Nc::Vector2f::Zero(),
     float rotation = 0.0f,
     float scale = 1.0f,
     Nc::RGBa tint = Nc::RGBa(WHITE)
 );
+
+void DrawSprite(
+    const Component::Sprite& sprite,
+    Nc::Vector2f position,
+    Nc::Vector2f origin = Nc::Vector2f::Zero(),
+    float rotation = 0.0f,
+    float scale = 1.0f,
+    Nc::RGBa tint = Nc::RGBa(WHITE)
+);
+
+void DrawSpriteLit(
+    const Shader& lightShader,
+    const Component::Sprite& sprite,
+    Rectangle slice,
+    Nc::Vector2f position,
+    Nc::Vector2f origin = Nc::Vector2f::Zero(),
+    float rotation = 0.0f,
+    float scale = 1.0f,
+    Nc::RGBa tint = Nc::RGBa(WHITE)
+);
+
 
 void DrawSpriteLit(
     const Shader& lightShader,

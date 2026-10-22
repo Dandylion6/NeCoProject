@@ -2,11 +2,12 @@
 
 #include "raylib.h"
 #include "core/data/vector2.hpp"
+#include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
-#include "game/component/core/interactive/drag_action_component.hpp"
 #include "game/component/core/rendering/rectangle_component.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
 #include  "game/component/shared/mechanical/breaker_component.hpp"
 #include "game/construction/shared/object/mechanical/circuit_breaker_object.hpp"
 #include "game/state/scene.hpp"
@@ -22,16 +23,23 @@ void Object::RadarBreaker::Create(const SceneContext& context, const entt::entit
 
 entt::entity Object::RadarBreaker::LeverBase::Create(const SceneContext& context)
 {
-	constexpr Nc::Vector2f POSITION = Nc::Vector2f(200.0f, 100.0f);
-	constexpr Nc::Vector2f SIZE = Nc::Vector2f(60.0f, 90.0f);
+    constexpr char SCENE_ALBEDO_PATH[] = "assets/environment/objects/switches/comms_breaker_switch/comms_breaker_switch_albedo.png";
+    constexpr char SCENE_NORMAL_PATH[] = "assets/environment/objects/switches/comms_breaker_switch/comms_breaker_switch_normal.png";
+    constexpr char SCENE_AO_PATH[] = "assets/environment/objects/switches/comms_breaker_switch/comms_breaker_switch_ao.png";
+	constexpr Nc::Vector2f POSITION = Nc::Vector2f(400.0f, 100.0f);
+	constexpr Nc::Vector2f SIZE = Nc::Vector2f(100.0f, 100.0f);
 
 	const entt::entity entity = context.registry.create();
 
 	context.registry.emplace<Component::Transform>(entity, Doorway, POSITION, SIZE, SIZE * 0.5f);
-	// TODO: Add visuals
-	context.registry.emplace<Component::Rectangle>(entity, Nc::RGBa(GRAY));
 
-	return entity;
+    const Texture2D& sceneAlbedoTexture = context.store.GetTexture(SCENE_ALBEDO_PATH);
+    const Texture2D& sceneNormalTexture = context.store.GetTexture(SCENE_NORMAL_PATH);
+    const Texture2D& sceneAoTexture = context.store.GetTexture(SCENE_AO_PATH);
+
+    context.registry.emplace<Component::Sprite>(entity, sceneAlbedoTexture, sceneNormalTexture, sceneAoTexture, 5u);
+
+    return entity;
 }
 
 

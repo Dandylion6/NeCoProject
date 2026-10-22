@@ -1,5 +1,7 @@
 #include "game/utility/rendering.hpp"
 
+#include <valarray>
+
 #include "raylib.h"
 #include "rlgl.h"
 #include "core/data/color.hpp"
@@ -39,6 +41,7 @@ Nc::Vector2f Renderer::GetWorldPosition(const Nc::RenderContext& context, const 
 void Renderer::DrawSpriteLit(
     const Shader& lightShader,
     const Component::Sprite& sprite,
+    const Rectangle slice,
     const Nc::Vector2f position,
     const Nc::Vector2f origin,
     const float rotation,
@@ -56,7 +59,37 @@ void Renderer::DrawSpriteLit(
     const float rotationAngle = rotation * Nc::Math::DEG_TO_RAD;
     SetShaderValue(lightShader, GetShaderLocation(lightShader, "uRotation"), &rotationAngle, RL_SHADER_UNIFORM_FLOAT);
 
-    DrawSprite(sprite, position, origin, rotation, scale, tint);
+    DrawSprite(sprite, slice, position, origin, rotation, scale, tint);
+
+    rlDrawRenderBatchActive();
+}
+
+
+void Renderer::DrawSpriteLit(
+    const Shader& lightShader,
+    const Component::Sprite& sprite,
+    const Nc::Vector2f position,
+    const Nc::Vector2f origin,
+    const float rotation,
+    const float scale,
+    const Nc::RGBa tint
+)
+{
+    if (sprite.alpha == 0.0f) return;
+
+    rlDrawRenderBatchActive();
+
+    SetShaderValueTexture(lightShader, GetShaderLocation(lightShader, "normals"), sprite.normals);
+    SetShaderValueTexture(lightShader, GetShaderLocation(lightShader, "ao"), sprite.ambientOcclusion);
+
+    const float rotationAngle = rotation * Nc::Math::DEG_TO_RAD;
+    SetShaderValue(lightShader, GetShaderLocation(lightShader, "uRotation"), &rotationAngle, RL_SHADER_UNIFORM_FLOAT);
+
+    const auto width = static_cast<float>(sprite.albedo.width);
+    const auto height = static_cast<float>(sprite.albedo.height);
+
+    const auto slice = Rectangle{0.0f, 0.0f, width, height};
+    DrawSprite(sprite, slice, position, origin, rotation, scale, tint);
 
     rlDrawRenderBatchActive();
 }
@@ -71,19 +104,42 @@ void Renderer::DrawSprite(
     Nc::RGBa tint
 )
 {
+    const auto width = static_cast<float>(sprite.albedo.width);
+    const auto height = static_cast<float>(sprite.albedo.height);
+
+    const auto slice = Rectangle{0.0f, 0.0f, width, height};
+    DrawSprite(sprite, slice, position, origin, rotation, scale, tint);
+}
+
+
+void Renderer::DrawSprite(
+    const Component::Sprite& sprite,
+    const Rectangle slice,
+    const Nc::Vector2f position,
+    const Nc::Vector2f origin,
+    const float rotation,
+    const float scale,
+    Nc::RGBa tint
+)
+{
     if (sprite.alpha == 0.0f) return;
 
     Nc::RGBa::SetAlphaFor(tint, sprite.alpha);
 
-    const auto width = static_cast<float>(sprite.albedo.width);
+    auto width = static_cast<float>(sprite.albedo.width);
     const auto height = static_cast<float>(sprite.albedo.height);
+
+    if (sprite.isSpriteSheet)
+    {
+        width /= static_cast<float>(sprite.maxFrames);
+    }
 
     const Nc::Vector2f pixelPosition = Nc::Vector::Round(position);
     const Nc::Vector2f pixelOrigin = Nc::Vector::Round(origin);
 
     ::DrawTexturePro(
         sprite.albedo,
-        Rectangle{0.0f, 0.0f, width, height},
+        slice,
         Rectangle{pixelPosition.x, pixelPosition.y, width * scale, height * scale},
         Vector2(pixelOrigin),
         rotation,

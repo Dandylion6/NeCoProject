@@ -209,7 +209,7 @@ entt::entity Object::Radar::Screen::Create(const SceneContext& context) noexcept
     const Texture2D& normalTexture = context.store.GetTexture(SCREEN_NORMAL_PATH);
     const Texture2D& aoTexture = context.store.GetTexture(SCREEN_AO_PATH);
 
-    context.registry.emplace<Component::Sprite>(entity, albedoTexture, normalTexture, aoTexture, 0.4f);
+    context.registry.emplace<Component::Sprite>(entity, albedoTexture, normalTexture, aoTexture, Nc::RGBa(WHITE), 0.3f);
 
     auto size = Nc::Vector2f(albedoTexture.width, albedoTexture.height);
     context.registry.emplace<Component::Transform>(entity, CommsRoom, POSITION, size, size * 0.5f, -1);

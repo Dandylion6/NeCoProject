@@ -129,7 +129,8 @@ add_executable(NeCoProject
         src/game/system/scene/comms_desk_scene/morse_code/morse_handle_system.cpp
         include/game/system/scene/comms_desk_scene/morse_code/morse_handle_system.hpp
         src/game/system/scene/comms_desk_scene/journal/journal_turn_system.cpp
-        src/game/system/scene/comms_desk_scene/journal/journal_page_system.cpp)
+        src/game/system/scene/comms_desk_scene/journal/journal_page_system.cpp
+        src/game/construction/scene/breaker_wall_scene/breaker_wall_scene.cpp)
 
 target_sources(NeCoProject PRIVATE
 		src/main.cpp
