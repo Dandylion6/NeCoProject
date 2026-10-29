@@ -17,11 +17,9 @@ entt::entity Entity::SceneAmbience::Create(const SceneContext& context, const st
     const entt::entity entity = context.registry.create();
 
     context.registry.emplace<Component::Transform>(entity, boundScene, POSITION);
+    context.registry.emplace<Component::LoopedAudio>(entity, LoadMusicStream(audioPath.c_str()));
 
-    const Music& ambience = context.store.GetMusic(audioPath);
-    context.registry.emplace<Component::LoopedAudio>(entity, ambience);
-
-    auto& emitter = context.registry.emplace<Component::AudioEmitter>(entity);
+    auto& emitter = context.registry.emplace<Component::AudioEmitter>(entity, false, 0.8f);
     System::Audio::Emitter::PlayEmitter(emitter);
 
     return entity;

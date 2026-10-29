@@ -101,7 +101,7 @@ void Renderer::DrawSprite(
     const Nc::Vector2f origin,
     const float rotation,
     const float scale,
-    Nc::RGBa tint
+    const Nc::RGBa tint
 )
 {
     const auto width = static_cast<float>(sprite.albedo.width);

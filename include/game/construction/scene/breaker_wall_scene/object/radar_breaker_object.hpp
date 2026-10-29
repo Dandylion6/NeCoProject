@@ -3,6 +3,7 @@
 
 #include "entt/entity/entity.hpp"
 #include "entt/entity/fwd.hpp"
+#include "game/construction/shared/object/mechanical/circuit_breaker_object.hpp"
 #include "game/contexts/scene_context.hpp"
 
 
@@ -17,8 +18,9 @@ public:
 	{
 		entt::entity base = entt::null;
 		entt::entity lever = entt::null;
+	    entt::entity indicator = entt::null;
 
-		[[nodiscard]] std::array<entt::entity, 2u> All() const noexcept { return { base, lever }; }
+		[[nodiscard]] std::array<entt::entity, 3u> All() const noexcept { return { base, lever, indicator }; }
 	};
 
 
@@ -40,9 +42,18 @@ private:
 	{
 	public:
 		// ------ Functions ------
-		static entt::entity Create(const SceneContext& context, entt::entity radar);
+		static CircuitBreaker::Data Create(const SceneContext& context, entt::entity radar, entt::entity base);
 
 	};
+
+
+    class Indicator final
+    {
+    public:
+        // ------ Functions ------
+        static entt::entity Create(const SceneContext& context, entt::entity indicator);
+
+    };
 
 };
 

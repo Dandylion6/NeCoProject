@@ -19,14 +19,14 @@
 
 void Structure::CommsScene::Build(const BuildContext& context) noexcept
 {
-    constexpr char SCENE_AMBIENCE_PATH[] = "assets/audio/ambient/comms_ambience.wav";
+    constexpr char SCENE_AMBIENCE_PATH[] = "assets/audio/ambient/bunker_interior_ambience.wav";
     constexpr char SCENE_ALBEDO_PATH[] = "assets/environment/backgrounds/comms_room/comms_scene_albedo.png";
     constexpr char SCENE_NORMAL_PATH[] = "assets/environment/backgrounds/comms_room/comms_scene_normal.png";
     constexpr char SCENE_AO_PATH[] = "assets/environment/backgrounds/comms_room/comms_scene_ao.png";
 
     constexpr auto LIGHT_COLOR = Nc::Hex(0xf3ffbfff);
     constexpr Nc::Vector2f LIGHT_POSITION = Nc::Vector::Modulate(
-        Nc::Vector2f(0.46f, 1.2f),
+        Nc::Vector2f(0.46f, -0.2f),
         Nc::Vector2f(Nc::RENDER_RESOLUTION)
     );
     constexpr float LIGHT_DISTANCE = 320.0f;

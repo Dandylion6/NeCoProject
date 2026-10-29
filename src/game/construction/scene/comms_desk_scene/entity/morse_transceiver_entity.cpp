@@ -40,8 +40,7 @@ entt::entity Entity::MorseTransceiver::Create(const SceneContext& context) noexc
     context.registry.emplace<Component::Action::Input>(entity, KEY_SPACE);
     context.registry.emplace<Component::Action::Click>(entity, OFFSET);
 
-    const Music& morseTone = context.store.GetMusic(MORSE_TONE_PATH);
-    context.registry.emplace<Component::LoopedAudio>(entity, morseTone);
+    context.registry.emplace<Component::LoopedAudio>(entity, LoadMusicStream(MORSE_TONE_PATH));
 
     auto& emitter = context.registry.emplace<Component::AudioEmitter>(entity, 0.0f);
     System::Audio::Emitter::PlayEmitter(emitter);

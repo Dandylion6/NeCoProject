@@ -3,11 +3,13 @@
 #include <cmath>
 
 #include "algorithm"
+#include "core/math/interpolation.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
 #include "game/component/core/interactive/drag_action_component.hpp"
 #include "game/component/core/interactive/toggle_component.hpp"
+#include "game/component/core/rendering/sprite_component.hpp"
 #include "game/component/shared/mechanical/lever_component.hpp"
 #include "game/contexts/system_context.hpp"
 
@@ -26,8 +28,18 @@ void System::Logic::Lever::Update(const SystemContext& context) noexcept
             targetHeight = std::clamp<float>(targetHeight, lever.heightRange.x, lever.heightRange.y);
         }
 
-        constexpr float STIFFNESS = 180.0f;
-        constexpr float DAMPING = 19.0f;
+        if (context.registry.any_of<Component::Sprite>(lever.base))
+        {
+            auto& sprite = context.registry.get<Component::Sprite>(lever.base);
+            const float factor = Nc::Math::InverseLerp(lever.heightRange.x, lever.heightRange.y, lever.currentHeight);
+
+            const auto maxFrames = static_cast<float>(sprite.maxFrames);
+            const int frame = static_cast<int>(std::clamp(maxFrames * factor, 0.0f, maxFrames - 1.0f));
+            sprite.frame = frame;
+        }
+
+        constexpr float STIFFNESS = 140.0f;
+        constexpr float DAMPING = 20.0f;
 
         const float displacement = targetHeight - lever.currentHeight;
         lever.velocity += displacement * STIFFNESS * context.deltaTime;

@@ -52,18 +52,22 @@ void System::Action::Click::UpdateSceneButtons(
         bounds.min += button.offset;
         bounds.max += button.offset;
 
-        if (!Nc::Bounds::PointInBounds(bounds, mousePosition - renderContext.cameraPosition)) continue;
+        if (!Nc::Bounds::PointInBounds(bounds, mousePosition - renderContext.cameraPosition) && !button.isPressed) continue;
 
         switch (state)
         {
         case None: break;
-        case JustClicked: button.justClicked = true;
+        case JustClicked:
+            button.justClicked = true;
+            button.isPressed = true;
             break;
         case IsHeld:
             Nc::Cursor::AssignIfHigherPriority(context.game.cursor, Nc::Cursor::Clicked);
             button.isHeld = true;
             break;
-        case JustReleased: button.justReleased = true;
+        case JustReleased:
+            button.justReleased = true;
+            button.isPressed = false;
             break;
         }
 
@@ -88,20 +92,23 @@ void System::Action::Click::UpdateUiButtons(
         const auto mousePosition = Nc::Vector2f(GetMousePosition());
         const auto bounds = Nc::Bounds(transform, windowSize);
 
-        if (!Nc::Bounds::PointInBounds(bounds, mousePosition)) continue;
+        if (!Nc::Bounds::PointInBounds(bounds, mousePosition) && !button.isPressed) continue;
 
         switch (state)
         {
         case None: break;
         case JustClicked:
             button.state = Component::Action::Click::Inactive;
+            button.isPressed = true;
             button.justClicked = true;
             break;
         case IsHeld:
             Nc::Cursor::AssignIfHigherPriority(context.game.cursor, Nc::Cursor::Clicked);
             button.isHeld = true;
             break;
-        case JustReleased: button.justReleased = true;
+        case JustReleased:
+            button.justReleased = true;
+            button.isPressed = false;
             break;
         }
 

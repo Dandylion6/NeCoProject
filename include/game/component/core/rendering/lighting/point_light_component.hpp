@@ -30,6 +30,9 @@ struct Point final
 {
     // ------ Members ------
 
+    /**
+     * @TODO Need to refactor to separate flickering logic!
+     */
     Nc::RGBa color = Nc::RGBa(WHITE);
     float zPosition = 10.0f;
     float range = 32.0f;

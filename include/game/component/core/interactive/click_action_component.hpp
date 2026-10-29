@@ -45,6 +45,11 @@ struct Click final
     bool justReleased = false;
     bool isHeld = false;
 
+    /**
+     * Whether the button has been pressed.
+     */
+    bool isPressed = false;
+
 
     // ------ Constructors ------
 

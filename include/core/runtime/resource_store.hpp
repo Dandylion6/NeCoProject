@@ -4,6 +4,8 @@
 #include <string>
 #include <unordered_map>
 
+#include "entt/entity/registry.hpp"
+
 
 namespace Nc
 {
@@ -55,16 +57,7 @@ public:
 	 */
 	Sound CreateSoundHandle(const std::string& filePath) noexcept(false);
 
-	/**
-	 * @brief Retrieves or loads a music stream by file path.
-	 *
-	 * Music streams are long-form audio assets typically streamed from disk.
-	 * The returned reference is read-only.
-	 *
-	 * @param filePath Path to the music file.
-	 * @return Const reference to the cached Music instance.
-	 */
-	const Music& GetMusic(const std::string& filePath) noexcept(false);
+    void OnLoopedAudioDestroyed(entt::registry& registry, entt::entity entity) noexcept(false);
 
     /**
      * @brief Unloads everything that has been stored.
@@ -77,7 +70,6 @@ private:
 	std::unordered_map<std::string, Shader> shaderStore { };
 	std::unordered_map<FontKey, ::Font, FontKeyHash> fontStore { };
 	std::unordered_map<std::string, Sound> soundStore { };
-	std::unordered_map<std::string, Music> musicStore { };
 
 
 	// ------ Functions ------

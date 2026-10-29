@@ -49,11 +49,17 @@ void System::Audio::Emitter::UpdateEmitter(
     constexpr auto SCENE_WIDTH = static_cast<float>(Nc::RENDER_RESOLUTION.x);
 
     const float positionPan = 1.0f - transform.position.x / SCENE_WIDTH;
-    if (transform.boundScene == currentScene || !emitter.isSpacial)
+    if (transform.boundScene == currentScene)
     {
         emitter.attenuation = 0.0f;
         emitter.stereoPan = positionPan;
         emitter.pitch = 1.0f;
+        return;
+    }
+
+    if (!emitter.isSpacial)
+    {
+        emitter.attenuation = 1.0f;
         return;
     }
 

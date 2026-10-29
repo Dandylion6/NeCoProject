@@ -29,6 +29,7 @@ add_executable(NeCoProject
 	${PROJECT_SOURCES}
 )]]
 
+
 add_executable(NeCoProject
 		src/game/game.cpp
 		src/game/utility/rendering.cpp
@@ -112,7 +113,7 @@ add_executable(NeCoProject
 		src/game/construction/scene/comms_desk_scene/object/morse_monitor_object.cpp
 		src/game/construction/scene/comms_scene/object/radar_object.cpp
 		src/game/construction/scene/comms_scene/comms_scene.cpp
-		src/game/construction/scene/doorway_scene/object/radar_breaker_object.cpp
+        src/game/construction/scene/breaker_wall_scene/object/radar_breaker_object.cpp
 		src/game/construction/scene/doorway_scene/doorway_scene.cpp
 		src/game/construction/scene/outside_scene/entity/artillery_entity.cpp
 		src/game/construction/scene/outside_scene/entity/projectile_entity.cpp
@@ -148,6 +149,13 @@ target_compile_definitions(
 	PRIVATE 
 		$<$<CONFIG:Debug>:DEBUG_BUILD>
 		$<$<CONFIG:Release>:RELEASE_BUILD>
+)
+
+target_compile_definitions(NeCoProject PRIVATE
+        WIN32_LEAN_AND_MEAN
+        NOGDI      # removes Rectangle(), etc.
+        NOUSER     # removes CloseWindow(), ShowCursor(), DrawText macros, etc.
+        NOMINMAX
 )
 
 target_include_directories(
