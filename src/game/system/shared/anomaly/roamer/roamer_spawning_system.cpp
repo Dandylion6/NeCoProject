@@ -10,7 +10,7 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/component/shared/anomaly/roamer/anomaly_roamer_component.hpp"
-#include "game/construction/scene/comms_scene/entity/blip_entity.hpp"
+#include "../../../../../../include/game/construction/scene/comms_scene/object/blip_object.hpp"
 #include "game/contexts/scene_context.hpp"
 #include "game/contexts/system_context.hpp"
 #include "game/state/anomaly_state.hpp"
@@ -73,21 +73,21 @@ entt::entity System::Anomaly::Roamer::Spawning::SpawnRoamer(
 	auto behaviour = static_cast<RoamerBehaviour>(randomBehaviour);
 
 	const auto sceneContext = SceneContext(context.registry, context.store, context.game);
-	const entt::entity entity = Entity::Blip::Create(sceneContext, spawnPoint, BASE_HEALTH);
-	auto& roamer = context.registry.emplace<Component::Anomaly::Roamer>(entity, behaviour, target);
+	const auto [blip, emitter] = Object::Blip::Create(sceneContext, spawnPoint, BASE_HEALTH);
+	auto& roamer = context.registry.emplace<Component::Anomaly::Roamer>(blip, behaviour, target);
 
 	switch (behaviour)
 	{
-	case RoamerBehaviour::Strider: Strider::Spawn(context.registry, entity);
+	case RoamerBehaviour::Strider: Strider::Spawn(context.registry, blip);
 		break;
-	case RoamerBehaviour::Phaser: Phaser::Spawn(context.registry, entity);
+	case RoamerBehaviour::Phaser: Phaser::Spawn(context.registry, blip);
 		break;
-	case RoamerBehaviour::Phantom: Phantom::Spawn(context.registry, anomalyState, entity, roamer);
+	case RoamerBehaviour::Phantom: Phantom::Spawn(context.registry, anomalyState, blip, roamer);
 		break;
 	default: break;
 	}
 
-	return entity;
+	return blip;
 }
 
 

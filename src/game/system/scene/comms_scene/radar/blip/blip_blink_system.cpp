@@ -10,8 +10,10 @@
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
 #include "game/component/core/tween_component.hpp"
+#include "game/component/core/audio/audio_emitter_component.hpp"
 #include "game/component/scene/comms_scene/blip_components.hpp"
 #include "game/state/game_state.hpp"
+#include "game/system/core/audio/audio_emitter_system.hpp"
 #include "game/tag/scene/comms_scene/radar_tags.hpp"
 
 #ifdef DEBUG_BUILD
@@ -48,6 +50,9 @@ void System::Blip::Blink::UpdateBlips(entt::registry& registry, const Component:
 
 		if (!BlipShouldAppear(registry, transform, pathTransform, fadeInTween)) continue;
 		Nc::Tween::Replay(fadeInTween);
+
+	    auto& emitter = registry.get<Component::AudioEmitter>(blip.emitter);
+        Audio::Emitter::PlayEmitter(emitter);
 	}
 }
 

@@ -107,7 +107,7 @@ add_executable(NeCoProject
 		src/game/construction/shared/object/interactive/circuit_breaker_object.cpp
         src/game/construction/scene/comms_desk_scene/entity/journal_entity.cpp
 		src/game/construction/scene/comms_desk_scene/comms_desk_scene.cpp
-		src/game/construction/scene/comms_scene/entity/blip_entity.cpp
+        src/game/construction/scene/comms_scene/object/blip_object.cpp
 		src/game/construction/scene/comms_desk_scene/entity/morse_transceiver_entity.cpp
 		src/game/construction/scene/comms_scene/entity/radio_entity.cpp
 		src/game/construction/scene/comms_desk_scene/object/morse_monitor_object.cpp

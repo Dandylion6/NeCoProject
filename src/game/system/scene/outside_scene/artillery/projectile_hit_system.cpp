@@ -1,19 +1,15 @@
+#include "game/system/scene/outside_scene/artillery/projectile_hit_system.hpp"
 #include "core/data/vector2.hpp"
 #include "core/math/vector_math.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
-#include "game/component/core/audio/audio_component.hpp"
 #include "game/component/core/transform_component.hpp"
+#include "game/component/core/audio/audio_emitter_component.hpp"
 #include "game/component/scene/comms_scene/blip_components.hpp"
 #include "game/component/scene/outside_scene/projectile_component.hpp"
 #include "game/component/shared/stat/health_component.hpp"
+#include "game/contexts/system_context.hpp"
 #include "game/system/core/audio/audio_emitter_system.hpp"
-#include "game/system/scene/outside_scene/artillery/projectile_hit_system.hpp"
-#include "raylib.h"
-#include <cstdint>
-#include <vector>
-
-#include "game/component/core/audio/audio_emitter_component.hpp"
 
 
 void System::Projectile::Hit::Update(const SystemContext& context) noexcept
