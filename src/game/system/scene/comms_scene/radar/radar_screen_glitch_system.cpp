@@ -12,8 +12,8 @@
 
 void System::Radar::ScreenGlitch::Update(const SystemContext& context)
 {
-    constexpr float BASE_VOLUME = 0.1;
-    constexpr float GLITCH_VOLUME_MULTIPLIER = 1.42f;
+    constexpr float BASE_VOLUME = 0.07;
+    constexpr float GLITCH_VOLUME_MULTIPLIER = 1.46f;
 
     const entt::entity entity = entt::get_single<Component::Radar>(context.registry);
     auto& radar = context.registry.get<Component::Radar>(entity);

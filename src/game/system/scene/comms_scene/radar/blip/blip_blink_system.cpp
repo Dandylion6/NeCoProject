@@ -11,7 +11,10 @@
 #include "game/component/core/transform_component.hpp"
 #include "game/component/core/tween_component.hpp"
 #include "game/component/core/audio/audio_emitter_component.hpp"
+#include "game/component/core/interactive/toggle_component.hpp"
 #include "game/component/scene/comms_scene/blip_components.hpp"
+#include "game/component/scene/comms_scene/radar_components.hpp"
+#include "game/component/shared/mechanical/machine_component.hpp"
 #include "game/state/game_state.hpp"
 #include "game/system/core/audio/audio_emitter_system.hpp"
 #include "game/tag/scene/comms_scene/radar_tags.hpp"
@@ -36,6 +39,9 @@ void System::Blip::Blink::Update(entt::registry& registry)
 
 void System::Blip::Blink::UpdateBlips(entt::registry& registry, const Component::Transform& pathTransform)
 {
+    const entt::entity radar = entt::get_single<Component::Radar, Component::Action::Toggle>(registry);
+    const auto& radarState = registry.get<Component::Action::Toggle>(radar);
+
 	const auto view = registry.view<const Component::Blip, const Component::Transform, Component::TweenCollection>();
 	for (auto [entity, blip, transform, collection] : view.each())
 	{
@@ -51,6 +57,7 @@ void System::Blip::Blink::UpdateBlips(entt::registry& registry, const Component:
 		if (!BlipShouldAppear(registry, transform, pathTransform, fadeInTween)) continue;
 		Nc::Tween::Replay(fadeInTween);
 
+	    if (radarState.state != On) continue;
 	    auto& emitter = registry.get<Component::AudioEmitter>(blip.emitter);
         Audio::Emitter::PlayEmitter(emitter);
 	}
