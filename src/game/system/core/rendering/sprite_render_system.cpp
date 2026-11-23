@@ -22,7 +22,20 @@ void SpriteRenderSystem::DrawScreen(
 	const Component::Sprite& sprite = registry.get<const Component::Sprite>(entity);
 
 	const Nc::Vector2f position = transform.position + cameraPosition;
-	Renderer::DrawSpriteLit(lightShader, sprite, position, transform.offset, transform.rotation, sprite.scale, sprite.tint);
+    if (!sprite.isSpriteSheet)
+    {
+        Renderer::DrawSpriteLit(lightShader, sprite, position, transform.offset, transform.rotation, sprite.scale, sprite.tint);
+        return;
+    }
+
+    const auto width = static_cast<float>(sprite.albedo.width);
+    const auto height = static_cast<float>(sprite.albedo.height);
+
+    const float sliceWidth = width / static_cast<float>(sprite.maxFrames);
+    const float sliceX =  sliceWidth * static_cast<float>(sprite.frame);
+
+    const auto slice = Rectangle{sliceX, 0.0f, sliceWidth, height};
+    Renderer::DrawSpriteLit(lightShader, sprite, slice, position, transform.offset, transform.rotation, sprite.scale, sprite.tint);
 }
 
 
@@ -38,5 +51,9 @@ void SpriteRenderSystem::DrawUi(const entt::entity entity, entt::registry& regis
 	const Nc::Vector2f position = anchorPoint + transform.offset;
 	const Nc::Vector2f origin = Nc::Vector::Modulate(transform.origin, transform.size) * scale;
 
-	Renderer::DrawSprite(sprite, position, origin, transform.rotation, scale, sprite.tint);
+    const auto width = static_cast<float>(sprite.albedo.width);
+    const auto height = static_cast<float>(sprite.albedo.height);
+
+    const auto slice = Rectangle{0.0f, 0.0f, width, height};
+	Renderer::DrawSprite(sprite, slice, position, origin, transform.rotation, scale, sprite.tint);
 }

@@ -29,6 +29,7 @@ add_executable(NeCoProject
 	${PROJECT_SOURCES}
 )]]
 
+
 add_executable(NeCoProject
 		src/game/game.cpp
 		src/game/utility/rendering.cpp
@@ -106,13 +107,13 @@ add_executable(NeCoProject
 		src/game/construction/shared/object/interactive/circuit_breaker_object.cpp
         src/game/construction/scene/comms_desk_scene/entity/journal_entity.cpp
 		src/game/construction/scene/comms_desk_scene/comms_desk_scene.cpp
-		src/game/construction/scene/comms_scene/entity/blip_entity.cpp
+        src/game/construction/scene/comms_scene/object/blip_object.cpp
 		src/game/construction/scene/comms_desk_scene/entity/morse_transceiver_entity.cpp
 		src/game/construction/scene/comms_scene/entity/radio_entity.cpp
 		src/game/construction/scene/comms_desk_scene/object/morse_monitor_object.cpp
 		src/game/construction/scene/comms_scene/object/radar_object.cpp
 		src/game/construction/scene/comms_scene/comms_scene.cpp
-		src/game/construction/scene/doorway_scene/object/radar_breaker_object.cpp
+        src/game/construction/scene/breaker_wall_scene/object/radar_breaker_object.cpp
 		src/game/construction/scene/doorway_scene/doorway_scene.cpp
 		src/game/construction/scene/outside_scene/entity/artillery_entity.cpp
 		src/game/construction/scene/outside_scene/entity/projectile_entity.cpp
@@ -129,7 +130,8 @@ add_executable(NeCoProject
         src/game/system/scene/comms_desk_scene/morse_code/morse_handle_system.cpp
         include/game/system/scene/comms_desk_scene/morse_code/morse_handle_system.hpp
         src/game/system/scene/comms_desk_scene/journal/journal_turn_system.cpp
-        src/game/system/scene/comms_desk_scene/journal/journal_page_system.cpp)
+        src/game/system/scene/comms_desk_scene/journal/journal_page_system.cpp
+        src/game/construction/scene/breaker_wall_scene/breaker_wall_scene.cpp)
 
 target_sources(NeCoProject PRIVATE
 		src/main.cpp
@@ -147,6 +149,13 @@ target_compile_definitions(
 	PRIVATE 
 		$<$<CONFIG:Debug>:DEBUG_BUILD>
 		$<$<CONFIG:Release>:RELEASE_BUILD>
+)
+
+target_compile_definitions(NeCoProject PRIVATE
+        WIN32_LEAN_AND_MEAN
+        NOGDI      # removes Rectangle(), etc.
+        NOUSER     # removes CloseWindow(), ShowCursor(), DrawText macros, etc.
+        NOMINMAX
 )
 
 target_include_directories(

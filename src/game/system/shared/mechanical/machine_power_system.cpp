@@ -12,7 +12,7 @@
 void System::Machine::PowerUsage::Update(const SystemContext& context, AnomalyState& anomaly)
 {
 	const auto view = context.registry.view<Component::Machine>();
-	for (auto [entity, machine] : view.each())
+	for (const auto& [entity, machine] : view.each())
 	{
 		if (!IsMachineActive(context, entity)) continue;
 		anomaly.attractionPercentage -= machine.attractionReduction * context.deltaTime;

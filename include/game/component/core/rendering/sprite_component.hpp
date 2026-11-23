@@ -26,6 +26,9 @@ struct Sprite final
     Nc::RGBa tint = Nc::RGBa(WHITE);
     float alpha = 1.0f;
     float scale = 1.0f;
+    uint8_t frame = 0;
+    uint8_t maxFrames = 1;
+    bool isSpriteSheet = false;
 
 
     // ------ Constructors ------
@@ -52,8 +55,20 @@ struct Sprite final
         const Texture2D& albedo,
         const Texture2D& normals,
         const Texture2D& ao,
-        const float alpha = 1.0f,
-        const Nc::RGBa tint = Nc::RGBa(WHITE)
+        const uint8_t maxFrames
+    ) noexcept
+        : albedo(albedo), normals(normals), ambientOcclusion(ao), maxFrames(maxFrames)
+    {
+        isSpriteSheet = maxFrames > 1;
+    }
+
+
+    explicit constexpr Sprite(
+        const Texture2D& albedo,
+        const Texture2D& normals,
+        const Texture2D& ao,
+        const Nc::RGBa tint = Nc::RGBa(WHITE),
+        const float alpha = 1.0f
     ) noexcept
         : albedo(albedo), normals(normals), ambientOcclusion(ao), tint(tint), alpha(alpha) {}
 };

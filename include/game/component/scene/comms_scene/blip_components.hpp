@@ -3,7 +3,7 @@
 #include <cstdint>
 
 #include "core/data/vector2.hpp"
-#include "game/contexts/system_context.hpp"
+#include "entt/entity/entity.hpp"
 
 
 namespace Component::Glitch
@@ -128,6 +128,7 @@ struct Blip final
 
 	// ------ Members ------
 
+    entt::entity emitter = entt::null;
 	float remainingGlitchSeconds = 0.0f;
 	State state = Stable;
 	bool isActive = true;
@@ -135,7 +136,7 @@ struct Blip final
 
 	// ------ Constructors ------
 
-	constexpr Blip() noexcept = default;
+    explicit constexpr Blip(const entt::entity emitter) noexcept : emitter(emitter) { };
 };
 
 }

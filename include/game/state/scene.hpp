@@ -3,6 +3,7 @@
 #include <cstdint>
 
 #include "core/data/vector2.hpp"
+#include "external/glfw/src/internal.h"
 
 
 enum Scene: uint8_t
@@ -11,6 +12,7 @@ enum Scene: uint8_t
     CommsRoom,
     RadarScene,
     CommsDesk,
+    BreakerWall,
     Doorway,
     Outside,
     SCENE_COUNT,
@@ -52,8 +54,9 @@ consteval Connections BuildConnections()
         isTraversable = true;
     };
 
-    AddConnection(CommsRoom, NullScene, CommsDesk, NullScene, Doorway, NullScene, NullScene);
+    AddConnection(CommsRoom, NullScene, CommsDesk, BreakerWall, Doorway, NullScene, NullScene);
     AddConnection(CommsDesk, CommsRoom, NullScene, NullScene, NullScene, NullScene, NullScene);
+    AddConnection(BreakerWall, NullScene, NullScene, NullScene, CommsRoom, NullScene, NullScene);
     AddConnection(Doorway, NullScene, NullScene, CommsRoom, NullScene, NullScene, NullScene);
 
     return connections;

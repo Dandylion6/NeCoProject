@@ -38,7 +38,8 @@ const Shader& System::Render::Lighting::Update(const SystemContext& systemContex
     {
         if (transform.boundScene != systemContext.game.currentScene) continue;
 
-        const Nc::Vector2f position = transform.position - context.cameraPosition;
+        const auto offsetPosition = transform.position + context.cameraPosition;
+        const auto position = Nc::Vector2f(offsetPosition.x, Nc::RENDER_RESOLUTION.y - offsetPosition.y);
         Vector3 position3D = {position.x, position.y, source.zPosition};
 
         SetShaderValue(shader, context.lightingContext.lightPositionLocation + index, &position3D, SHADER_UNIFORM_VEC3);

@@ -47,7 +47,9 @@ struct AudioEmitter final
     // ------ Constructors ------
 
     constexpr AudioEmitter() = default;
-    explicit constexpr AudioEmitter(const bool isSpacial) noexcept : isSpacial(isSpacial) {}
+    explicit constexpr AudioEmitter(const bool isSpacial, const float volume = 1.0f) noexcept
+        : volume(volume), isSpacial(isSpacial) {}
+
     explicit constexpr AudioEmitter(const float volume, const float stereoPan = 0.5f, const float pitch = 1.0f) noexcept
         : stereoPan(stereoPan), volume(volume), pitch(pitch) {}
 };

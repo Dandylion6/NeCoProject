@@ -9,6 +9,8 @@
 #include "core/runtime/entity_helpers.hpp"
 #include "core/runtime/render_context.hpp"
 #include "entt/entity/fwd.hpp"
+#include "game/component/core/audio/audio_component.hpp"
+#include "game/construction/scene/breaker_wall_scene/breaker_wall_scene.hpp"
 #include "game/construction/scene/comms_desk_scene/comms_desk_scene.hpp"
 #include "game/construction/scene/comms_scene/comms_scene.hpp"
 #include "game/construction/scene/doorway_scene/doorway_scene.hpp"
@@ -90,6 +92,13 @@
 #endif
 
 
+static void OnLoopedAudioDestroyed(entt::registry& registry, const entt::entity entity)
+{
+    const auto& audio = registry.get<Component::LoopedAudio>(entity);
+    UnloadMusicStream(audio.sound);
+}
+
+
 Game::Game() : renderContext(resourceStore)
 {
 	InitAudioDevice();
@@ -98,7 +107,8 @@ Game::Game() : renderContext(resourceStore)
 	pendingSettings = settings;
 
 	registry.ctx().emplace<Nc::Random>();
-};
+    registry.on_destroy<Component::LoopedAudio>().connect<&OnLoopedAudioDestroyed>();
+}
 
 
 void Game::SetupRenderContext()
@@ -214,6 +224,7 @@ void Game::BuildRuntimeScenes()
 
 	Structure::CommsScene::Build(buildContext);
 	Structure::DeskScene::Build(buildContext);
+    Structure::BreakerWallScene::Build(buildContext);
 	Structure::DoorwayScene::Build(buildContext);
 	Structure::OutsideScene::Build(buildContext);
 }

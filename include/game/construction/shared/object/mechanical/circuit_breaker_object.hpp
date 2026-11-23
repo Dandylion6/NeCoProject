@@ -23,14 +23,16 @@ public:
         Component::Logic::Breaker& breaker;
         entt::entity entity = entt::null;
         entt::entity indicator = entt::null;
+        entt::entity base = entt::null;
 
-        [[nodiscard]] std::array<entt::entity, 2u> All() const noexcept { return { entity, indicator }; }
+        [[nodiscard]] std::array<entt::entity, 3u> All() const noexcept { return { entity, indicator, base }; }
     };
 
 
     // ------- Functions ------
 
-    static Data Create(entt::registry& registry, const Component::Transform& transform, entt::entity system) noexcept;
+    static Data Create(entt::registry& registry, const Component::Transform& transform, entt::entity system, entt::entity base) noexcept;
+    static Data Create(entt::registry& registry, const Component::Transform& transform, float moveRange, entt::entity system, entt::entity base) noexcept;
 
 private:
     class Indicator final

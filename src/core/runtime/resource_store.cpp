@@ -6,6 +6,7 @@
 
 #include "raylib.h"
 #include "core/data/font.hpp"
+#include "game/component/core/audio/audio_component.hpp"
 
 #if defined(PLATFORM_DESKTOP)
 constexpr auto GLSL_VERSION = 330;
@@ -66,17 +67,6 @@ Sound ResourceStore::CreateSoundHandle(const std::string& filePath) noexcept(fal
 }
 
 
-const Music& ResourceStore::GetMusic(const std::string& filePath) noexcept(false)
-{
-	if (!musicStore.contains(filePath))
-	{
-		Music music = LoadMusicStream(filePath.c_str());
-		musicStore.emplace(filePath, music);
-	}
-	return musicStore.at(filePath);
-}
-
-
 void ResourceStore::OnShutdown() noexcept(false)
 {
     for (const Texture2D& texture : textureStore | std::views::values)
@@ -91,14 +81,10 @@ void ResourceStore::OnShutdown() noexcept(false)
     for (const Sound& sound : soundStore | std::views::values)
         UnloadSound(sound);
 
-    for (const Music& music : musicStore | std::views::values)
-        UnloadMusicStream(music);
-
     textureStore.clear();
     shaderStore.clear();
     fontStore.clear();
     soundStore.clear();
-    musicStore.clear();
 }
 
 

@@ -31,23 +31,33 @@ struct Lever final
 
     std::string movingSound { };
     std::string switchedSound { };
-    // @brief Minimum and maximum lever height in world. 
+
+    /**
+     * @brief Minimum and maximum lever height in world.
+     */
     Nc::Vector2f heightRange = Nc::Vector2f::Zero();
     float currentHeight = 0.0f; 
     float velocity = 0.0f;
+
+    /**
+     * @brief The animated handle.
+     */
+    entt::entity base = entt::null;
 
 
 	// ------ Constructors ------
 
     constexpr Lever() noexcept = default;
     constexpr Lever(
-        Nc::Vector2f heightRange, 
+        const Nc::Vector2f heightRange,
+        const entt::entity base,
         std::string&& movingSound, 
         std::string&& switchedSound
     ) noexcept :
-        heightRange(heightRange), 
-        movingSound(std::move(movingSound)), 
-        switchedSound(std::move(switchedSound)) 
+        movingSound(std::move(movingSound)),
+        switchedSound(std::move(switchedSound)),
+        heightRange(heightRange),
+        base(base)
     { };
 };
 

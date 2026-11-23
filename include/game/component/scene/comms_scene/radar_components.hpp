@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include "entt/entity/entity.hpp"
 
 
 namespace Component
@@ -19,7 +20,12 @@ struct Radar final
 
 
 	// ------ Members ------
-	
+
+    /**
+     * The physical screen entity.
+     */
+    entt::entity screen = entt::null;
+
 	float stability = 100.0f;
 	// Remaining seconds of recalibration.
 	float recalibrationTimeLeft = 0.0f;
@@ -40,6 +46,7 @@ struct Radar final
 	// ------ Constructors ------
 
 	constexpr Radar() noexcept = default;
+    explicit constexpr Radar(const entt::entity screen) noexcept : screen(screen) {}
 };
 
 
