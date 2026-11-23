@@ -7,6 +7,7 @@
 #include "game/component/core/audio/audio_emitter_component.hpp"
 #include "game/component/scene/comms_desk_scene/morse_components.hpp"
 #include "game/contexts/system_context.hpp"
+#include "game/tag/scene/comms_scene/morse_monitor_tag.hpp"
 
 
 void System::Morse::Tone::Update(const SystemContext& context)
@@ -14,10 +15,12 @@ void System::Morse::Tone::Update(const SystemContext& context)
 	constexpr float FADE_SPEED = 54.0f;
 	constexpr float TONE_VOLUME = 1.1f;
 
-	const entt::entity entity = entt::get_single<Component::Morse::Transceiver>(context.registry);
-	const auto& transceiver = context.registry.get<Component::Morse::Transceiver>(entity);
-	auto& emitter = context.registry.get<Component::AudioEmitter>(entity);
+    const entt::entity gaugeEntity = entt::get_single<Tag::Morse::Gauge>(context.registry);
+    const entt::entity transceiverEntity = entt::get_single<Component::Morse::Transceiver>(context.registry);
+
+	const auto& transceiver = context.registry.get<Component::Morse::Transceiver>(transceiverEntity);
+	auto& emitter = context.registry.get<Component::AudioEmitter>(gaugeEntity);
 
 	const float targetVolume = transceiver.isPushed ? TONE_VOLUME : 0.0f;
 	emitter.volume = Nc::Math::SmoothApproach(emitter.volume, targetVolume, context.deltaTime, FADE_SPEED);
-};
+}

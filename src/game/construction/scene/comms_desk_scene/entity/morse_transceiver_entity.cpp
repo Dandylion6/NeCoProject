@@ -14,12 +14,10 @@
 #include "game/component/scene/comms_desk_scene/morse_components.hpp"
 #include "game/contexts/scene_context.hpp"
 #include "game/state/scene.hpp"
-#include "game/system/core/audio/audio_emitter_system.hpp"
 
 
 entt::entity Entity::MorseTransceiver::Create(const SceneContext& context) noexcept
 {
-    constexpr char MORSE_TONE_PATH[] = "assets/audio/object/morse_tone.wav";
     constexpr char HANDLE_ALBEDO_PATH[] = "assets/environment/objects/morse_transmitter/morse_handle/morse_handle_albedo.png";
     constexpr char HANDLE_NORMAL_PATH[] = "assets/environment/objects/morse_transmitter/morse_handle/morse_handle_normal.png";
     constexpr char HANDLE_AO_PATH[] = "assets/environment/objects/morse_transmitter/morse_handle/morse_handle_ao.png";
@@ -40,10 +38,7 @@ entt::entity Entity::MorseTransceiver::Create(const SceneContext& context) noexc
     context.registry.emplace<Component::Action::Input>(entity, KEY_SPACE);
     context.registry.emplace<Component::Action::Click>(entity, OFFSET);
 
-    context.registry.emplace<Component::LoopedAudio>(entity, LoadMusicStream(MORSE_TONE_PATH));
-
-    auto& emitter = context.registry.emplace<Component::AudioEmitter>(entity, 0.0f);
-    System::Audio::Emitter::PlayEmitter(emitter);
-
+    context.registry.emplace<Component::ShotAudio>(entity);
+    context.registry.emplace<Component::AudioEmitter>(entity, 0.3f);
     return entity;
 }

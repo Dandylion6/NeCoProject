@@ -6,18 +6,22 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
+#include "game/component/core/audio/audio_component.hpp"
+#include "game/component/core/audio/audio_emitter_component.hpp"
 #include "game/component/core/rendering/sprite_component.hpp"
 #include "game/state/scene.hpp"
+#include "game/system/core/audio/audio_emitter_system.hpp"
 #include "game/tag/scene/comms_scene/morse_monitor_tag.hpp"
 
 
 void Object::MorseMonitor::Create(const SceneContext& context) noexcept
 {
-    constexpr auto POSITION = Nc::Vector2f(296.0f, 141.0f);
-    constexpr auto OFFSET = Nc::Vector2f(25.0f, 62.0f);
+    constexpr char MORSE_TONE_PATH[] = "assets/audio/object/morse_telegraph/morse_tone.wav";
     constexpr char GAUGE_ALBEDO_PATH[] = "assets/environment/objects/morse_transmitter/morse_timing_knob/morse_transmission_gauge_albedo.png";
     constexpr char GAUGE_NORMAL_PATH[] = "assets/environment/objects/morse_transmitter/morse_timing_knob/morse_transmission_gauge_normal.png";
     constexpr char GAUGE_AO_PATH[] = "assets/environment/objects/morse_transmitter/morse_timing_knob/morse_transmission_gauge_ao.png";
+    constexpr auto POSITION = Nc::Vector2f(296.0f, 141.0f);
+    constexpr auto OFFSET = Nc::Vector2f(25.0f, 62.0f);
 
     const entt::entity entity = context.registry.create();
 
@@ -30,4 +34,9 @@ void Object::MorseMonitor::Create(const SceneContext& context) noexcept
 
     const auto size = Nc::Vector2f(albedoTexture.width, normalTexture.height);
     context.registry.emplace<Component::Transform>(entity, CommsDesk, POSITION, size, OFFSET);
+
+    context.registry.emplace<Component::LoopedAudio>(entity, LoadMusicStream(MORSE_TONE_PATH));
+
+    auto& emitter = context.registry.emplace<Component::AudioEmitter>(entity, 0.0f);
+    System::Audio::Emitter::PlayEmitter(emitter);
 }
