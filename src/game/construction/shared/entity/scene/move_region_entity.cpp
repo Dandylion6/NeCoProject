@@ -2,9 +2,12 @@
 
 #include "core/data/vector2.hpp"
 #include "core/runtime/render_context.hpp"
+#include "core/runtime/resource_store.hpp"
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
+#include "game/component/core/audio/audio_component.hpp"
+#include "game/component/core/audio/audio_emitter_component.hpp"
 #include "game/component/core/interactive/click_action_component.hpp"
 #include "game/component/shared/input/move_region_component.hpp"
 #include "game/construction/ui/shared/entity/move_transition_entity.hpp"
@@ -15,7 +18,8 @@ entt::entity Entity::MoveRegion::Create(
 	const SceneContext& context,
 	const Component::Transform& transform,
 	Scene nextScene,
-	float moveTime
+	float moveTime,
+	const std::string& moveSound
 ) noexcept
 {
 	const entt::entity entity = context.registry.create();
@@ -23,6 +27,9 @@ entt::entity Entity::MoveRegion::Create(
 	context.registry.emplace<Component::MoveRegion>(entity, nextScene, moveTime);
 	context.registry.emplace<Component::Transform>(entity, transform);
 	context.registry.emplace<Component::Action::Click>(entity);
+
+    context.registry.emplace<Component::ShotAudio>(entity, context.store.CreateSoundHandle(moveSound));
+    context.registry.emplace<Component::AudioEmitter>(entity, false, 1.0f, true);
 	return entity;
 }
 
@@ -32,7 +39,8 @@ entt::entity Entity::MoveRegion::Create(
 	const Direction region,
 	const Scene currentScene,
 	const Scene nextScene,
-	const float moveTime
+	const float moveTime,
+	const std::string& moveSound
 ) noexcept
 {
 	constexpr Nc::Vector2f displaySize = Nc::Vector2f(Nc::RENDER_RESOLUTION);
@@ -83,5 +91,5 @@ entt::entity Entity::MoveRegion::Create(
 	    break;
     }
 
-	return Create(context, transform, nextScene, moveTime);
+	return Create(context, transform, nextScene, moveTime, moveSound);
 }

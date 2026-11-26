@@ -41,14 +41,15 @@ struct AudioEmitter final
     float pitch = 1.0f;
     State state = Idle;
     bool isSpacial = true;
+    bool ignoreScene = false;
     bool justPlayed = false;
 
 
     // ------ Constructors ------
 
     constexpr AudioEmitter() = default;
-    explicit constexpr AudioEmitter(const bool isSpacial, const float volume = 1.0f) noexcept
-        : volume(volume), isSpacial(isSpacial) {}
+    explicit constexpr AudioEmitter(const bool isSpacial, const float volume = 1.0f, const bool ignoreScene = false) noexcept
+        : volume(volume), isSpacial(isSpacial), ignoreScene(ignoreScene) {}
 
     explicit constexpr AudioEmitter(const float volume, const float stereoPan = 0.5f, const float pitch = 1.0f) noexcept
         : stereoPan(stereoPan), volume(volume), pitch(pitch) {}

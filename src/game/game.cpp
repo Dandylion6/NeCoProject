@@ -82,7 +82,6 @@
 #include "game/utility/color_palette.hpp"
 
 #ifdef DEBUG_BUILD
-#include <cstring>
 #include <string>
 
 #include "game/component/shared/debug/dev_settings_component.hpp"

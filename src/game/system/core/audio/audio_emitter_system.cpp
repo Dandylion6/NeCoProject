@@ -21,7 +21,7 @@ void System::Audio::Emitter::Update(const SystemContext& context)
 
         UpdateEmitter(context.game.currentScene, emitter, transform);
 
-        const float newVolume = context.game.movingToScene != NullScene ? 1.0f : 0.0f;
+        const float newVolume = context.game.movingToScene != NullScene || emitter.ignoreScene ? 1.0f : 0.0f;
         emitter.volumeFade = Nc::Math::SmoothApproach(emitter.volumeFade, newVolume, context.deltaTime, FADE_SPEED);
     }
 }
@@ -49,7 +49,7 @@ void System::Audio::Emitter::UpdateEmitter(
     constexpr auto SCENE_WIDTH = static_cast<float>(Nc::RENDER_RESOLUTION.x);
 
     const float positionPan = 1.0f - transform.position.x / SCENE_WIDTH;
-    if (transform.boundScene == currentScene)
+    if (transform.boundScene == currentScene || emitter.ignoreScene)
     {
         emitter.attenuation = 0.0f;
         emitter.stereoPan = positionPan;

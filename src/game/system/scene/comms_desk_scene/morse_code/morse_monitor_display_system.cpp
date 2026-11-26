@@ -6,9 +6,8 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
-#include "game/component/core/audio/audio_component.hpp"
-#include "game/component/core/audio/audio_emitter_component.hpp"
 #include "game/component/scene/comms_desk_scene/morse_components.hpp"
+#include "game/construction/shared/entity/environment/runtime_audio_entity.hpp"
 #include "game/contexts/system_context.hpp"
 #include "game/state/settings.hpp"
 #include "game/system/core/audio/audio_emitter_system.hpp"
@@ -18,8 +17,6 @@
 
 void System::Morse::MonitorDisplay::Update(const SystemContext& context, const Settings::Morse settings)
 {
-    constexpr char MORSE_PRESS_SOUND[] = "assets/audio/object/morse_telegraph/morse_telegraph_press.wav";
-    constexpr char MORSE_RELEASE_SOUND[] = "assets/audio/object/morse_telegraph/morse_telegraph_release.wav";
     constexpr float SMOOTH_SPEED = 32.0f;
     constexpr float MIN_ROTATION = -90.0f;
 
@@ -28,15 +25,6 @@ void System::Morse::MonitorDisplay::Update(const SystemContext& context, const S
 
     const auto& transceiver = context.registry.get<Component::Morse::Transceiver>(transceiverEntity);
     auto& transform = context.registry.get<Component::Transform>(gaugeEntity);
-
-    auto& audio = context.registry.get<Component::ShotAudio>(transceiverEntity);
-    auto& emitter = context.registry.get<Component::AudioEmitter>(transceiverEntity);
-
-    if (transceiver.inputJustChanged)
-    {
-        audio.sound = context.store.CreateSoundHandle(transceiver.isPushed ? MORSE_PRESS_SOUND : MORSE_RELEASE_SOUND);
-        Audio::Emitter::PlayEmitter(emitter);
-    }
 
     if (transceiver.isPushed)
     {

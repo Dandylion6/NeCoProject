@@ -6,12 +6,16 @@
 #include "game/component/core/rendering/sprite_component.hpp"
 #include "game/component/scene/comms_desk_scene/morse_components.hpp"
 #include "game/construction/scene/comms_desk_scene/entity/morse_transceiver_entity.hpp"
-#include "game/construction/scene/outside_scene/entity/artillery_entity.hpp"
+#include "game/construction/shared/entity/environment/runtime_audio_entity.hpp"
 #include "game/contexts/system_context.hpp"
+#include "game/system/core/audio/audio_emitter_system.hpp"
 
 
 void System::Morse::Handle::Update(const SystemContext& context) noexcept
 {
+    constexpr char MORSE_PRESS_SOUND[] = "assets/audio/object/morse_telegraph/morse_telegraph_press.wav";
+    constexpr char MORSE_RELEASE_SOUND[] = "assets/audio/object/morse_telegraph/morse_telegraph_release.wav";
+
     constexpr char HANDLE_ALBEDO_PATH[] = "assets/environment/objects/morse_transmitter/morse_handle/morse_handle_albedo.png";
     constexpr char HANDLE_NORMAL_PATH[] = "assets/environment/objects/morse_transmitter/morse_handle/morse_handle_normal.png";
     constexpr char HANDLE_AO_PATH[] = "assets/environment/objects/morse_transmitter/morse_handle/morse_handle_ao.png";
@@ -27,6 +31,9 @@ void System::Morse::Handle::Update(const SystemContext& context) noexcept
 
     auto& sprite = context.registry.get<Component::Sprite>(entity);
     auto& transform = context.registry.get<Component::Transform>(entity);
+
+    const std::string file = transceiver.isPushed ? MORSE_PRESS_SOUND : MORSE_RELEASE_SOUND;
+    Entity::RuntimeAudio::Create(context.store, context.registry, file, transform, 0.3f);
 
     if (transceiver.isPushed)
     {

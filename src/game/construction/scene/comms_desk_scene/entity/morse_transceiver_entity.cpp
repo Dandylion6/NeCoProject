@@ -6,8 +6,6 @@
 #include "entt/entity/fwd.hpp"
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
-#include "game/component/core/audio/audio_component.hpp"
-#include "game/component/core/audio/audio_emitter_component.hpp"
 #include "game/component/core/interactive/click_action_component.hpp"
 #include "game/component/core/interactive/input_component.hpp"
 #include "game/component/core/rendering/sprite_component.hpp"
@@ -38,7 +36,5 @@ entt::entity Entity::MorseTransceiver::Create(const SceneContext& context) noexc
     context.registry.emplace<Component::Action::Input>(entity, KEY_SPACE);
     context.registry.emplace<Component::Action::Click>(entity, OFFSET);
 
-    context.registry.emplace<Component::ShotAudio>(entity);
-    context.registry.emplace<Component::AudioEmitter>(entity, 0.3f);
     return entity;
 }

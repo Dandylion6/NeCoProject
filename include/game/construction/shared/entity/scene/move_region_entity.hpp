@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+
 #include "core/data/vector2.hpp"
 #include "entt/entity/fwd.hpp"
 #include "game/state/scene.hpp"
@@ -22,7 +24,8 @@ public:
 		const SceneContext& context,
 		const Component::Transform& transform,
 		Scene nextScene,
-		float moveTime = 0.2f
+		float moveTime = 0.2f,
+		const std::string& moveSound = "assets/audio/effects/scene_transition.wav"
 	) noexcept;
 
 	static entt::entity Create(
@@ -30,7 +33,8 @@ public:
 		Direction region,
 		Scene currentScene,
 		Scene nextScene,
-		float moveTime = 0.2f
+		float moveTime = 0.2f,
+		const std::string& moveSound = "assets/audio/effects/scene_transition.wav"
 	) noexcept;
 
 };

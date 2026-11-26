@@ -4,10 +4,10 @@
 #include "core/runtime/entity_helpers.hpp"
 #include "core/runtime/resource_store.hpp"
 #include "entt/entity/registry.hpp"
-#include "game/component/core/audio/audio_component.hpp"
-#include "game/component/core/audio/audio_emitter_component.hpp"
 #include "game/component/core/interactive/drag_action_component.hpp"
 #include "game/component/scene/comms_desk_scene/journal_component.hpp"
+#include "game/construction/scene/outside_scene/entity/artillery_entity.hpp"
+#include "game/construction/shared/entity/environment/runtime_audio_entity.hpp"
 #include "game/contexts/system_context.hpp"
 #include "game/system/scene/comms_desk_scene/journal/journal_page_system.hpp"
 
@@ -45,6 +45,7 @@ void System::Journal::Turn::Update(const SystemContext& context) noexcept
 
 void System::Journal::Turn::PlayTurnSound(const SystemContext& context, const Component::Transform& transform) noexcept
 {
+    constexpr auto VOLUME_RANGE = Nc::Vector2f(0.7f, 0.9f);
     constexpr std::array<std::string_view, 3> TURN_SOUNDS = {
         "assets/audio/object/paper/turn_page_0.wav",
         "assets/audio/object/paper/turn_page_1.wav",
@@ -55,8 +56,6 @@ void System::Journal::Turn::PlayTurnSound(const SystemContext& context, const Co
     const int i = randomService.RangeInt(0, TURN_SOUNDS.size() - 1);
     const auto file = std::string(TURN_SOUNDS[i]);
 
-    const entt::entity entity = context.registry.create();
-    context.registry.emplace<Component::Transform>(entity, transform);
-    context.registry.emplace<Component::ShotAudio>(entity, context.store.CreateSoundHandle(file), true);
-    Audio::Emitter::PlayEmitter(context.registry.emplace<Component::AudioEmitter>(entity));
+    const float volume = randomService.RangeFloat(VOLUME_RANGE.x, VOLUME_RANGE.y);
+    Entity::RuntimeAudio::Create(context.store, context.registry, file, transform, volume);
 }
