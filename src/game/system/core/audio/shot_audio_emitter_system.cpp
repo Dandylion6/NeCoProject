@@ -1,5 +1,7 @@
 #include "game/system/core/audio/shot_audio_emitter_system.hpp"
 
+#include <queue>
+
 #include "entt/entity/registry.hpp"
 #include "game/component/core/transform_component.hpp"
 #include "game/component/core/audio/audio_component.hpp"
@@ -10,6 +12,8 @@
 
 void System::Audio::ShotEmitter::Update(const SystemContext& context)
 {
+    std::queue<entt::entity> toDestroy;
+
     const auto view = context.registry.view<Component::Transform, Component::AudioEmitter, Component::ShotAudio>();
     for (auto [entity, transform, emitter, audio] : view.each())
     {
@@ -35,7 +39,14 @@ void System::Audio::ShotEmitter::Update(const SystemContext& context)
         // Audio has finished playing.
         const bool shouldBeEnd = CanPlay(audio) && !emitter.justPlayed;
         if (shouldBeEnd && emitter.state != Component::AudioEmitter::Paused)
+        {
+            if (audio.destroyOnFinish)
+            {
+                toDestroy.push(entity);
+                continue;
+            }
             emitter.state = Component::AudioEmitter::Idle;
+        }
 
         switch (emitter.state)
         {
@@ -55,6 +66,13 @@ void System::Audio::ShotEmitter::Update(const SystemContext& context)
         }
 
         emitter.justPlayed = false;
+    }
+
+    while (!toDestroy.empty())
+    {
+        const auto entity = toDestroy.front();
+        context.registry.destroy(entity);
+        toDestroy.pop();
     }
 }
 

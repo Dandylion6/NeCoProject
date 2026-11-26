@@ -24,12 +24,14 @@ struct ShotAudio final
     // ------ Members ------
 
     Sound sound{ };
+    bool destroyOnFinish = false;
 
 
     // ------ Constructors ------
 
     constexpr ShotAudio() noexcept = default;
-    explicit constexpr ShotAudio(const Sound& sound) noexcept : sound(sound) {}
+    explicit constexpr ShotAudio(const Sound& sound, const bool destroyOnFinish = false) noexcept
+        : sound(sound), destroyOnFinish(destroyOnFinish) { }
 };
 
 
